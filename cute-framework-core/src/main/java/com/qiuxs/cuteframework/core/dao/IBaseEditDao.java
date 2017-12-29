@@ -6,15 +6,15 @@ import java.util.Map;
 
 import com.qiuxs.cuteframework.core.entity.IObject;
 
-public interface IBaseEditDao<PK extends Serializable, B extends IObject<PK>> {
+public interface IBaseEditDao<PK extends Serializable, T extends IObject<PK>> {
 
-	public void insert(B bean);
+	public void insert(T bean);
 
-	public void insertInBatch(Collection<B> beans);
+	public void insertInBatch(Collection<T> beans);
 
-	public void update(B bean);
+	public void update(T bean);
 
-	public void updateInBatch(Collection<B> beans);
+	public void updateInBatch(Collection<T> beans);
 
 	public void updateByMap(Map<String, Object> mBean);
 
