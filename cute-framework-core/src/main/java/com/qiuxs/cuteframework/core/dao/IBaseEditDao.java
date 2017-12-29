@@ -8,14 +8,14 @@ import com.qiuxs.cuteframework.core.entity.IObject;
 
 public interface IBaseEditDao<PK extends Serializable, T extends IObject<PK>> {
 
-	public void insert(T bean);
+	public int insert(T bean);
 
-	public void insertInBatch(Collection<T> beans);
+	public int insertInBatch(Collection<T> beans);
 
-	public void update(T bean);
+	public int update(T bean);
 
-	public void updateInBatch(Collection<T> beans);
+	public int updateInBatch(Collection<T> beans);
 
-	public void updateByMap(Map<String, Object> mBean);
+	public int updateByMap(Map<String, Object> mBean);
 
 }

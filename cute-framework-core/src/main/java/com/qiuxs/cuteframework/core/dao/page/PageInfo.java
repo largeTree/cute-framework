@@ -1,4 +1,4 @@
-package com.qiuxs.cuteframework.thirdparty.mybatis;
+package com.qiuxs.cuteframework.core.dao.page;
 
 import org.apache.ibatis.session.RowBounds;
 

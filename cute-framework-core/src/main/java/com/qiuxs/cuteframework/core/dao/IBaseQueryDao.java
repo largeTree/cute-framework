@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.qiuxs.cuteframework.core.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.entity.IObject;
-import com.qiuxs.cuteframework.thirdparty.mybatis.PageInfo;
 
 public interface IBaseQueryDao<PK extends Serializable, T extends IObject<PK>> {
 
