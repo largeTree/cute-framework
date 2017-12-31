@@ -4,3 +4,7 @@
 /cute-framework-core/.classpath
 /cute-framework-parent/.project
 /cute-framework-parent/.settings
+.settings
+target
+.classpath
+.project

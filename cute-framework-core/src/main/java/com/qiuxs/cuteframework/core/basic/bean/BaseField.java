@@ -17,6 +17,12 @@ public class BaseField {
 	/** 字段类型Class */
 	private Class<?> typeClass;
 
+	public BaseField(String name, String label, String type) {
+		this.name = name;
+		this.label = label;
+		this.type = type;
+	}
+
 	public String getName() {
 		return name;
 	}

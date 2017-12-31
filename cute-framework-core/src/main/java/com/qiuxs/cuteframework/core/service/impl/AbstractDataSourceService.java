@@ -94,7 +94,7 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 		return "相同记录已存在";
 	}
 
-	protected abstract void initDefault(T bean);
+	protected void initDefault(T bean){}
 
 	protected abstract D getDao();
 

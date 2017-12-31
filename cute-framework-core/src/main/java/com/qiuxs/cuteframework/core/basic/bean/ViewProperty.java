@@ -1,7 +1,5 @@
 package com.qiuxs.cuteframework.core.basic.bean;
 
-import java.io.Serializable;
-
 import com.qiuxs.cuteframework.core.basic.code.provider.ICodeTranslatable;
 
 /**
@@ -10,14 +8,14 @@ import com.qiuxs.cuteframework.core.basic.code.provider.ICodeTranslatable;
  *
  * @param <T>
  */
-public class BaseProperty<F extends BaseField, C extends Serializable, TC extends ICodeTranslatable<C>> {
+public class ViewProperty<C> {
 
 	/** 字段描述 */
-	private F field;
+	private BaseField field;
 
-	private TC codeTranslate;
+	private ICodeTranslatable<C> codeTranslate;
 
-	public BaseProperty(F field, TC codeTranslate) {
+	public ViewProperty(BaseField field, ICodeTranslatable<C> codeTranslate) {
 		this.field = field;
 		this.codeTranslate = codeTranslate;
 	}
@@ -26,7 +24,7 @@ public class BaseProperty<F extends BaseField, C extends Serializable, TC extend
 	 * 获取字段描述
 	 * @return
 	 */
-	public F getField() {
+	public BaseField getField() {
 		return field;
 	}
 
@@ -34,7 +32,7 @@ public class BaseProperty<F extends BaseField, C extends Serializable, TC extend
 	 * 获取翻译器
 	 * @return
 	 */
-	public TC getCodeTranslate() {
+	public ICodeTranslatable<C> getCodeTranslate() {
 		return this.codeTranslate;
 	}
 

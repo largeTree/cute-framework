@@ -12,8 +12,9 @@ import com.qiuxs.cuteframework.core.basic.ex.LogicalException;
 @Component
 public class DataSourceServiceProxy {
 
-	@AfterThrowing("execution(* **.service.*.*(..))")
-	public void modifyAfterThrowing(Object target, Throwable t) {
+	@AfterThrowing(value = "execution(* **.service.*.*(..))", throwing = "t")
+	public void modifyAfterThrowing(Throwable t) {
+		System.out.println("in proxy");
 		if (t instanceof LogicalException) {
 			throw (LogicalException) t;
 		} else if (t instanceof DuplicateKeyException) {
