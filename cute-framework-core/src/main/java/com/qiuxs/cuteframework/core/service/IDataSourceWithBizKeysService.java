@@ -7,10 +7,8 @@ import com.qiuxs.cuteframework.core.entity.IObject;
 
 public interface IDataSourceWithBizKeysService<PK extends Serializable, T extends IObject<PK>, D extends IBaseDaoWithBizKeys<PK, T>> extends IDataSourceService<PK, T, D> {
 
-	public T getByBizKeysInner(Object... bizKeyVals);
-
+	public T getByBizKeys();
+	
 	public void updateByBizKeys(T bean);
-
-	public void deleteByBizKeys(Object... bizKeyVals);
 
 }

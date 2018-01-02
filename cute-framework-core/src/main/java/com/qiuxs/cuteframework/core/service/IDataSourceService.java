@@ -18,14 +18,12 @@ public interface IDataSourceService<PK extends Serializable, T extends IObject<P
 
 	public void delete(T bean);
 
+	public void delete(Map<String, Object> params);
+
 	public List<T> findAll();
 
 	public List<T> list(Map<String, Object> params);
 
-	public List<T> list(Map<String, Object> params, boolean wrapper);
-
 	public List<T> list(Map<String, Object> params, PageInfo pageInfo);
-
-	public List<T> list(Map<String, Object> params, boolean wrapper, PageInfo pageInfo);
 
 }
