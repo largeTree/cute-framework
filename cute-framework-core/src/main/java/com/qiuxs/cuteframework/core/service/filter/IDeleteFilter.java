@@ -13,11 +13,7 @@ import com.qiuxs.cuteframework.core.entity.IObject;
  */
 public interface IDeleteFilter<PK extends Serializable, T extends IObject<PK>> extends IServiceFilter<PK, T> {
 
-	public void preDelete();
-
 	public void preDelete(T bean);
-
-	public void postDelete();
 
 	public void postDelete(T bean);
 

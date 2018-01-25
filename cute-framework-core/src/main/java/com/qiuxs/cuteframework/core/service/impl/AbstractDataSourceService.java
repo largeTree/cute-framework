@@ -146,11 +146,7 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 		List<IInsertFilter<PK, T>> insertFilters = this.getInsertFilters();
 		if (!insertFilters.isEmpty()) {
 			insertFilters.forEach((filter) -> {
-				if (bean == null) {
-					filter.preInsert();
-				} else {
-					filter.preInsert(bean);
-				}
+				filter.preInsert(bean);
 			});
 		}
 	}
@@ -163,11 +159,7 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 		List<IUpdateFilter<PK, T>> filters = this.getUpdateFilters();
 		if (!filters.isEmpty()) {
 			filters.forEach((filter) -> {
-				if (bean == null) {
-					filter.preUpdate();
-				} else {
-					filter.preUpdate(bean);
-				}
+				filter.preUpdate(bean);
 			});
 		}
 	}
@@ -180,11 +172,7 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 		List<IDeleteFilter<PK, T>> delelteFilters = this.getDeleteFilters();
 		if (!delelteFilters.isEmpty()) {
 			delelteFilters.forEach((filter) -> {
-				if (bean == null) {
-					filter.preDelete();
-				} else {
-					filter.preDelete(bean);
-				}
+				filter.preDelete(bean);
 			});
 		}
 	}
@@ -197,11 +185,7 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 		List<IModifyFilter<PK, T>> modifyFilters = this.getModifyFilters();
 		if (!modifyFilters.isEmpty()) {
 			modifyFilters.forEach((filter) -> {
-				if (bean == null) {
-					filter.preModify();
-				} else {
-					filter.preModify(bean);
-				}
+				filter.preModify(bean);
 			});
 		}
 	}
@@ -257,11 +241,7 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 		List<IInsertFilter<PK, T>> insertFilters = this.getInsertFilters();
 		if (!insertFilters.isEmpty()) {
 			insertFilters.forEach((filter) -> {
-				if (bean == null) {
-					filter.postInsert();
-				} else {
-					filter.postInsert(bean);
-				}
+				filter.postInsert(bean);
 			});
 		}
 	}
@@ -274,11 +254,7 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 		List<IUpdateFilter<PK, T>> filters = this.getUpdateFilters();
 		if (!filters.isEmpty()) {
 			filters.forEach((filter) -> {
-				if (bean == null) {
-					filter.postUpdate();
-				} else {
-					filter.postUpdate(bean);
-				}
+				filter.postUpdate(bean);
 			});
 		}
 	}
@@ -291,11 +267,7 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 		List<IDeleteFilter<PK, T>> deleteFilters = this.getDeleteFilters();
 		if (!deleteFilters.isEmpty()) {
 			deleteFilters.forEach((filter) -> {
-				if (bean == null) {
-					filter.postDelete();
-				} else {
-					filter.postDelete(bean);
-				}
+				filter.postDelete(bean);
 			});
 		}
 	}
@@ -308,11 +280,7 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 		List<IModifyFilter<PK, T>> modifyFilters = this.getModifyFilters();
 		if (!modifyFilters.isEmpty()) {
 			modifyFilters.forEach((filter) -> {
-				if (bean == null) {
-					filter.postModify();
-				} else {
-					filter.postModify(bean);
-				}
+				filter.postModify(bean);
 			});
 		}
 	}

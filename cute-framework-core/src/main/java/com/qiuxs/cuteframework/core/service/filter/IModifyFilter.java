@@ -13,11 +13,7 @@ import com.qiuxs.cuteframework.core.entity.IObject;
  */
 public interface IModifyFilter<PK extends Serializable, T extends IObject<PK>> extends IServiceFilter<PK, T> {
 
-	public void preModify();
-
 	public void preModify(T bean);
-
-	public void postModify();
 
 	public void postModify(T bean);
 

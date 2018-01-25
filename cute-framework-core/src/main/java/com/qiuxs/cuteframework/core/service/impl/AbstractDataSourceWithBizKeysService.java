@@ -9,6 +9,11 @@ import com.qiuxs.cuteframework.core.service.IDataSourceWithBizKeysService;
 public abstract class AbstractDataSourceWithBizKeysService<PK extends Serializable, T extends IObject<PK>, D extends IBaseDaoWithBizKeys<PK, T>> extends AbstractDataSourceService<PK, T, D> implements IDataSourceWithBizKeysService<PK, T, D> {
 
 	@Override
+	public T getByBizKeys(Object... bizKeyAndValues) {
+	    return null;
+	}
+	
+	@Override
 	public void updateByBizKeys(T bean) {
 
 	}
