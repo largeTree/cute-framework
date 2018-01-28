@@ -1,21 +1,28 @@
 package com.qiuxs.cuteframework.core.service.impl;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.dao.DuplicateKeyException;
+
+import com.qiuxs.cuteframework.core.basic.ex.ExceptionCode;
+import com.qiuxs.cuteframework.core.basic.ex.LogicalException;
 import com.qiuxs.cuteframework.core.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.dao.page.PageInfo;
+import com.qiuxs.cuteframework.core.entity.IEntity;
 import com.qiuxs.cuteframework.core.entity.IObject;
-import com.qiuxs.cuteframework.core.service.IDataSourceService;
+import com.qiuxs.cuteframework.core.service.IDataPropertyService;
 import com.qiuxs.cuteframework.core.service.filter.IDeleteFilter;
 import com.qiuxs.cuteframework.core.service.filter.IInsertFilter;
 import com.qiuxs.cuteframework.core.service.filter.IModifyFilter;
 import com.qiuxs.cuteframework.core.service.filter.IServiceFilter;
 import com.qiuxs.cuteframework.core.service.filter.IUpdateFilter;
 
-public abstract class AbstractDataSourceService<PK extends Serializable, T extends IObject<PK>, D extends IBaseDao<PK, T>> extends AbstractPropertyService<PK, T> implements IDataSourceService<PK, T, D> {
+public abstract class AbstractDataPropertyService<PK extends Serializable, T extends IObject<PK>, D extends IBaseDao<PK, T>> extends AbstractPropertyService<PK, T> implements IDataPropertyService<PK, T, D> {
 
 	/** 所有的服务过滤器 */
 	private List<IServiceFilter<PK, T>> serviceFilters = new LinkedList<>();
@@ -30,18 +37,45 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 
 	@Override
 	public void insert(T bean) {
-		this.checkModifyNullBean(bean);
 		this.preInsertInner(bean);
-		this.getDao().insert(bean);
+		this.insertInner(bean);
 		this.postInsertInner(bean);
 	}
 
 	@Override
-	public void update(T bean) {
+	public void insertInBatch(Collection<T> beans) {
+		for (T bean : beans) {
+			this.preInsertInner(bean);
+		}
+		this.insertInBatchInner(beans);
+		for (T bean : beans) {
+			this.postInsertInner(bean);
+		}
+	}
+
+	protected void insertInBatchInner(Collection<T> beans) {
+		this.getDao().insertInBatch(beans);
+	}
+
+	protected void insertInner(T bean) {
 		this.checkModifyNullBean(bean);
+		try {
+			this.getDao().insert(bean);
+		} catch (DuplicateKeyException duplicateKeyException) {
+			throw new LogicalException(ExceptionCode.DuplicateKey, "重复记录已存在==>" + this.getDescription());
+		} 
+	}
+
+	@Override
+	public void update(T bean) {
 		this.preUpdateInner(bean);
-		this.getDao().update(bean);
+		this.updateInner(bean);
 		this.postUpdateInner(bean);
+	}
+
+	protected void updateInner(T bean) {
+		this.checkModifyNullBean(bean);
+		this.getDao().update(bean);
 	}
 
 	@Override
@@ -58,8 +92,12 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 	public void delete(T bean) {
 		this.checkModifyNullBean(bean);
 		this.preDeleteInner(bean);
-		this.getDao().delete(bean);
+		this.deleteInner(bean);
 		this.postDeleteInner(bean);
+	}
+
+	protected void deleteInner(T bean) {
+		this.getDao().delete(bean);
 	}
 
 	@Override
@@ -71,11 +109,6 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 	@Override
 	public List<T> findAll() {
 		return this.getDao().findAll();
-	}
-
-	@Override
-	public List<T> list(Map<String, Object> params) {
-		return this.getDao().list(params);
 	}
 
 	@Override
@@ -108,6 +141,13 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 		this.invokePreInsertFilter(bean);
 		// 5.服务内前置插入
 		this.preInsert(bean);
+
+		if (bean instanceof IEntity) {
+			IEntity<PK> iEntity = ((IEntity<PK>) bean);
+			if (iEntity.getCreatedDate() == null) {
+				iEntity.setCreatedDate(new Date());
+			}
+		}
 	}
 
 	/**
@@ -123,6 +163,13 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 		this.invokePreUpdateFilter(bean);
 		// 内置前置更新
 		this.preUpdate(bean);
+
+		if (bean instanceof IEntity) {
+			IEntity<PK> iEntity = (IEntity<PK>) bean;
+			if (iEntity.getUpdatedDate() == null) {
+				iEntity.setUpdatedDate(new Date());
+			}
+		}
 	}
 
 	/**
@@ -416,6 +463,7 @@ public abstract class AbstractDataSourceService<PK extends Serializable, T exten
 	 * @param bean
 	 */
 	protected void preInsert(T bean) {
+
 	}
 
 	/**

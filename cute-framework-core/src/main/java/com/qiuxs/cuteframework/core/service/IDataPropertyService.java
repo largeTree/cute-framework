@@ -1,6 +1,7 @@
 package com.qiuxs.cuteframework.core.service;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -8,9 +9,11 @@ import com.qiuxs.cuteframework.core.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.entity.IObject;
 
-public interface IDataSourceService<PK extends Serializable, T extends IObject<PK>, D extends IBaseDao<PK, T>> {
+public interface IDataPropertyService<PK extends Serializable, T extends IObject<PK>, D extends IBaseDao<PK, T>> {
 
 	public void insert(T bean);
+	
+	public void insertInBatch(Collection<T> beans);
 
 	public void update(T bean);
 
@@ -21,8 +24,6 @@ public interface IDataSourceService<PK extends Serializable, T extends IObject<P
 	public void delete(Map<String, Object> params);
 
 	public List<T> findAll();
-
-	public List<T> list(Map<String, Object> params);
 
 	public List<T> list(Map<String, Object> params, PageInfo pageInfo);
 

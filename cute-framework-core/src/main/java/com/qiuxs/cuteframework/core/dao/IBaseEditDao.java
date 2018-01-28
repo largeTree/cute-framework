@@ -18,4 +18,13 @@ public interface IBaseEditDao<PK extends Serializable, T extends IObject<PK>> {
 
 	public int updateByMap(Map<String, Object> mBean);
 
+	public void deleteById(PK id);
+
+	public void deleteByIds(Collection<PK> ids);
+
+	public void delete(T bean);
+
+	public void deleteInBatch(Collection<T> beans);
+
+	public void deleteByWhere(Map<String, Object> params);
 }

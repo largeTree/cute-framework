@@ -10,6 +10,8 @@ import com.qiuxs.cuteframework.core.entity.IObject;
 public interface IPropertyService<PK extends Serializable, T extends IObject<PK>> {
 
 	public static final String VIEW_ID = "viewId";
+	
+	public Class<T> getEntityClass();
 
 	public JSONObject translateBean(T bean);
 

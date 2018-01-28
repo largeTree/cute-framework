@@ -7,8 +7,12 @@ import com.qiuxs.cuteframework.core.entity.IEntity;
 public abstract class AbstractEntity<PK> implements IEntity<PK> {
 
 	private PK id;
+	private Long createdBy;
 	private Date createdDate;
+	private Long updatedBy;
 	private Date updatedDate;
+	private Long deletedBy;
+	private Date deletedDate;
 
 	@Override
 	public PK getId() {
@@ -18,6 +22,16 @@ public abstract class AbstractEntity<PK> implements IEntity<PK> {
 	@Override
 	public void setId(PK id) {
 		this.id = id;
+	}
+
+	@Override
+	public Long getCreatedBy() {
+		return createdBy;
+	}
+
+	@Override
+	public void setCreatedBy(Long createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	@Override
@@ -38,6 +52,36 @@ public abstract class AbstractEntity<PK> implements IEntity<PK> {
 	@Override
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
+	}
+
+	@Override
+	public Long getUpdatedBy() {
+		return updatedBy;
+	}
+
+	@Override
+	public void setUpdatedBy(Long updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	@Override
+	public Long getDeletedBy() {
+		return this.deletedBy;
+	}
+
+	@Override
+	public void setDeletedBy(Long deletedBy) {
+		this.deletedBy = deletedBy;
+	}
+
+	@Override
+	public Date getDeletedDate() {
+		return this.deletedDate;
+	}
+
+	@Override
+	public void setDeletedDate(Date deletedDate) {
+		this.deletedDate = deletedDate;
 	}
 
 }
