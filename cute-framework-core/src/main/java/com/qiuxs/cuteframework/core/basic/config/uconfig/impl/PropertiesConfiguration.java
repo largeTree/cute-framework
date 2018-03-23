@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import com.qiuxs.cuteframework.core.basic.config.uconfig.IConfiguration;
+import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.core.basic.utils.io.FileUtils;
 
 public class PropertiesConfiguration implements IConfiguration {
@@ -44,122 +45,55 @@ public class PropertiesConfiguration implements IConfiguration {
 
 	@Override
 	public Object get(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		return configItems.get(key);
 	}
 
 	@Override
 	public String getString(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		return MapUtils.getString(configItems, key);
 	}
 
 	@Override
 	public String getString(String key, String defaultValue) {
-		// TODO Auto-generated method stub
-		return null;
+		String val = MapUtils.getString(configItems, key);
+		return val == null ? defaultValue : val;
 	}
 
 	@Override
 	public String getStringMust(String key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Byte getByte(String key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public byte getByteValue(String key, byte defaultValue) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Byte getByte(String key, Byte defaultValue) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Byte getByteMust(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		return MapUtils.getStringMust(configItems, key);
 	}
 
 	@Override
 	public Integer getInteger(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		return MapUtils.getInteger(configItems, key);
 	}
 
 	@Override
 	public int getIntValue(String key, int defaultValue) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Integer getInteger(String key, Integer defaultValue) {
-		// TODO Auto-generated method stub
-		return null;
+		Integer val = this.getInteger(key);
+		return val == null ? defaultValue : val.intValue();
 	}
 
 	@Override
 	public Integer getIntegerMust(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		return MapUtils.getIntegerMust(configItems, key);
 	}
 
 	@Override
 	public Long getLong(String key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Long getLong(String key, Long defaultValue) {
-		// TODO Auto-generated method stub
-		return null;
+		return MapUtils.getLong(configItems, key);
 	}
 
 	@Override
 	public long getLongValues(String key, long defaultValue) {
-		// TODO Auto-generated method stub
-		return 0;
+		Long val = this.getLong(key);
+		return val == null ? defaultValue : val.longValue();
 	}
 
 	@Override
 	public Long getLongMust(String key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Double getDouble(String key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Double getDouble(String key, Double defaultValue) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public double getDoubleValue(String key, double defaultValue) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Double getDoubleMust(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		return MapUtils.getLongMust(configItems, key);
 	}
 
 }

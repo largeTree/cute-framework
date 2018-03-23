@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSONObject;
  *
  */
 public class JsonUtils {
-	
+
 	/**
 	 * javaBean转JSONObject
 	 * @param bean
@@ -18,5 +18,13 @@ public class JsonUtils {
 	public static JSONObject bean2JSONObject(Object bean) {
 		return (JSONObject) JSON.toJSON(bean);
 	}
-	
+
+	/**
+	 * jsonString转JSONObject
+	 * @param jsonString
+	 * @return
+	 */
+	public static JSONObject string2JSONObject(String jsonString) {
+		return JSON.parseObject(jsonString);
+	}
 }

@@ -1,5 +1,10 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
+/**
+ * 类型适配器
+ * @author qiuxs
+ *
+ */
 public class TypeAdapter {
 
 	public static final String BYTE_TYPE_NAME_SIMPLE = "Byte";
@@ -15,6 +20,12 @@ public class TypeAdapter {
 	public static final String DOUBLE_TYPE_NAME_SIMPLE = "Double";
 	public static final String DOUBLE_VALUE_TYPE_NAME_SIMPLE = "double";
 
+	/**
+	 * 类型适配
+	 * @param obj
+	 * @param type
+	 * @return
+	 */
 	public static Object adapter(Object obj, Class<?> type) {
 		if (type == null || obj == null) {
 			return obj;
@@ -35,4 +46,24 @@ public class TypeAdapter {
 		}
 		return obj;
 	}
+
+	/**
+	 * 转换为Integer
+	 * @param obj
+	 * @return
+	 */
+	public static Integer toInteger(Object obj) throws NumberFormatException {
+		return obj == null ? null : Integer.valueOf(obj.toString());
+	}
+
+	/**
+	 * 转换为Long
+	 * @param obj
+	 * @return
+	 * @throws NumberFormatException
+	 */
+	public static Long toLong(Object obj) throws NumberFormatException {
+		return obj == null ? null : Long.parseLong(obj.toString());
+	}
+
 }
