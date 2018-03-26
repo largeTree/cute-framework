@@ -1,5 +1,10 @@
 package com.qiuxs.cuteframework.core.basic.config.uconfig;
 
+/**
+ * 实现此接口用于uconfig.xml时，必须实现一个以单个InputStream为参数的构造器
+ * @author qiuxs
+ *
+ */
 public interface IConfiguration {
 
 	public Object get(String key);
@@ -13,7 +18,7 @@ public interface IConfiguration {
 	public Integer getInteger(String key);
 
 	public int getIntValue(String key, int defaultValue);
-	
+
 	public Integer getIntegerMust(String key);
 
 	public Long getLong(String key);

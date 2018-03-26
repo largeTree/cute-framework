@@ -5,48 +5,50 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 
 import com.qiuxs.cuteframework.core.basic.bean.IMergeable;
 import com.qiuxs.cuteframework.core.basic.config.uconfig.IConfiguration;
+import com.qiuxs.cuteframework.core.basic.config.uconfig.ex.UConfigException;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.core.basic.utils.io.FileUtils;
 
-public class PropertiesConfiguration implements IConfiguration, IMergeable<PropertiesConfiguration> {
+public class XMLConfiguration implements IConfiguration, IMergeable<XMLConfiguration> {
 
 	private Map<String, String> configItems = new HashMap<String, String>();
 
-	public PropertiesConfiguration(String location) throws IOException {
+	public XMLConfiguration(String location) throws IOException {
 		InputStream in = FileUtils.readAsInputStream(location);
 		this.load(in);
 	}
 
-	public PropertiesConfiguration(InputStream in) throws IOException {
+	public XMLConfiguration(InputStream in) throws IOException {
 		this.load(in);
 	}
 
-	public PropertiesConfiguration(Properties props) {
-		this.setProperties(props);
-	}
-
 	private void load(InputStream in) throws IOException {
-		Properties props = new Properties();
-		props.load(in);
-		this.setProperties(props);
-	}
-
-	private void setProperties(Properties props) {
-		// Properties的方法多为同步方法 只读的属性没必要加同步 所以转为Map存储
-		for (Iterator<Entry<Object, Object>> iter = props.entrySet().iterator(); iter.hasNext();) {
-			Entry<Object, Object> entry = iter.next();
-			configItems.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
+		SAXReader reader = new SAXReader();
+		try {
+			Document config = reader.read(in);
+			Element rootElement = config.getRootElement();
+			@SuppressWarnings("unchecked")
+			Iterator<Element> elementIterator = rootElement.elementIterator();
+			while (elementIterator.hasNext()) {
+				Element item = elementIterator.next();
+				this.configItems.put(item.getName(), item.getTextTrim());
+			}
+		} catch (DocumentException e) {
+			throw new UConfigException("配置文件格式错误：" + e.getLocalizedMessage(), e);
 		}
 	}
 
 	@Override
 	public Object get(String key) {
-		return configItems.get(key);
+		return this.configItems.get(key);
 	}
 
 	@Override
@@ -98,8 +100,8 @@ public class PropertiesConfiguration implements IConfiguration, IMergeable<Prope
 	}
 
 	@Override
-    public void merge(PropertiesConfiguration margeable) {
-		
-    }
+	public void merge(XMLConfiguration margeable) {
+
+	}
 
 }

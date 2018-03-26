@@ -1,4 +1,4 @@
-package com.qiuxs.cuteframework.core.basic.bean;
+package com.qiuxs.cuteframework.core.persistent.modal;
 
 /**
  * 基础字段配置
