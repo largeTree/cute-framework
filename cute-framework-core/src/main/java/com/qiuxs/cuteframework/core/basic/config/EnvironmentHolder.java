@@ -9,7 +9,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import com.qiuxs.cuteframework.core.basic.config.uconfig.ex.UConfigException;
@@ -64,7 +63,7 @@ public class EnvironmentHolder {
 			ENVIRONMENT.clear();
 		}
 		SAXReader reader = new SAXReader();
-		Resource res = new ClassPathResource(ENVIRONMENT_PATH);
+		Resource res = ClasspathResourceUtils.getResource(ENVIRONMENT_PATH);
 		try {
 			Document environment = reader.read(res.getFile());
 			Element rootElement = environment.getRootElement();

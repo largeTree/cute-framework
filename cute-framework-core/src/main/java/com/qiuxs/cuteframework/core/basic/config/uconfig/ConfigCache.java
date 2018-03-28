@@ -35,7 +35,7 @@ public class ConfigCache {
 	private static final String CONFIG_TYPE_PROPERTIES = "properties";
 
 	/** 配置顺序类型：取最后一个生效的配置 */
-	private static final String ORDER_TYPE_LASTONE = "lastone";
+	private static final String ORDER_TYPE_LASTONE = "lastOne";
 	/** 配置顺序类型：后出现的优先(缺省值) */
 	private static final String ORDER_TYPE_REPLACE = "replace";
 
@@ -223,7 +223,7 @@ public class ConfigCache {
 			}
 			Constructor<?> constructor = clz.getConstructor(InputStream.class);
 			for (Resource res : resources) {
-				if (res.getFile().exists()) {
+				if (res.exists()) {
 					if (config == null) {
 						// 第一个
 						config = (IConfiguration) constructor.newInstance(res.getInputStream());
