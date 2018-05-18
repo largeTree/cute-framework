@@ -6,6 +6,7 @@ import com.qiuxs.cuteframework.core.persistent.entity.IEntity;
 
 public abstract class AbstractEntity<PK> implements IEntity<PK> {
 
+	private static final long serialVersionUID = -7526268408245513295L;
 	private PK id;
 	private Long createdBy;
 	private Date createdTime;

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.qiuxs.cuteframework.core.persistent.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.persistent.dao.page.PageInfo;
-import com.qiuxs.cuteframework.core.persistent.entity.IObject;
+import com.qiuxs.cuteframework.core.persistent.entity.IEntity;
 
 /**
  * 提供
@@ -18,7 +18,7 @@ import com.qiuxs.cuteframework.core.persistent.entity.IObject;
  * @param <T>
  * @param <D>
  */
-public interface IDataPropertyService<PK extends Serializable, T extends IObject<PK>, D extends IBaseDao<PK, T>> {
+public interface IDataPropertyService<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>> {
 
 	public void create(T bean);
 
