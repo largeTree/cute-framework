@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<env>
-	<!-- 当前环境 dev,test,produce -->
-	<environment>dev</environment>
-	<!-- 统一配置入口文件 -->
-	<uconfig_path>classpath:uconfig.xml</uconfig_path>
-</env>

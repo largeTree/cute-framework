@@ -8,11 +8,9 @@ public abstract class AbstractEntity<PK> implements IEntity<PK> {
 
 	private PK id;
 	private Long createdBy;
-	private Date createdDate;
+	private Date createdTime;
 	private Long updatedBy;
-	private Date updatedDate;
-	private Long deletedBy;
-	private Date deletedDate;
+	private Date updatedTime;
 
 	@Override
 	public PK getId() {
@@ -35,23 +33,23 @@ public abstract class AbstractEntity<PK> implements IEntity<PK> {
 	}
 
 	@Override
-	public Date getCreatedDate() {
-		return this.createdDate;
+	public Date getCreatedTime() {
+		return this.createdTime;
 	}
 
 	@Override
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
 	}
 
 	@Override
-	public Date getUpdatedDate() {
-		return this.updatedDate;
+	public Date getUpdatedTime() {
+		return this.updatedTime;
 	}
 
 	@Override
-	public void setUpdatedDate(Date updatedDate) {
-		this.updatedDate = updatedDate;
+	public void setUpdatedTime(Date updatedTime) {
+		this.updatedTime = updatedTime;
 	}
 
 	@Override
@@ -62,26 +60,6 @@ public abstract class AbstractEntity<PK> implements IEntity<PK> {
 	@Override
 	public void setUpdatedBy(Long updatedBy) {
 		this.updatedBy = updatedBy;
-	}
-
-	@Override
-	public Long getDeletedBy() {
-		return this.deletedBy;
-	}
-
-	@Override
-	public void setDeletedBy(Long deletedBy) {
-		this.deletedBy = deletedBy;
-	}
-
-	@Override
-	public Date getDeletedDate() {
-		return this.deletedDate;
-	}
-
-	@Override
-	public void setDeletedDate(Date deletedDate) {
-		this.deletedDate = deletedDate;
 	}
 
 }
