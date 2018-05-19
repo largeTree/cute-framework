@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.persistent.dao.page.PageInfo;
+import com.qiuxs.cuteframework.web.bean.ResponseResult;
 
 public abstract class BaseController {
 
@@ -32,38 +33,34 @@ public abstract class BaseController {
 	 */
 	public PageInfo preparePageInfo(Map<String, String> params) {
 		PageInfo pageInfo = new PageInfo();
-		
+
 		return pageInfo;
 	}
 
 	public String responseSuccess() {
-		return successResponse().toJSONString();
+		return response(this.successResponse());
 	}
 
 	protected String responseVal(Object val) {
-		JSONObject response = this.successResponse();
-		response.put("data", JsonUtils.genJSON("val", val));
-		return response.toJSONString();
+		ResponseResult response = this.successResponse();
+		response.setData(JsonUtils.genJSON("val", val));
+		return this.response(response);
 	}
 
 	protected String responseRes(List<?> rows) {
 		if (rows == null) {
 			rows = new ArrayList<>();
 		}
-		return this.responseRes(rows, (long) rows.size());
+		return this.responseRes(rows, rows.size());
 	}
 
-	protected String responseRes(List<?> rows, Long count) {
-		return this.responseRes(rows, count, null);
+	protected String responseRes(List<?> rows, int total) {
+		return this.responseRes(rows, total, null);
 	}
 
-	protected String responseRes(List<?> rows, Long count, Map<String, ? extends Number> sumrow) {
-		JSONObject res = this.successResponse();
-		JSONObject data = new JSONObject();
-		data.put("rows", res);
-		data.put("count", count);
-		data.put("sumrow", sumrow);
-		return this.responseRes(res);
+	protected String responseRes(List<?> rows, int total, Map<String, ? extends Number> sumrow) {
+		ResponseResult resp = new ResponseResult(rows, total, sumrow);
+		return this.response(resp);
 	}
 
 	/**
@@ -73,9 +70,9 @@ public abstract class BaseController {
 	 * @return
 	 */
 	protected String responseRes(Object res) {
-		JSONObject resp = this.successResponse();
-		resp.put("data", JsonUtils.toJSONObject(res));
-		return this.responseRes(resp);
+		ResponseResult resp = this.successResponse();
+		resp.setData(res);
+		return this.response(resp);
 	}
 
 	/**
@@ -84,17 +81,21 @@ public abstract class BaseController {
 	 * @return
 	 */
 	protected String responseRes(JSONObject res) {
-		return res.toJSONString();
+		ResponseResult resp = this.successResponse();
+		resp.setData(res);
+		return this.response(resp);
+	}
+
+	protected String response(ResponseResult resp) {
+		return JsonUtils.toJSONString(resp);
 	}
 
 	/**
 	 * 构造默认响应JSON对象
 	 * @return
 	 */
-	protected JSONObject successResponse() {
-		JSONObject res = new JSONObject();
-		res.put("code", "0");
-		res.put("msg", "请求成功");
+	protected ResponseResult successResponse() {
+		ResponseResult res = ResponseResult.makeSuccess();
 		return res;
 	}
 }

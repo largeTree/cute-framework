@@ -3,12 +3,11 @@ package com.qiuxs.cuteframework.core.basic.utils;
 import org.apache.logging.log4j.Logger;
 
 import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.ex.ErrorCodes;
 import com.qiuxs.cuteframework.core.basic.ex.LogicException;
 import com.qiuxs.cuteframework.core.basic.ex.LoginException;
 
 public class ExceptionUtils {
-
-	public static final int DEFAULT_ERROR_CODE = -10;
 
 	public static final String ERROR_CODE = "error_code";
 	public static final String ERROR_MSG = "msg";
@@ -46,7 +45,7 @@ public class ExceptionUtils {
 	 * @param msg
 	 */
 	public static void throwLogicalException(String msg) {
-		throwLogicalException(DEFAULT_ERROR_CODE, msg);
+		throwLogicalException(ErrorCodes.LOGIC_EXCEPTION_CODE, msg);
 	}
 
 	/**

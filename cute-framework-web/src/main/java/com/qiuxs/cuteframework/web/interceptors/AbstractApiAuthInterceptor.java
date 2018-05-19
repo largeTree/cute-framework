@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
-import com.qiuxs.cuteframework.server.ServerStatusController;
+import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
+import com.qiuxs.cuteframework.server.ServerController;
 import com.qiuxs.cuteframework.web.utils.RequestUtils;
 
 /***
@@ -23,15 +24,16 @@ import com.qiuxs.cuteframework.web.utils.RequestUtils;
  */
 public abstract class AbstractApiAuthInterceptor extends AbstractHandlerInterceptor {
 
-	public static final String DEFAULT_LOGIN_API_PATH = "/api/login";
+	public static final String DEFAULT_API_PREFIX = "/api";
+	public static final String DEFAULT_LOGIN_API_PATH = DEFAULT_API_PREFIX + "/login";
 	private static final List<String> IGNORE_APIAUTH_PATH = new ArrayList<>();
 	static {
-		IGNORE_APIAUTH_PATH.add(ServerStatusController.IGNORE_PATH_PREFIX);
+		IGNORE_APIAUTH_PATH.add(ServerController.IGNORE_PATH_PREFIX);
 	}
 
 	@Override
 	public final boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
+	        throws Exception {
 		this.getUserLite(request, RequestUtils.getRequestParams(request));
 		return super.preHandle(request, response, handler);
 	}
@@ -39,6 +41,19 @@ public abstract class AbstractApiAuthInterceptor extends AbstractHandlerIntercep
 	@Override
 	public final int getOrder() {
 		return AbstractHandlerInterceptor.PRIORITY_MIDDLE;
+	}
+
+	/**
+	 * 获取API前缀，仅拦截以此前缀开头的请求
+	 * @return
+	 */
+	protected String getApiPrefix() {
+		return DEFAULT_API_PREFIX;
+	}
+
+	@Override
+	public Optional<List<String>> getPathPatterns() {
+		return ListUtils.genList(DEFAULT_API_PREFIX + "/**");
 	}
 
 	/**

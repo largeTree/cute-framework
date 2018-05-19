@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.qiuxs.cuteframework.core.basic.ex.ErrorCodes;
+import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.persistent.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.persistent.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.persistent.entity.IEntity;
@@ -21,7 +23,7 @@ import com.qiuxs.cuteframework.core.persistent.service.ifc.IDataPropertyService;
  * @version 1.0.0
  */
 public abstract class AbstractDataService<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>>
-		extends AbstractPropertyService<PK, T> implements IDataPropertyService<PK, T, D> {
+        extends AbstractPropertyService<PK, T> implements IDataPropertyService<PK, T, D> {
 
 	private String tableName;
 
@@ -37,7 +39,7 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	 * @return
 	 */
 	protected abstract D getDao();
-	
+
 	/**
 	 * 获取表名
 	 * @return
@@ -64,7 +66,11 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	 * @return
 	 */
 	public T getById(PK id) {
-		return this.getDao().get(id);
+		T bean = this.getDao().get(id);
+		if (bean == null) {
+			ExceptionUtils.throwLogicalException(ErrorCodes.DataError.INVALID_PRIMARY_KEY, "records_do_not_exists");
+		}
+		return bean;
 	}
 
 	/**

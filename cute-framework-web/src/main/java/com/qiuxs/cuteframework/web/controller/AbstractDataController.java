@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.qiuxs.cuteframework.core.basic.ex.ErrorCodeConstants;
+import com.qiuxs.cuteframework.core.basic.ex.ErrorCodes;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.persistent.dao.IBaseDao;
@@ -27,7 +27,8 @@ import com.qiuxs.cuteframework.core.persistent.service.AbstractDataService;
  * @author qiuxs   
  * @version 1.0.0
  */
-public abstract class AbstractDataController<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>, S extends AbstractDataService<PK, T, D>> extends AbstractPropertyController<PK, T, S> {
+public abstract class AbstractDataController<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>, S extends AbstractDataService<PK, T, D>>
+        extends AbstractPropertyController<PK, T, S> {
 
 	@PostMapping("/create")
 	public String create(@RequestParam(name = "jsonParam") String jsonParam) {
@@ -46,10 +47,16 @@ public abstract class AbstractDataController<PK extends Serializable, T extends 
 	public String update(@RequestParam(name = "jsonParam") String jsonParam) {
 		T newBean = JsonUtils.parseObject(jsonParam, this.getService().getPojoClass());
 		if (newBean.getId() == null) {
-			ExceptionUtils.throwLogicalException(ErrorCodeConstants.UPDATE_NO_ID, "id is required");
+			ExceptionUtils.throwLogicalException(ErrorCodes.DataError.UPDATE_NO_ID, "id is required");
 		}
 		this.getService().update(newBean);
 		return super.responseVal(newBean.getId());
+	}
+
+	@GetMapping("/get")
+	public String get(@RequestParam("id") PK id) {
+		T bean = this.getService().getById(id);
+		return super.responseRes(bean);
 	}
 
 	@GetMapping("/list")

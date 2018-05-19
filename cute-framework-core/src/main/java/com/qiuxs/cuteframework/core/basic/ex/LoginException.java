@@ -9,7 +9,7 @@ public class LoginException extends RuntimeException {
 
 	public LoginException() {
 		super("无效会话，请重新登陆");
-		this.code = ErrorCodeConstants.SESSION_INVALID;
+		this.code = ErrorCodes.SessionError.SESSION_INVALID;
 	}
 
 	public LoginException(int code, String msg) {

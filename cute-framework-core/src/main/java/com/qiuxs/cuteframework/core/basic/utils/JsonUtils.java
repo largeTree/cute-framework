@@ -5,6 +5,7 @@ import java.util.List;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 /**
  * json工具封装
@@ -23,7 +24,11 @@ public class JsonUtils {
 	}
 
 	public static String toJSONString(Object obj) {
-		return toJSONObject(obj).toJSONString();
+		return JSONObject.toJSONString(obj,
+		        SerializerFeature.IgnoreNonFieldGetter,
+		        SerializerFeature.WriteNonStringKeyAsString,
+		        SerializerFeature.WriteDateUseDateFormat, //日期输出成"yyyy-MM-dd HH:mm:ss"格式
+		        SerializerFeature.DisableCircularReferenceDetect);
 	}
 
 	public static JSONObject parseJSONObject(String str) {
