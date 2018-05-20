@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
-import com.qiuxs.cuteframework.server.ServerController;
+import com.qiuxs.cuteframework.web.WebConstants;
 import com.qiuxs.cuteframework.web.utils.RequestUtils;
 
 /***
@@ -28,7 +28,7 @@ public abstract class AbstractApiAuthInterceptor extends AbstractHandlerIntercep
 	public static final String DEFAULT_LOGIN_API_PATH = DEFAULT_API_PREFIX + "/login";
 	private static final List<String> IGNORE_APIAUTH_PATH = new ArrayList<>();
 	static {
-		IGNORE_APIAUTH_PATH.add(ServerController.IGNORE_PATH_PREFIX);
+		IGNORE_APIAUTH_PATH.add(WebConstants.SYS_CONTROLLER_PREFIX + "/**");
 	}
 
 	@Override
