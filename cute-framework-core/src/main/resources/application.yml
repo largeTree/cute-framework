@@ -1,0 +1,9 @@
+environment:
+  currentEnv: dev
+  envProps:
+    dev:
+      mc_type: local
+      seq_type: db
+    pro:
+      mc_type: redis
+      seq_type: redis

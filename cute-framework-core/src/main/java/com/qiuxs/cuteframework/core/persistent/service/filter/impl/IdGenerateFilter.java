@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 
 import com.qiuxs.cuteframework.core.basic.utils.TypeAdapter;
+import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.persistent.entity.IObject;
 import com.qiuxs.cuteframework.core.persistent.service.filter.IInsertFilter;
 import com.qiuxs.cuteframework.core.persistent.util.IDGenerateUtil;
@@ -34,7 +35,7 @@ public class IdGenerateFilter<PK extends Serializable, T extends IObject<PK>> im
 
 	@SuppressWarnings("unchecked")
 	private PK getPK(Class<?> type) {
-		Object pk = IDGenerateUtil.getNextId(this.tableName);
+		Object pk = ApplicationContextHolder.getBean(IDGenerateUtil.class).getNextId(tableName);
 		return (PK) TypeAdapter.adapter(pk, type);
 	}
 

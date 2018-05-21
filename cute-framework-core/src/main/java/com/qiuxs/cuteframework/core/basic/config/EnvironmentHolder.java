@@ -1,83 +1,44 @@
 package com.qiuxs.cuteframework.core.basic.config;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
-import org.springframework.core.io.Resource;
-
-import com.qiuxs.cuteframework.core.basic.config.uconfig.ex.UConfigException;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * 环境配置
  * @author qiuxs
  *
  */
+@ConfigurationProperties(prefix = "environment")
 public class EnvironmentHolder {
 
-	private static final String ENV_ENVIRONMENT = "environment";
-	private static final String UCONFIG_PATH = "uconfig_path";
+	/** 当前运行环境 */
+	private String currentEnv;
 
-	private static final String ENVIRONMENT_PATH = "classpath:environment.xml";
-	private static final Map<String, String> ENVIRONMENT = new HashMap<>();
+	private Map<String, Map<String, String>> envProps = new HashMap<String, Map<String, String>>();
 
-	static {
-		refresh();
+	public String getCurrentEnv() {
+		return currentEnv;
 	}
 
-	/**
-	 * 获取当前环境
-	 * @return
-	 */
-	public static String currentEnvironment() {
-		return ENVIRONMENT.get(ENV_ENVIRONMENT);
+	public void setCurrentEnv(String currentEnv) {
+		this.currentEnv = currentEnv;
 	}
 
-	/**
-	 * 获取一个环境配置
-	 * @param name
-	 * @return
-	 */
-	public static String getEnv(String name) {
-		return ENVIRONMENT.get(name);
+	public Map<String, Map<String, String>> getEnvProps() {
+		return envProps;
 	}
 
-	/**
-	 * 获取当前uconfig.xml路径
-	 * @return
-	 */
-	public static String getUconfigPath() {
-		return ENVIRONMENT.get(UCONFIG_PATH);
+	public void setEnvProps(Map<String, Map<String, String>> envProps) {
+		this.envProps = envProps;
 	}
 
-	/**
-	 * 刷新环境配置缓存
-	 */
-	public static void refresh() {
-		if (ENVIRONMENT.size() > 0) {
-			ENVIRONMENT.clear();
-		}
-		SAXReader reader = new SAXReader();
-		Resource res = ClasspathResourceUtils.getResource(ENVIRONMENT_PATH);
-		try {
-			Document environment = reader.read(res.getFile());
-			Element rootElement = environment.getRootElement();
-			@SuppressWarnings("unchecked")
-			Iterator<Element> elementIterator = rootElement.elementIterator();
-			while (elementIterator.hasNext()) {
-				Element element = elementIterator.next();
-				ENVIRONMENT.put(element.getName(), element.getTextTrim());
-			}
-		} catch (DocumentException e) {
-			throw new UConfigException("配置格式错误========>" + e.getLocalizedMessage(), e);
-		} catch (IOException e) {
-			throw new UConfigException("配置文件不存在========>" + e.getLocalizedMessage(), e);
-		}
+	public String getEnvProp(String key) {
+		return getMap().get(key);
 	}
 
+	private Map<String, String> getMap() {
+		return this.envProps.get(this.getCurrentEnv());
+	}
 }
