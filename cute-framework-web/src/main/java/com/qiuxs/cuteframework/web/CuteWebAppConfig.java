@@ -22,7 +22,7 @@ import com.qiuxs.cuteframework.web.interceptors.AbstractHandlerInterceptor;
  * @version 1.0.0
  */
 @Component
-public class WebAppConfig extends WebMvcConfigurationSupport {
+public class CuteWebAppConfig extends WebMvcConfigurationSupport {
 
 	@Override
 	protected void addInterceptors(InterceptorRegistry registry) {

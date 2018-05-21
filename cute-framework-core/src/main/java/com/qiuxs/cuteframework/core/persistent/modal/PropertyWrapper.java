@@ -8,14 +8,14 @@ import com.qiuxs.cuteframework.core.basic.code.provider.ICodeTranslatable;
  *
  * @param <T>
  */
-public class ViewProperty<C> {
+public class PropertyWrapper<C> {
 
 	/** 字段描述 */
 	private BaseField field;
 
 	private ICodeTranslatable<C> codeTranslate;
 
-	public ViewProperty(BaseField field, ICodeTranslatable<C> codeTranslate) {
+	public PropertyWrapper(BaseField field, ICodeTranslatable<C> codeTranslate) {
 		this.field = field;
 		this.codeTranslate = codeTranslate;
 	}
