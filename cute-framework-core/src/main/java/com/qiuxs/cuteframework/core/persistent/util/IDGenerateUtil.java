@@ -4,11 +4,7 @@ import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.core.persistent.service.ifc.IDGeneraterable;
 
-@Component
 public class IDGenerateUtil {
-
-	@Resource
-	private EnvironmentHolder envHolder;
 
 	public static final String SEQ_TYPE_DB = "db";
 

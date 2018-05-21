@@ -23,7 +23,7 @@ import com.qiuxs.cuteframework.core.persistent.service.ifc.IDataPropertyService;
  * @version 1.0.0
  */
 public abstract class AbstractDataService<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>>
-        extends AbstractPropertyService<PK, T> implements IDataPropertyService<PK, T, D> {
+		extends AbstractPropertyService<PK, T> implements IDataPropertyService<PK, T, D> {
 
 	private String tableName;
 
@@ -42,6 +42,7 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 
 	/**
 	 * 获取表名
+	 * 
 	 * @return
 	 */
 	public String getTableName() {
@@ -134,13 +135,22 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	@Override
 	public void update(T newBean) {
 		// 默认为Null，需要时自行实现
-		T oldBean = this.getByIdInner(newBean.getId());
+		T oldBean = this.getOld(newBean.getId());
 		if (preUpdate(oldBean, newBean)) {
 			preSave(oldBean, newBean);
 			this.getDao().update(oldBean);
 		}
 		postUpdate(oldBean, newBean);
 		postSave(oldBean, newBean);
+	}
+
+	/**
+	 * 获取就记录
+	 * @param pk
+	 * @return
+	 */
+	protected T getOld(PK pk) {
+		return null;
 	}
 
 	/**
@@ -178,17 +188,6 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 		} else {
 			this.update(bean);
 		}
-	}
-
-	/**
-	 * 直接掉save时，调用此方法查询旧数据，默认返回Null，需要旧数据时需要自行实现此方法返回对应数据
-	 * 
-	 * @author qiuxs
-	 * @param id
-	 * @return
-	 */
-	protected T getByIdInner(PK id) {
-		return null;
 	}
 
 	/**
