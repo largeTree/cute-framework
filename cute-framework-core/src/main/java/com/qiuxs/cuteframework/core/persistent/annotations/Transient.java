@@ -7,14 +7,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 数据库列对应关系
+ * 用于标记字段不做用于持久化
  * @author qiuxs
  *
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Column {
+public @interface Transient {
 
-	String value();
 }
