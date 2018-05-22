@@ -1,6 +1,6 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
-public class StringUtils {
+public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
 	public static boolean isBlank(final CharSequence cs) {
 		int strLen;
