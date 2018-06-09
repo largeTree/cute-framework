@@ -1,20 +1,25 @@
 package com.qiuxs.cuteframework.core.basic.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 
- * 功能描述: 简单会话持有对象<br/>  
- * 新增原因: TODO<br/>  
- * 新增日期: 2018年4月23日 下午10:28:06 <br/>  
- *  
- * @author qiuxs   
+ * 功能描述: 简单会话持有对象<br/>
+ * 新增原因: TODO<br/>
+ * 新增日期: 2018年4月23日 下午10:28:06 <br/>
+ * 
+ * @author qiuxs
  * @version 1.0.0
  */
-public class UserLite {
+public class UserLite implements Serializable {
 
+	private static final long serialVersionUID = -3008176462742444808L;
+	
 	/** 当前用户ID */
 	private Long userId;
+	/** 登陆名，账号 */
+	private String loginId;
 	/** 用户名 */
 	private String name;
 	/** sessionId */
@@ -22,12 +27,22 @@ public class UserLite {
 	/** 登陆时间 */
 	private Date loginTime;
 
+	public Object getu;
+
 	public Long getUserId() {
 		return userId;
 	}
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	public String getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
 	}
 
 	public String getName() {

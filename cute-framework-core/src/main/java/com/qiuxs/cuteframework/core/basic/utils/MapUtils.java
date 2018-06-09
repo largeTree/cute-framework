@@ -5,6 +5,7 @@ import java.util.Map;
 
 /**
  * Map封装工具类
+ * 
  * @author qiuxs
  *
  */
@@ -12,6 +13,7 @@ public class MapUtils {
 
 	/**
 	 * 快速生成Map
+	 * 
 	 * @param keyValues
 	 * @return
 	 */
@@ -33,6 +35,7 @@ public class MapUtils {
 
 	/**
 	 * 获取String值 为Null时 返回 "null"
+	 * 
 	 * @param map
 	 * @param key
 	 * @return
@@ -44,6 +47,7 @@ public class MapUtils {
 
 	/**
 	 * 获取String值 不存在或值为Null时 抛出异常
+	 * 
 	 * @param map
 	 * @param key
 	 * @return
@@ -57,6 +61,7 @@ public class MapUtils {
 
 	/**
 	 * 获取Integer值 当值为Null时返回Null，值为非整形数字时 抛出异常
+	 * 
 	 * @param map
 	 * @param key
 	 * @return
@@ -68,11 +73,13 @@ public class MapUtils {
 
 	/**
 	 * 获取Integer值 当值为Null时，抛出异常
+	 * 
 	 * @param map
 	 * @param key
 	 * @return
 	 */
-	public static Integer getIntegerMust(Map<String, ?> map, String key) throws NumberFormatException, NullPointerException {
+	public static Integer getIntegerMust(Map<String, ?> map, String key)
+			throws NumberFormatException, NullPointerException {
 		Integer val = getInteger(map, key);
 		checkNull(key, key);
 		return val;
@@ -80,6 +87,7 @@ public class MapUtils {
 
 	/**
 	 * 获取Long值 当值为Null时返回Null，值为非整形数字时 抛出异常
+	 * 
 	 * @param map
 	 * @param key
 	 * @return
@@ -91,6 +99,7 @@ public class MapUtils {
 
 	/**
 	 * 获取Long值 当值为Null时，抛出异常
+	 * 
 	 * @param configItems
 	 * @param key
 	 * @return
@@ -103,7 +112,7 @@ public class MapUtils {
 
 	private static void checkNull(Object val, String key) {
 		if (val == null) {
-			ExceptionUtils.throwLogicalException("has no Key[" + key + "] or values is Null");
+			ExceptionUtils.throwLogicalException("param_required", key);
 		}
 	}
 

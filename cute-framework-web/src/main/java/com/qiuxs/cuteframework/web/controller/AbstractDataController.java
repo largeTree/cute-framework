@@ -15,7 +15,7 @@ import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.persistent.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.persistent.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.persistent.entity.IEntity;
-import com.qiuxs.cuteframework.core.persistent.service.AbstractDataService;
+import com.qiuxs.cuteframework.core.persistent.service.ifc.IDataPropertyService;
 
 /**
  * 
@@ -26,7 +26,7 @@ import com.qiuxs.cuteframework.core.persistent.service.AbstractDataService;
  * @author qiuxs   
  * @version 1.0.0
  */
-public abstract class AbstractDataController<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>, S extends AbstractDataService<PK, T, D>>
+public abstract class AbstractDataController<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>, S extends IDataPropertyService<PK, T, D>>
         extends AbstractPropertyController<PK, T, S> {
 
 	@PostMapping("/create")

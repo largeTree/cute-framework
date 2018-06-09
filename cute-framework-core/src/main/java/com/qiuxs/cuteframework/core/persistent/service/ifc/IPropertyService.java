@@ -19,6 +19,8 @@ public interface IPropertyService<PK extends Serializable, T extends IEntity<PK>
 	public static final String VIEW_ID = "viewId";
 
 	public Class<T> getPojoClass();
+	
+	
 
 	public JSONObject translateBean(T bean);
 

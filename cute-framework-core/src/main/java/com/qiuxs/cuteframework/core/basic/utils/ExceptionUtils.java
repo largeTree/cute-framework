@@ -28,8 +28,18 @@ public class ExceptionUtils {
 	 * 
 	 * @author qiuxs
 	 */
-	public static void throwLoginException(int errorCode, String msg) {
-		throw new LoginException(msg);
+	public static void throwLoginException(String msgId, String... args) {
+		throwLoginException(ErrorCodes.SessionError.SESSION_INVALID, msgId, args);
+	}
+
+	/**
+	 * 登陆异常
+	 * 
+	 * @author qiuxs
+	 */
+	public static void throwLoginException(int errorCode, String msgId, String... args) {
+		String formatedMsg = I18nUtils.getMessageByLang(Constants.DEFAULT_LANG, msgId, args);
+		throw new LoginException(errorCode, formatedMsg);
 	}
 
 	/**
@@ -41,10 +51,14 @@ public class ExceptionUtils {
 	public static void throwLogicalException(String msgId, String... args) {
 		throwLogicalException(ErrorCodes.LOGIC_EXCEPTION_CODE, msgId, args);
 	}
-	
+
 	public static void throwLogicalException(int errorCode, String msgId, String... args) {
 		String formatedMsg = I18nUtils.getMessageByLang(Constants.DEFAULT_LANG, msgId, args);
-		throwLogicalException(errorCode, formatedMsg);
+		throwLogicalExceptionInner(errorCode, formatedMsg);
+	}
+
+	private static void throwLogicalExceptionInner(int errorCode, String msg) {
+		throw new LogicException(errorCode, msg);
 	}
 
 	/**
@@ -113,5 +127,4 @@ public class ExceptionUtils {
 	public static RuntimeException unchecked(Exception e) {
 		return new RuntimeException(e);
 	}
-
 }

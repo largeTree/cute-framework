@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 
 /**
  * 
@@ -19,8 +20,10 @@ public class UserContext {
 
 	private static final String TL_USER_LITE = "tl_user_lite";
 
-	/** 回话缓存 */
+	/** 会话缓存 */
 	private static final Map<String, UserLite> SESSION_HOLDER = new ConcurrentHashMap<>();
+	/** 用户ID和sessionId对应关系 */
+	private static final Map<Long, String> USER_ID_SESSION_ID_HOLDER = new ConcurrentHashMap<>();
 
 	/**
 	 * 添加一个会话信息
@@ -28,43 +31,64 @@ public class UserContext {
 	 * @param userLite
 	 */
 	public static void addUserLite(UserLite userLite) {
-		SESSION_HOLDER.put(userLite.getSessionId(), userLite);
-	}
-	
-	/**
-	 * 获取会话信息，不存在时抛出异常
-	 * @param sessionId
-	 * @return
-	 */
-	public static UserLite getUserLite(String sessionId) {
-		return getUserLite(sessionId, false);
+		getSessionMap().put(userLite.getSessionId(), userLite);
+		Map<Long, String> idSessionIdMap = getIdSessionIdMap();
+		// 放入新的对应关系
+		String oldSessionId = idSessionIdMap.put(userLite.getUserId(), userLite.getSessionId());
+		if (StringUtils.isNotBlank(oldSessionId)) {
+			// 存在旧会话时，移除旧会话
+			getSessionMap().remove(oldSessionId);
+		}
+
 	}
 
-	/***
-	 * 根据sessionId从缓存中获取会话信息并存入当前线程变量
+	/**
+	 * 从本地线程变量获取会话信息
 	 * 
-	 * @param sessionId
 	 * @return
 	 */
-	public static UserLite getUserLite(String sessionId, boolean ignoreException) {
-		Map<String, UserLite> sessionMap = getSessionMap();
-		UserLite userLite = sessionMap.get(sessionId);
-		if (!ignoreException && userLite == null) {
+	public static UserLite getUserLite() {
+		UserLite userLite = getUserLiteInner();
+		if (userLite == null) {
 			ExceptionUtils.throwLoginException();
-		}
-		if (userLite != null) {
-			setUserLite(userLite);
 		}
 		return userLite;
 	}
 
 	/**
-	 * 获取会话缓存Map
+	 * 内部调用
 	 * 
 	 * @return
 	 */
-	private static Map<String, UserLite> getSessionMap() {
-		return SESSION_HOLDER;
+	private static UserLite getUserLiteInner() {
+		return ThreadLocalVariableHolder.getVariable(TL_USER_LITE);
+	}
+
+	/**
+	 * 从缓存中获取会话信息并保存到本地线程变量
+	 * 
+	 * @param sessionId
+	 * @return
+	 */
+	public static UserLite getUserLite(String sessionId) {
+		UserLite userLite = getUserLite(sessionId, false);
+		setUserLite(userLite);
+		return userLite;
+	}
+
+	/**
+	 * 从缓存中获取会话信息
+	 * 
+	 * @param sessionId
+	 * @param ignoreException
+	 * @return
+	 */
+	public static UserLite getUserLite(String sessionId, boolean ignoreException) {
+		UserLite userLite = getSessionMap().get(sessionId);
+		if (!ignoreException && userLite == null) {
+			ExceptionUtils.throwLoginException();
+		}
+		return userLite;
 	}
 
 	/**
@@ -78,38 +102,20 @@ public class UserContext {
 	}
 
 	/**
-	 * 获取当前线程的会话信息
+	 * 获取会话缓存Map
 	 * 
-	 * @author qiuxs
 	 * @return
 	 */
-	public static UserLite getUserList() {
-		return getUserLite(false);
+	private static Map<String, UserLite> getSessionMap() {
+		return SESSION_HOLDER;
 	}
 
 	/**
-	 * 获取当前线程回话信息
+	 * 获取用户ID和sessionId对应关系Map
 	 * 
-	 * @author qiuxs
-	 * @param ignoreException
-	 *            会话无效时是否抛出异常
 	 * @return
 	 */
-	public static UserLite getUserLite(boolean ignoreException) {
-		UserLite userLite = getUserLiteInner();
-		if (!ignoreException && userLite == null) {
-			ExceptionUtils.throwLoginException();
-		}
-		return userLite;
-	}
-
-	/**
-	 * 内部调用
-	 * 
-	 * @author qiuxs
-	 * @return
-	 */
-	private static UserLite getUserLiteInner() {
-		return ThreadLocalVariableHolder.getVariable(TL_USER_LITE);
+	private static Map<Long, String> getIdSessionIdMap() {
+		return USER_ID_SESSION_ID_HOLDER;
 	}
 }
