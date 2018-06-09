@@ -2,22 +2,15 @@ package com.qiuxs.cuteframework.core.persistent.entity.impl;
 
 import java.util.Date;
 
-import com.qiuxs.cuteframework.core.persistent.annotations.Column;
-import com.qiuxs.cuteframework.core.persistent.annotations.Id;
 import com.qiuxs.cuteframework.core.persistent.entity.IEntity;
 
 public abstract class AbstractEntity<PK> implements IEntity<PK> {
 
 	private static final long serialVersionUID = -7526268408245513295L;
-	@Id()
 	private PK id;
-	@Column("created_by")
 	private Long createdBy;
-	@Column("created_time")
 	private Date createdTime;
-	@Column("updated_by")
 	private Long updatedBy;
-	@Column("updated_time")
 	private Date updatedTime;
 
 	@Override

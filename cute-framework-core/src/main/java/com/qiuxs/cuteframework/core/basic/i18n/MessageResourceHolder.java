@@ -8,61 +8,56 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
-import org.springframework.stereotype.Component;
 
 import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
 
-@Configuration
-@ConfigurationProperties(prefix = "msg")
-@Component
 public class MessageResourceHolder {
 
 	private static Logger log = LogManager.getLogger(MessageResourceHolder.class);
 	private static final String[] DEFAULT_LANGS = new String[] { "cn", "en" };
 
-	private List<Map<String, String>> locations;
+	private static List<Map<String, String>> locations;
 
-	private Map<String, Map<String, String>> langMsgs;
-
-	@PostConstruct
-	private void init() {
-		if (this.langMsgs == null) {
-			this.langMsgs = new HashMap<>();
+	private static Map<String, Map<String, String>> langMsgs;
+	
+	static {
+		init();
+	}
+	
+	private static void init() {
+		if (langMsgs == null) {
+			langMsgs = new HashMap<>();
 		}
 		for (String lang : DEFAULT_LANGS) {
 			try {
 				Properties properties = PropertiesLoaderUtils.loadAllProperties("msg/msg_" + lang + ".properties");
-				Map<String, String> msgs = this.langMsgs.get(lang);
+				Map<String, String> msgs = langMsgs.get(lang);
 				if (msgs == null) {
 					msgs = new HashMap<>();
-					this.langMsgs.put(lang, msgs);
+					langMsgs.put(lang, msgs);
 				}
-				this.fillMsgMap(properties, msgs);
+				fillMsgMap(properties, msgs);
 			} catch (IOException e) {
 				log.error("init msg properties error ext=" + e.getLocalizedMessage(), e);
 			}
 		}
 
-		if (!ListUtils.isNullOrEmpty(this.locations)) {
-			for (Map<String, String> location : this.locations) {
+		if (!ListUtils.isNullOrEmpty(locations)) {
+			for (Map<String, String> location : locations) {
 				for (Iterator<Map.Entry<String, String>> iter = location.entrySet().iterator(); iter.hasNext();) {
 					Entry<String, String> entry = iter.next();
 					try {
 						Properties properties = PropertiesLoaderUtils.loadAllProperties(entry.getValue());
 						String lang = entry.getKey();
-						Map<String, String> msgs = this.langMsgs.get(lang);
+						Map<String, String> msgs = langMsgs.get(lang);
 						if (msgs == null) {
 							msgs = new HashMap<>();
-							this.langMsgs.put(lang, msgs);
+							langMsgs.put(lang, msgs);
 						}
-						this.fillMsgMap(properties, msgs);
+						fillMsgMap(properties, msgs);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -71,31 +66,31 @@ public class MessageResourceHolder {
 		}
 	}
 
-	private void fillMsgMap(Properties props, Map<String, String> msgMap) {
+	private static void fillMsgMap(Properties props, Map<String, String> msgMap) {
 		for (Iterator<Map.Entry<Object, Object>> iter = props.entrySet().iterator(); iter.hasNext();) {
 			Map.Entry<Object, Object> entry = iter.next();
 			msgMap.put(entry.getKey().toString(), entry.getValue().toString());
 		}
 	}
 
-	public List<Map<String, String>> getLocations() {
+	public static List<Map<String, String>> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(List<Map<String, String>> locations) {
-		this.locations = locations;
+	public static void setLocations(List<Map<String, String>> locations) {
+		MessageResourceHolder.locations = locations;
 	}
 
-	public Map<String, Map<String, String>> getLangMsgs() {
+	public static Map<String, Map<String, String>> getLangMsgs() {
 		return langMsgs;
 	}
 
-	public void setLangMsgs(Map<String, Map<String, String>> langMsgs) {
-		this.langMsgs = langMsgs;
+	public static void setLangMsgs(Map<String, Map<String, String>> langMsgs) {
+		MessageResourceHolder.langMsgs = langMsgs;
 	}
 
-	public String getMessage(String lang, String msgKey) {
-		Map<String, String> msgs = this.langMsgs.get(lang);
+	public static String getMessage(String lang, String msgKey) {
+		Map<String, String> msgs = langMsgs.get(lang);
 		if (msgs == null) {
 			return null;
 		}

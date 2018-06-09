@@ -1,16 +1,23 @@
 package com.qiuxs.cuteframework.core.persistent.service;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.qiuxs.cuteframework.core.basic.ex.ErrorCodes;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.persistent.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.persistent.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.persistent.entity.IEntity;
+import com.qiuxs.cuteframework.core.persistent.service.filter.IInsertFilter;
+import com.qiuxs.cuteframework.core.persistent.service.filter.IServiceFilter;
+import com.qiuxs.cuteframework.core.persistent.service.filter.IUpdateFilter;
 import com.qiuxs.cuteframework.core.persistent.service.ifc.IDataPropertyService;
 
 /**
@@ -26,6 +33,10 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 		extends AbstractPropertyService<PK, T> implements IDataPropertyService<PK, T, D> {
 
 	private String tableName;
+
+	private List<IServiceFilter<PK, T>> serviceFilters;
+	private List<IInsertFilter<PK, T>> insertFilters;
+	private List<IUpdateFilter<PK, T>> updateFilters;
 
 	public AbstractDataService(Class<PK> pkClass, Class<T> pojoClass, String tableName) {
 		super(pkClass, pojoClass);
@@ -55,6 +66,7 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	 * @see com.qiuxs.frm.persistent.service.IDataService#deleteById(java.lang.Object)
 	 */
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void deleteById(PK id) {
 		this.getDao().deleteById(id);
 	}
@@ -66,6 +78,7 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	 * @param id
 	 * @return
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public T getById(PK id) {
 		T bean = this.getDao().get(id);
 		if (bean == null) {
@@ -81,6 +94,7 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	 * @param ids
 	 * @return
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public List<T> getByIds(Collection<PK> ids) {
 		return this.getDao().getByIds(ids);
 	}
@@ -92,6 +106,7 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	 * @param params
 	 * @return
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public List<T> findByMap(final Map<String, Object> params, PageInfo pageInfo) {
 		return this.getDao().list(params, pageInfo);
 	}
@@ -103,6 +118,7 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	 * @param bean
 	 */
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void create(T bean) {
 		if (preCreate(bean)) {
 			this.preSave(null, bean);
@@ -118,12 +134,37 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	}
 
 	protected void postCreate(T bean) {
+		List<IInsertFilter<PK, T>> insertFilters = this.getInsertFilters();
+		for (IInsertFilter<PK, T> filter : insertFilters) {
+			filter.postInsert(bean);
+		}
 	}
 
 	protected void initCreate(T bean) {
+		List<IInsertFilter<PK, T>> insertFilters = getInsertFilters();
+		for (IInsertFilter<PK, T> filter : insertFilters) {
+			filter.preInsert(bean);
+		}
 		if (bean.getCreatedTime() == null) {
 			bean.setCreatedTime(new Date());
 		}
+	}
+
+	private List<IInsertFilter<PK, T>> getInsertFilters() {
+		if (this.insertFilters == null) {
+			this.insertFilters = new ArrayList<>();
+			List<IServiceFilter<PK, T>> serviceFilters = getServiceFilters();
+			for (IServiceFilter<PK, T> filter : serviceFilters) {
+				if (filter instanceof IInsertFilter) {
+					this.insertFilters.add((IInsertFilter<PK, T>) filter);
+				}
+			}
+		}
+		return this.insertFilters;
+	}
+
+	public void setId(T bean) {
+
 	}
 
 	/**
@@ -133,6 +174,7 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	 *      java.lang.Object)
 	 */
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void update(T newBean) {
 		// 默认为Null，需要时自行实现
 		T oldBean = this.getOld(newBean.getId());
@@ -146,6 +188,7 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 
 	/**
 	 * 获取就记录
+	 * 
 	 * @param pk
 	 * @return
 	 */
@@ -167,6 +210,10 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	}
 
 	private void initUpdate(T oldBean, T newBean) {
+		List<IUpdateFilter<PK, T>> updateFilters = this.getUpdateFilters();
+		for (IUpdateFilter<PK, T> filter : updateFilters) {
+			filter.preUpdate(oldBean, newBean);
+		}
 		newBean.setUpdatedTime(new Date());
 	}
 
@@ -178,9 +225,27 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	 * @param newBean
 	 */
 	protected void postUpdate(T oldBean, T newBean) {
+		List<IUpdateFilter<PK, T>> updateFilters = this.getUpdateFilters();
+		for (IUpdateFilter<PK, T> filter : updateFilters) {
+			filter.postUpdate(oldBean, newBean);
+		}
+	}
+
+	private List<IUpdateFilter<PK, T>> getUpdateFilters() {
+		if (this.updateFilters == null) {
+			this.updateFilters = new ArrayList<>();
+			List<IServiceFilter<PK, T>> serviceFilters = getServiceFilters();
+			for (IServiceFilter<PK, T> filter : serviceFilters) {
+				if (filter instanceof IUpdateFilter) {
+					this.updateFilters.add((IUpdateFilter<PK, T>) filter);
+				}
+			}
+		}
+		return this.updateFilters;
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void save(T bean) {
 		PK id = bean.getId();
 		if (id == null) {
@@ -209,4 +274,13 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	protected void postSave(T oldBean, T newBean) {
 	}
 
+	protected List<IServiceFilter<PK, T>> getServiceFilters() {
+		if (this.serviceFilters == null) {
+			this.serviceFilters = new ArrayList<>();
+			this.initServiceFilters(serviceFilters);
+		}
+		return this.serviceFilters;
+	}
+
+	protected abstract void initServiceFilters(List<IServiceFilter<PK, T>> serviceFilters);
 }

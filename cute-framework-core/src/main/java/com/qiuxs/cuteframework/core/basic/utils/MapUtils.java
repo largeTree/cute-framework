@@ -103,7 +103,7 @@ public class MapUtils {
 
 	private static void checkNull(Object val, String key) {
 		if (val == null) {
-			throw new NullPointerException("has no Key[" + key + "] or values is Null");
+			ExceptionUtils.throwLogicalException("has no Key[" + key + "] or values is Null");
 		}
 	}
 

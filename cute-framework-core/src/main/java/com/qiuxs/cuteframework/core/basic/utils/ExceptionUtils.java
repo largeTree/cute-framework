@@ -3,9 +3,11 @@ package com.qiuxs.cuteframework.core.basic.utils;
 import org.apache.logging.log4j.Logger;
 
 import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.Constants;
 import com.qiuxs.cuteframework.core.basic.ex.ErrorCodes;
 import com.qiuxs.cuteframework.core.basic.ex.LogicException;
 import com.qiuxs.cuteframework.core.basic.ex.LoginException;
+import com.qiuxs.cuteframework.core.basic.i18n.I18nUtils;
 
 public class ExceptionUtils {
 
@@ -14,7 +16,7 @@ public class ExceptionUtils {
 
 	/**
 	 * 抛出默认登陆异常
-	 *  
+	 * 
 	 * @author qiuxs
 	 */
 	public static void throwLoginException() {
@@ -23,7 +25,7 @@ public class ExceptionUtils {
 
 	/**
 	 * 登陆异常
-	 *  
+	 * 
 	 * @author qiuxs
 	 */
 	public static void throwLoginException(int errorCode, String msg) {
@@ -32,6 +34,7 @@ public class ExceptionUtils {
 
 	/**
 	 * 使用指定的错误代码抛出逻辑异常
+	 * 
 	 * @param errorCode
 	 * @param msg
 	 */
@@ -46,6 +49,17 @@ public class ExceptionUtils {
 	 */
 	public static void throwLogicalException(String msg) {
 		throwLogicalException(ErrorCodes.LOGIC_EXCEPTION_CODE, msg);
+	}
+
+	/**
+	 * 使用指定的消息格式抛出逻辑异常
+	 * 
+	 * @param msg
+	 * @param args
+	 */
+	public static void throwLogicalException(String msg, String... args) {
+		String formatedMsg = I18nUtils.getMessageByLang(Constants.DEFAULT_LANG, msg, args);
+		throwLogicalException(ErrorCodes.LOGIC_EXCEPTION_CODE, formatedMsg);
 	}
 
 	/**
