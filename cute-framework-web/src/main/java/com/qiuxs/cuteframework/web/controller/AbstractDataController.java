@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.qiuxs.cuteframework.core.basic.ex.ErrorCodes;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
-import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.persistent.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.persistent.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.persistent.entity.IEntity;
@@ -32,7 +31,7 @@ public abstract class AbstractDataController<PK extends Serializable, T extends 
 
 	@PostMapping("/create")
 	public String create(@RequestParam(name = "jsonParam") String jsonParam) {
-		T bean = JsonUtils.parseObject(jsonParam, this.getService().getPojoClass());
+		T bean = super.fromJSON(jsonParam);
 		this.getService().save(bean);
 		return super.responseVal(bean.getId());
 	}
@@ -45,7 +44,7 @@ public abstract class AbstractDataController<PK extends Serializable, T extends 
 
 	@PostMapping("/update")
 	public String update(@RequestParam(name = "jsonParam") String jsonParam) {
-		T newBean = JsonUtils.parseObject(jsonParam, this.getService().getPojoClass());
+		T newBean = super.fromJSON(jsonParam);
 		if (newBean.getId() == null) {
 			ExceptionUtils.throwLogicalException(ErrorCodes.DataError.UPDATE_NO_ID, "id is required");
 		}

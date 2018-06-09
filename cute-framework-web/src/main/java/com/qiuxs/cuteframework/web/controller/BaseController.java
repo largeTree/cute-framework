@@ -94,7 +94,7 @@ public abstract class BaseController {
 	 * 构造默认响应JSON对象
 	 * @return
 	 */
-	protected ResponseResult successResponse() {
+	private ResponseResult successResponse() {
 		ResponseResult res = ResponseResult.makeSuccess();
 		return res;
 	}

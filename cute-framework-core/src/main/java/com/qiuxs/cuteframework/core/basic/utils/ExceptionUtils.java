@@ -29,26 +29,7 @@ public class ExceptionUtils {
 	 * @author qiuxs
 	 */
 	public static void throwLoginException(int errorCode, String msg) {
-		throw new LoginException();
-	}
-
-	/**
-	 * 使用指定的错误代码抛出逻辑异常
-	 * 
-	 * @param errorCode
-	 * @param msg
-	 */
-	public static void throwLogicalException(int errorCode, String msg) {
-		throw new LogicException(errorCode, msg);
-	}
-
-	/**
-	 * 抛出逻辑异常
-	 * 
-	 * @param msg
-	 */
-	public static void throwLogicalException(String msg) {
-		throwLogicalException(ErrorCodes.LOGIC_EXCEPTION_CODE, msg);
+		throw new LoginException(msg);
 	}
 
 	/**
@@ -57,9 +38,13 @@ public class ExceptionUtils {
 	 * @param msg
 	 * @param args
 	 */
-	public static void throwLogicalException(String msg, String... args) {
-		String formatedMsg = I18nUtils.getMessageByLang(Constants.DEFAULT_LANG, msg, args);
-		throwLogicalException(ErrorCodes.LOGIC_EXCEPTION_CODE, formatedMsg);
+	public static void throwLogicalException(String msgId, String... args) {
+		throwLogicalException(ErrorCodes.LOGIC_EXCEPTION_CODE, msgId, args);
+	}
+	
+	public static void throwLogicalException(int errorCode, String msgId, String... args) {
+		String formatedMsg = I18nUtils.getMessageByLang(Constants.DEFAULT_LANG, msgId, args);
+		throwLogicalException(errorCode, formatedMsg);
 	}
 
 	/**

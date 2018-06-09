@@ -2,6 +2,7 @@ package com.qiuxs.cuteframework.web.controller;
 
 import java.io.Serializable;
 
+import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.persistent.entity.IEntity;
 import com.qiuxs.cuteframework.core.persistent.service.AbstractPropertyService;
 
@@ -9,4 +10,8 @@ public abstract class AbstractPropertyController<PK extends Serializable, T exte
 
 	protected abstract S getService();
 
+	protected T fromJSON(String jsonData) {
+		return JsonUtils.parseObject(jsonData, this.getService().getPojoClass());
+	}
+	
 }

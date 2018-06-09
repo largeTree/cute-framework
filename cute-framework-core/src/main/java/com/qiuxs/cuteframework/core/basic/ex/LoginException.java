@@ -12,6 +12,11 @@ public class LoginException extends RuntimeException {
 		this.code = ErrorCodes.SessionError.SESSION_INVALID;
 	}
 
+	public LoginException(String msg) {
+		super(msg);
+		this.code = ErrorCodes.SessionError.SESSION_INVALID;
+	}
+
 	public LoginException(int code, String msg) {
 		super(msg);
 		this.code = code;
