@@ -79,6 +79,13 @@ public class ClassPathResourceUtil {
 		return getResourceList(true, paths);
 	}
 
+	public static List<Resource> getResourceList(List<String> paths) {
+		if (paths == null) {
+			return null;
+		}
+		return getResourceList(true, paths.toArray(new String[paths.size()]));
+	}
+	
 	private static List<Resource> getResourceList(boolean includeAll, String... paths) {
 		String prefix = includeAll ? CLASSPATH_ALL_URL_PREFIX : CLASSPATH_URL_PREFIX;
 		ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();

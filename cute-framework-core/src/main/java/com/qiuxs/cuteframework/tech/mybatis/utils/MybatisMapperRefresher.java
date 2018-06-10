@@ -7,30 +7,31 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.assertj.core.util.Sets;
 import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
 
+import com.qiuxs.cuteframework.core.basic.utils.ArrayUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ClassPathResourceUtil;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 
 /**
  * 刷新MyBatis Mapper XML 线程
  */
-public class MapperRefresh implements java.lang.Runnable {
+public class MybatisMapperRefresher implements java.lang.Runnable {
 
-	public static Logger log = LogManager.getLogger(MapperRefresh.class);
+	public static Logger log = LogManager.getLogger(MybatisMapperRefresher.class);
 
 	private static boolean refresh; // 刷新启用后，是否启动了刷新线程
 
@@ -40,23 +41,29 @@ public class MapperRefresh implements java.lang.Runnable {
 	private Configuration configuration; // MyBatis配置对象
 
 	private Long beforeTime = 0L; // 上一次刷新时间
-	private static int delaySeconds = 30; // 延迟刷新秒数
+	private static int delaySeconds = 10; // 延迟刷新秒数
 	private static int sleepSeconds = 3; // 休眠时间
 
-	private static String[] mapperPaths = { "classpath*:/com/qiuxs/**/mapper/", "classpath*:/mybatis/**/*.xml" };
+	private static String[] DEFAULT_MAPPER_PATHS = { "classpath*:/com/qiuxs/**/mapper/",
+			"classpath*:/mybatis/**/*.xml" };
 
-	public static void startRefresher() {
+	public static void startRefresher(String[] mapperPaths) {
 		SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) ApplicationContextHolder.getBean("sqlSessionFactory");
 		Configuration configuration = sqlSessionFactory.getConfiguration();
-		List<Resource> mapperLocations = ClassPathResourceUtil.getResourceList(mapperPaths);
-		new MapperRefresh(mapperLocations, configuration).run();
+		List<Resource> mapperLocations = new ArrayList<>();
+		if (!ArrayUtils.isNullOtEmpty(mapperPaths)) {
+			mapperLocations.addAll(ClassPathResourceUtil.getResourceList(mapperPaths));
+		}
+		// 额外加上默认的
+		mapperLocations.addAll(ClassPathResourceUtil.getResourceList(DEFAULT_MAPPER_PATHS));
+		new MybatisMapperRefresher(mapperLocations, configuration).run();
 	}
 
 	public static boolean isRefresh() {
 		return refresh;
 	}
 
-	public MapperRefresh(List<Resource> mapperLocations, Configuration configuration) {
+	public MybatisMapperRefresher(List<Resource> mapperLocations, Configuration configuration) {
 		this.mapperLocations = mapperLocations;
 		this.configuration = configuration;
 	}
@@ -70,13 +77,13 @@ public class MapperRefresh implements java.lang.Runnable {
 		log.debug("[configuration] " + configuration);
 
 		// 启动刷新线程
-		final MapperRefresh runnable = this;
+		final MybatisMapperRefresher runnable = this;
 		new Thread(new java.lang.Runnable() {
 			@Override
 			public void run() {
 
 				if (location == null) {
-					location = Sets.newHashSet();
+					location = new HashSet<>();
 					log.debug("MapperLocation's length:" + mapperLocations.size());
 					for (Resource mapperLocation : mapperLocations) {
 						String s = mapperLocation.toString().replaceAll("\\\\", "/");
@@ -276,7 +283,7 @@ public class MapperRefresh implements java.lang.Runnable {
 		@SuppressWarnings("unchecked")
 		public V put(String key, V value) {
 			// ThinkGem 如果现在状态为刷新，则刷新(先删除后添加)
-			if (MapperRefresh.isRefresh()) {
+			if (MybatisMapperRefresher.isRefresh()) {
 				remove(key);
 				// MapperRefresh.log.debug("refresh key:" + key.substring(key.lastIndexOf(".") +
 				// 1));
