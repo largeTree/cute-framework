@@ -12,7 +12,7 @@ import java.util.Map;
  * @author qiuxs   
  * @version 1.0.0
  */
-public class ThreadLocalVariableHolder {
+public class TLVariableHolder {
 
 	private static ThreadLocal<Map<String, Object>> thread_local_variables = new ThreadLocal<>();
 

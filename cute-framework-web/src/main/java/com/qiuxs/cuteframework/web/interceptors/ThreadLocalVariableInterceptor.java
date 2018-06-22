@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.qiuxs.cuteframework.core.context.ThreadLocalVariableHolder;
+import com.qiuxs.cuteframework.core.context.TLVariableHolder;
 
 /**
  * 功能描述: 请求开始和结束时清理一下线程变量<br/>
@@ -22,14 +22,14 @@ public class ThreadLocalVariableInterceptor extends AbstractHandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		ThreadLocalVariableHolder.clear();
+		TLVariableHolder.clear();
 		return true;
 	}
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		ThreadLocalVariableHolder.clear();
+		TLVariableHolder.clear();
 	}
 
 	@Override

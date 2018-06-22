@@ -43,12 +43,12 @@ public class UserContext {
 	}
 
 	/**
-	 * 从本地线程变量获取会话信息
+	 * 获取会话信息，不存在时抛出异常
 	 * 
 	 * @return
 	 */
 	public static UserLite getUserLite() {
-		UserLite userLite = getUserLiteInner();
+		UserLite userLite = getUserLiteOpt();
 		if (userLite == null) {
 			ExceptionUtils.throwLoginException();
 		}
@@ -56,12 +56,12 @@ public class UserContext {
 	}
 
 	/**
-	 * 内部调用
+	 * 获取会话信息
 	 * 
 	 * @return
 	 */
-	private static UserLite getUserLiteInner() {
-		return ThreadLocalVariableHolder.getVariable(TL_USER_LITE);
+	public static UserLite getUserLiteOpt() {
+		return TLVariableHolder.getVariable(TL_USER_LITE);
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class UserContext {
 	 * @param userLite
 	 */
 	public static void setUserLite(UserLite userLite) {
-		ThreadLocalVariableHolder.setVariable(TL_USER_LITE, userLite);
+		TLVariableHolder.setVariable(TL_USER_LITE, userLite);
 	}
 
 	/**
