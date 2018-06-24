@@ -1,5 +1,7 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
+import java.math.BigDecimal;
+
 /**
  * 类型适配器
  * @author qiuxs
@@ -19,6 +21,9 @@ public class TypeAdapter {
 	public static final String FLOAT_VALUE_TYPE_NAME_SIMPLE = "float";
 	public static final String DOUBLE_TYPE_NAME_SIMPLE = "Double";
 	public static final String DOUBLE_VALUE_TYPE_NAME_SIMPLE = "double";
+	public static final String BIGDECIMAL_TYPE_NAME = "BigDecimal";
+	public static final String DATE_TYPE_NAME = "Date";
+	public static final String STRING_TYPE_NAME = "String";
 
 	/**
 	 * 类型适配
@@ -43,6 +48,8 @@ public class TypeAdapter {
 			return Float.valueOf(obj.toString());
 		} else if (DOUBLE_TYPE_NAME_SIMPLE.equals(simpleTypeName) || DOUBLE_VALUE_TYPE_NAME_SIMPLE.equals(simpleTypeName)) {
 			return Double.valueOf(obj.toString());
+		} else if (BIGDECIMAL_TYPE_NAME.equals(simpleTypeName)) {
+			return BigDecimal.valueOf(Double.valueOf(obj.toString()));
 		}
 		return obj;
 	}

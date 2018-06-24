@@ -2,6 +2,11 @@ package com.qiuxs.cuteframework.web.context;
 
 import javax.servlet.ServletContext;
 
+/**
+ * Web上下文缓存
+ * @author qiuxs
+ *
+ */
 public class WebContext {
 	private static String ctxPath;
 	private static ServletContext servletContext;

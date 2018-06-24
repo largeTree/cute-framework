@@ -11,9 +11,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
-import com.qiuxs.cuteframework.core.persistent.dao.page.PageInfo;
+import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
 import com.qiuxs.cuteframework.web.bean.ResponseResult;
 
+/**
+ * 控制器基类
+ * 提供统一的异常处理
+ * 输出响应相关能力
+ * @author qiuxs
+ *
+ */
 public abstract class BaseController {
 
 	protected static Logger log = LogManager.getLogger(BaseController.class);
@@ -76,7 +83,7 @@ public abstract class BaseController {
 	}
 
 	/**
-	 * 输出JSON相应
+	 * 输出JSON响应
 	 * @param res
 	 * @return
 	 */

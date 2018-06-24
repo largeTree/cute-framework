@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.qiuxs.cuteframework.core.basic.ex.ErrorCodes;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
-import com.qiuxs.cuteframework.core.persistent.dao.IBaseDao;
-import com.qiuxs.cuteframework.core.persistent.dao.page.PageInfo;
-import com.qiuxs.cuteframework.core.persistent.entity.IEntity;
-import com.qiuxs.cuteframework.core.persistent.service.ifc.IDataPropertyService;
+import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
+import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
+import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
+import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService;
 
 /**
  * 

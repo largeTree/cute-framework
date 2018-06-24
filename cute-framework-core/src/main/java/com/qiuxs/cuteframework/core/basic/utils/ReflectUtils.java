@@ -71,9 +71,40 @@ public class ReflectUtils {
 			Field declaredField = clz.getDeclaredField(fieldName);
 			declaredField.setAccessible(true);
 			return declaredField;
-		} catch (NoSuchFieldException | SecurityException e) {
-			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			// 不存在字段，向父类寻找
+			Class<?> superclass = clz.getSuperclass();
+			// 父类是Object时直接返回
+			if (superclass.getSimpleName().equals(Object.class.getSimpleName())) {
+				return null;
+			}
+			return getAccessibleField(superclass, fieldName);
 		}
-		return null;
+	}
+
+	/**
+	 * 获取字段值
+	 * 当前类不存在则寻找父类
+	 * @param bean
+	 * @param name
+	 * @return
+	 * @throws ReflectiveOperationException
+	 */
+	public static Object getFieldValue(Object bean, String name) throws ReflectiveOperationException {
+		Field accessibleField = getAccessibleField(bean.getClass(), name);
+		return accessibleField.get(bean);
+	}
+
+	/**
+	 * 设置字段值
+	 * 当前类不存在时则寻找父类
+	 * @param bean
+	 * @param name
+	 * @param defaultValue
+	 * @throws ReflectiveOperationException
+	 */
+	public static void setFieldValue(Object bean, String name, Object defaultValue) throws ReflectiveOperationException {
+		Field accessibleField = getAccessibleField(bean.getClass(), name);
+		accessibleField.set(bean, defaultValue);
 	}
 }

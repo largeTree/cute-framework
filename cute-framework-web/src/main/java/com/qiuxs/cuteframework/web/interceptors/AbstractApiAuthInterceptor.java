@@ -24,8 +24,7 @@ import com.qiuxs.cuteframework.web.utils.RequestUtils;
  */
 public abstract class AbstractApiAuthInterceptor extends AbstractHandlerInterceptor {
 
-	public static final String DEFAULT_API_PREFIX = "/api";
-	public static final String DEFAULT_LOGIN_API_PATH = DEFAULT_API_PREFIX + "/login";
+	public static final String DEFAULT_LOGIN_API_PATH = WebConstants.DEFAULT_API_PREFIX + "/login";
 	private static final List<String> IGNORE_APIAUTH_PATH = new ArrayList<>();
 	static {
 		IGNORE_APIAUTH_PATH.add(WebConstants.SYS_CONTROLLER_PREFIX + "/**");
@@ -48,12 +47,12 @@ public abstract class AbstractApiAuthInterceptor extends AbstractHandlerIntercep
 	 * @return
 	 */
 	protected String getApiPrefix() {
-		return DEFAULT_API_PREFIX;
+		return WebConstants.DEFAULT_API_PREFIX;
 	}
 
 	@Override
 	public Optional<List<String>> getPathPatterns() {
-		return ListUtils.genList(DEFAULT_API_PREFIX + "/**");
+		return ListUtils.genList(getApiPrefix()+ "/**");
 	}
 
 	/**
