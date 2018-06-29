@@ -1,24 +1,31 @@
 package com.qiuxs.cuteframework.tech.task;
 
-import com.qiuxs.cuteframework.core.basic.bean.UserLite;
-import com.qiuxs.cuteframework.core.context.UserContext;
+/**
+ * 简单异步任务
+ * @author qiuxs
+ *
+ * @param <P> 前置参数类型
+ */
+public abstract class RunnableAsyncTask<P> extends AbstractAsyncTask<P> implements Runnable {
 
-public abstract class RunnableAsyncTask<P> implements Runnable {
-
-	private P preparParam;
-	private UserLite userLite;
-
+	/**
+	 * 构造一个异步任务
+	 * @param preparParam
+	 */
 	public RunnableAsyncTask(P preparParam) {
-		this.preparParam = preparParam;
-		this.userLite = UserContext.getUserLiteOpt();
+		super(preparParam);
 	}
 
 	@Override
 	public final void run() {
-		UserContext.setUserLite(userLite);
-		this.execute(this.preparParam);
+		super.initUserLite();
+		this.execute(super.getPreparParam());
 	}
 
+	/**
+	 * 任务方法
+	 * @param preparParam 前置参数
+	 */
 	public abstract void execute(P preparParam);
 
 }
