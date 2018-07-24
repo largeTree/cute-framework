@@ -2,6 +2,14 @@ package com.qiuxs.cuteframework.core.basic.utils;
 
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
+	public static String append(String... strs) {
+		StringBuilder sb = new StringBuilder();
+		for (String str : strs) {
+			sb.append(str);
+		}
+		return sb.toString();
+	}
+
 	public static boolean isBlank(final CharSequence cs) {
 		int strLen;
 		if (cs == null || (strLen = cs.length()) == 0) {

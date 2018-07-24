@@ -16,6 +16,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.boot.version>2.0.1.RELEASE</spring.boot.version>
 		<fastjson.version>1.2.32</fastjson.version>
+		<fluent.hc.version>4.3.5</fluent.hc.version>
+		<http.client.version>4.3.5</http.client.version>
+		<http.client.cache.version>4.3.5</http.client.cache.version>
+		<httpcore.version>4.3.2</httpcore.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -31,6 +35,27 @@
 				<groupId>com.alibaba</groupId>
 				<artifactId>fastjson</artifactId>
 				<version>${fastjson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>fluent-hc</artifactId>
+				<version>${fluent.hc.version}</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>${http.client.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient-cache</artifactId>
+				<version>${http.client.cache.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpcore</artifactId>
+				<version>${httpcore.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>dom4j</groupId>

@@ -10,9 +10,11 @@ public class IDGenerateUtil {
 	public static final String SEQ_TYPE_DB = "db";
 
 	public static final String SEQ_TYPE_REDIS = "redis";
+	
+	private static String seqType;
 
 	public static Object getNextId(String tableName) {
-		String seq_type = EnvironmentContext.getEnv("seq_type");
+		String seq_type = getSeqType();
 		IDGeneraterable idGenerater = null;
 		switch (seq_type) {
 		case SEQ_TYPE_DB:
@@ -27,4 +29,13 @@ public class IDGenerateUtil {
 		return idGenerater.getNextId(tableName);
 	}
 
+	private static String getSeqType() {
+		if (seqType == null) {
+			seqType = ApplicationContextHolder.getBean(EnvironmentContext.class).getSeqType();
+		}
+		return seqType;
+	}
+
+	
+	
 }

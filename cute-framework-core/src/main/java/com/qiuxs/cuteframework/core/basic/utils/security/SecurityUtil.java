@@ -11,6 +11,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import com.qiuxs.cuteframework.core.FrmLogger;
 import com.qiuxs.cuteframework.core.basic.Constants;
@@ -18,6 +19,10 @@ import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 
 public class SecurityUtil {
 
+	public static String sha1Hex(String str) {
+		return DigestUtils.sha1Hex(str);
+	}
+	
 	public static String byteToHex(final byte[] hash) {
 		Formatter formatter = new Formatter();
 		for (byte b : hash) {

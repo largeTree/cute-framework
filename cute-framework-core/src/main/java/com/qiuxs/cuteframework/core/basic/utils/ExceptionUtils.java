@@ -61,6 +61,14 @@ public class ExceptionUtils {
 		throw new LogicException(errorCode, msg);
 	}
 
+	public static void throwRuntimeException(String message) {
+		throwRuntimeException(message, null);
+	}
+
+	public static void throwRuntimeException(String message, Throwable cause) {
+		throw new RuntimeException(message, cause);
+	}
+
 	/**
 	 * 记录错误日志
 	 * 
@@ -112,14 +120,16 @@ public class ExceptionUtils {
 	 * @return
 	 */
 	private static Throwable getRtootThrowable(Throwable e) {
-		if (e.getCause() == null) {
+		Throwable cause = e.getCause();
+		if (cause == null) {
 			return e;
 		}
 		for (;;) {
-			if (e.getCause() == null) {
-				return e;
+			e = cause.getCause();
+			if (e == null) {
+				return cause;
 			} else {
-				e = e.getCause();
+				cause = e.getCause();
 			}
 		}
 	}

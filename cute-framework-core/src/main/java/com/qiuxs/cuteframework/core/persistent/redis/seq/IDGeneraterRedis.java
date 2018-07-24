@@ -2,9 +2,9 @@ package com.qiuxs.cuteframework.core.persistent.redis.seq;
 
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDGeneraterable;
 
 import redis.clients.jedis.Jedis;
@@ -15,8 +15,8 @@ public class IDGeneraterRedis implements IDGeneraterable {
 
 	private static final String PREFIX = "seq:";
 
-	@Value("${env.seq-db-idx}")
-	private int seqDbIdx;
+	@Resource
+	private EnvironmentContext envContext;
 
 	@Resource
 	private JedisPool jedisPool;
@@ -24,7 +24,7 @@ public class IDGeneraterRedis implements IDGeneraterable {
 	@Override
 	public Object getNextId(String tableName) {
 		Jedis jedis = jedisPool.getResource();
-		jedis.select(seqDbIdx);
+		jedis.select(envContext.getSeqDbIndex());
 		Long next = jedis.incrBy(getKey(tableName), 1L);
 		return next;
 	}

@@ -7,4 +7,6 @@ public class WebConstants {
 	public static final String SYS_CONTROLLER_PREFIX = "/sys";
 	/** 默认RequestMapper.produces */
 	public static final String DEFAULT_REQUEST_PRODUCES = "application/json; charset=UTF-8";
+	/** XML */
+	public static final String XML_PRODUCES = "text/xml; charset=UTF-8";
 }
