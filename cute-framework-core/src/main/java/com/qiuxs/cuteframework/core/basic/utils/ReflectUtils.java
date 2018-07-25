@@ -107,4 +107,27 @@ public class ReflectUtils {
 		Field accessibleField = getAccessibleField(bean.getClass(), name);
 		accessibleField.set(bean, defaultValue);
 	}
+
+	/**
+	 * 判断类型是否为基础类型包装类
+	 * @author qiuxs
+	 *
+	 * @param fieldType
+	 * @return
+	 *
+	 * 创建时间：2018年7月25日 下午9:34:12
+	 */
+	public static boolean isPrimitivePackagingClass(Class<?> fieldType) {
+		if (fieldType.isAssignableFrom(Boolean.class) 
+				|| fieldType.isAssignableFrom(Byte.class) 
+				|| fieldType.isAssignableFrom(Character.class) 
+				|| fieldType.isAssignableFrom(Double.class) 
+				|| fieldType.isAssignableFrom(Float.class) 
+				|| fieldType.isAssignableFrom(Integer.class) 
+				|| fieldType.isAssignableFrom(Long.class) 
+				|| fieldType.isAssignableFrom(Short.class)) {
+			return true;
+		}
+		return false;
+	}
 }
