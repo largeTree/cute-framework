@@ -10,7 +10,7 @@ public class ArrayUtils {
 	 * @param arr
 	 * @return
 	 */
-	public static boolean isNullOtEmpty(Object arr) {
+	public static boolean isNullOrEmpty(Object arr) {
 		if (arr == null) {
 			return true;
 		}

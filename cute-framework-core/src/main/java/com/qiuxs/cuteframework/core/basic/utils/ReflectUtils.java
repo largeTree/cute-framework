@@ -6,6 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 反射相关工具
+ * @author qiuxs
+ * 
+ * 创建时间 ： 2018年7月26日 下午10:21:35
+ *
+ */
 public class ReflectUtils {
 
 	/**
@@ -41,6 +48,17 @@ public class ReflectUtils {
 		return fields;
 	}
 
+	/**
+	 * 获取类中所有定义的方法对象
+	 * @author qiuxs
+	 *
+	 * @param clz
+	 * @param mthName
+	 * @param includeSupperClass
+	 * @return
+	 *
+	 * 创建时间：2018年7月26日 下午10:21:46
+	 */
 	public static List<Method> getMethods(Class<?> clz, String mthName, boolean includeSupperClass) {
 		Method[] methods = clz.getDeclaredMethods();
 		List<Method> retList = new ArrayList<>();
@@ -56,6 +74,16 @@ public class ReflectUtils {
 		return retList;
 	}
 
+	/**
+	 * 过滤方法列表
+	 * @author qiuxs
+	 *
+	 * @param mths
+	 * @param name
+	 * @return
+	 *
+	 * 创建时间：2018年7月26日 下午10:22:06
+	 */
 	private static List<Method> filterMethods(Method[] mths, String name) {
 		List<Method> retList = new ArrayList<>();
 		for (Method mth : mths) {
@@ -66,6 +94,16 @@ public class ReflectUtils {
 		return retList;
 	}
 
+	/**
+	 * 获取无权限判断的字段对象
+	 * @author qiuxs
+	 *
+	 * @param clz
+	 * @param fieldName
+	 * @return
+	 *
+	 * 创建时间：2018年7月26日 下午10:22:14
+	 */
 	public static Field getAccessibleField(Class<?> clz, String fieldName) {
 		try {
 			Field declaredField = clz.getDeclaredField(fieldName);
@@ -112,20 +150,20 @@ public class ReflectUtils {
 	 * 判断类型是否为基础类型包装类
 	 * @author qiuxs
 	 *
-	 * @param fieldType
+	 * @param type
 	 * @return
 	 *
 	 * 创建时间：2018年7月25日 下午9:34:12
 	 */
-	public static boolean isPrimitivePackagingClass(Class<?> fieldType) {
-		if (fieldType.isAssignableFrom(Boolean.class) 
-				|| fieldType.isAssignableFrom(Byte.class) 
-				|| fieldType.isAssignableFrom(Character.class) 
-				|| fieldType.isAssignableFrom(Double.class) 
-				|| fieldType.isAssignableFrom(Float.class) 
-				|| fieldType.isAssignableFrom(Integer.class) 
-				|| fieldType.isAssignableFrom(Long.class) 
-				|| fieldType.isAssignableFrom(Short.class)) {
+	public static boolean isPrimitivePackagingClass(Class<?> type) {
+		if (type.isAssignableFrom(Boolean.class) 
+				|| type.isAssignableFrom(Byte.class) 
+				|| type.isAssignableFrom(Character.class) 
+				|| type.isAssignableFrom(Double.class) 
+				|| type.isAssignableFrom(Float.class) 
+				|| type.isAssignableFrom(Integer.class) 
+				|| type.isAssignableFrom(Long.class) 
+				|| type.isAssignableFrom(Short.class)) {
 			return true;
 		}
 		return false;

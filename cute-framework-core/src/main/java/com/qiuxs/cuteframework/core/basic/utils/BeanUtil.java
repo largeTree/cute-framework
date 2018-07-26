@@ -9,10 +9,27 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 
+/**
+ * 扩展Bean工具
+ * @author qiuxs
+ * 
+ * 创建时间 ： 2018年7月26日 下午10:09:06
+ *
+ */
 public class BeanUtil extends BeanUtils {
 
 	private static Logger log = LogManager.getLogger(BeanUtil.class);
 
+	/**
+	 * 复制对象属性，忽略为Null的值
+	 * @author qiuxs
+	 *
+	 * @param src
+	 * @param target
+	 * @param ignoreFields
+	 *
+	 * 创建时间：2018年7月26日 下午10:09:19
+	 */
 	public static void copyBeanIgnoreNullValue(Object src, Object target, String... ignoreFields) {
 		if (src == null || target == null) {
 			return;

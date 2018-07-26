@@ -10,6 +10,16 @@ import java.math.BigDecimal;
  */
 public class NumberUtils {
 
+	/**
+	 * 比较数字大小
+	 * @author qiuxs
+	 *
+	 * @param num1
+	 * @param num2
+	 * @return
+	 *
+	 * 创建时间：2018年7月26日 下午10:21:23
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T extends Number> int compareTo(T num1, T num2) {
 		// null认为是最小值

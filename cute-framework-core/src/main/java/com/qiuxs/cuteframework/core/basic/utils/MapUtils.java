@@ -34,7 +34,7 @@ public class MapUtils {
 	}
 
 	/**
-	 * 获取String值 为Null时 返回 "null"
+	 * 获取String值 为Null时 返回 Null
 	 * 
 	 * @param map
 	 * @param key

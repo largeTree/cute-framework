@@ -79,6 +79,15 @@ public class ClassPathResourceUtil {
 		return getResourceList(true, paths);
 	}
 
+	/**
+	 * 获取多个资源文件，默认包含jar中的资源文件
+	 * @author qiuxs
+	 *
+	 * @param paths
+	 * @return
+	 *
+	 * 创建时间：2018年7月26日 下午10:10:36
+	 */
 	public static List<Resource> getResourceList(List<String> paths) {
 		if (paths == null) {
 			return null;
@@ -86,6 +95,17 @@ public class ClassPathResourceUtil {
 		return getResourceList(true, paths.toArray(new String[paths.size()]));
 	}
 	
+	/**
+	 * 获取多个资源文件
+	 * 可指定是否获取jar中的资源
+	 * @author qiuxs
+	 *
+	 * @param includeAll
+	 * @param paths
+	 * @return
+	 *
+	 * 创建时间：2018年7月26日 下午10:09:54
+	 */
 	private static List<Resource> getResourceList(boolean includeAll, String... paths) {
 		String prefix = includeAll ? CLASSPATH_ALL_URL_PREFIX : CLASSPATH_URL_PREFIX;
 		ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
@@ -149,7 +169,7 @@ public class ClassPathResourceUtil {
 	/**
 	 * 根据classpath路径获取绝对路径
 	 * 
-	 * @author fengdg
+	 * @author qiuxs
 	 * @param cpPath
 	 * @return
 	 */

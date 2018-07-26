@@ -51,7 +51,7 @@ public class MybatisMapperRefresher implements java.lang.Runnable {
 		SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) ApplicationContextHolder.getBean("sqlSessionFactory");
 		Configuration configuration = sqlSessionFactory.getConfiguration();
 		List<Resource> mapperLocations = new ArrayList<>();
-		if (!ArrayUtils.isNullOtEmpty(mapperPaths)) {
+		if (!ArrayUtils.isNullOrEmpty(mapperPaths)) {
 			mapperLocations.addAll(ClassPathResourceUtil.getResourceList(mapperPaths));
 		}
 		// 额外加上默认的

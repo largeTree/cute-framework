@@ -52,6 +52,16 @@ public class ExceptionUtils {
 		throwLogicalException(ErrorCodes.LOGIC_EXCEPTION_CODE, msgId, args);
 	}
 
+	/**
+	 * 抛出指定错误代码，错误消息的逻辑异常
+	 * @author qiuxs
+	 *
+	 * @param errorCode
+	 * @param msgId
+	 * @param args
+	 *
+	 * 创建时间：2018年7月26日 下午10:11:23
+	 */
 	public static void throwLogicalException(int errorCode, String msgId, String... args) {
 		String formatedMsg = I18nUtils.getMessageByLang(Constants.DEFAULT_LANG, msgId, args);
 		throwLogicalExceptionInner(errorCode, formatedMsg);
@@ -61,10 +71,27 @@ public class ExceptionUtils {
 		throw new LogicException(errorCode, msg);
 	}
 
+	/**
+	 * 抛出运行时异常
+	 * @author qiuxs
+	 *
+	 * @param message
+	 *
+	 * 创建时间：2018年7月26日 下午10:11:50
+	 */
 	public static void throwRuntimeException(String message) {
 		throwRuntimeException(message, null);
 	}
 
+	/**
+	 * 抛出制定消息的及源错误的运行时异常
+	 * @author qiuxs
+	 *
+	 * @param message
+	 * @param cause
+	 *
+	 * 创建时间：2018年7月26日 下午10:11:59
+	 */
 	public static void throwRuntimeException(String message, Throwable cause) {
 		throw new RuntimeException(message, cause);
 	}
