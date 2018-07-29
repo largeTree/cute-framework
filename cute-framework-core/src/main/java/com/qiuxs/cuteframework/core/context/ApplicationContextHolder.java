@@ -37,14 +37,24 @@ public class ApplicationContextHolder implements ApplicationContextAware {
 	}
 
 	/**
+	 * 根据BeanName获取指定类型的bean
+	 * @param name
+	 * @param type
+	 * @return
+	 */
+	public static <T> T getBean(String name, Class<T> type) {
+		return applicationContext.getBean(name, type);
+	}
+
+	/**
 	 * 根据Bean类型获取bean
 	 *  
 	 * @author qiuxs  
 	 * @param clz
 	 * @return
 	 */
-	public static <T> T getBean(Class<T> clz) {
-		return applicationContext.getBean(clz);
+	public static <T> T getBean(Class<T> type) {
+		return applicationContext.getBean(type);
 	}
 
 	/**

@@ -10,6 +10,24 @@ package com.qiuxs.cuteframework.core.basic.utils;
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
 	/**
+	 * 首字母小写
+	 * @param str
+	 * @return
+	 */
+	public static String firstToLowerCase(String str) {
+		return append(str.substring(0, 1).toLowerCase(), str.substring(1, str.length()));
+	}
+
+	/**
+	 * 首字母大写
+	 * @param str
+	 * @return
+	 */
+	public static String firstToUpperCase(String str) {
+		return append(str.substring(0, 1).toUpperCase(), str.substring(1, str.length()));
+	}
+
+	/**
 	 * 高效拼接字符串
 	 * @author qiuxs
 	 *
@@ -25,4 +43,5 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}
 		return sb.toString();
 	}
+	
 }
