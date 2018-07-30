@@ -35,7 +35,7 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropert
  * @author qiuxs
  * @version 1.0.0
  */
-public abstract class AbstractDataService<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>>
+public abstract class AbstractDataPropertyService<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>>
 		extends AbstractPropertyService<PK, T> implements IDataPropertyService<PK, T, D> {
 
 	private String tableName;
@@ -44,7 +44,7 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	private List<IInsertFilter<PK, T>> insertFilters;
 	private List<IUpdateFilter<PK, T>> updateFilters;
 
-	public AbstractDataService(Class<PK> pkClass, Class<T> pojoClass, String tableName) {
+	public AbstractDataPropertyService(Class<PK> pkClass, Class<T> pojoClass, String tableName) {
 		super(pkClass, pojoClass);
 		this.tableName = tableName;
 	}
@@ -217,15 +217,15 @@ public abstract class AbstractDataService<PK extends Serializable, T extends IEn
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void update(T newBean) {
+	public void update(T bean) {
 		// 默认为Null，需要时自行实现
-		T oldBean = this.getOld(newBean.getId());
-		if (this.initUpdate(oldBean, newBean)) {
-			preSave(oldBean, newBean);
-			this.getDao().update(oldBean);
+		T oldBean = this.getOld(bean.getId());
+		if (this.initUpdate(oldBean, bean)) {
+			preSave(oldBean, bean);
+			this.getDao().update(bean);
 		}
-		postUpdate(oldBean, newBean);
-		postSave(oldBean, newBean);
+		postUpdate(oldBean, bean);
+		postSave(oldBean, bean);
 	}
 
 	/**

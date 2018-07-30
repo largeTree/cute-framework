@@ -1,6 +1,7 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -60,6 +61,9 @@ public class XMLUtils {
 				String fieldName = field.getName();
 				Element childElement = element.element(fieldName);
 				Class<?> fieldType = field.getType();
+				if (childElement == null || Modifier.isStatic(field.getModifiers())) {
+					continue;
+				}
 				Object value;
 				if (fieldType.isPrimitive() || ReflectUtils.isPrimitivePackagingClass(fieldType) || fieldType.isAssignableFrom(String.class)) {
 					value = TypeAdapter.adapter(childElement.getTextTrim(), fieldType);
@@ -109,6 +113,9 @@ public class XMLUtils {
 				field.setAccessible(true);
 				String fieldName = field.getName();
 				Class<?> fieldType = field.getType();
+				if (Modifier.isStatic(field.getModifiers())) {
+					continue;
+				}
 				Element childElement = element.addElement(fieldName);
 				Object val = field.get(obj);
 				if (fieldType.isPrimitive() || ReflectUtils.isPrimitivePackagingClass(fieldType) || fieldType.isAssignableFrom(String.class)) {
