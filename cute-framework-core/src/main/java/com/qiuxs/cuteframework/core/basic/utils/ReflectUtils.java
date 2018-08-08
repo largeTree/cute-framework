@@ -1,8 +1,10 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -141,7 +143,8 @@ public class ReflectUtils {
 	 * @param defaultValue
 	 * @throws ReflectiveOperationException
 	 */
-	public static void setFieldValue(Object bean, String name, Object defaultValue) throws ReflectiveOperationException {
+	public static void setFieldValue(Object bean, String name, Object defaultValue)
+			throws ReflectiveOperationException {
 		Field accessibleField = getAccessibleField(bean.getClass(), name);
 		accessibleField.set(bean, defaultValue);
 	}
@@ -156,16 +159,65 @@ public class ReflectUtils {
 	 * 创建时间：2018年7月25日 下午9:34:12
 	 */
 	public static boolean isPrimitivePackagingClass(Class<?> type) {
-		if (type.isAssignableFrom(Boolean.class) 
-				|| type.isAssignableFrom(Byte.class) 
-				|| type.isAssignableFrom(Character.class) 
-				|| type.isAssignableFrom(Double.class) 
-				|| type.isAssignableFrom(Float.class) 
-				|| type.isAssignableFrom(Integer.class) 
-				|| type.isAssignableFrom(Long.class) 
+		if (type.isAssignableFrom(Boolean.class)
+				|| type.isAssignableFrom(Byte.class)
+				|| type.isAssignableFrom(Character.class)
+				|| type.isAssignableFrom(Double.class)
+				|| type.isAssignableFrom(Float.class)
+				|| type.isAssignableFrom(Integer.class)
+				|| type.isAssignableFrom(Long.class)
 				|| type.isAssignableFrom(Short.class)) {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * 提取带有指定注解的方法列表
+	 * @author qiuxs
+	 *
+	 * @param clz
+	 * @param anno
+	 * @param includeSuper
+	 * @return
+	 *
+	 * 创建时间：2018年8月6日 下午9:49:14
+	 */
+	public static List<Method> getDeclaredMethods(Class<?> clz, Class<? extends Annotation> annotationClass, boolean includeSuper) {
+		List<Method> declaredMethods = getDeclaredMethods(clz, includeSuper);
+		for (Iterator<Method> iter = declaredMethods.iterator(); iter.hasNext();) {
+			Method method = iter.next();
+			Annotation annotation = method.getAnnotation(annotationClass);
+			if (annotation == null) {
+				iter.remove();
+			}
+		}
+		return declaredMethods;
+	}
+
+	/**
+	 * 获取所有定义的方法
+	 * @author qiuxs
+	 *
+	 * @param clz
+	 * 		类型
+	 * @param includeSuper 
+	 * 		是否需要包含父类的方法
+	 * @return
+	 *
+	 * 创建时间：2018年8月6日 下午9:34:59
+	 */
+	public static List<Method> getDeclaredMethods(Class<?> clz, boolean includeSuper) {
+		List<Method> methods = new ArrayList<>();
+		Method[] declaredMethods = clz.getDeclaredMethods();
+		for (Method m : declaredMethods) {
+			methods.add(m);
+		}
+		Class<?> superclass = clz.getSuperclass();
+		// 提取父类方法
+		if (includeSuper && !(superclass instanceof Object)) {
+			methods.addAll(getDeclaredMethods(superclass, includeSuper));
+		}
+		return methods;
 	}
 }

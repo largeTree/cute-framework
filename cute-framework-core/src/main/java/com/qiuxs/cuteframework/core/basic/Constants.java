@@ -7,6 +7,9 @@ public class Constants {
 	public static final String UTF_8 = "utf-8";
 	public static final String DEFAULT_CHARSET = UTF_8;
 
+	public static final int TRUE = 1;
+	public static final int FALSE = 0;
+
 	public enum DsType {
 		/**数据源类型:入口库*/
 		ENTRY,

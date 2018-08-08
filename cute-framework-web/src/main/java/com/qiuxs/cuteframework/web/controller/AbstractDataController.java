@@ -5,17 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.qiuxs.cuteframework.core.basic.ex.ErrorCodes;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService;
+import com.qiuxs.cuteframework.web.annotation.Api;
+import com.qiuxs.cuteframework.web.controller.api.Param;
 
 /**
  * 
@@ -27,23 +24,23 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropert
  * @version 1.0.0
  */
 public abstract class AbstractDataController<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>, S extends IDataPropertyService<PK, T, D>>
-        extends AbstractPropertyController<PK, T, S> {
+		extends AbstractPropertyController<PK, T, S> {
 
-	@PostMapping("/create")
-	public String create(@RequestParam(name = "jsonParam") String jsonParam) {
+	@Api
+	public String create(@Param("jsonParam") String jsonParam) {
 		T bean = super.fromJSON(jsonParam);
 		this.getService().save(bean);
 		return super.responseVal(bean.getId());
 	}
 
-	@DeleteMapping("/delete")
-	public String delete(@RequestParam("id") PK id) {
+	@Api
+	public String delete(@Param("id") PK id) {
 		this.getService().deleteById(id);
 		return super.responseSuccess();
 	}
 
-	@PostMapping("/update")
-	public String update(@RequestParam(name = "jsonParam") String jsonParam) {
+	@Api
+	public String update(@Param("jsonParam") String jsonParam) {
 		T newBean = super.fromJSON(jsonParam);
 		if (newBean.getId() == null) {
 			ExceptionUtils.throwLogicalException(ErrorCodes.DataError.UPDATE_NO_ID, "id is required");
@@ -52,14 +49,14 @@ public abstract class AbstractDataController<PK extends Serializable, T extends 
 		return super.responseVal(newBean.getId());
 	}
 
-	@GetMapping("/get")
-	public String get(@RequestParam("id") PK id) {
+	@Api
+	public String get(@Param("id") PK id) {
 		T bean = this.getService().getById(id);
 		return super.responseRes(bean);
 	}
 
-	@GetMapping("/list")
-	public String list(@RequestParam Map<String, String> params) {
+	@Api
+	public String list(Map<String, String> params) {
 		PageInfo pageInfo = super.preparePageInfo(params);
 		List<T> list = this.getService().findByMap(new HashMap<>(params), pageInfo);
 		return super.responseRes(list);

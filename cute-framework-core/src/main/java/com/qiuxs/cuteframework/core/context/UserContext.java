@@ -24,6 +24,8 @@ public class UserContext {
 	private static final Map<String, UserLite> SESSION_HOLDER = new ConcurrentHashMap<>();
 	/** 用户ID和sessionId对应关系 */
 	private static final Map<Long, String> USER_ID_SESSION_ID_HOLDER = new ConcurrentHashMap<>();
+	/** 微信OpenId对应的SessionId */
+	private static final Map<String, String> WX_OPENID_SESSIONID = new ConcurrentHashMap<>();
 
 	/**
 	 * 添加一个会话信息
@@ -33,11 +35,20 @@ public class UserContext {
 	public static void addUserLite(UserLite userLite) {
 		getSessionMap().put(userLite.getSessionId(), userLite);
 		Map<Long, String> idSessionIdMap = getIdSessionIdMap();
+		Map<String, String> wxOpenIdSessionIdMap = getWxOpenIdSessionIdMap();
 		// 放入新的对应关系
 		String oldSessionId = idSessionIdMap.put(userLite.getUserId(), userLite.getSessionId());
 		if (StringUtils.isNotBlank(oldSessionId)) {
 			// 存在旧会话时，移除旧会话
 			getSessionMap().remove(oldSessionId);
+		}
+		String wxOpenId = userLite.getWxOpenId();
+		// 带有wxOpenId的会话缓存一份openId和sessionId的对应关系
+		if (StringUtils.isNotBlank(wxOpenId)) {
+			oldSessionId = wxOpenIdSessionIdMap.put(wxOpenId, userLite.getSessionId());
+			if (StringUtils.isNotBlank(oldSessionId)) {
+				wxOpenIdSessionIdMap.remove(oldSessionId);
+			}
 		}
 
 	}
@@ -72,7 +83,6 @@ public class UserContext {
 	 */
 	public static UserLite getUserLite(String sessionId) {
 		UserLite userLite = getUserLite(sessionId, false);
-		setUserLite(userLite);
 		return userLite;
 	}
 
@@ -88,7 +98,42 @@ public class UserContext {
 		if (!ignoreException && userLite == null) {
 			ExceptionUtils.throwLoginException();
 		}
+		setUserLite(userLite);
 		return userLite;
+	}
+
+	/**
+	 * 根据微信OpenId获取会话信息
+	 * @author qiuxs
+	 *
+	 * @param wxOpenId
+	 * @return
+	 *
+	 * 创建时间：2018年8月8日 下午9:39:17
+	 */
+	public static UserLite getUserLiteByWxOpenId(String wxOpenId) {
+		String sessionId = getWxOpenIdSessionIdMap().get(wxOpenId);
+		if (sessionId == null) {
+			ExceptionUtils.throwLoginException();
+		}
+		return getUserLite(sessionId);
+	}
+
+	/**
+	 * 根据微信OpenId获取会话信息，不存在时不抛出异常
+	 * @author qiuxs
+	 *
+	 * @param wxOpenId
+	 * @return
+	 *
+	 * 创建时间：2018年8月8日 下午9:47:04
+	 */
+	public static UserLite getUserLiteByWxOpenIdOpt(String wxOpenId) {
+		String sessionId = getWxOpenIdSessionIdMap().get(wxOpenId);
+		if (sessionId == null) {
+			return null;
+		}
+		return getUserLite(sessionId, true);
 	}
 
 	/**
@@ -117,5 +162,38 @@ public class UserContext {
 	 */
 	private static Map<Long, String> getIdSessionIdMap() {
 		return USER_ID_SESSION_ID_HOLDER;
+	}
+
+	/**
+	 * 获取微信OpenId和SessionId的对应关系
+	 * @author qiuxs
+	 *
+	 * @return
+	 *
+	 * 创建时间：2018年8月8日 下午9:48:13
+	 */
+	private static Map<String, String> getWxOpenIdSessionIdMap() {
+		return WX_OPENID_SESSIONID;
+	}
+
+	/**
+	 * 获取当前用户ID
+	 * @author qiuxs
+	 *
+	 * @return
+	 *
+	 * 创建时间：2018年8月8日 下午9:21:23
+	 */
+	public static Long getUserId() {
+		Long userId = getUserIdOpt();
+		if (userId == null) {
+			ExceptionUtils.throwLoginException();
+		}
+		return userId;
+	}
+
+	public static Long getUserIdOpt() {
+		UserLite userLite = getUserLiteOpt();
+		return userLite == null ? null : userLite.getUserId();
 	}
 }

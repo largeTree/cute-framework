@@ -10,9 +10,10 @@ import com.qiuxs.cuteframework.web.WebConstants;
 import com.qiuxs.cuteframework.web.controller.BaseController;
 
 @RestController
-@RequestMapping(value = WebConstants.SYS_CONTROLLER_PREFIX
-		+ "/config", produces = WebConstants.DEFAULT_REQUEST_PRODUCES)
+@RequestMapping(value = ConfigController.PREFIX, produces = WebConstants.DEFAULT_REQUEST_PRODUCES)
 public class ConfigController extends BaseController {
+
+	protected static final String PREFIX = WebConstants.SYS_CONTROLLER_PREFIX + "/config";
 
 	@GetMapping("/msg/{lang}/{msgKey}")
 	public String msgByLang(@PathVariable("lang") String lang, @PathVariable("msgKey") String msgKey) {
@@ -22,6 +23,11 @@ public class ConfigController extends BaseController {
 	@GetMapping("/msg/all")
 	public String msgAll() {
 		return super.responseRes(MessageResourceHolder.getLangMsgs());
+	}
+
+	@Override
+	protected String getCtlPrefix() {
+		return PREFIX;
 	}
 
 }

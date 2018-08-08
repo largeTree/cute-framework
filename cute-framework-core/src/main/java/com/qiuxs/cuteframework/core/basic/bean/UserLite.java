@@ -15,7 +15,7 @@ import java.util.Date;
 public class UserLite implements Serializable {
 
 	private static final long serialVersionUID = -3008176462742444808L;
-	
+
 	/** 当前用户ID */
 	private Long userId;
 	/** 登陆名，账号 */
@@ -26,8 +26,8 @@ public class UserLite implements Serializable {
 	private String sessionId;
 	/** 登陆时间 */
 	private Date loginTime;
-
-	public Object getu;
+	/** 微信OpenId */
+	private String wxOpenId;
 
 	public Long getUserId() {
 		return userId;
@@ -67,6 +67,14 @@ public class UserLite implements Serializable {
 
 	public void setLoginTime(Date loginTime) {
 		this.loginTime = loginTime;
+	}
+
+	public String getWxOpenId() {
+		return wxOpenId;
+	}
+
+	public void setWxOpenId(String wxOpenId) {
+		this.wxOpenId = wxOpenId;
 	}
 
 }

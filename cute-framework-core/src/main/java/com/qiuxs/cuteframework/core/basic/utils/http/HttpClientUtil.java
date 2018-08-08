@@ -16,14 +16,18 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.Constants;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
@@ -56,14 +60,29 @@ public class HttpClientUtil {
 	}
 
 	/**
-	 * Https Get请求获取JSONObject结果
+	 * Http Get请求获取JSONObject结果
 	 * 
 	 * @param url
 	 * @param params
 	 * @return
 	 */
-	public static JSONObject doGetHttpsJSONObject(String url, Map<String, String> params) {
-		return JsonUtils.parseJSONObject(doGetHttpsString(url, params));
+	public static JSONObject doGetJSONObject(String url, Map<String, String> params) {
+		return JsonUtils.parseJSONObject(doGetString(url, params, false));
+	}
+
+	/**
+	 * Https Get请求获取JSONObject结果
+	 * 
+	 * @param url
+	 * 		地址
+	 * @param params
+	 * 		参数
+	 * @param sslFlag 
+	 * 		是否需要使用https
+	 * @return
+	 */
+	public static JSONObject doGetJSONObject(String url, Map<String, String> params, boolean sslFlag) {
+		return JsonUtils.parseJSONObject(doGetString(url, params, sslFlag));
 	}
 
 	/**
@@ -73,30 +92,19 @@ public class HttpClientUtil {
 	 * @param params
 	 * @return
 	 */
-	public static String doGetHttpsString(String url, Map<String, String> params) {
-		return doGetStrng(builderFinalGetUrl(url, params), httpsClient);
+	public static String doGetString(String url, Map<String, String> params) {
+		return doGetString(url, params, false);
 	}
 
 	/**
-	 * Http Get请求获取JSONObject结果
+	 * Https Get请求获取String结果
 	 * 
 	 * @param url
 	 * @param params
 	 * @return
 	 */
-	public static JSONObject doGetHttpJSONObject(String url, Map<String, String> params) {
-		return JsonUtils.parseJSONObject(doGetHttpString(url, params));
-	}
-
-	/**
-	 * Http Get请求获取String结果
-	 * 
-	 * @param url
-	 * @param params
-	 * @return
-	 */
-	public static String doGetHttpString(String url, Map<String, String> params) {
-		return doGetStrng(builderFinalGetUrl(url, params), httpClient);
+	public static String doGetString(String url, Map<String, String> params, boolean sslFlag) {
+		return doGetString(builderFinalGetUrl(url, params), sslFlag ? httpsClient : httpClient);
 	}
 
 	/**
@@ -106,7 +114,7 @@ public class HttpClientUtil {
 	 * @param client
 	 * @return
 	 */
-	private static String doGetStrng(String finalUrl, HttpClient client) {
+	private static String doGetString(String finalUrl, HttpClient client) {
 		HttpGet get = new HttpGet(finalUrl);
 		try {
 			HttpResponse resp = client.execute(get);
@@ -142,8 +150,80 @@ public class HttpClientUtil {
 		return queryString.toString();
 	}
 
-	public static void main(String[] args) {
-		System.out.println(doGetHttpsString("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx55c8ac915f39e12d&secret=31809101036ac3ac9835d2f57be93ca7", null));
+	/**
+	 * PostBody
+	 * @author qiuxs
+	 *
+	 * @param url
+	 * @param jsonString
+	 * @return
+	 *
+	 * 创建时间：2018年8月7日 下午10:17:40
+	 */
+	public static JSONObject doPostJSONStringBodyRetJSONObject(String url, String jsonString) {
+		return JsonUtils.parseJSONObject(doPostJSONStringBodyRetString(url, jsonString, false));
 	}
 	
+	/**
+	 * PostBody
+	 * @author qiuxs
+	 *
+	 * @param url
+	 * @param jsonString
+	 * @return
+	 *
+	 * 创建时间：2018年8月7日 下午10:17:40
+	 */
+	public static JSONObject doPostJSONStringBodyRetJSONObject(String url, String jsonString, boolean sslFlag) {
+		return JsonUtils.parseJSONObject(doPostJSONStringBodyRetString(url, jsonString, sslFlag));
+	}
+	
+	/**
+	 * PostBody
+	 * @author qiuxs
+	 *
+	 * @param url
+	 * @param jsonString
+	 * @return
+	 *
+	 * 创建时间：2018年8月7日 下午10:17:40
+	 */
+	public static String doPostJSONStringBodyRetString(String url, String jsonString) {
+		return doPostJSONStringBodyRetString(url, jsonString, false);
+	}
+	
+	/**
+	 * postBody
+	 * @author qiuxs
+	 *
+	 * @param append
+	 * @param jsonString
+	 *
+	 * 创建时间：2018年8月7日 下午10:05:55
+	 */
+	public static String doPostJSONStringBodyRetString(String url, String jsonString, boolean sslFlag) {
+		return postStringBody(url, jsonString, ContentType.APPLICATION_JSON.toString(),
+				sslFlag ? httpsClient : httpClient);
+	}
+
+	private static String postStringBody(String url, String bodyString, String contentType, HttpClient client) {
+		HttpPost post = null;
+		try {
+			post = new HttpPost(url);
+			post.setHeader("Content-type", contentType);
+			StringEntity entity = new StringEntity(bodyString, Constants.DEFAULT_CHARSET);
+			post.setEntity(entity);
+			HttpResponse resp = client.execute(post);
+			String respStr = EntityUtils.toString(resp.getEntity());
+			int statusCode = resp.getStatusLine().getStatusCode();
+			if (statusCode == HttpStatus.SC_OK) {
+				return respStr;
+			} else {
+				throw new HttpResponseException(statusCode, respStr);
+			}
+		} catch (IOException e) {
+			throw ExceptionUtils.unchecked(e);
+		}
+	}
+
 }
