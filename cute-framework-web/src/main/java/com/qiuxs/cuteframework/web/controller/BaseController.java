@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -40,24 +41,34 @@ public abstract class BaseController {
 
 	protected static Logger log = LogManager.getLogger(BaseController.class);
 
-	protected abstract String getCtlPrefix();
-
-	public String getUriPrefix() {
-		String ctlPrefix = this.getCtlPrefix();
-		if (!ctlPrefix.endsWith("/")) {
-			ctlPrefix = StringUtils.append(ctlPrefix, "/");
-		}
-		return ctlPrefix;
-	}
-
 	@RequestMapping(value = "/*", produces = WebConstants.DEFAULT_REQUEST_PRODUCES)
 	public String dispatch(HttpServletRequest request, HttpServletResponse resp) throws Exception {
+		String ctxPath = request.getContextPath();
 		String uri = request.getRequestURI();
-		String uriPrefix = this.getUriPrefix();
-		String apiKey = uri.substring(uriPrefix.length(), uri.length());
+		uri = uri.substring(ctxPath.length(), uri.length());
+		String[] mappings = HandlerMappinHolder.getMappings(this.getClass());
+		
+		String urlPrefix = null;
+		for (String mapping : mappings) {
+			if (uri.startsWith(mapping)) {
+				urlPrefix = mapping;
+			}
+		}
+		
+		String apiKey = uri.substring(urlPrefix.length(), uri.length());
 		ApiConfig apiConfig = HandlerMappinHolder.getApiConfig(this.getClass(), apiKey);
+		
+		if (apiConfig == null) {
+			return sendNotFound(resp);
+		}
+		
 		Object resObj = this.invokeMethod(apiConfig, request);
 		return this.parseResponse(resObj);
+	}
+
+	private String sendNotFound(HttpServletResponse resp) {
+		resp.setStatus(HttpStatus.NOT_FOUND.value());
+		return "404 Not Found";
 	}
 
 	/**
@@ -94,7 +105,7 @@ public abstract class BaseController {
 			return this.responseRes(obj);
 		}
 	}
-	
+
 	/**
 	 * 执行实际的方法
 	 * @author qiuxs
@@ -246,7 +257,7 @@ public abstract class BaseController {
 		resp.setData(mapData);
 		return this.response(resp);
 	}
-	
+
 	/**
 	 * 输出响应
 	 * 

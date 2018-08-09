@@ -3,6 +3,7 @@ package com.qiuxs.cuteframework.core.persistent.util;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDGeneraterable;
+import com.qiuxs.cuteframework.core.persistent.database.service.seq.IDGeneraterDatabase;
 import com.qiuxs.cuteframework.core.persistent.redis.seq.IDGeneraterRedis;
 
 public class IDGenerateUtil {
@@ -18,7 +19,7 @@ public class IDGenerateUtil {
 		IDGeneraterable idGenerater = null;
 		switch (seq_type) {
 		case SEQ_TYPE_DB:
-			idGenerater = (IDGeneraterable) ApplicationContextHolder.getBean("IDGeneraterDataSource");
+			idGenerater = ApplicationContextHolder.getBean(IDGeneraterDatabase.class);
 			break;
 		case SEQ_TYPE_REDIS:
 			idGenerater = ApplicationContextHolder.getBean(IDGeneraterRedis.class);

@@ -186,7 +186,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 
 	/**
 	 * 获取序列库DsId
-	 * 
+	 * 没有指定序列库时定位到入口库
 	 * @author qiuxs
 	 *
 	 * @return
@@ -194,7 +194,11 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	 * 		创建时间：2018年7月28日 上午12:00:10
 	 */
 	public String getSeqDb() {
-		return (String) this.mapDsTypeId.get(DsType.SEQ.value());
+		String seqDbId = (String) this.mapDsTypeId.get(DsType.SEQ.value());
+		if (seqDbId == null) {
+			seqDbId = (String) this.mapDsTypeId.get(DsType.ENTRY.value());
+		}
+		return seqDbId;
 	}
 
 	/**

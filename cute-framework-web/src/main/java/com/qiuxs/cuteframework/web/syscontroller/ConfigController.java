@@ -25,9 +25,4 @@ public class ConfigController extends BaseController {
 		return super.responseRes(MessageResourceHolder.getLangMsgs());
 	}
 
-	@Override
-	protected String getCtlPrefix() {
-		return PREFIX;
-	}
-
 }

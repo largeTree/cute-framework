@@ -1,6 +1,7 @@
 package com.qiuxs.cuteframework.web.controller.handler;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.qiuxs.cuteframework.core.basic.utils.ReflectUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
@@ -22,6 +24,9 @@ public class HandlerMappinHolder {
 
 	/** Api配置缓存 */
 	private static Map<Class<? extends BaseController>, Map<String, ApiConfig>> MAP_API_CONFIG = new ConcurrentHashMap<>();
+	
+	/** 类对应的前缀缓存 */
+	private static Map<Class<? extends BaseController>, String[]> MAP_API_PREF = new ConcurrentHashMap<>();
 
 	/**
 	 * 注册控制器类
@@ -33,6 +38,11 @@ public class HandlerMappinHolder {
 	 */
 	public static void register(BaseController ctl) {
 		Class<? extends BaseController> ctlClass = ctl.getClass();
+		RequestMapping requestMapping = ctlClass.getAnnotation(RequestMapping.class);
+		// Api前缀
+		String[] mappings = requestMapping.value();
+		MAP_API_PREF.put(ctlClass, mappings);
+		
 		List<Method> apiMethods = ReflectUtils.getDeclaredMethods(ctlClass, Api.class, true);
 		Map<String, ApiConfig> handlerMappings = MAP_API_CONFIG.get(ctlClass);
 		if (handlerMappings == null) {
@@ -56,7 +66,7 @@ public class HandlerMappinHolder {
 			apiConfig.setMethod(method);
 			handlerMappings.put(apiKey, apiConfig);
 			if (log.isDebugEnabled()) {
-				log.debug(StringUtils.append("ApiMapping \"{[", ctl.getUriPrefix(), apiKey, "] desc=[",
+				log.debug(StringUtils.append("ApiMapping \"{[",Arrays.toString(mappings) , apiKey, "] desc=[",
 						apiConfig.getDesc(), "]}\""));
 			}
 		}
@@ -79,4 +89,9 @@ public class HandlerMappinHolder {
 		return apiConfig;
 	}
 
+	public static String[] getMappings(Class<? extends BaseController> clz) {
+		String[] mappings = MAP_API_PREF.get(clz);
+		return mappings;
+	}
+	
 }
