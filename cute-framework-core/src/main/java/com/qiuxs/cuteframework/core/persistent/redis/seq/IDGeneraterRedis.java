@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDGeneraterable;
 
@@ -18,11 +19,12 @@ public class IDGeneraterRedis implements IDGeneraterable {
 	@Resource
 	private EnvironmentContext envContext;
 
-	@Resource
-	private JedisPool jedisPool;
-
 	@Override
 	public Object getNextId(String tableName) {
+		JedisPool jedisPool = ApplicationContextHolder.getBean(JedisPool.class);
+		if (jedisPool == null) {
+			throw new RuntimeException("No RedisPool Configuration");
+		}
 		Jedis jedis = jedisPool.getResource();
 		jedis.select(envContext.getSeqDbIndex());
 		Long next = jedis.incrBy(getKey(tableName), 1L);
