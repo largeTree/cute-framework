@@ -25,7 +25,7 @@ CREATE TABLE `mylog`(
 	`level` VARCHAR(10) NOT NULL COMMENT'日志级别',
 	`class_name` VARCHAR(100) NOT NULL COMMENT'类名',
 	`method` VARCHAR(100) NOT NULL COMMENT'方法名',
-	`msg` TEXT NULL DEFAULT '' COMMENT'日志消息文本',
+	`msg` TEXT NULL COMMENT'日志消息文本',
 	`throwable` VARCHAR(500) NULL DEFAULT '' COMMENT'',
 	`stacktrace` MEDIUMTEXT NOT NULL COMMENT'堆栈信息',
 	`thread_id` VARCHAR(50) NOT NULL COMMENT'线程ID',
