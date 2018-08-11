@@ -3,6 +3,8 @@ package com.qiuxs.cuteframework.core.basic.utils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -173,6 +175,19 @@ public class ReflectUtils {
 	}
 
 	/**
+	 * 是否简单类型，包含基础数据类型及对应包装类和String
+	 * @author qiuxs
+	 *
+	 * @param type
+	 * @return
+	 *
+	 * 创建时间：2018年8月11日 下午5:14:12
+	 */
+	public static boolean isSimpleType(Class<?> type) {
+		return type.isPrimitive() || isPrimitivePackagingClass(type) || type.isAssignableFrom(String.class);
+	}
+	
+	/**
 	 * 提取带有指定注解的方法列表
 	 * @author qiuxs
 	 *
@@ -220,4 +235,27 @@ public class ReflectUtils {
 		}
 		return methods;
 	}
+	
+	/**
+	 * 获取List字段的泛型类型，未设置泛型的返回Null
+	 * @author qiuxs
+	 *
+	 * @param field
+	 * @return
+	 *
+	 * 创建时间：2018年8月11日 下午5:04:29
+	 */
+	public static Class<?> getListFieldParameterizedType(Field field) {
+		Type genericType = field.getGenericType();
+		if (genericType == null) {
+			return null;
+		}
+		if (genericType instanceof ParameterizedType) {
+			ParameterizedType parameterizedType = (ParameterizedType) genericType;
+			Type type = parameterizedType.getActualTypeArguments()[0];
+			return (Class<?>) type;
+		}
+		return null;
+	}
+	
 }

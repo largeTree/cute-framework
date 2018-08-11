@@ -1,11 +1,13 @@
 package com.qiuxs.cuteframework.core.context;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
 @ConfigurationProperties(prefix = EnvironmentContext.PREFIX)
-public class EnvironmentContext {
+public class EnvironmentContext implements EnvironmentAware {
 
 	private static EnvironmentContext environmentContext;
 
@@ -19,6 +21,10 @@ public class EnvironmentContext {
 	private String seqType;
 	/** 序列所在数据库索引 */
 	private int seqDbIndex;
+	/** 是否测试模式 */
+	private boolean isTest;
+	/** 全局环境变量 */
+	private Environment environment;
 
 	public String getAppName() {
 		return appName;
@@ -50,6 +56,23 @@ public class EnvironmentContext {
 
 	public void setServerId(String serverId) {
 		this.serverId = serverId;
+	}
+
+	public boolean isTest() {
+		return isTest;
+	}
+
+	public void setTest(boolean isTest) {
+		this.isTest = isTest;
+	}
+	
+	@Override
+	public void setEnvironment(Environment environment) {
+		this.environment = environment;
+	}
+	
+	public <T> T getEnvValue(String key, Class<T> targetType) {
+		return this.environment.getProperty(key, targetType);
 	}
 
 	public static EnvironmentContext getEnvContext() {

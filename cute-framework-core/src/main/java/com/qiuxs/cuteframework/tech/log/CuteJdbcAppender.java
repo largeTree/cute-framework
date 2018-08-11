@@ -6,10 +6,8 @@ import org.apache.logging.log4j.core.appender.db.AbstractDatabaseAppender;
 import org.apache.logging.log4j.core.appender.db.jdbc.ColumnConfig;
 import org.apache.logging.log4j.core.appender.db.jdbc.ConnectionSource;
 import org.apache.logging.log4j.core.appender.db.jdbc.JdbcDatabaseManager;
-import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginElement;
-import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 import org.apache.logging.log4j.core.util.Booleans;
 
 /**
@@ -21,7 +19,7 @@ import org.apache.logging.log4j.core.util.Booleans;
  * @see ColumnConfig
  * @see ConnectionSource
  */
-@Plugin(name = "CuteJdbcAppender", category = "Core", elementType = "appender", printObject = true)
+//@Plugin(name = "CuteJdbcAppender", category = "Core", elementType = "appender", printObject = true)
 public class CuteJdbcAppender extends AbstractDatabaseAppender<CuteDatabaseManager> {
 
 	private final String description;
@@ -51,7 +49,7 @@ public class CuteJdbcAppender extends AbstractDatabaseAppender<CuteDatabaseManag
 	 *                      that data.
 	 * @return a new JDBC appender.
 	 */
-	@PluginFactory
+//	@PluginFactory
 	public static CuteJdbcAppender createAppender(@PluginAttribute("name") final String name, @PluginAttribute("ignoreExceptions") final String ignore, @PluginElement("Filter") final Filter filter, @PluginElement("ConnectionSource") final ConnectionSource connectionSource, @PluginAttribute("bufferSize") final String bufferSize, @PluginAttribute("tableName") final String tableName, @PluginElement("MyColumnConfig") final CuteColumnConfig[] columnConfigs) {
 
 		final int bufferSizeInt = AbstractAppender.parseInt(bufferSize, 0);

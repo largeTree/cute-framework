@@ -35,21 +35,22 @@ public class TypeAdapter {
 		if (type == null || obj == null) {
 			return obj;
 		}
-		String simpleTypeName = type.getSimpleName();
-		if (BYTE_TYPE_NAME_SIMPLE.equals(simpleTypeName) || BYTE_VALUE_TYPE_NAME_SIMPLE.equals(simpleTypeName)) {
+		if (type.isAssignableFrom(Byte.class) || type.isAssignableFrom(byte.class)) {
 			return Byte.valueOf(obj.toString());
-		} else if (CHARACTER_TYPE_NAME_SIMPLE.equals(simpleTypeName) || CHARCTER_VALUE_TYPE_NAME_SIMPLE.equals(simpleTypeName)) {
+		} else if (type.isAssignableFrom(Character.class) || type.isAssignableFrom(char.class)) {
 			return obj.toString().charAt(0);
-		} else if (INTEGER_TYPE_NAME_SIMPLE.equals(simpleTypeName) || INTEGER_VALUE_TYPE_NAME_SIMPLE.equals(simpleTypeName)) {
+		} else if (type.isAssignableFrom(Integer.class) || type.isAssignableFrom(int.class)) {
 			return Integer.valueOf(obj.toString());
-		} else if (LONG_TYPE_NAME_SIMPLE.equals(simpleTypeName) || LONG_VALUE_TYPE_NAME_SIMPLE.equals(simpleTypeName)) {
+		} else if (type.isAssignableFrom(Long.class) || type.isAssignableFrom(long.class)) {
 			return Long.valueOf(obj.toString());
-		} else if (FLOAT_TYPE_NAME_SIMPLE.equals(simpleTypeName) || FLOAT_VALUE_TYPE_NAME_SIMPLE.equals(simpleTypeName)) {
+		} else if (type.isAssignableFrom(Float.class) || type.isAssignableFrom(float.class)) {
 			return Float.valueOf(obj.toString());
-		} else if (DOUBLE_TYPE_NAME_SIMPLE.equals(simpleTypeName) || DOUBLE_VALUE_TYPE_NAME_SIMPLE.equals(simpleTypeName)) {
+		} else if (type.isAssignableFrom(Double.class) || type.isAssignableFrom(double.class)) {
 			return Double.valueOf(obj.toString());
-		} else if (BIGDECIMAL_TYPE_NAME.equals(simpleTypeName)) {
+		} else if (type.isAssignableFrom(BigDecimal.class)) {
 			return BigDecimal.valueOf(Double.valueOf(obj.toString()));
+		} else if (type.isAssignableFrom(String.class)) {
+			return obj.toString();
 		}
 		return obj;
 	}
