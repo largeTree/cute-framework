@@ -230,7 +230,7 @@ public class ReflectUtils {
 		}
 		Class<?> superclass = clz.getSuperclass();
 		// 提取父类方法
-		if (includeSuper && !(superclass instanceof Object)) {
+		if (includeSuper && !(superclass.equals(Object.class))) {
 			methods.addAll(getDeclaredMethods(superclass, includeSuper));
 		}
 		return methods;

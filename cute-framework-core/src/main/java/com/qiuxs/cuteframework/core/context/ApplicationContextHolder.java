@@ -1,6 +1,8 @@
 package com.qiuxs.cuteframework.core.context;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -79,4 +81,21 @@ public class ApplicationContextHolder implements ApplicationContextAware {
 		return applicationContext.getBeanNamesForAnnotation(annotationType);
 	}
 
+	/**
+	 * 获取指定类型的所有子类Bean
+	 * @author qiuxs
+	 *
+	 * @param type
+	 * @return
+	 *
+	 * 创建时间：2018年8月17日 下午8:34:41
+	 */
+	public static <T> List<T> getBeansForType(Class<T> type) {
+		String[] beanNames = getBeanNamesForType(type);
+		List<T> beans = new ArrayList<>();
+		for (String name : beanNames) {
+			beans.add(getBean(name, type));
+		}
+		return beans;
+	}
 }

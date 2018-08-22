@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
+import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.web.WebConstants;
 import com.qiuxs.cuteframework.web.utils.RequestUtils;
 
@@ -32,8 +33,11 @@ public abstract class AbstractApiAuthInterceptor extends AbstractHandlerIntercep
 
 	@Override
 	public final boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-	        throws Exception {
-		this.getUserLite(request, RequestUtils.getRequestParams(request));
+			throws Exception {
+		UserLite userLite = this.getUserLite(request, RequestUtils.getRequestParams(request));
+		if (userLite != null) {
+			UserContext.setUserLite(userLite);
+		}
 		return super.preHandle(request, response, handler);
 	}
 
@@ -52,7 +56,7 @@ public abstract class AbstractApiAuthInterceptor extends AbstractHandlerIntercep
 
 	@Override
 	public Optional<List<String>> getPathPatterns() {
-		return ListUtils.genList(getApiPrefix()+ "/**");
+		return ListUtils.genList(getApiPrefix() + "/**");
 	}
 
 	/**

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.ex.ErrorCodes;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
+import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ReflectUtils;
 import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
@@ -126,12 +128,48 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void create(T bean) {
-		if (initCreate(bean)) {
+		if (this.initCreate(bean)) {
 			this.preSave(null, bean);
 			this.getDao().insert(bean);
 		}
 		postCreate(bean);
 		postSave(null, bean);
+	}
+
+	@Override
+	@Transactional
+	public void createInBatch(List<T> beans) {
+		if (ListUtils.isNullOrEmpty(beans)) {
+			return;
+		}
+		// 本次被批量插入的所有记录
+		List<T> all = new ArrayList<>(beans.size());
+		// 单次插入的记录
+		List<T> once = new ArrayList<>(beans.size() > 200 ? 200 : beans.size());
+		for (Iterator<T> iter = beans.iterator(); iter.hasNext();) {
+			T bean = iter.next();
+			// 执行初始化并加入待插入列表
+			if (this.initCreate(bean)) {
+				this.preSave(null, bean);
+				once.add(bean);
+				all.add(bean);
+			}
+			// 两百条 插入一次
+			if (once.size() > 200) {
+				this.getDao().insertInBatch(once);
+				once.clear();
+			}
+		}
+		// 不足两百条多出来的部分
+		if (once.size() > 0) {
+			this.getDao().insertInBatch(once);
+		}
+		// 执行后置操作
+		for (Iterator<T> iter = all.iterator();iter.hasNext();) {
+			T bean = iter.next();
+			this.postCreate(bean);
+			this.postSave(null, bean);
+		}
 	}
 
 	protected boolean preCreate(T bean) {

@@ -38,4 +38,8 @@ public class DateFormatUtils {
 		return timeParser.format(time);
 	}
 
+	public static String format(Date date, String pattern) {
+		return FastDateFormat.getInstance(pattern).format(date);
+	}
+
 }

@@ -22,7 +22,7 @@ public abstract class CallableAsyncTask<P, V> extends AbstractAsyncTask<P> imple
 
 	@Override
 	public V call() throws Exception {
-		super.initUserLite();
+		super.init();
 		return this.call(super.getPreparParam());
 	}
 

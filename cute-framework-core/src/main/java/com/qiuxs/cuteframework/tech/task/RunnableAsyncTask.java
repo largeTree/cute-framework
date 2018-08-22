@@ -18,7 +18,7 @@ public abstract class RunnableAsyncTask<P> extends AbstractAsyncTask<P> implemen
 
 	@Override
 	public final void run() {
-		super.initUserLite();
+		super.init();
 		this.execute(super.getPreparParam());
 	}
 

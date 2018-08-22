@@ -34,6 +34,8 @@ public class UserContext {
 	 */
 	public static void addUserLite(UserLite userLite) {
 		getSessionMap().put(userLite.getSessionId(), userLite);
+		// 放入线程变量缓存
+		setUserLite(userLite);
 		Map<Long, String> idSessionIdMap = getIdSessionIdMap();
 		Map<String, String> wxOpenIdSessionIdMap = getWxOpenIdSessionIdMap();
 		// 放入新的对应关系

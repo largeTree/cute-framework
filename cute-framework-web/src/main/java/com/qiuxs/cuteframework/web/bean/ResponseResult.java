@@ -38,7 +38,7 @@ public class ResponseResult {
 		this(rows, total, null);
 	}
 
-	public ResponseResult(List<?> rows, int total, Map<String, ? extends Number> sumrow) {
+	public ResponseResult(List<?> rows, Integer total, Map<String, ? extends Number> sumrow) {
 		Map<String, Object> data = new HashMap<>();
 		if (rows == null) {
 			rows = new ArrayList<>();

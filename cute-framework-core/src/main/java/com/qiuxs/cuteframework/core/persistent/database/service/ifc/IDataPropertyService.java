@@ -20,8 +20,12 @@ import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
  */
 public interface IDataPropertyService<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>> extends IPropertyService<PK, T> {
 
+	public void setId(T bean);
+	
 	public void create(T bean);
 
+	public void createInBatch(List<T> beans);
+	
 	public void save(T bean);
 
 	public void update(T newBean);
@@ -33,4 +37,5 @@ public interface IDataPropertyService<PK extends Serializable, T extends IEntity
 	public List<T> findByMap(final Map<String, Object> params, PageInfo pageInfo);
 
 	public void deleteById(PK id);
+
 }

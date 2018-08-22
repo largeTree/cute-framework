@@ -1,6 +1,7 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.StringMapMessage;
 
 import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.Constants;
@@ -11,7 +12,7 @@ import com.qiuxs.cuteframework.core.basic.i18n.I18nUtils;
 
 public class ExceptionUtils {
 
-	public static final String ERROR_CODE = "error_code";
+	public static final String ERROR_CODE = "errorCode";
 	public static final String ERROR_MSG = "msg";
 
 	/**
@@ -105,8 +106,11 @@ public class ExceptionUtils {
 	 */
 	public static JSONObject logError(Logger log, Throwable e) {
 		JSONObject error = buildError(e);
+		StringMapMessage msg = new StringMapMessage();
+		msg.put("message", error.getString(ERROR_MSG));
+		msg.put(ERROR_CODE, error.getString("code"));
 		if (log != null) {
-			log.error(error.getString(ERROR_CODE), e);
+			log.error(msg, e);
 		}
 		return error;
 	}
@@ -121,12 +125,12 @@ public class ExceptionUtils {
 		JSONObject error = new JSONObject();
 		e = getRtootThrowable(e);
 		if (e instanceof LogicException) {
-			error.put(ERROR_CODE, ((LogicException) e).getErrorCode());
+			error.put("code", ((LogicException) e).getErrorCode());
 			error.put(ERROR_MSG, e.getLocalizedMessage());
 		} else {
 			int errorCode = genErrorCode();
 			error.put(ERROR_MSG, "服务端错误：" + errorCode);
-			error.put(ERROR_CODE, errorCode);
+			error.put("code", errorCode);
 		}
 		return error;
 	}
@@ -147,16 +151,13 @@ public class ExceptionUtils {
 	 * @return
 	 */
 	private static Throwable getRtootThrowable(Throwable e) {
-		Throwable cause = e.getCause();
-		if (cause == null) {
-			return e;
-		}
+		Throwable cause;
 		for (;;) {
-			e = cause.getCause();
-			if (e == null) {
-				return cause;
+			cause = e.getCause();
+			if (cause == null) {
+				return e;
 			} else {
-				cause = e.getCause();
+				e = cause;
 			}
 		}
 	}

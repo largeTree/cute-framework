@@ -141,4 +141,17 @@ public class NumberUtils {
 		return bd1.compareTo(BigDecimal.ZERO) <= 0;
 	}
 
+	/**
+	 * 判断数字是否为空
+	 * @author qiuxs
+	 *
+	 * @param num
+	 * @return
+	 *
+	 * 创建时间：2018年8月20日 下午6:38:29
+	 */
+	public static boolean isEmpty(Number num) {
+		return num == null || num.longValue() == 0;
+	}
+
 }

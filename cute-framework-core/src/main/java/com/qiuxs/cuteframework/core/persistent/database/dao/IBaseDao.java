@@ -19,6 +19,8 @@ public interface IBaseDao<PK extends Serializable, T extends IEntity<PK>> {
 	List<T> list(Map<String, Object> params, PageInfo pageInfo);
 
 	void insert(T bean);
+	
+	void insertInBatch(List<T> beans);
 
 	void update(T bean);
 }

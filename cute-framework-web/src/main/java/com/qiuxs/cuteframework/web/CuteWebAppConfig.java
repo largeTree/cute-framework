@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
@@ -23,6 +25,19 @@ import com.qiuxs.cuteframework.web.interceptors.AbstractHandlerInterceptor;
  */
 @Component
 public class CuteWebAppConfig extends WebMvcConfigurationSupport {
+
+	@Override
+	protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/**/*.html", "/**/*.js", "/**/imgs/**", "/**/*.css", "/**/*.png", "/**/*.gif",
+				"/**/*.json")
+				.addResourceLocations("/");
+	}
+
+	@Override
+	protected void addCorsMappings(CorsRegistry registry) {
+		super.addCorsMappings(registry);
+		registry.addMapping("/**");
+	}
 
 	@Override
 	protected void addInterceptors(InterceptorRegistry registry) {
@@ -50,7 +65,8 @@ public class CuteWebAppConfig extends WebMvcConfigurationSupport {
 	 * @return
 	 */
 	private Optional<List<AbstractHandlerInterceptor>> getCustomerHandlerInterceptors() {
-		String[] handlerInterceptorNames = ApplicationContextHolder.getBeanNamesForType(AbstractHandlerInterceptor.class);
+		String[] handlerInterceptorNames = ApplicationContextHolder
+				.getBeanNamesForType(AbstractHandlerInterceptor.class);
 		List<AbstractHandlerInterceptor> handlerInterceptors = null;
 		int size = handlerInterceptorNames.length;
 		if (size > 0) {

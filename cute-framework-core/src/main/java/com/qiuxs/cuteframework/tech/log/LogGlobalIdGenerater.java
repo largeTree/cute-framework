@@ -54,7 +54,7 @@ public class LogGlobalIdGenerater {
 		try {
 			closeable.close();
 		} catch (Exception e) {
-
+			log.error("close Error ext=" + e.getLocalizedMessage(), e);
 		}
 	}
 

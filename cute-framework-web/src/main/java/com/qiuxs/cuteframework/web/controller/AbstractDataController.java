@@ -12,6 +12,7 @@ import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService;
 import com.qiuxs.cuteframework.web.annotation.Api;
+import com.qiuxs.cuteframework.web.bean.ListResult;
 import com.qiuxs.cuteframework.web.controller.api.Param;
 
 /**
@@ -27,38 +28,37 @@ public abstract class AbstractDataController<PK extends Serializable, T extends 
 		extends AbstractPropertyController<PK, T, S> {
 
 	@Api
-	public String create(@Param("jsonParam") String jsonParam) {
+	public PK create(@Param("jsonParam") String jsonParam) {
 		T bean = super.fromJSON(jsonParam);
 		this.getService().save(bean);
-		return super.responseVal(bean.getId());
+		return bean.getId();
 	}
 
 	@Api
-	public String delete(@Param("id") PK id) {
+	public void delete(@Param("id") PK id) {
 		this.getService().deleteById(id);
-		return super.responseSuccess();
 	}
 
 	@Api
-	public String update(@Param("jsonParam") String jsonParam) {
+	public PK update(@Param("jsonParam") String jsonParam) {
 		T newBean = super.fromJSON(jsonParam);
 		if (newBean.getId() == null) {
 			ExceptionUtils.throwLogicalException(ErrorCodes.DataError.UPDATE_NO_ID, "id is required");
 		}
 		this.getService().update(newBean);
-		return super.responseVal(newBean.getId());
+		return newBean.getId();
 	}
 
 	@Api
-	public String get(@Param("id") PK id) {
+	public T get(@Param("id") PK id) {
 		T bean = this.getService().getById(id);
-		return super.responseRes(bean);
+		return bean;
 	}
 
 	@Api
-	public String list(Map<String, String> params) {
+	public ListResult list(Map<String, String> params) {
 		PageInfo pageInfo = super.preparePageInfo(params);
 		List<T> list = this.getService().findByMap(new HashMap<>(params), pageInfo);
-		return super.responseRes(list);
+		return new ListResult(list, pageInfo.getTotal());
 	}
 }

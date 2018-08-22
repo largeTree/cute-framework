@@ -23,7 +23,9 @@ import com.qiuxs.cuteframework.core.basic.utils.ReflectUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.basic.utils.TypeAdapter;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
+import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageSettings;
 import com.qiuxs.cuteframework.web.WebConstants;
+import com.qiuxs.cuteframework.web.bean.ListResult;
 import com.qiuxs.cuteframework.web.bean.ResponseResult;
 import com.qiuxs.cuteframework.web.controller.api.ApiConfig;
 import com.qiuxs.cuteframework.web.controller.api.Param;
@@ -47,21 +49,22 @@ public abstract class BaseController {
 		String uri = request.getRequestURI();
 		uri = uri.substring(ctxPath.length(), uri.length());
 		String[] mappings = HandlerMappinHolder.getMappings(this.getClass());
-		
+
 		String urlPrefix = null;
 		for (String mapping : mappings) {
 			if (uri.startsWith(mapping)) {
 				urlPrefix = mapping;
+				break;
 			}
 		}
-		
-		String apiKey = uri.substring(urlPrefix.length(), uri.length());
+
+		String apiKey = uri.substring(urlPrefix.length() + 1, uri.length());
 		ApiConfig apiConfig = HandlerMappinHolder.getApiConfig(this.getClass(), apiKey);
-		
+
 		if (apiConfig == null) {
 			return sendNotFound(resp);
 		}
-		
+
 		Object resObj = this.invokeMethod(apiConfig, request);
 		return this.parseResponse(resObj);
 	}
@@ -85,7 +88,10 @@ public abstract class BaseController {
 			return this.responseSuccess();
 		}
 		Class<? extends Object> resClz = obj.getClass();
-		if (obj instanceof ResponseResult) {
+		if (obj instanceof ListResult) {
+			ListResult lr = (ListResult) obj;
+			return this.responseRes(lr.getList(), lr.getTotal(), lr.getSummary());
+		} else if (obj instanceof ResponseResult) {
 			// 包装好的结果
 			return this.response((ResponseResult) obj);
 		} else if (obj instanceof List) {
@@ -123,7 +129,48 @@ public abstract class BaseController {
 		Parameter[] parameters = apiConfig.getParameters();
 		Object[] args = this.parseArgs(request, parameters);
 		Object resObj = apiConfig.getMethod().invoke(this, args);
-		return resObj;
+		return this.postHandler(resObj, args);
+	}
+
+	/**
+	 * 执行后置处理
+	 * @author qiuxs
+	 *
+	 * @param resObj
+	 * @param args
+	 *
+	 * 创建时间：2018年8月17日 下午11:07:24
+	 */
+	private Object postHandler(Object resObj, Object[] args) {
+		Object finalRes = resObj;
+		if (resObj != null) {
+			if (resObj instanceof ListResult) {
+				ListResult lr = (ListResult) resObj;
+				this.listResultHandler(lr, args);
+			} else if (resObj instanceof List) {
+				List<?> list = (List<?>) resObj;
+				ListResult lr = new ListResult();
+				lr.setList(list);
+				this.listResultHandler(lr, args);
+				finalRes = lr;
+			}
+		}
+		return finalRes;
+	}
+
+	private void listResultHandler(ListResult lr, Object[] args) {
+		if (lr.getTotal() == null) {
+			PageInfo pageInfo = null;
+			for (Object arg : args) {
+				if (arg instanceof PageInfo) {
+					pageInfo = (PageInfo) arg;
+					break;
+				}
+			}
+			if (pageInfo != null) {
+				lr.setTotal(pageInfo.getTotal());
+			}
+		}
 	}
 
 	/**
@@ -147,6 +194,9 @@ public abstract class BaseController {
 				// Map类型直接把所有参数放入
 				if (type.isAssignableFrom(Map.class)) {
 					args[i] = mapParams;
+				} else if (type.equals(PageInfo.class)) {
+					// 分页参数从map中获取参数构造
+					args[i] = preparePageInfo(mapParams);
 				} else {
 					String paramName = param.getName();
 					String paramVal = mapParams.get(paramName);
@@ -185,7 +235,7 @@ public abstract class BaseController {
 					// TODO log this
 				}
 			} else if (type.isPrimitive() || ReflectUtils.isPrimitivePackagingClass(type)
-					|| type.isAssignableFrom(CharSequence.class)) {
+					|| type.isAssignableFrom(String.class)) {
 				// 基础类型或基础类型包装类或字符串
 				finalVal = TypeAdapter.adapter(val, type);
 			}
@@ -212,9 +262,7 @@ public abstract class BaseController {
 	 * @return
 	 */
 	public PageInfo preparePageInfo(Map<String, String> params) {
-		PageInfo pageInfo = new PageInfo();
-
-		return pageInfo;
+		return PageSettings.preparePageInfo(params);
 	}
 
 	public String responseSuccess() {
@@ -234,11 +282,11 @@ public abstract class BaseController {
 		return this.responseRes(rows, rows.size());
 	}
 
-	protected String responseRes(List<?> rows, int total) {
+	protected String responseRes(List<?> rows, Integer total) {
 		return this.responseRes(rows, total, null);
 	}
 
-	protected String responseRes(List<?> rows, int total, Map<String, ? extends Number> sumrow) {
+	protected String responseRes(List<?> rows, Integer total, Map<String, ? extends Number> sumrow) {
 		ResponseResult resp = new ResponseResult(rows, total, sumrow);
 		return this.response(resp);
 	}
