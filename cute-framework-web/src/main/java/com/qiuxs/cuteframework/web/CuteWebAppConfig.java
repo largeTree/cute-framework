@@ -28,7 +28,7 @@ public class CuteWebAppConfig extends WebMvcConfigurationSupport {
 
 	@Override
 	protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/**/*.html", "/**/*.js", "/**/imgs/**", "/**/*.css", "/**/*.png", "/**/*.gif",
+		registry.addResourceHandler("/**/*.svg","/**/*.html", "/**/*.js", "/**/imgs/**", "/**/*.css", "/**/*.png", "/**/*.gif",
 				"/**/*.json")
 				.addResourceLocations("/");
 	}
