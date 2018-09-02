@@ -54,6 +54,24 @@ public class UserContext {
 		}
 
 	}
+	
+	/**
+	 * 移除会话
+	 * @author qiuxs
+	 *
+	 * @param sesionId
+	 *
+	 * 创建时间：2018年9月2日 下午10:13:23
+	 */
+	public static void removeSession(String sesionId) {
+		UserLite userLite = getSessionMap().get(sesionId);
+		if (userLite != null) {
+			getIdSessionIdMap().remove(userLite.getUserId());
+			if (userLite.getWxOpenId() != null) {
+				getWxOpenIdSessionIdMap().remove(userLite.getWxOpenId());
+			}
+		}
+	}
 
 	/**
 	 * 获取会话信息，不存在时抛出异常

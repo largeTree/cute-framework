@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.qiuxs.cuteframework.core.basic.ex.ErrorCodes;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
+import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
@@ -28,15 +29,36 @@ public abstract class AbstractDataController<PK extends Serializable, T extends 
 		extends AbstractPropertyController<PK, T, S> {
 
 	@Api
-	public PK create(@Param("jsonParam") String jsonParam) {
+	public PK save(@Param("jsonParam") String jsonParam) {
 		T bean = super.fromJSON(jsonParam);
 		this.getService().save(bean);
 		return bean.getId();
 	}
-
+	
 	@Api
-	public void delete(@Param("id") PK id) {
-		this.getService().deleteById(id);
+	public PK create(@Param("jsonParam") String jsonParam) {
+		T bean = super.fromJSON(jsonParam);
+		return this.createDirect(bean);
+	}
+	
+	protected PK createDirect(T bean) {
+		this.getService().create(bean);
+		return bean.getId();
+	}
+
+	/**
+	 * TODO 此处使用泛型参数有问题 暂时先改成Map参数，后续修正
+	 * @author qiuxs
+	 *
+	 * @param params
+	 *
+	 * 创建时间：2018年8月29日 下午10:28:27
+	 */
+	@SuppressWarnings("unchecked")
+	@Api
+	public void delete(Map<String, String> params) {
+		Long id = MapUtils.getLongMust(params, "id");
+		this.getService().deleteById((PK) id);
 	}
 
 	@Api
@@ -45,10 +67,14 @@ public abstract class AbstractDataController<PK extends Serializable, T extends 
 		if (newBean.getId() == null) {
 			ExceptionUtils.throwLogicalException(ErrorCodes.DataError.UPDATE_NO_ID, "id is required");
 		}
-		this.getService().update(newBean);
-		return newBean.getId();
+		return this.updateDirect(newBean);
 	}
-
+	
+	protected PK updateDirect(T bean) {
+		this.getService().update(bean);
+		return bean.getId();
+	}
+	
 	@Api
 	public T get(@Param("id") PK id) {
 		T bean = this.getService().getById(id);

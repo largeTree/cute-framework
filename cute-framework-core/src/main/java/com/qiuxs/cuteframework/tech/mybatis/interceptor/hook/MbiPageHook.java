@@ -94,6 +94,11 @@ public class MbiPageHook implements IMbiHook {
 	private String getCountSql(String sql) {
 		sql = sql.replaceAll("[\\t\\n\\r]", " ");
 		String fromSql = sql.substring(sql.indexOf("from"), sql.length());
+
+		if (fromSql.indexOf("order") != -1) {
+			fromSql = fromSql.substring(0, fromSql.indexOf("order"));
+		}
+
 		StringBuilder countSql = new StringBuilder();
 		countSql.append("select count(1) as ").append(DB_COUNT).append(" ")
 				.append(fromSql);
