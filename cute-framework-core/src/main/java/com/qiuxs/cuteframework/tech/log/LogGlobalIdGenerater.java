@@ -9,7 +9,6 @@ import javax.annotation.Resource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DataSourceContext;
@@ -23,7 +22,6 @@ public class LogGlobalIdGenerater {
 	@Resource
 	private DynamicDataSource dataSource;
 
-	@Transactional
 	public Long nextId() {
 		String logDb = this.dataSource.getLogDb();
 		if (StringUtils.isBlank(logDb)) {
