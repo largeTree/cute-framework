@@ -235,10 +235,10 @@ public abstract class BaseController {
 					// TODO log this
 				}
 			} else if (type.isPrimitive() || ReflectUtils.isPrimitivePackagingClass(type)
-					|| type.isAssignableFrom(String.class)) {
+					|| String.class.isAssignableFrom(type) || Number.class.isAssignableFrom(type)) {
 				// 基础类型或基础类型包装类或字符串
 				finalVal = TypeAdapter.adapter(val, type);
-			}
+			} 
 		}
 		return finalVal;
 	}
