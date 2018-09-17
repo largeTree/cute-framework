@@ -24,6 +24,8 @@ public class ApiConfig {
 	private boolean authFlag;
 	/** 持有方法对象 */
 	private Method method;
+	/** 忽略默认响应 */
+	private boolean ignoreDefaultResp;
 
 	public String getKey() {
 		return key;
@@ -71,6 +73,14 @@ public class ApiConfig {
 
 	public void setMethod(Method method) {
 		this.method = method;
+	}
+
+	public boolean isIgnoreDefaultResp() {
+		return ignoreDefaultResp;
+	}
+
+	public void setIgnoreDefaultResp(boolean ignoreDefaultResp) {
+		this.ignoreDefaultResp = ignoreDefaultResp;
 	}
 
 	@Override

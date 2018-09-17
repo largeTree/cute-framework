@@ -65,7 +65,7 @@ public abstract class BaseController {
 			return sendNotFound(resp);
 		}
 
-		Object resObj = this.invokeMethod(apiConfig, request);
+		Object resObj = this.invokeMethod(apiConfig, request, resp);
 		return this.parseResponse(resObj);
 	}
 
@@ -125,9 +125,9 @@ public abstract class BaseController {
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
 	 */
-	private Object invokeMethod(ApiConfig apiConfig, HttpServletRequest request) throws ReflectiveOperationException {
+	private Object invokeMethod(ApiConfig apiConfig, HttpServletRequest request, HttpServletResponse response) throws ReflectiveOperationException {
 		Parameter[] parameters = apiConfig.getParameters();
-		Object[] args = this.parseArgs(request, parameters);
+		Object[] args = this.parseArgs(request, response, parameters);
 		Object resObj = apiConfig.getMethod().invoke(this, args);
 		return this.postHandler(resObj, args);
 	}
@@ -183,7 +183,7 @@ public abstract class BaseController {
 	 *
 	 * 创建时间：2018年8月6日 下午10:51:22
 	 */
-	private Object[] parseArgs(HttpServletRequest request, Parameter[] parameters) {
+	private Object[] parseArgs(HttpServletRequest request,HttpServletResponse response, Parameter[] parameters) {
 		Map<String, String> mapParams = RequestUtils.getRequestParams(request);
 		Object[] args = new Object[parameters.length];
 		for (int i = 0; i < parameters.length; i++) {
@@ -192,11 +192,15 @@ public abstract class BaseController {
 			Param paramAnno = param.getAnnotation(Param.class);
 			if (paramAnno == null) {
 				// Map类型直接把所有参数放入
-				if (type.isAssignableFrom(Map.class)) {
+				if (Map.class.isAssignableFrom(type)) {
 					args[i] = mapParams;
 				} else if (type.equals(PageInfo.class)) {
 					// 分页参数从map中获取参数构造
 					args[i] = preparePageInfo(mapParams);
+				} else if (HttpServletRequest.class.isAssignableFrom(type)) {
+					args[i] = request;
+				} else if (HttpServletResponse.class.isAssignableFrom(type)) {
+					args[i] = response;
 				} else {
 					String paramName = param.getName();
 					String paramVal = mapParams.get(paramName);
