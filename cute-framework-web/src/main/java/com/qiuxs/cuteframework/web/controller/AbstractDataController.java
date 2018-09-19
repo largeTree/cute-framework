@@ -82,8 +82,7 @@ public abstract class AbstractDataController<PK extends Serializable, T extends 
 	}
 
 	@Api
-	public ListResult list(Map<String, String> params) {
-		PageInfo pageInfo = super.preparePageInfo(params);
+	public ListResult list(Map<String, String> params, PageInfo pageInfo) {
 		List<T> list = this.getService().findByMap(new HashMap<>(params), pageInfo);
 		return new ListResult(list, pageInfo.getTotal());
 	}
