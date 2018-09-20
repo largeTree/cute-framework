@@ -3,6 +3,7 @@ package com.qiuxs.cuteframework.core.persistent.database.service;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
+import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IPropertyService;
@@ -26,7 +29,7 @@ public abstract class AbstractPropertyService<PK extends Serializable, T extends
 		implements IPropertyService<PK, T> {
 
 	protected static Logger log = LogManager.getLogger(AbstractPropertyService.class);
-	
+
 	private Class<T> pojoClass;
 
 	private Class<PK> pkClass;
@@ -56,12 +59,33 @@ public abstract class AbstractPropertyService<PK extends Serializable, T extends
 
 	@Override
 	public JSONObject translateBean(T bean) {
-		return null;
+		if (bean == null) {
+			return new JSONObject();
+		}
+		JSONObject jbean = JsonUtils.toJSONObject(bean);
+		List<PropertyWrapper<?>> props = this.getProperties();
+		JSONObject captions = new JSONObject();
+		for (PropertyWrapper<?> prop : props) {
+			if (prop.hasTranslater()) {
+				String fileName = prop.getField().getName();
+				String caption = prop.getCaption(jbean.get(fileName));
+				captions.put(fileName, caption);
+			}
+		}
+		jbean.put("_caption", captions);
+		return jbean;
 	}
 
 	@Override
 	public JSONArray translateBeans(Collection<T> beans) {
-		return null;
+		if (ListUtils.isNullOrEmpty(beans)) {
+			return new JSONArray();
+		}
+		JSONArray dataList = new JSONArray(beans.size());
+		for (Iterator<T> iter = beans.iterator(); iter.hasNext();) {
+			dataList.add(this.translateBean(iter.next()));
+		}
+		return dataList;
 	}
 
 	protected abstract void initProps(List<PropertyWrapper<?>> props);

@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONArray;
 import com.qiuxs.cuteframework.core.basic.ex.ErrorCodes;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
+import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
@@ -34,13 +36,13 @@ public abstract class AbstractDataController<PK extends Serializable, T extends 
 		this.getService().save(bean);
 		return bean.getId();
 	}
-	
+
 	@Api
 	public PK create(@Param("jsonParam") String jsonParam) {
 		T bean = super.fromJSON(jsonParam);
 		return this.createDirect(bean);
 	}
-	
+
 	protected PK createDirect(T bean) {
 		this.getService().create(bean);
 		return bean.getId();
@@ -69,12 +71,12 @@ public abstract class AbstractDataController<PK extends Serializable, T extends 
 		}
 		return this.updateDirect(newBean);
 	}
-	
+
 	protected PK updateDirect(T bean) {
 		this.getService().update(bean);
 		return bean.getId();
 	}
-	
+
 	@Api
 	public T get(@Param("id") PK id) {
 		T bean = this.getService().getById(id);
@@ -84,6 +86,12 @@ public abstract class AbstractDataController<PK extends Serializable, T extends 
 	@Api
 	public ListResult list(Map<String, String> params, PageInfo pageInfo) {
 		List<T> list = this.getService().findByMap(new HashMap<>(params), pageInfo);
-		return new ListResult(list, pageInfo.getTotal());
+		JSONArray jlist = null;
+		if (MapUtils.getBooleanValue(params, "wrapper", false)) {
+			jlist = this.getService().translateBeans(list);
+		} else {
+			jlist = JsonUtils.toJSONArray(list);
+		}
+		return new ListResult(jlist, pageInfo.getTotal());
 	}
 }

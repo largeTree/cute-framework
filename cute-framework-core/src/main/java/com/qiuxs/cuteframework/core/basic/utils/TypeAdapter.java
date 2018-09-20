@@ -74,4 +74,17 @@ public class TypeAdapter {
 		return obj == null ? null : Long.parseLong(obj.toString());
 	}
 
+	/**
+	 * 转换为Boolean
+	 * @author qiuxs
+	 *
+	 * @param obj
+	 * @return
+	 *
+	 * 创建时间：2018年9月20日 下午11:02:25
+	 */
+	public static Boolean toBoolean(Object obj) {
+		return obj == null ? null : Boolean.valueOf(obj.toString());
+	}
+
 }

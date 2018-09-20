@@ -37,6 +37,18 @@ public class PropertyWrapper<C> {
 	}
 
 	/**
+	 * 判断是否有翻译器
+	 * @author qiuxs
+	 *
+	 * @return
+	 *
+	 * 创建时间：2018年9月20日 下午11:09:01
+	 */
+	public boolean hasTranslater() {
+		return this.codeTranslate != null;
+	}
+	
+	/**
 	 * 获取翻译
 	 * @param object
 	 * @return
@@ -48,7 +60,7 @@ public class PropertyWrapper<C> {
 		if (this.codeTranslate != null) {
 			return this.codeTranslate.getCaption(getNewValue(object));
 		}
-		return object.toString();
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")

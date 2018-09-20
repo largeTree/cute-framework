@@ -109,7 +109,53 @@ public class MapUtils {
 		checkNull(val, key);
 		return val;
 	}
+	
+	/**
+	 * 获取Boolean值，为空时返回null
+	 * @author qiuxs
+	 *
+	 * @param map
+	 * @param key
+	 * @return
+	 *
+	 * 创建时间：2018年9月20日 下午11:02:42
+	 */
+	public static Boolean getBoolean(Map<String, ?> map, String key) {
+		return TypeAdapter.toBoolean(map.get(key));
+	}
 
+	/**
+	 * 获取boolean值，为空时抛出异常
+	 * @author qiuxs
+	 *
+	 * @param map
+	 * @param key
+	 * @return
+	 *
+	 * 创建时间：2018年9月20日 下午11:04:41
+	 */
+	public static Boolean getBooleanMust(Map<String, ?> map, String key) {
+		Boolean val = getBoolean(map, key);
+		checkNull(val, key);
+		return val;
+	}
+	
+	/**
+	 * 获取boolean值，不存在时返回默认值
+	 * @author qiuxs
+	 *
+	 * @param map
+	 * @param key
+	 * @param defaultVal
+	 * @return
+	 *
+	 * 创建时间：2018年9月20日 下午11:05:59
+	 */
+	public static boolean getBooleanValue(Map<String, ?> map, String key, boolean defaultVal) {
+		Boolean val = getBoolean(map, key);
+		return val == null ? defaultVal : val;
+	}
+	
 	private static void checkNull(Object val, String key) {
 		if (val == null) {
 			ExceptionUtils.throwLogicalException("param_required", key);
