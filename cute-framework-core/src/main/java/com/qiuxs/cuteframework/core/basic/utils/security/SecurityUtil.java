@@ -141,8 +141,4 @@ public class SecurityUtil {
 			throw ExceptionUtils.unchecked(e);
 		}
 	}
-
-	public static void main(String[] args) throws Exception {
-		System.out.println(encodeSHA256("000000"));
-	}
 }

@@ -137,15 +137,4 @@ public class GUIDGenerator{
         return sb.toString();
     }
 
-    /*
-     * Demonstraton and self test of class
-     */
-    public static void main(String args[]) {
-    	for (int i=0; i< 10; i++) {
-    		GUIDGenerator myGUID = new GUIDGenerator();
-    		System.out.println(myGUID.toString());
-    	}
-    }
-
-	
 }
