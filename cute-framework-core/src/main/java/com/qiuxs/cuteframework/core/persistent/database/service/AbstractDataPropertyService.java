@@ -20,6 +20,7 @@ import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
+import com.qiuxs.cuteframework.core.persistent.database.entity.IFlag;
 import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
 import com.qiuxs.cuteframework.core.persistent.database.service.filter.IInsertFilter;
@@ -76,9 +77,52 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void deleteById(PK id) {
-		this.getDao().deleteById(id);
+		T bean = this.getMust(id);
+		// 实现了IFlag接口的默认软删除
+		if (bean instanceof IFlag) {
+			IFlag flagBean = (IFlag) bean;
+			flagBean.setFlag(IFlag.DELETED);
+			this.getDao().update(bean);
+		} else {
+			this.getDao().deleteById(id);
+		}
 	}
-
+	
+	/**
+	 * 2019年3月21日 下午10:44:05
+	 * qiuxs
+	 * @see com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService#enable(java.io.Serializable)
+	 */
+	@Override
+	public void enable(PK pk) {
+		T bean = this.getMust(pk);
+		if (bean instanceof IFlag) {
+			IFlag flagBean = (IFlag) bean;
+			flagBean.setFlag(IFlag.VALID);
+			this.getDao().update(bean);
+		} else {
+			
+		}
+	}
+	
+	/**
+	 * 停用记录实现
+	 * 2019年3月21日 下午10:38:54
+	 * qiuxs
+	 * @see com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService#disable(java.io.Serializable)
+	 */
+	@Override
+	public void disable(PK pk) {
+		T bean = this.getMust(pk);
+		if (bean instanceof IFlag) {
+			IFlag flagBean = (IFlag) bean;
+			flagBean.setFlag(IFlag.INVALID);
+			this.getDao().update(bean);
+		} else {
+			
+		}
+	}
+	
 	/**
 	 * 根据ID获取一行记录
 	 * 
@@ -86,15 +130,27 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * @param id
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
-	public T getById(PK id) {
+	@Override
+	public T get(PK id) {
 		T bean = this.getDao().get(id);
+		return bean;
+	}
+
+	/**
+	 * 
+	 * 2019年3月21日 下午10:40:58
+	 * qiuxs
+	 * @see com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService#getMust(java.io.Serializable)
+	 */
+	@Override
+	public T getMust(PK id) {
+		T bean = this.get(id);
 		if (bean == null) {
 			ExceptionUtils.throwLogicalException(ErrorCodes.DataError.INVALID_PRIMARY_KEY, "records_do_not_exists");
 		}
 		return bean;
 	}
-
+	
 	/**
 	 * 根据ID获取多行记录
 	 * 

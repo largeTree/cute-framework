@@ -20,10 +20,10 @@ public interface IPropertyService<PK extends Serializable, T extends IEntity<PK>
 
 	public Class<T> getPojoClass();
 	
-	
+	public Class<PK> getPkClass();
 
-	public JSONObject translateBean(T bean);
+	public JSONObject translateBean(T bean, boolean wrapper);
 
-	public JSONArray translateBeans(Collection<T> beans);
+	public JSONArray translateBeans(Collection<T> beans, boolean wrapper);
 
 }

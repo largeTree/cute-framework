@@ -97,6 +97,20 @@ public class JsonUtils {
 	public static <T> T parseObject(String str, Class<T> clz) {
 		return JSON.parseObject(str, clz);
 	}
+	
+	/**
+	 * JSON对象转为JavaBean
+	 * @author qiuxs
+	 *
+	 * @param json
+	 * @param clz
+	 * @return
+	 *
+	 * 创建时间：2018年7月26日 下午10:14:05
+	 */
+	public static <T> T parseObject(JSONObject json, Class<T> clz) {
+		return JSONObject.toJavaObject(json, clz);
+	}
 
 	/**
 	 * JSON字符串转为List
@@ -110,6 +124,20 @@ public class JsonUtils {
 	 */
 	public static <T> List<T> parseArray(String str, Class<T> clz) {
 		return JSON.parseArray(str, clz);
+	}
+	
+	/**
+	 * JSON数组转为List
+	 * @author qiuxs
+	 *
+	 * @param jsonArr
+	 * @param clz
+	 * @return
+	 *
+	 * 创建时间：2018年7月26日 下午10:14:18
+	 */
+	public static <T> List<T> parseArray(JSONArray jsonArr, Class<T> clz) {
+		return parseArray(jsonArr.toJSONString(), clz);
 	}
 
 	/**

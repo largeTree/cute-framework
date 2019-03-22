@@ -1,5 +1,7 @@
 package com.qiuxs.cuteframework.core.persistent.database.dao.page;
 
+import java.util.Map;
+
 import org.apache.ibatis.session.RowBounds;
 
 /**
@@ -28,15 +30,23 @@ public class PageInfo extends RowBounds {
 	private Integer total;
 
 	/** 不分页 */
-	public static final PageInfo NO_PAGE_INFO = new PageInfo(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+	public static final PageInfo NO_PAGE_INFO = new PageInfo(1, RowBounds.NO_ROW_LIMIT);
+	
+	/** 默认分页 */
+	public static final PageInfo DEFAULT_PAGE_INFO = new PageInfo(1, DEFAULT_PAGESIZE);
 
 	public PageInfo() {
 		this.pageNo = 1;
 		this.pageSize = RowBounds.NO_ROW_LIMIT;
 	}
 
-	public PageInfo(int offset, int limit) {
-		super(offset, limit);
+	public PageInfo(int pageNo, int pageSize) {
+		if (pageNo <= 0) {
+			pageNo = 1;
+		}
+		this.offset = (pageNo - 1) * pageSize;
+		this.setLimit(pageSize);
+		this.setOffset(this.offset);
 	}
 
 	/**
@@ -56,8 +66,8 @@ public class PageInfo extends RowBounds {
 		if (pageSize <= 0) {
 			pageSize = DEFAULT_PAGESIZE;
 		}
-		int limit = (pageNo - 1) * pageSize;
-		PageInfo pageInfo = new PageInfo(limit, pageSize);
+		int offset = (pageNo - 1) * pageSize;
+		PageInfo pageInfo = new PageInfo(offset, pageSize);
 		pageInfo.setPageNo(pageNo);
 		pageInfo.setPageSize(pageSize);
 		return pageInfo;
@@ -104,6 +114,10 @@ public class PageInfo extends RowBounds {
 
 	public void setLimit(int limit) {
 		this.limit = limit;
+	}
+
+	public Map<String, ? extends Number> getSumrow() {
+		return null;
 	}
 
 }

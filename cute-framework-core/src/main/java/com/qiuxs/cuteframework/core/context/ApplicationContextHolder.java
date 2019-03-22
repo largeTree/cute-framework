@@ -29,13 +29,21 @@ public class ApplicationContextHolder implements ApplicationContextAware {
 	}
 
 	/**
+	 * 获取Spring上下文
+	 * @return
+	 */
+	public static ApplicationContext getApplicationContext() {
+		return ApplicationContextHolder.applicationContext;
+	}
+
+	/**
 	 * 根据BeanName获取bean
 	 * @author qiuxs  
 	 * @param name
 	 * @return
 	 */
 	public static Object getBean(String name) {
-		return applicationContext.getBean(name);
+		return getApplicationContext().getBean(name);
 	}
 
 	/**
@@ -45,7 +53,7 @@ public class ApplicationContextHolder implements ApplicationContextAware {
 	 * @return
 	 */
 	public static <T> T getBean(String name, Class<T> type) {
-		return applicationContext.getBean(name, type);
+		return getApplicationContext().getBean(name, type);
 	}
 
 	/**
@@ -56,7 +64,7 @@ public class ApplicationContextHolder implements ApplicationContextAware {
 	 * @return
 	 */
 	public static <T> T getBean(Class<T> type) {
-		return applicationContext.getBean(type);
+		return getApplicationContext().getBean(type);
 	}
 
 	/**
@@ -67,7 +75,7 @@ public class ApplicationContextHolder implements ApplicationContextAware {
 	 * @return
 	 */
 	public static String[] getBeanNamesForType(Class<?> type) {
-		return applicationContext.getBeanNamesForType(type);
+		return getApplicationContext().getBeanNamesForType(type);
 	}
 
 	/**
@@ -78,7 +86,7 @@ public class ApplicationContextHolder implements ApplicationContextAware {
 	 * @return
 	 */
 	public static String[] getBeanNamesForAnnotation(Class<? extends Annotation> annotationType) {
-		return applicationContext.getBeanNamesForAnnotation(annotationType);
+		return getApplicationContext().getBeanNamesForAnnotation(annotationType);
 	}
 
 	/**

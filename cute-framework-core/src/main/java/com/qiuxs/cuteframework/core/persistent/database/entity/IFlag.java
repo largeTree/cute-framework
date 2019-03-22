@@ -21,6 +21,6 @@ public interface IFlag {
 
 	public Integer getFlag();
 
-	public void setFlag();
+	public void setFlag(Integer flag);
 
 }

@@ -5,40 +5,62 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ResponseResult {
+import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
+
+public class ActionResult {
 
 	public static final String RES_KEY_CODE = "code";
 	public static final String RES_KEY_MSG = "msg";
 	public static final String RES_KEY_ROWS = "rows";
 	public static final String RES_KEY_TOTAL = "total";
 	public static final String RES_KEY_SUMROW = "sumrow";
+	public static final String RES_KEY_VAL = "val";
 
 	public static final int CODE_SUCCESS = 0;
 	public static final String MSG_SUCCESS = "请求成功";
 	public static final int CODE_FAILED = -10;
 	public static final String MSG_FAILED = "请求失败";
 
+	public static final ActionResult SUCCESS_INSTANCE = new ActionResult(CODE_SUCCESS, MSG_SUCCESS);
+	public static final ActionResult FAILED_INSTANCE = new ActionResult(CODE_FAILED, MSG_FAILED);
+
 	private int code;
 	private String msg;
 	private Object data;
 
-	public ResponseResult() {
+	public ActionResult() {
 	}
 
-	public ResponseResult(int code, String msg) {
+	public ActionResult(int code, String msg) {
 		this.code = code;
 		this.msg = msg;
 	}
 
-	public ResponseResult(List<?> rows) {
+	public ActionResult(Integer val) {
+		this(MapUtils.genMap(RES_KEY_VAL, val));
+	}
+
+	public ActionResult(Long val) {
+		this(MapUtils.genMap(RES_KEY_VAL, val));
+	}
+
+	public ActionResult(String val) {
+		this(MapUtils.genMap(RES_KEY_VAL, val));
+	}
+
+	public ActionResult(Boolean val) {
+		this(MapUtils.genMap(RES_KEY_VAL, val));
+	}
+
+	public ActionResult(List<?> rows) {
 		this(rows, rows == null ? 0 : rows.size());
 	}
 
-	public ResponseResult(List<?> rows, int total) {
+	public ActionResult(List<?> rows, int total) {
 		this(rows, total, null);
 	}
 
-	public ResponseResult(List<?> rows, Integer total, Map<String, ? extends Number> sumrow) {
+	public ActionResult(List<?> rows, Integer total, Map<String, ? extends Number> sumrow) {
 		Map<String, Object> data = new HashMap<>();
 		if (rows == null) {
 			rows = new ArrayList<>();
@@ -49,6 +71,16 @@ public class ResponseResult {
 		this.data = data;
 		this.code = CODE_SUCCESS;
 		this.msg = MSG_SUCCESS;
+	}
+
+	public ActionResult(Map<String, Object> mapData) {
+		this(CODE_SUCCESS, MSG_SUCCESS, mapData);
+	}
+
+	public ActionResult(int code, String msg, Object data) {
+		this.data = data;
+		this.code = code;
+		this.msg = msg;
 	}
 
 	public int getCode() {
@@ -73,14 +105,6 @@ public class ResponseResult {
 
 	public void setData(Object data) {
 		this.data = data;
-	}
-
-	public static ResponseResult makeSuccess() {
-		return new ResponseResult(CODE_SUCCESS, MSG_SUCCESS);
-	}
-
-	public static ResponseResult makeFailed() {
-		return new ResponseResult(CODE_FAILED, MSG_FAILED);
 	}
 
 }

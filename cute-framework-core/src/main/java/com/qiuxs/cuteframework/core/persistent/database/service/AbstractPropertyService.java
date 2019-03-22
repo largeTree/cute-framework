@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.Constants;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
@@ -26,7 +27,7 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IPropertySer
  * @version 1.0.0
  */
 public abstract class AbstractPropertyService<PK extends Serializable, T extends IEntity<PK>>
-		implements IPropertyService<PK, T> {
+        implements IPropertyService<PK, T> {
 
 	protected static Logger log = LogManager.getLogger(AbstractPropertyService.class);
 
@@ -41,10 +42,12 @@ public abstract class AbstractPropertyService<PK extends Serializable, T extends
 		this.pojoClass = pojoClass;
 	}
 
+	@Override
 	public Class<T> getPojoClass() {
 		return pojoClass;
 	}
 
+	@Override
 	public Class<PK> getPkClass() {
 		return pkClass;
 	}
@@ -58,32 +61,34 @@ public abstract class AbstractPropertyService<PK extends Serializable, T extends
 	}
 
 	@Override
-	public JSONObject translateBean(T bean) {
+	public JSONObject translateBean(T bean, boolean wrapper) {
 		if (bean == null) {
 			return new JSONObject();
 		}
 		JSONObject jbean = JsonUtils.toJSONObject(bean);
-		List<PropertyWrapper<?>> props = this.getProperties();
-		JSONObject captions = new JSONObject();
-		for (PropertyWrapper<?> prop : props) {
-			if (prop.hasTranslater()) {
-				String fileName = prop.getField().getName();
-				String caption = prop.getCaption(jbean.get(fileName));
-				captions.put(fileName, caption);
+		if (wrapper) {
+			List<PropertyWrapper<?>> props = this.getProperties();
+			JSONObject captions = new JSONObject();
+			for (PropertyWrapper<?> prop : props) {
+				if (prop.hasTranslater()) {
+					String fileName = prop.getField().getName();
+					String caption = prop.getCaption(jbean.get(fileName));
+					captions.put(fileName, caption);
+				}
 			}
+			jbean.put(Constants.CAPTION_KEY, captions);
 		}
-		jbean.put("_caption", captions);
 		return jbean;
 	}
 
 	@Override
-	public JSONArray translateBeans(Collection<T> beans) {
+	public JSONArray translateBeans(Collection<T> beans, boolean wrapper) {
 		if (ListUtils.isNullOrEmpty(beans)) {
 			return new JSONArray();
 		}
 		JSONArray dataList = new JSONArray(beans.size());
 		for (Iterator<T> iter = beans.iterator(); iter.hasNext();) {
-			dataList.add(this.translateBean(iter.next()));
+			dataList.add(this.translateBean(iter.next(), wrapper));
 		}
 		return dataList;
 	}

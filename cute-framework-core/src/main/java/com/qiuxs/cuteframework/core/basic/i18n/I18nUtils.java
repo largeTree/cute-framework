@@ -16,10 +16,10 @@ public class I18nUtils {
 	 *
 	 * 创建时间：2018年7月27日 下午10:23:09
 	 */
-	public static String getDefaultLangMsg(String msgKey,String ...args) {
+	public static String getDefaultLangMsg(String msgKey, Object... args) {
 		return getMessageByLang(Constants.DEFAULT_LANG, msgKey, args);
 	}
-	
+
 	/**
 	 * 获取格式化的国际化
 	 * 
@@ -28,7 +28,7 @@ public class I18nUtils {
 	 * @param args
 	 * @return
 	 */
-	public static String getMessageByLang(String lang, String msgKey, String... args) {
+	public static String getMessageByLang(String lang, String msgKey, Object... args) {
 		String msg = MessageResourceHolder.getMessage(lang, msgKey);
 		if (msg != null) {
 			msg = new MessageFormat(msg).format(args);

@@ -2,6 +2,9 @@ package com.qiuxs.cuteframework.core.basic;
 
 public class Constants {
 
+	/** 翻译集合 */
+	public static final String CAPTION_KEY = "_caption";
+
 	public static final String DEFAULT_LANG = "cn";
 
 	public static final String UTF_8 = "utf-8";

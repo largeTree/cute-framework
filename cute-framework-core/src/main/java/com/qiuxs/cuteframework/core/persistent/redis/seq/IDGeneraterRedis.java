@@ -26,7 +26,7 @@ public class IDGeneraterRedis implements IDGeneraterable {
 			throw new RuntimeException("No RedisPool Configuration");
 		}
 		Jedis jedis = jedisPool.getResource();
-		jedis.select(envContext.getSeqDbIndex());
+		jedis.select(this.envContext.getSeqDbIndex());
 		Long next = jedis.incrBy(getKey(tableName), 1L);
 		jedis.close();
 		return next;

@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.qiuxs.cuteframework.web.action.ActionConstants;
+
 /**
  * 功能描述: Http请求转换工具<br/>  
  * 新增原因: TODO<br/>  
@@ -16,12 +18,32 @@ import javax.servlet.http.HttpServletRequest;
  * @version 1.0.0
  */
 public class RequestUtils {
+	
+	/**
+	 * 将请求参数转化为Map方便使用
+	 *  
+	 * @author qiuxs  
+	 * @param request
+	 * 请求对象
+	 * @param compressType 
+	 * 	压缩方式
+	 * @return
+	 */
+	public static Map<String, String> getRequestParams(HttpServletRequest request, String compressType) {
+		Map<String, String> params = getRequestParams(request);
+		String jsonParam = params.get(ActionConstants.PARAM_JSONPARAM);
+		if (compressType != null && jsonParam != null) {
+			// TODO 解压jsonParam
+		}
+		return params;
+	}
 
 	/**
 	 * 将请求参数转化为Map方便使用
 	 *  
 	 * @author qiuxs  
 	 * @param request
+	 * 请求对象
 	 * @return
 	 */
 	public static Map<String, String> getRequestParams(HttpServletRequest request) {

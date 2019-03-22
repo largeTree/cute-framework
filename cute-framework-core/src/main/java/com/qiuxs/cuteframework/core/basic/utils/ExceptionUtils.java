@@ -29,7 +29,7 @@ public class ExceptionUtils {
 	 * 
 	 * @author qiuxs
 	 */
-	public static void throwLoginException(String msgId, String... args) {
+	public static void throwLoginException(String msgId, Object... args) {
 		throwLoginException(ErrorCodes.SessionError.SESSION_INVALID, msgId, args);
 	}
 
@@ -38,7 +38,7 @@ public class ExceptionUtils {
 	 * 
 	 * @author qiuxs
 	 */
-	public static void throwLoginException(int errorCode, String msgId, String... args) {
+	public static void throwLoginException(int errorCode, String msgId, Object... args) {
 		String formatedMsg = I18nUtils.getMessageByLang(Constants.DEFAULT_LANG, msgId, args);
 		throw new LoginException(errorCode, formatedMsg);
 	}
@@ -49,7 +49,7 @@ public class ExceptionUtils {
 	 * @param msg
 	 * @param args
 	 */
-	public static void throwLogicalException(String msgId, String... args) {
+	public static void throwLogicalException(String msgId, Object... args) {
 		throwLogicalException(ErrorCodes.LOGIC_EXCEPTION_CODE, msgId, args);
 	}
 
@@ -63,7 +63,7 @@ public class ExceptionUtils {
 	 *
 	 * 创建时间：2018年7月26日 下午10:11:23
 	 */
-	public static void throwLogicalException(int errorCode, String msgId, String... args) {
+	public static void throwLogicalException(int errorCode, String msgId, Object... args) {
 		String formatedMsg = I18nUtils.getMessageByLang(Constants.DEFAULT_LANG, msgId, args);
 		throwLogicalExceptionInner(errorCode, formatedMsg);
 	}

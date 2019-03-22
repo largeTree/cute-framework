@@ -23,6 +23,8 @@ public class EnvironmentContext implements EnvironmentAware {
 	private int seqDbIndex;
 	/** 是否测试模式 */
 	private boolean isTest;
+	/** 是否调试模式 */
+	private boolean isDebug;
 	/** 全局环境变量 */
 	private Environment environment;
 
@@ -65,12 +67,20 @@ public class EnvironmentContext implements EnvironmentAware {
 	public void setTest(boolean isTest) {
 		this.isTest = isTest;
 	}
-	
+
+	public boolean isDebug() {
+		return isDebug;
+	}
+
+	public void setDebug(boolean isDebug) {
+		this.isDebug = isDebug;
+	}
+
 	@Override
 	public void setEnvironment(Environment environment) {
 		this.environment = environment;
 	}
-	
+
 	public <T> T getEnvValue(String key, Class<T> targetType) {
 		return this.environment.getProperty(key, targetType);
 	}
