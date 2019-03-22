@@ -133,6 +133,6 @@ public abstract class AbstractDataPropertyAction<PK extends Serializable, T exte
 	 * @auther qiuxs
 	 * @return S
 	 */
-	public abstract S getService();
+	protected abstract S getService();
 
 }
