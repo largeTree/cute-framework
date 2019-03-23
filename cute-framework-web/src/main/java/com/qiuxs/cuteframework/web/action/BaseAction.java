@@ -27,12 +27,12 @@ import com.qiuxs.cuteframework.web.bean.ActionResult;
  * @param <S>
  */
 public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>, S extends IDataPropertyService<PK, T, D>>
-        extends AbstractDataPropertyAction<PK, T, D, S> implements IAction {
+        extends AbstractDataPropertyAction<PK, T, D, S> implements IBaseAction {
 
 	/**
 	 * 2019年3月22日 下午9:28:46
 	 * qiuxs
-	 * @see com.qiuxs.cuteframework.web.action.IAction#list(java.util.Map, java.lang.String)
+	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#list(java.util.Map, java.lang.String)
 	 */
 	@Api(WebConstants.AUTO_API_KEY)
 	@Override
@@ -61,7 +61,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	/**
 	 * 2019年3月22日 下午9:29:19
 	 * qiuxs
-	 * @see com.qiuxs.cuteframework.web.action.IAction#get(java.util.Map)
+	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#get(java.util.Map)
 	 */
 	@Api(WebConstants.AUTO_API_KEY)
 	@Override
@@ -87,7 +87,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	/**
 	 * 2019年3月22日 下午9:29:39
 	 * qiuxs
-	 * @see com.qiuxs.cuteframework.web.action.IAction#save(java.util.Map, java.lang.String)
+	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#save(java.util.Map, java.lang.String)
 	 */
 	@Api(WebConstants.AUTO_API_KEY)
 	@Override
@@ -100,7 +100,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	/**
 	 * 2019年3月22日 下午9:29:53
 	 * qiuxs
-	 * @see com.qiuxs.cuteframework.web.action.IAction#delete(java.util.Map)
+	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#delete(java.util.Map)
 	 */
 	@Api(WebConstants.AUTO_API_KEY)
 	@Override
@@ -112,7 +112,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	/**
 	 * 2019年3月22日 下午9:30:18
 	 * qiuxs
-	 * @see com.qiuxs.cuteframework.web.action.IAction#disable(java.util.Map)
+	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#disable(java.util.Map)
 	 */
 	@Api(WebConstants.AUTO_API_KEY)
 	@Override
@@ -124,7 +124,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	/**
 	 * 2019年3月22日 下午9:30:41
 	 * qiuxs
-	 * @see com.qiuxs.cuteframework.web.action.IAction#enable(java.util.Map)
+	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#enable(java.util.Map)
 	 */
 	@Api(WebConstants.AUTO_API_KEY)
 	@Override
