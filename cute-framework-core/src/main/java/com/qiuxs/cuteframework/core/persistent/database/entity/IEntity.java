@@ -79,5 +79,41 @@ public interface IEntity<PK> extends Serializable {
 	 * @param updatedDate
 	 */
 	public void setUpdatedTime(Date updatedDate);
+	
+	/***
+	 * 获取删除时间
+	 * 
+	 * 2019年3月23日 下午10:58:00
+	 * @auther qiuxs
+	 * @return
+	 */
+	public Date getDeletedTime();
+	
+	/**
+	 * 设置删除时间
+	 * 
+	 * 2019年3月23日 下午10:58:07
+	 * @auther qiuxs
+	 * @param deletedTime
+	 */
+	public void setDeletedTime(Date deletedTime);
+
+	/**
+	 * 获取删除人ID
+	 * 
+	 * 2019年3月23日 下午10:58:43
+	 * @auther qiuxs
+	 * @return
+	 */
+	public Long getDeletedBy();
+
+	/**
+	 * 设置删除人ID
+	 * 
+	 * 2019年3月23日 下午10:59:21
+	 * @auther qiuxs
+	 * @param deletedBy
+	 */
+	public void setDeletedBy(Long deletedBy);
 
 }

@@ -26,8 +26,10 @@ public class UserLite implements Serializable {
 	private String sessionId;
 	/** 登陆时间 */
 	private Date loginTime;
-	/** 微信OpenId */
-	private String wxOpenId;
+	/** 请求地址 */
+	private String requestUrl;
+	/** 客户端IP地址 */
+	private String clientIp;
 
 	public Long getUserId() {
 		return userId;
@@ -69,12 +71,20 @@ public class UserLite implements Serializable {
 		this.loginTime = loginTime;
 	}
 
-	public String getWxOpenId() {
-		return wxOpenId;
+	public String getRequestUrl() {
+		return requestUrl;
 	}
 
-	public void setWxOpenId(String wxOpenId) {
-		this.wxOpenId = wxOpenId;
+	public void setRequestUrl(String requestUrl) {
+		this.requestUrl = requestUrl;
+	}
+
+	public String getClientIp() {
+		return clientIp;
+	}
+
+	public void setClientIp(String clientIp) {
+		this.clientIp = clientIp;
 	}
 
 }

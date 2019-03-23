@@ -51,6 +51,10 @@ public class ActionResult {
 	public ActionResult(Boolean val) {
 		this(MapUtils.genMap(RES_KEY_VAL, val));
 	}
+	
+	public ActionResult(Object obj) {
+		this.data = obj;
+	}
 
 	public ActionResult(List<?> rows) {
 		this(rows, rows == null ? 0 : rows.size());

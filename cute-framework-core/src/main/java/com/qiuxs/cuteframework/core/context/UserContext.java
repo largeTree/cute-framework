@@ -24,8 +24,6 @@ public class UserContext {
 	private static final Map<String, UserLite> SESSION_HOLDER = new ConcurrentHashMap<>();
 	/** 用户ID和sessionId对应关系 */
 	private static final Map<Long, String> USER_ID_SESSION_ID_HOLDER = new ConcurrentHashMap<>();
-	/** 微信OpenId对应的SessionId */
-	private static final Map<String, String> WX_OPENID_SESSIONID = new ConcurrentHashMap<>();
 
 	/**
 	 * 添加一个会话信息
@@ -37,22 +35,12 @@ public class UserContext {
 		// 放入线程变量缓存
 		setUserLite(userLite);
 		Map<Long, String> idSessionIdMap = getIdSessionIdMap();
-		Map<String, String> wxOpenIdSessionIdMap = getWxOpenIdSessionIdMap();
 		// 放入新的对应关系
 		String oldSessionId = idSessionIdMap.put(userLite.getUserId(), userLite.getSessionId());
 		if (StringUtils.isNotBlank(oldSessionId)) {
 			// 存在旧会话时，移除旧会话
 			getSessionMap().remove(oldSessionId);
 		}
-		String wxOpenId = userLite.getWxOpenId();
-		// 带有wxOpenId的会话缓存一份openId和sessionId的对应关系
-		if (StringUtils.isNotBlank(wxOpenId)) {
-			oldSessionId = wxOpenIdSessionIdMap.put(wxOpenId, userLite.getSessionId());
-			if (StringUtils.isNotBlank(oldSessionId)) {
-				wxOpenIdSessionIdMap.remove(oldSessionId);
-			}
-		}
-
 	}
 	
 	/**
@@ -67,9 +55,6 @@ public class UserContext {
 		UserLite userLite = getSessionMap().get(sesionId);
 		if (userLite != null) {
 			getIdSessionIdMap().remove(userLite.getUserId());
-			if (userLite.getWxOpenId() != null) {
-				getWxOpenIdSessionIdMap().remove(userLite.getWxOpenId());
-			}
 		}
 	}
 
@@ -123,40 +108,6 @@ public class UserContext {
 	}
 
 	/**
-	 * 根据微信OpenId获取会话信息
-	 * @author qiuxs
-	 *
-	 * @param wxOpenId
-	 * @return
-	 *
-	 * 创建时间：2018年8月8日 下午9:39:17
-	 */
-	public static UserLite getUserLiteByWxOpenId(String wxOpenId) {
-		String sessionId = getWxOpenIdSessionIdMap().get(wxOpenId);
-		if (sessionId == null) {
-			ExceptionUtils.throwLoginException();
-		}
-		return getUserLite(sessionId);
-	}
-
-	/**
-	 * 根据微信OpenId获取会话信息，不存在时不抛出异常
-	 * @author qiuxs
-	 *
-	 * @param wxOpenId
-	 * @return
-	 *
-	 * 创建时间：2018年8月8日 下午9:47:04
-	 */
-	public static UserLite getUserLiteByWxOpenIdOpt(String wxOpenId) {
-		String sessionId = getWxOpenIdSessionIdMap().get(wxOpenId);
-		if (sessionId == null) {
-			return null;
-		}
-		return getUserLite(sessionId, true);
-	}
-
-	/**
 	 * 设置当前线程的会话信息
 	 * 
 	 * @author qiuxs
@@ -182,18 +133,6 @@ public class UserContext {
 	 */
 	private static Map<Long, String> getIdSessionIdMap() {
 		return USER_ID_SESSION_ID_HOLDER;
-	}
-
-	/**
-	 * 获取微信OpenId和SessionId的对应关系
-	 * @author qiuxs
-	 *
-	 * @return
-	 *
-	 * 创建时间：2018年8月8日 下午9:48:13
-	 */
-	private static Map<String, String> getWxOpenIdSessionIdMap() {
-		return WX_OPENID_SESSIONID;
 	}
 
 	/**

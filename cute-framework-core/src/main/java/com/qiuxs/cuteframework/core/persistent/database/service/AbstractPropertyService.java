@@ -3,6 +3,7 @@ package com.qiuxs.cuteframework.core.persistent.database.service;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import com.qiuxs.cuteframework.core.basic.Constants;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
+import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IPropertyService;
 
@@ -93,5 +95,25 @@ public abstract class AbstractPropertyService<PK extends Serializable, T extends
 		return dataList;
 	}
 
-	protected abstract void initProps(List<PropertyWrapper<?>> props);
+	protected void initProps(List<PropertyWrapper<?>> props) {
+		PropertyWrapper<?> prop = null;
+		
+		prop = new PropertyWrapper<Date>(new BaseField("createdBy", "创建人", Long.class), null);
+		props.add(prop);
+		
+		prop = new PropertyWrapper<Date>(new BaseField("createdTime", "创建时间", Date.class), null);
+		props.add(prop);
+		
+		prop = new PropertyWrapper<Date>(new BaseField("updatedBy", "创建人", Long.class), null);
+		props.add(prop);
+		
+		prop = new PropertyWrapper<Date>(new BaseField("updatedTime", "更新时间", Date.class), null);
+		props.add(prop);
+		
+		prop = new PropertyWrapper<Date>(new BaseField("deletedBy", "创建人", Long.class), null);
+		props.add(prop);
+		
+		prop = new PropertyWrapper<Date>(new BaseField("deletedTime", "删除时间", Date.class), null);
+		props.add(prop);
+	}
 }
