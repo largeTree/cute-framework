@@ -36,7 +36,9 @@ public interface IDataPropertyService<PK extends Serializable, T extends IEntity
 
 	public List<T> getByIds(Collection<PK> ids);
 
-	public List<T> findByMap(final Map<String, Object> params, PageInfo pageInfo);
+	public List<T> findByMap(Map<String, Object> params, PageInfo pageInfo);
+	
+	public List<T> findByMap(Map<String, Object> params);
 
 	public void deleteById(PK pk);
 

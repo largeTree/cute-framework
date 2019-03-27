@@ -40,6 +40,9 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropert
  */
 public abstract class AbstractDataPropertyService<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>>
 		extends AbstractPropertyService<PK, T> implements IDataPropertyService<PK, T, D> {
+	
+	/** 批量操作一次多少条 */
+	private static final int BATCH_ONCE = 200;
 
 	private String tableName;
 
@@ -168,11 +171,27 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * 
 	 * @author qiuxs
 	 * @param params
+	 * 		参数列表
+	 * @param pageInfo
+	 * 		分页信息
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS)
-	public List<T> findByMap(final Map<String, Object> params, PageInfo pageInfo) {
+	public List<T> findByMap(Map<String, Object> params, PageInfo pageInfo) {
 		return this.getDao().list(params, pageInfo);
+	}
+	
+	/**
+	 * 使用Map作为参数查询
+	 * 
+	 * @author qiuxs
+	 * @param params
+	 * 		参数列表
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS)
+	public List<T> findByMap(Map<String, Object> params) {
+		return this.getDao().list(params);
 	}
 
 	/**
@@ -184,16 +203,15 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void create(T bean) {
-		if (this.initCreate(bean)) {
-			this.preSave(null, bean);
-			this.getDao().insert(bean);
-		}
-		postCreate(bean);
+		this.initCreate(bean);
+		this.preSave(null, bean);
+		this.getDao().insert(bean);
 		postSave(null, bean);
+		postCreate(bean);
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void createInBatch(List<T> beans) {
 		if (ListUtils.isNullOrEmpty(beans)) {
 			return;
@@ -201,17 +219,16 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		// 本次被批量插入的所有记录
 		List<T> all = new ArrayList<>(beans.size());
 		// 单次插入的记录
-		List<T> once = new ArrayList<>(beans.size() > 200 ? 200 : beans.size());
+		List<T> once = new ArrayList<>(beans.size() > BATCH_ONCE ? BATCH_ONCE : beans.size());
 		for (Iterator<T> iter = beans.iterator(); iter.hasNext();) {
 			T bean = iter.next();
 			// 执行初始化并加入待插入列表
-			if (this.initCreate(bean)) {
-				this.preSave(null, bean);
-				once.add(bean);
-				all.add(bean);
-			}
+			this.initCreate(bean);
+			this.preSave(null, bean);
+			once.add(bean);
+			all.add(bean);
 			// 两百条 插入一次
-			if (once.size() > 200) {
+			if (once.size() == BATCH_ONCE) {
 				this.getDao().insertInBatch(once);
 				once.clear();
 			}
@@ -228,8 +245,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		}
 	}
 
-	protected boolean preCreate(T bean) {
-		return true;
+	protected void preCreate(T bean) {
 	}
 
 	protected void postCreate(T bean) {
@@ -239,7 +255,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		}
 	}
 
-	private boolean initCreate(T bean) {
+	private void initCreate(T bean) {
 		List<IInsertFilter<PK, T>> insertFilters = this.getInsertFilters();
 		for (IInsertFilter<PK, T> filter : insertFilters) {
 			filter.preInsert(bean);
@@ -259,7 +275,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		}
 		
 		this.initDefault(bean);
-		return this.preCreate(bean);
+		this.preCreate(bean);
 	}
 
 	/**
@@ -330,8 +346,8 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	}
 
 	/**
-	 * 获取就记录
-	 * 
+	 * 获取旧记录
+	 * 默认返回空，需要时自行实现
 	 * @param pk
 	 * @return
 	 */

@@ -34,6 +34,9 @@ public class PageInfo extends RowBounds {
 	
 	/** 默认分页 */
 	public static final PageInfo DEFAULT_PAGE_INFO = new PageInfo(1, DEFAULT_PAGESIZE);
+	
+	/** 适用于获取一行数据的分页对象 */
+	public static final PageInfo SINGLE_PAGE_INFO = new PageInfo(1, 1);
 
 	public PageInfo() {
 		this.pageNo = 1;
