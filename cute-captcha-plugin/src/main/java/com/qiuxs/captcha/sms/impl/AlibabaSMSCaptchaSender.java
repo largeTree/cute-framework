@@ -1,8 +1,6 @@
 package com.qiuxs.captcha.sms.impl;
 
-import java.util.Map;
-
-import com.qiuxs.captcha.sms.ISMSCaptchaSender;
+import com.qiuxs.sms.sender.impl.AlibabaSMSSender;
 
 /**
  * 阿里云短信发送器
@@ -10,16 +8,16 @@ import com.qiuxs.captcha.sms.ISMSCaptchaSender;
  * @author qiuxs
  * 2019年3月28日 下午11:37:27
  */
-public class AlibabaSMSCaptchaSender implements ISMSCaptchaSender {
+public class AlibabaSMSCaptchaSender extends AbstractSMSCaptchaSender<AlibabaSMSSender> {
 
-	@Override
-	public void sendCaptcha(String mobile, String content) {
-		throw new UnsupportedOperationException("Alibaba SMS Service not suppored send by content");
-	}
-
-	@Override
-	public void sendCaptchaByTemplate(String mobile, String templateId, Map<String, String> params) {
-		
+	/**
+	 * 直接使用短信发送器构造
+	 * @param sender
+	 * 2019年3月28日 下午11:47:20
+	 * @author qiuxs
+	 */
+	public AlibabaSMSCaptchaSender(AlibabaSMSSender sender) {
+		super(sender);
 	}
 
 }

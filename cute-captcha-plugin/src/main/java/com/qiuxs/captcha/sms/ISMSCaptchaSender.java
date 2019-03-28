@@ -2,12 +2,14 @@ package com.qiuxs.captcha.sms;
 
 import java.util.Map;
 
+import com.qiuxs.sms.sender.ISMSSener;
+
 /**
  * 短信验证码发送器
  * @author qiuxs
  * 2019年3月28日 下午11:14:41
  */
-public interface ISMSCaptchaSender {
+public interface ISMSCaptchaSender<S extends ISMSSener> {
 
 	/**
 	 * 发送验证码短信

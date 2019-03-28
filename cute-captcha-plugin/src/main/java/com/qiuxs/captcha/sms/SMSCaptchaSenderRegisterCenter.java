@@ -15,7 +15,7 @@ public class SMSCaptchaSenderRegisterCenter {
 	/**
 	 * 验证码发送器列表
 	 */
-	private static List<ISMSCaptchaSender> smsCaptchaSends = new ArrayList<>();
+	private static List<ISMSCaptchaSender<?>> smsCaptchaSends = new ArrayList<>();
 
 	/**
 	 * 手机号对应发送器索引
@@ -29,7 +29,7 @@ public class SMSCaptchaSenderRegisterCenter {
 	 * @auther qiuxs
 	 * @param sender
 	 */
-	public static void register(ISMSCaptchaSender sender) {
+	public static void register(ISMSCaptchaSender<?> sender) {
 		smsCaptchaSends.add(sender);
 	}
 
@@ -40,7 +40,7 @@ public class SMSCaptchaSenderRegisterCenter {
 	 * @auther qiuxs
 	 * @param mobile
 	 */
-	public static ISMSCaptchaSender chooseAnSender(String mobile) {
+	public static ISMSCaptchaSender<?> chooseAnSender(String mobile) {
 		if (smsCaptchaSends.size() == 0) {
 			throw new RuntimeException("No SMSCaptchaSender Registered");
 		}
@@ -51,7 +51,7 @@ public class SMSCaptchaSenderRegisterCenter {
 		if (idx >= smsCaptchaSends.size()) {
 			idx = 0;
 		}
-		ISMSCaptchaSender sender = smsCaptchaSends.get(idx);
+		ISMSCaptchaSender<?> sender = smsCaptchaSends.get(idx);
 		mobileSenderIdx.put(mobile, ++idx);
 		return sender;
 	}
