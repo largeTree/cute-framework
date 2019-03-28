@@ -12,7 +12,7 @@ import com.qiuxs.sms.sender.ISMSSener;
 public interface ISMSCaptchaSender<S extends ISMSSener> {
 
 	/**
-	 * 发送验证码短信
+	 * 根据短信内容直接发送验证码
 	 * 
 	 * 2019年3月28日 下午11:14:48
 	 * @auther qiuxs

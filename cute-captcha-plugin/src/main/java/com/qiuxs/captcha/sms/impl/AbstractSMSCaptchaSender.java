@@ -13,25 +13,58 @@ import com.qiuxs.sms.sender.ISMSSener;
  */
 public abstract class AbstractSMSCaptchaSender<S extends ISMSSener> implements ISMSCaptchaSender<S> {
 
+	/**
+	 * 短信发送器实例
+	 */
 	private S smsSender;
 
+	/**
+	 * 根据短信发送器直接构造验证码发送器
+	 * @param sender
+	 * 2019年3月28日 下午11:58:38
+	 * @author qiuxs
+	 */
 	public AbstractSMSCaptchaSender(S sender) {
 		this.smsSender = sender;
 	}
 
+	/**
+	 * 获取短信发送器
+	 * 
+	 * 2019年3月28日 下午11:58:49
+	 * @auther qiuxs
+	 * @return
+	 */
 	protected S getSmsSender() {
 		return smsSender;
 	}
 
+	/**
+	 * 设置短信发送器
+	 * 
+	 * 2019年3月28日 下午11:58:57
+	 * @auther qiuxs
+	 * @param smsSender
+	 */
 	protected void setSmsSender(S smsSender) {
 		this.smsSender = smsSender;
 	}
 
+	/**
+	 * 2019年3月28日 下午11:59:10
+	 * qiuxs
+	 * @see com.qiuxs.captcha.sms.ISMSCaptchaSender#sendCaptcha(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void sendCaptcha(String mobile, String content) {
 		this.getSmsSender().sendSMS(mobile, content);
 	}
 
+	/**
+	 * 2019年3月28日 下午11:59:33
+	 * qiuxs
+	 * @see com.qiuxs.captcha.sms.ISMSCaptchaSender#sendCaptchaByTemplate(java.lang.String, java.lang.String, java.util.Map)
+	 */
 	@Override
 	public void sendCaptchaByTemplate(String mobile, String templateId, Map<String, String> params) {
 		this.getSmsSender().sendSMSByTemplate(mobile, templateId, params);
