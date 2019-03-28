@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiuxs.captcha.dao.CaptchaHistoryDao">
+
+	<sql id="allFields">
+		`id`,
+		`session_key` as sessionKey,
+		`ip`,
+		`captcha`,
+		`time_limit` as timeLimit,
+		`cap_created_time` as capCreatedTime,
+		`created_time` as createdTime
+	</sql>
+
+	<sql id="insertFields">
+		`id`,
+		`session_key`,
+		`ip`,
+		`captcha`,
+		`time_limit`,
+		`cap_created_time`,
+		`created_time`
+	</sql>
+
+	<select id="list" resultType="com.qiuxs.captcha.entity.CaptchaHistory" >
+		select
+			<include refid="allFields" />
+		from `cute_captcha_history`
+		<where>
+			<include refid="comnWhere" />
+		</where>
+		<if test="orderBy != null" >
+			order by ${orderBy}
+			<if test="orderByDesc != null">
+				desc
+			</if>
+		</if>
+	</select>
+	
+	<select id="getCount" resultType="Long" >
+		select 
+			count(1) 
+		from `cute_captcha_history`
+		<where>
+			<include refid="comnWhere" />
+		</where>
+	</select>
+
+	<sql id="comnWhere">
+		<if test="id != null">
+			`id` = #{id}
+		</if>
+		<if test="sessionKey != null">
+			 and `session_key` = #{sessionKey}
+		</if>
+		<if test="ip != null">
+			 and `ip` = #{ip}
+		</if>
+		<if test="captcha != null">
+			 and `captcha` = #{captcha}
+		</if>
+		<if test="timeLimit != null">
+			 and `time_limit` = #{timeLimit}
+		</if>
+		<if test="capCreatedTime != null">
+			 and `cap_created_time` = #{capCreatedTime}
+		</if>
+		<if test="createdTime != null">
+			 and `created_time` = #{createdTime}
+		</if>
+	</sql>
+
+	<select id="getByIds" resultType="com.qiuxs.captcha.entity.CaptchaHistory" >
+		select <include refid="allFields" /> from `cute_captcha_history` where id in
+		<foreach collection="list" item="item" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="get" resultType="com.qiuxs.captcha.entity.CaptchaHistory" >
+		select <include refid="allFields" /> from `cute_captcha_history` where id = #{id}
+	</select>
+
+	<delete id="deleteById" parameterType="Long" >
+		delete from `cute_captcha_history` where id = #{id}
+	</delete>
+
+	<insert id="insert" parameterType="com.qiuxs.captcha.entity.CaptchaHistory">
+		insert into `cute_captcha_history`(<include refid="insertFields" />)
+		values(
+			#{id},
+			#{sessionKey},
+			#{ip},
+			#{captcha},
+			#{timeLimit},
+			#{capCreatedTime},
+			#{createdTime}
+		)
+	</insert>
+
+	<insert id="insertInBatch" parameterType="java.util.List" >
+		insert into `cute_captcha_history`(<include refid="insertFields" />)
+		values
+		<foreach collection="list" item="item" separator="," >
+			(
+				#{item.id},
+				#{item.sessionKey},
+				#{item.ip},
+				#{item.captcha},
+				#{item.timeLimit},
+				#{item.capCreatedTime},
+				#{item.createdTime}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="com.qiuxs.captcha.entity.CaptchaHistory" >
+		update `cute_captcha_history` 
+			<set>
+				<include refid="setComn" />
+			</set>
+		where id = #{id}
+	</update>
+
+	<sql id="setComn" >
+		<if test="sessionKey != null" >
+			`session_key` = #{sessionKey},
+		</if>
+		<if test="ip != null" >
+			`ip` = #{ip},
+		</if>
+		<if test="captcha != null" >
+			`captcha` = #{captcha},
+		</if>
+		<if test="timeLimit != null" >
+			`time_limit` = #{timeLimit},
+		</if>
+		<if test="capCreatedTime != null" >
+			`cap_created_time` = #{capCreatedTime},
+		</if>
+		<if test="createdTime != null" >
+			`created_time` = #{createdTime}
+		</if>
+	</sql>
+</mapper>

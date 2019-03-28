@@ -256,6 +256,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	}
 
 	private void initCreate(T bean) {
+		this.preCreate(bean);
 		List<IInsertFilter<PK, T>> insertFilters = this.getInsertFilters();
 		for (IInsertFilter<PK, T> filter : insertFilters) {
 			filter.preInsert(bean);
@@ -275,7 +276,6 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		}
 		
 		this.initDefault(bean);
-		this.preCreate(bean);
 	}
 
 	/**

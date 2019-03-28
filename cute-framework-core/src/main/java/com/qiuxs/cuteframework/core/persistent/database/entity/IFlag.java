@@ -11,7 +11,7 @@ import com.qiuxs.cuteframework.core.basic.code.annotation.CodeDomain;
 public interface IFlag {
 
 	@CodeDomain
-	public static final String FLAG_DOMAIN = "flagDomain";
+	public static final String FLAG_DOMAIN = "domain.flag";
 	@Code(domain = FLAG_DOMAIN, caption = "有效")
 	public static final Integer VALID = 1;
 	@Code(domain = FLAG_DOMAIN, caption = "无效")

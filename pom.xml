@@ -11,6 +11,7 @@
 		<module>cute-framework-core</module>
 		<module>cute-framework-tester</module>
 		<module>cute-framework-web</module>
+		<module>cute-captcha-plugin</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

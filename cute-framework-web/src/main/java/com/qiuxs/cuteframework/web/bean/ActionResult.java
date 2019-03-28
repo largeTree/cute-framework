@@ -53,7 +53,7 @@ public class ActionResult {
 	}
 	
 	public ActionResult(Object obj) {
-		this.data = obj;
+		this(CODE_SUCCESS, MSG_SUCCESS, obj);
 	}
 
 	public ActionResult(List<?> rows) {
