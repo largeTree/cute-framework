@@ -13,4 +13,17 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropert
  */
 public interface ICaptchaService extends IDataPropertyService<Long, Captcha, CaptchaDao> {
 
+	/**
+	 * 生成一个验证码记录
+	 * 
+	 * 2019年4月2日 下午10:09:33
+	 * @auther qiuxs
+	 * @param mobile
+	 * 		手机号
+	 * @param ip
+	 * 		ip地址
+	 * @return
+	 */
+	public Captcha genCaptcha(String mobile, String ip);
+
 }

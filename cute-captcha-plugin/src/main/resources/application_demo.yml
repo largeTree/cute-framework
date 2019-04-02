@@ -1,0 +1,6 @@
+# 实例配置
+env:
+  captcha:
+    default-time-limit: 60
+    default-balcklist-reason: '你被拉黑了'
+    capcha-placeholder: captcha

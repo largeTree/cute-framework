@@ -81,7 +81,7 @@ public class ApiHolder implements ApplicationListener<ContextRefreshedEvent> {
 				
 				apiConfig.setKey(apiKey);
 				apiConfig.setDesc(api.desc());
-				apiConfig.setLoginFlag(api.loginFlag());
+				apiConfig.setLoginFlag(api.login());
 				apiConfig.setAuthFlag(api.authFlag());
 				apiConfig.setBean(action);
 				apiConfig.setMethod(method);

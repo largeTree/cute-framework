@@ -17,7 +17,7 @@ public @interface Api {
 	String desc() default "";
 
 	/** 是否需要会话验证 */
-	boolean loginFlag() default true;
+	boolean login() default true;
 
 	/** 是否需要授权认证 */
 	boolean authFlag() default false;

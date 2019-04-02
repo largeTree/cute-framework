@@ -1,9 +1,10 @@
 package com.qiuxs.captcha.dao;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
 import com.qiuxs.captcha.entity.CaptchaBlacklist;
+import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
 
 /**
  * Dao接口
@@ -14,5 +15,16 @@ import com.qiuxs.captcha.entity.CaptchaBlacklist;
  */
 @Repository
 public interface CaptchaBlacklistDao extends IBaseDao<Long, CaptchaBlacklist> {
+
+	/**
+	 * 获取一个有效的黑名单记录
+	 * sessionKey等于指定sessionKey，且当前时间减创建时间小于有效期或有效期为永久
+	 * 
+	 * 2019年4月2日 下午10:36:23
+	 * @auther qiuxs
+	 * @param sessionKey
+	 * @return
+	 */
+	public CaptchaBlacklist getValidBySessionKey(@Param("sessionKey") String sessionKey);
 
 }

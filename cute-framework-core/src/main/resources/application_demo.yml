@@ -7,3 +7,5 @@ environment:
     pro:
       mc_type: redis
       seq_type: redis
+mybatis:
+  auto-refresh: true

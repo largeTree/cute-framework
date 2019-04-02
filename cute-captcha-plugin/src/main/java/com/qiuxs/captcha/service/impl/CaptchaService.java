@@ -4,8 +4,10 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
+import com.qiuxs.cuteframework.core.basic.utils.generator.RandomGenerator;
 import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
 import com.qiuxs.cuteframework.core.persistent.database.service.AbstractDataPropertyService;
 import com.qiuxs.cuteframework.core.persistent.database.service.filter.IServiceFilter;
@@ -13,6 +15,7 @@ import com.qiuxs.cuteframework.core.persistent.database.service.filter.impl.IdGe
 import com.qiuxs.captcha.dao.CaptchaDao;
 import com.qiuxs.captcha.entity.Captcha;
 import com.qiuxs.captcha.service.ICaptchaService;
+
 /**
  * 验证码服务类
  *
@@ -37,6 +40,17 @@ public class CaptchaService extends AbstractDataPropertyService<Long, Captcha, C
 	}
 
 	@Override
+	@Transactional
+	public Captcha genCaptcha(String mobile, String ip) {
+		Captcha captcha = new Captcha();
+		captcha.setSessionKey(mobile);
+		captcha.setIp(ip);
+		captcha.setCaptcha(RandomGenerator.getRandCode());
+		this.save(captcha);
+		return captcha;
+	}
+
+	@Override
 	protected void initServiceFilters(List<IServiceFilter<Long, Captcha>> serviceFilters) {
 		serviceFilters.add(new IdGenerateFilter<>(TABLE_NAME));
 	}
@@ -44,19 +58,18 @@ public class CaptchaService extends AbstractDataPropertyService<Long, Captcha, C
 	@Override
 	protected void initProps(List<PropertyWrapper<?>> props) {
 		super.initProps(props);
-		
+
 		PropertyWrapper<?> prop = null;
 
-		
 		prop = new PropertyWrapper<String>(new BaseField("sessionKey", "会话Key", String.class), null);
 		props.add(prop);
-		
+
 		prop = new PropertyWrapper<String>(new BaseField("ip", "ip", String.class), null);
 		props.add(prop);
-		
+
 		prop = new PropertyWrapper<String>(new BaseField("captcha", "验证码", String.class), null);
 		props.add(prop);
-		
+
 		prop = new PropertyWrapper<Long>(new BaseField("timeLimit", "时限,秒", Long.class), null);
 		props.add(prop);
 	}

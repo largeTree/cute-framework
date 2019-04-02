@@ -13,4 +13,13 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropert
  */
 public interface ICaptchaBlacklistService extends IDataPropertyService<Long, CaptchaBlacklist, CaptchaBlacklistDao> {
 
+	/**
+	 * 检查sessionKey是否在黑名单内
+	 * 
+	 * 2019年4月2日 下午10:33:37
+	 * @auther qiuxs
+	 * @param sessionKey
+	 */
+	public void checkInBlacklist(String sessionKey);
+
 }
