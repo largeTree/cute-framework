@@ -2,14 +2,12 @@ package com.qiuxs.captcha.sms;
 
 import java.util.Map;
 
-import com.qiuxs.sms.sender.ISMSSener;
-
 /**
  * 短信验证码发送器
  * @author qiuxs
  * 2019年3月28日 下午11:14:41
  */
-public interface ISMSCaptchaSender<S extends ISMSSener> {
+public interface ISMSCaptchaSender {
 
 	/**
 	 * 根据短信内容直接发送验证码
@@ -21,7 +19,7 @@ public interface ISMSCaptchaSender<S extends ISMSSener> {
 	 * @param content
 	 * 		验证码短信内容
 	 */
-	public void sendCaptcha(String mobile, String content);
+	public void sendCaptcha(String signName, String mobile, String content);
 
 	/**
 	 * 根据模板发送验证码短信
@@ -35,6 +33,6 @@ public interface ISMSCaptchaSender<S extends ISMSSener> {
 	 * @param params
 	 * 		模板参数
 	 */
-	public void sendCaptchaByTemplate(String mobile, String templateId, Map<String, String> params);
+	public void sendCaptchaByTemplate(String signName, String mobile, String templateId, Map<String, String> params);
 
 }

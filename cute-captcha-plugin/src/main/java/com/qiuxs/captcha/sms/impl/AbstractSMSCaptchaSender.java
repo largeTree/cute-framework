@@ -11,7 +11,7 @@ import com.qiuxs.sms.sender.ISMSSener;
  * 2019年3月28日 下午11:54:28
  * @param <S>
  */
-public abstract class AbstractSMSCaptchaSender<S extends ISMSSener> implements ISMSCaptchaSender<S> {
+public abstract class AbstractSMSCaptchaSender<S extends ISMSSener> implements ISMSCaptchaSender {
 
 	/**
 	 * 短信发送器实例
@@ -56,8 +56,8 @@ public abstract class AbstractSMSCaptchaSender<S extends ISMSSener> implements I
 	 * @see com.qiuxs.captcha.sms.ISMSCaptchaSender#sendCaptcha(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void sendCaptcha(String mobile, String content) {
-		this.getSmsSender().sendSMS(mobile, content);
+	public void sendCaptcha(String signName, String mobile, String content) {
+		this.getSmsSender().sendSMS(signName, mobile, content);
 	}
 
 	/**
@@ -66,8 +66,8 @@ public abstract class AbstractSMSCaptchaSender<S extends ISMSSener> implements I
 	 * @see com.qiuxs.captcha.sms.ISMSCaptchaSender#sendCaptchaByTemplate(java.lang.String, java.lang.String, java.util.Map)
 	 */
 	@Override
-	public void sendCaptchaByTemplate(String mobile, String templateId, Map<String, String> params) {
-		this.getSmsSender().sendSMSByTemplate(mobile, templateId, params);
+	public void sendCaptchaByTemplate(String signName, String mobile, String templateId, Map<String, String> params) {
+		this.getSmsSender().sendSMSByTemplate(signName, mobile, templateId, params);
 	}
 
 }

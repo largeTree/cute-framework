@@ -2,6 +2,7 @@ package com.qiuxs.cuteframework.core.basic.bean;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 
@@ -30,6 +31,8 @@ public class UserLite implements Serializable {
 	private String requestUrl;
 	/** 客户端IP地址 */
 	private String clientIp;
+	/** 扩展字段 */
+	private Map<String, Object> extProps;
 
 	public Long getUserId() {
 		return userId;
@@ -85,6 +88,14 @@ public class UserLite implements Serializable {
 
 	public void setClientIp(String clientIp) {
 		this.clientIp = clientIp;
+	}
+
+	public Map<String, Object> getExtProps() {
+		return extProps;
+	}
+
+	public void setExtProps(Map<String, Object> extProps) {
+		this.extProps = extProps;
 	}
 
 }

@@ -26,4 +26,14 @@ public interface ICaptchaService extends IDataPropertyService<Long, Captcha, Cap
 	 */
 	public Captcha genCaptcha(String mobile, String ip);
 
+	/**
+	 * 获取已发送的验证码
+	 * 
+	 * 2019年4月9日 下午10:07:35
+	 * @auther qiuxs
+	 * @param mobile
+	 * @return
+	 */
+	public Captcha getBySessionKey(String mobile);
+
 }

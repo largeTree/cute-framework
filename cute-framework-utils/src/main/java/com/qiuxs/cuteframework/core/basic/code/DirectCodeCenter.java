@@ -7,7 +7,6 @@ import com.qiuxs.cuteframework.core.basic.code.annotation.Code;
 import com.qiuxs.cuteframework.core.basic.code.annotation.CodeDomain;
 import com.qiuxs.cuteframework.core.basic.code.provider.DirectCodeHouse;
 import com.qiuxs.cuteframework.core.basic.code.utils.CodeUtils;
-import com.qiuxs.cuteframework.core.persistent.database.entity.IFlag;
 
 /**
  * 直接编码集
@@ -30,7 +29,6 @@ public class DirectCodeCenter {
 
 	static {
 		CodeUtils.genDirectCode(DirectCodeCenter.class);
-		CodeUtils.genDirectCode(IFlag.class);
 	}
 
 	/**

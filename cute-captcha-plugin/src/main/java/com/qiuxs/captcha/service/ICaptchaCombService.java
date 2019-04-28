@@ -20,7 +20,7 @@ public interface ICaptchaCombService {
 	 * @param centant
 	 * 		短信模板
 	 */
-	public void sendMobileCaptcha(String mobile, String centant);
+	public void sendMobileCaptcha(String signName, String mobile, String centant);
 	
 	/**
 	 * 根据短信模板发送验证码
@@ -34,7 +34,7 @@ public interface ICaptchaCombService {
 	 * @param params
 	 * 		模板参数
 	 */
-	public void sendMobileCaptchaByTemplate(String mobile, String templateId, Map<String, String> params);
+	public void sendMobileCaptchaByTemplate(String signName, String mobile, String templateId, Map<String, String> params);
 	
 	/**
 	 * 验证验证码是否正确
@@ -46,7 +46,7 @@ public interface ICaptchaCombService {
 	 * @param captcha
 	 * 		验证码
 	 */
-	public void verifyCaptcha(String mobile, String captcha);
+	public boolean verifyCaptcha(String mobile, String captcha);
 	
 	/**
 	 * 验证验证码是否正确
@@ -60,6 +60,6 @@ public interface ICaptchaCombService {
 	 * @param invalidFlag
 	 * 		是否失效验证码
 	 */
-	public void veriftCaptcha(String mobile, String captcha, boolean invalidFlag);
+	public boolean veriftCaptcha(String mobile, String captcha, boolean invalidFlag);
 
 }

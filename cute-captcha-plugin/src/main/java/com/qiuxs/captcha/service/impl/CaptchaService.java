@@ -38,6 +38,11 @@ public class CaptchaService extends AbstractDataPropertyService<Long, Captcha, C
 	protected CaptchaDao getDao() {
 		return this.captchaDao;
 	}
+	
+	@Override
+	public Captcha getBySessionKey(String sessionKey) {
+		return this.getDao().getBySessionKey(sessionKey);
+	}
 
 	@Override
 	@Transactional

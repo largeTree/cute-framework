@@ -104,13 +104,13 @@ public abstract class AbstractPropertyService<PK extends Serializable, T extends
 		prop = new PropertyWrapper<Date>(new BaseField("createdTime", "创建时间", Date.class), null);
 		props.add(prop);
 		
-		prop = new PropertyWrapper<Date>(new BaseField("updatedBy", "创建人", Long.class), null);
+		prop = new PropertyWrapper<Date>(new BaseField("updatedBy", "更新人", Long.class), null);
 		props.add(prop);
 		
 		prop = new PropertyWrapper<Date>(new BaseField("updatedTime", "更新时间", Date.class), null);
 		props.add(prop);
 		
-		prop = new PropertyWrapper<Date>(new BaseField("deletedBy", "创建人", Long.class), null);
+		prop = new PropertyWrapper<Date>(new BaseField("deletedBy", "删除人", Long.class), null);
 		props.add(prop);
 		
 		prop = new PropertyWrapper<Date>(new BaseField("deletedTime", "删除时间", Date.class), null);

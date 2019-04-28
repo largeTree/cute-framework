@@ -15,4 +15,14 @@ import com.qiuxs.captcha.entity.Captcha;
 @Repository
 public interface CaptchaDao extends IBaseDao<Long, Captcha> {
 
+	/**
+	 * 根据sessionKey获取一个已经发出去的验证码
+	 * 
+	 * 2019年4月9日 下午10:08:21
+	 * @auther qiuxs
+	 * @param sessionKey
+	 * @return
+	 */
+	public Captcha getBySessionKey(String sessionKey);
+
 }

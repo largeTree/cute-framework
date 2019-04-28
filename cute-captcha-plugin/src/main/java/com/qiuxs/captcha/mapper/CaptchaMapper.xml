@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiuxs.captcha.dao.CaptchaDao">
-
+	
+	<select id="getBySessionKey" resultType="com.qiuxs.captcha.entity.Captcha">
+		select 
+			<include refid="allFields" />
+		from `cute_captcha`
+		where session_key = #{sessionKey}
+	</select>
+	
 	<sql id="allFields">
 		`id`,
 		`session_key` as sessionKey,

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = CaptchaEnvironmentConfig.PREFIX)
 public class CaptchaEnvironmentConfig {
 
-	protected static final String PREFIX = "env.captcha";
+	protected static final String PREFIX = "cute.captcha";
 
 	/** 默认超时时间 */
 	private Long defaultTimeLimit = 60L;

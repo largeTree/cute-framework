@@ -1,6 +1,7 @@
 package com.qiuxs.captcha.service;
 
 import com.qiuxs.captcha.dao.CaptchaHistoryDao;
+import com.qiuxs.captcha.entity.Captcha;
 import com.qiuxs.captcha.entity.CaptchaHistory;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService;
 
@@ -12,5 +13,14 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropert
  * @author qiuxs
  */
 public interface ICaptchaHistoryService extends IDataPropertyService<Long, CaptchaHistory, CaptchaHistoryDao> {
+
+	/**
+	 * 转移到验证码历史记录中
+	 * 
+	 * 2019年4月9日 下午10:12:21
+	 * @auther qiuxs
+	 * @param captchaBean
+	 */
+	public void moveToHistory(Captcha captchaBean);
 
 }
