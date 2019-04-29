@@ -96,6 +96,21 @@ public class MapUtils {
 	public static Long getLong(Map<String, ?> map, String key) throws NumberFormatException {
 		return TypeAdapter.toLong(map.get(key));
 	}
+	
+	/**
+	 * 获取long值，不存在时返回默认值
+	 * 
+	 * 2019年4月29日 下午6:45:20
+	 * @auther qiuxs
+	 * @param map
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 */
+	public static long getLongValue(Map<String, ?> map, String key, long defaultValue) {
+		Long l = getLong(map, key);
+		return l == null ? defaultValue : l.longValue();
+	}
 
 	/**
 	 * 获取Long值 当值为Null时，抛出异常
