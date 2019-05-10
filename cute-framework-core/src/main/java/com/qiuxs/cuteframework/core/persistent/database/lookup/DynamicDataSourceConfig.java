@@ -3,6 +3,8 @@ package com.qiuxs.cuteframework.core.persistent.database.lookup;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,8 @@ import com.qiuxs.cuteframework.tech.spring.tx.CuteTransactionInterceptor;
 @Component
 @Configuration
 public class DynamicDataSourceConfig implements EnvironmentAware {
+
+	private static Logger log = LogManager.getLogger(DynamicDataSourceConfig.class);
 
 	private static final String DATA_SOURCE_CONFIG_PREFIX = "spring.datasource.";
 
@@ -41,7 +45,14 @@ public class DynamicDataSourceConfig implements EnvironmentAware {
 		this.defaultDataSource.setMaxTotal(this.getTypeEnv(DATA_SOURCE_CONFIG_PREFIX + "dbcp2.max-total", int.class));
 		this.defaultDataSource.setMinIdle(this.getTypeEnv(DATA_SOURCE_CONFIG_PREFIX + "dbcp2.min-idle", int.class));
 		this.defaultDataSource.setMaxWaitMillis(this.getTypeEnv(DATA_SOURCE_CONFIG_PREFIX + "dbcp2.max-wait-millis", long.class));
-		this.defaultDataSource.setValidationQuery(this.getStringEnv(DATA_SOURCE_CONFIG_PREFIX+"dbcp2.validation-query"));
+		this.defaultDataSource.setValidationQuery(this.getStringEnv(DATA_SOURCE_CONFIG_PREFIX + "dbcp2.validation-query"));
+
+		try {
+			this.defaultDataSource.getConnection().close();
+		} catch (Exception e) {
+			log.info("Connection to Entry Error, ext = " + e.getLocalizedMessage(), e);
+			throw new RuntimeException(e);
+		}
 	}
 
 	private <T> T getTypeEnv(String key, Class<T> clz) {
@@ -76,7 +87,7 @@ public class DynamicDataSourceConfig implements EnvironmentAware {
 
 	@Bean("transactionInterceptor")
 	public TransactionInterceptor transactionInterceptor(PlatformTransactionManager platformTransactionManager,
-			AnnotationTransactionAttributeSource attributes) {
+	        AnnotationTransactionAttributeSource attributes) {
 		return getTransactionInterceptor(platformTransactionManager, attributes);
 	}
 
@@ -88,7 +99,7 @@ public class DynamicDataSourceConfig implements EnvironmentAware {
 	 * @return
 	 */
 	protected TransactionInterceptor getTransactionInterceptor(PlatformTransactionManager platformTransactionManager,
-			AnnotationTransactionAttributeSource attributes) {
+	        AnnotationTransactionAttributeSource attributes) {
 		return new CuteTransactionInterceptor(platformTransactionManager, attributes);
 	}
 
