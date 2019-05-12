@@ -5,10 +5,8 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.context.EnvironmentAware;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
@@ -18,34 +16,32 @@ import com.qiuxs.cuteframework.tech.spring.tx.CuteDataSourceTransactionManager;
 import com.qiuxs.cuteframework.tech.spring.tx.CuteTransactionInterceptor;
 
 @Component
-@Configuration
-public class DynamicDataSourceConfig implements EnvironmentAware {
+@ConfigurationProperties(prefix = DynamicDataSourceConfig.PREFIX)
+public class DynamicDataSourceConfig {
+
+	protected static final String PREFIX = "spring.datasource";
 
 	private static Logger log = LogManager.getLogger(DynamicDataSourceConfig.class);
 
-	private static final String DATA_SOURCE_CONFIG_PREFIX = "spring.datasource.";
+	private String url;
+	private String username;
+	private String password;
+	private String driverClassName;
+	private Dbcp2Config dbcp2;
 
 	private BasicDataSource defaultDataSource;
 
-	private Environment environment;
-
-	@Override
-	public void setEnvironment(Environment environment) {
-		this.environment = environment;
-		this.initDefaultDataSource();
-	}
-
 	private void initDefaultDataSource() {
 		this.defaultDataSource = new BasicDataSource();
-		this.defaultDataSource.setUrl(this.getStringEnv(DATA_SOURCE_CONFIG_PREFIX + "url"));
-		this.defaultDataSource.setUsername(this.getStringEnv(DATA_SOURCE_CONFIG_PREFIX + "username"));
-		this.defaultDataSource.setPassword(this.getStringEnv(DATA_SOURCE_CONFIG_PREFIX + "password"));
-		this.defaultDataSource.setDriverClassName(this.getStringEnv(DATA_SOURCE_CONFIG_PREFIX + "driver-class-name"));
-		this.defaultDataSource.setInitialSize(this.getTypeEnv(DATA_SOURCE_CONFIG_PREFIX + "dbcp2.initial-size", int.class));
-		this.defaultDataSource.setMaxTotal(this.getTypeEnv(DATA_SOURCE_CONFIG_PREFIX + "dbcp2.max-total", int.class));
-		this.defaultDataSource.setMinIdle(this.getTypeEnv(DATA_SOURCE_CONFIG_PREFIX + "dbcp2.min-idle", int.class));
-		this.defaultDataSource.setMaxWaitMillis(this.getTypeEnv(DATA_SOURCE_CONFIG_PREFIX + "dbcp2.max-wait-millis", long.class));
-		this.defaultDataSource.setValidationQuery(this.getStringEnv(DATA_SOURCE_CONFIG_PREFIX + "dbcp2.validation-query"));
+		this.defaultDataSource.setUrl(this.url);
+		this.defaultDataSource.setUsername(this.username);
+		this.defaultDataSource.setPassword(this.password);
+		this.defaultDataSource.setDriverClassName(this.driverClassName);
+		this.defaultDataSource.setInitialSize(this.dbcp2.getInitialSize());
+		this.defaultDataSource.setMaxTotal(this.dbcp2.getMaxTotal());
+		this.defaultDataSource.setMinIdle(this.dbcp2.getMinIdle());
+		this.defaultDataSource.setMaxWaitMillis(this.dbcp2.getMaxWaitMillis());
+		this.defaultDataSource.setValidationQuery(this.dbcp2.getValidationQuery());
 
 		try {
 			this.defaultDataSource.getConnection().close();
@@ -55,16 +51,9 @@ public class DynamicDataSourceConfig implements EnvironmentAware {
 		}
 	}
 
-	private <T> T getTypeEnv(String key, Class<T> clz) {
-		return this.environment.getProperty(key, clz);
-	}
-
-	private String getStringEnv(String key) {
-		return this.environment.getProperty(key);
-	}
-
 	@Bean("dataSource")
 	public DataSource dataSource() {
+		this.initDefaultDataSource();
 		DynamicDataSource dynamicDataSource = new DynamicDataSource();
 		dynamicDataSource.setDefaultTargetDataSource(this.defaultDataSource);
 		return dynamicDataSource;
@@ -101,6 +90,95 @@ public class DynamicDataSourceConfig implements EnvironmentAware {
 	protected TransactionInterceptor getTransactionInterceptor(PlatformTransactionManager platformTransactionManager,
 	        AnnotationTransactionAttributeSource attributes) {
 		return new CuteTransactionInterceptor(platformTransactionManager, attributes);
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getDriverClassName() {
+		return driverClassName;
+	}
+
+	public void setDriverClassName(String driverClassName) {
+		this.driverClassName = driverClassName;
+	}
+
+	public Dbcp2Config getDbcp2() {
+		return dbcp2;
+	}
+
+	public void setDbcp2(Dbcp2Config dbcp2) {
+		this.dbcp2 = dbcp2;
+	}
+
+	public static class Dbcp2Config {
+		private int initialSize;
+		private int maxTotal;
+		private int minIdle;
+		private long maxWaitMillis;
+		private String validationQuery;
+
+		public int getInitialSize() {
+			return initialSize;
+		}
+
+		public void setInitialSize(int initialSize) {
+			this.initialSize = initialSize;
+		}
+
+		public int getMaxTotal() {
+			return maxTotal;
+		}
+
+		public void setMaxTotal(int maxTotal) {
+			this.maxTotal = maxTotal;
+		}
+
+		public int getMinIdle() {
+			return minIdle;
+		}
+
+		public void setMinIdle(int minIdle) {
+			this.minIdle = minIdle;
+		}
+
+		public long getMaxWaitMillis() {
+			return maxWaitMillis;
+		}
+
+		public void setMaxWaitMillis(long maxWaitMillis) {
+			this.maxWaitMillis = maxWaitMillis;
+		}
+
+		public String getValidationQuery() {
+			return validationQuery;
+		}
+
+		public void setValidationQuery(String validationQuery) {
+			this.validationQuery = validationQuery;
+		}
+
 	}
 
 }

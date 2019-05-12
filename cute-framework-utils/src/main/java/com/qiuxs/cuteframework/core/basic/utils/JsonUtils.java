@@ -1,6 +1,8 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -14,6 +16,42 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
  *
  */
 public class JsonUtils {
+	
+	/**
+	 * 准换数组元素key的格式，
+	 * 将zk_final_price 转为zkFinalPrice
+	 * 2019年5月12日 上午11:48:03
+	 * @auther qiuxs
+	 * @param jArr
+	 */
+	public static void parseJSONArrayItemKey(JSONArray jArr) {
+		if (ListUtils.isNullOrEmpty(jArr)) {
+			return;
+		}
+		for (int i = 0;i<jArr.size();i++) {
+			Object val = jArr.get(i);
+			if (val instanceof JSONObject) {
+				parseJSONObjectKey((JSONObject) val);
+			} else {
+				parseJSONArrayItemKey((JSONArray) val);
+			}
+		}
+	}
+	
+	/**
+	 * 转换json的key的格式，将zk_final_price 转为zkFinalPrice
+	 * 
+	 * 2019年5月12日 上午11:14:51
+	 * @auther qiuxs
+	 * @param jsonData
+	 */
+	public static void parseJSONObjectKey(JSONObject jsonData) {
+		Set<String> keySet = new HashSet<>(jsonData.keySet());
+		for (String key : keySet) {
+			Object val = jsonData.remove(key);
+			jsonData.put(StringUtils.UnderlineToHump(key), val);
+		}
+	}
 
 	/**
 	 * JavaBean转为JSONObject
