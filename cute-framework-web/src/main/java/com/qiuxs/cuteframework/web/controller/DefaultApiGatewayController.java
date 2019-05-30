@@ -37,8 +37,8 @@ public class DefaultApiGatewayController extends BaseController {
 	private ApiAuthService apiAuthService;
 
 	@RequestMapping(value = "/api.do", produces = WebConstants.DEFAULT_REQUEST_PRODUCES)
-	public String dispatcher(@RequestParam(name = "apiKey", required = true) String apiKey,
-	        @RequestHeader(name = "compress-type", required = false) String compressType,
+	public String dispatcher(@RequestParam(name = WebConstants.REQ_P_API_KEY, required = true) String apiKey,
+	        @RequestHeader(name = WebConstants.REQ_H_COMPRESS_TYPE, required = false) String compressType,
 	        HttpServletRequest request, HttpServletResponse response) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
 		long start = System.currentTimeMillis();
@@ -62,7 +62,7 @@ public class DefaultApiGatewayController extends BaseController {
 		// 调用Action
 		String actionResult = this.doAction(apiConfig, params);
 
-		// 根据压缩类型反悔结果
+		// 根据压缩类型返回结果
 		String compressedResult = this.compressResult(actionResult, compressType);
 		
 		log.info("response -> costMs = " + (System.currentTimeMillis() - start));

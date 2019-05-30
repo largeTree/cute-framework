@@ -1,6 +1,11 @@
 package com.qiuxs.cuteframework.web;
 
 public class WebConstants {
+	
+	/** apiKey请求餐宿 */
+	public static final String REQ_P_API_KEY = "apiKey";
+	public static final String REQ_H_COMPRESS_TYPE = "compress-type";
+	
 	/** 自动生成apiKey */
 	public static final String AUTO_API_KEY = "auto";
 	
