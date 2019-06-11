@@ -162,7 +162,7 @@ public class ExceptionUtils {
 		}
 	}
 
-	public static RuntimeException unchecked(Exception e) {
+	public static RuntimeException unchecked(Throwable e) {
 		return new RuntimeException(e);
 	}
 }
