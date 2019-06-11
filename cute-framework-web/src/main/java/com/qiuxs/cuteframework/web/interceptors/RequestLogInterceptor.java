@@ -25,7 +25,7 @@ import com.qiuxs.cuteframework.web.utils.RequestUtils;
  * @author qiuxs
  * 2019年5月30日 下午10:29:05
  */
-@Component
+// @Component
 public class RequestLogInterceptor extends AbstractHandlerInterceptor {
 
 	private static Logger log = LogManager.getLogger(RequestLogInterceptor.class);
