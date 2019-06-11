@@ -4,6 +4,7 @@ public class WebConstants {
 	
 	/** apiKey请求餐宿 */
 	public static final String REQ_P_API_KEY = "apiKey";
+	/** 参数压缩类型 */
 	public static final String REQ_H_COMPRESS_TYPE = "compress-type";
 	
 	/** 自动生成apiKey */

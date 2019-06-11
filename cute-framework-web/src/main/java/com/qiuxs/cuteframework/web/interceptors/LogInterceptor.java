@@ -34,7 +34,7 @@ public class LogInterceptor extends AbstractHandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		try {
-			String ip = RequestUtils.getRemoteAddr((HttpServletRequest) request);
+			String ip = RequestUtils.getRemoteAddr(request);
 			LogUtils.putMDC("ip", ip);
 			LogUtils.putMDC(LogConstant.COLUMN_GLOBALID, String.valueOf(globalIdGenerater.nextId()));
 		} catch (Throwable e) {
