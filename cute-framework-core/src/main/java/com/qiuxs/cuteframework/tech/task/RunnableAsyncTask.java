@@ -1,5 +1,8 @@
 package com.qiuxs.cuteframework.tech.task;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * 简单异步任务
  * @author qiuxs
@@ -7,6 +10,8 @@ package com.qiuxs.cuteframework.tech.task;
  * @param <P> 前置参数类型
  */
 public abstract class RunnableAsyncTask<P> extends AbstractAsyncTask<P> implements Runnable {
+
+	private static final Logger log = LogManager.getLogger(RunnableAsyncTask.class);
 
 	/**
 	 * 构造一个异步任务
@@ -19,7 +24,11 @@ public abstract class RunnableAsyncTask<P> extends AbstractAsyncTask<P> implemen
 	@Override
 	public final void run() {
 		super.init();
-		this.execute(super.getPreparParam());
+		try {
+			this.execute(super.getPreparParam());
+		} catch (Throwable e) {
+			log.error("Async Task exec ext = " + e.getLocalizedMessage(), e);
+		}
 	}
 
 	/**

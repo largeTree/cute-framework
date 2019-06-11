@@ -12,6 +12,9 @@ public class Constants {
 
 	public static final int TRUE = 1;
 	public static final int FALSE = 0;
+	
+	public static final String TRUE_STR = "1";
+	public static final String FALSE_STR = "0";
 
 	public enum DsType {
 		/**数据源类型:入口库*/

@@ -42,8 +42,9 @@ public class ApplicationContextHolder implements ApplicationContextAware {
 	 * @param name
 	 * @return
 	 */
-	public static Object getBean(String name) {
-		return getApplicationContext().getBean(name);
+	@SuppressWarnings("unchecked")
+	public static <T> T  getBean(String name) {
+		return (T) getApplicationContext().getBean(name);
 	}
 
 	/**

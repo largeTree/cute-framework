@@ -8,3 +8,6 @@ CREATE TABLE `api_request_log`(
 	`req_end_time` DATETIME(3) NOT NULL COMMENT'请求结束时间'
 );
 CREATE INDEX `idx_request_log_ApiKey` ON api_request_log(`api_key`);
+
+
+ALTER TABLE `api_request_log` ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 1 COMMENT'请求状态';

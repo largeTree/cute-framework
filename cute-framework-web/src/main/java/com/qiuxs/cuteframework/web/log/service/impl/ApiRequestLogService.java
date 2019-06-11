@@ -65,6 +65,9 @@ public class ApiRequestLogService extends AbstractDataPropertyService<Long, ApiR
 		
 		prop = new PropertyWrapper<Date>(new BaseField("reqEndTime", "请求结束时间", Date.class), null);
 		props.add(prop);
+		
+		prop = new PropertyWrapper<Integer>(new BaseField("status", "请求状态", Integer.class), null);
+		props.add(prop);
 	}
 
 }

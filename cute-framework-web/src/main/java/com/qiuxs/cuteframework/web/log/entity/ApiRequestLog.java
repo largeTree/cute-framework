@@ -17,6 +17,11 @@ public class ApiRequestLog extends AbstractEntity<Long> {
 
 	private static final long serialVersionUID = 1L;
 	
+	/** 成功 */
+	public static final int SUCCESS = 1;
+	/** 失败 */
+	public static final int FAILED = 0;
+	
 	/** 接口号 */
 	private String apiKey;
 
@@ -34,7 +39,9 @@ public class ApiRequestLog extends AbstractEntity<Long> {
 
 	/** 请求结束时间 */
 	private Date reqEndTime;
-
+	
+	/** 请求状态 */
+	private Integer status;
 
 	/**
 	 * get the 接口号
@@ -130,6 +137,28 @@ public class ApiRequestLog extends AbstractEntity<Long> {
 	 */
 	public void setReqEndTime(Date reqEndTime) {
 		this.reqEndTime = reqEndTime;
+	}
+
+	/**
+	 * get the 请求状态
+	 * 
+	 * 2019年6月11日 下午9:14:41
+	 * @auther qiuxs
+	 * @return
+	 */
+	public Integer getStatus() {
+		return status;
+	}
+
+	/**
+	 * set the 请求状态
+	 * 
+	 * 2019年6月11日 下午9:14:58
+	 * @auther qiuxs
+	 * @param status
+	 */
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 }

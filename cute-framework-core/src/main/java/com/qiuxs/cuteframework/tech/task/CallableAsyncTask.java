@@ -3,6 +3,11 @@ package com.qiuxs.cuteframework.tech.task;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
+
 /**
  * 带返回值的异步任务
  * @author qiuxs
@@ -11,6 +16,8 @@ import java.util.concurrent.CancellationException;
  * @param <V> 返回值类型
  */
 public abstract class CallableAsyncTask<P, V> extends AbstractAsyncTask<P> implements Callable<V> {
+
+	private static final Logger log = LogManager.getLogger(CallableAsyncTask.class);
 
 	/**
 	 * 构造异步任务对象
@@ -23,7 +30,12 @@ public abstract class CallableAsyncTask<P, V> extends AbstractAsyncTask<P> imple
 	@Override
 	public V call() throws Exception {
 		super.init();
-		return this.call(super.getPreparParam());
+		try {
+			return this.call(super.getPreparParam());
+		} catch (Throwable e) {
+			log.error("Callable Async Task exec ext = " + e.getLocalizedMessage(), e);
+			throw ExceptionUtils.unchecked(e);
+		}
 	}
 
 	/**

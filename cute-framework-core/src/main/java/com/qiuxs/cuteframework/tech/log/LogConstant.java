@@ -15,8 +15,12 @@ public class LogConstant {
 	public static final String COLUMN_THREAD_ID = "thread_id";
 	public static final String COLUMN_ERRORCODE = "error_code";
 	public static final String COLUMN_LOG_TIME = "log_time";
+	
+	public static final String MDC_KEY_APIKEY = "apiKey";
+	public static final String MDC_KEY_REQURL = "reqUrl";
+	public static final String MDC_KEY_START_TIME = "startTime";
+	public static final String MDC_KEY_FLAG = "__flag";
 
-	//liushanhong add 2017/2/8
 	/**
 	 * jdbc日志appender缓存大小
 	 */

@@ -9,7 +9,8 @@
 		`req_ip` as reqIp,
 		`req_url` as reqUrl,
 		`req_start_time` as reqStartTime,
-		`req_end_time` as reqEndTime
+		`req_end_time` as reqEndTime,
+		`status`
 	</sql>
 
 	<sql id="insertFields">
@@ -19,7 +20,8 @@
 		`req_ip`,
 		`req_url`,
 		`req_start_time`,
-		`req_end_time`
+		`req_end_time`,
+		`status`
 	</sql>
 
 	<select id="list" resultType="com.qiuxs.cuteframework.web.log.entity.ApiRequestLog" >
@@ -68,6 +70,9 @@
 		<if test="reqEndTime != null">
 			 and `req_end_time` = #{reqEndTime}
 		</if>
+		<if test="status != null">
+			and `status` = #{status}
+		</if>
 	</sql>
 
 	<select id="getByIds" resultType="com.qiuxs.cuteframework.web.log.entity.ApiRequestLog" >
@@ -94,7 +99,8 @@
 			#{reqIp},
 			#{reqUrl},
 			#{reqStartTime},
-			#{reqEndTime}
+			#{reqEndTime},
+			#{status}
 		)
 	</insert>
 
@@ -109,7 +115,8 @@
 				#{item.reqIp},
 				#{item.reqUrl},
 				#{item.reqStartTime},
-				#{item.reqEndTime}
+				#{item.reqEndTime},
+				#{item.status}
 			)
 		</foreach>
 	</insert>
@@ -139,7 +146,10 @@
 			`req_start_time` = #{reqStartTime},
 		</if>
 		<if test="reqEndTime != null" >
-			`req_end_time` = #{reqEndTime}
+			`req_end_time` = #{reqEndTime},
+		</if>
+		<if test="status != null">
+			`status` = #{status}
 		</if>
 	</sql>
 </mapper>

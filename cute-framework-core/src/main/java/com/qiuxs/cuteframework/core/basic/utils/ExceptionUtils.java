@@ -10,6 +10,8 @@ import com.qiuxs.cuteframework.core.basic.ex.LogicException;
 import com.qiuxs.cuteframework.core.basic.ex.LoginException;
 import com.qiuxs.cuteframework.core.basic.i18n.I18nUtils;
 
+import net.bytebuddy.implementation.bytecode.Throw;
+
 public class ExceptionUtils {
 
 	public static final String ERROR_CODE = "errorCode";
@@ -162,7 +164,7 @@ public class ExceptionUtils {
 		}
 	}
 
-	public static RuntimeException unchecked(Exception e) {
+	public static RuntimeException unchecked(Throwable e) {
 		return new RuntimeException(e);
 	}
 }

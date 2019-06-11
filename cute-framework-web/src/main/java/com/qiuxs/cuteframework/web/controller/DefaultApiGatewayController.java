@@ -51,6 +51,9 @@ public class DefaultApiGatewayController extends BaseController {
 		super.fillClientInfo(params, request);
 		super.fillServerInfo(params, request);
 		
+		// 准备日志
+		super.prepareRequestLog(apiKey, request.getRequestURL().toString(), start);
+		
 		log.info("request -> params = " + String.valueOf(params));
 
 		// 检查sessionId
@@ -66,6 +69,9 @@ public class DefaultApiGatewayController extends BaseController {
 		String compressedResult = this.compressResult(actionResult, compressType);
 		
 		log.info("response -> costMs = " + (System.currentTimeMillis() - start));
+		
+		// 日志入库
+		super.logRequest(true);
 		
 		return compressedResult;
 	}
