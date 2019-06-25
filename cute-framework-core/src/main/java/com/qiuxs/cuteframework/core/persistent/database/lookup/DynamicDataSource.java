@@ -16,8 +16,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import com.qiuxs.cuteframework.core.basic.Constants.DsType;
-import com.qiuxs.cuteframework.core.basic.utils.ReflectUtils;
 import com.qiuxs.cuteframework.core.basic.utils.TypeAdapter;
+import com.qiuxs.cuteframework.core.basic.utils.reflect.FieldUtils;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.dto.DsInfo;
 import com.qiuxs.cuteframework.tech.log.NoDbLogger;
 
@@ -92,7 +92,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	private DsInfo parseDsInfo(ResultSet rs) {
 		DsInfo dsInfo = new DsInfo();
 		try {
-			List<Field> fields = ReflectUtils.getDeclaredFields(DsInfo.class);
+			List<Field> fields = FieldUtils.getDeclaredFields(DsInfo.class);
 			for (Field field : fields) {
 				field.setAccessible(true);
 				String fieldName = field.getName();

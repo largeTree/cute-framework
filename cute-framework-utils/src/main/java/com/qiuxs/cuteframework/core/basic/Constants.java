@@ -15,6 +15,9 @@ public class Constants {
 	
 	public static final String TRUE_STR = "1";
 	public static final String FALSE_STR = "0";
+	
+	/** 系统默认支持精确度 */
+	public static final int DEFAULT_SCALE_INNER = 10;
 
 	public enum DsType {
 		/**数据源类型:入口库*/

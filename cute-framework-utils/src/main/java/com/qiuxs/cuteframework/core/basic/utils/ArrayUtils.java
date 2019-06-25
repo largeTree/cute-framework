@@ -2,7 +2,7 @@ package com.qiuxs.cuteframework.core.basic.utils;
 
 import java.lang.reflect.Array;
 
-public class ArrayUtils {
+public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 
 	/**
 	 * 判断数组是否是Null或者长度为0

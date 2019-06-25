@@ -1,6 +1,9 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+import com.qiuxs.cuteframework.core.basic.Constants;
 
 /**
  * 数字工具类
@@ -9,6 +12,119 @@ import java.math.BigDecimal;
  *
  */
 public class NumberUtils {
+
+	/**
+	 * 两个数值相减。数值类型可为BigDecimal double float long int short byte
+	 * 
+	 * @author lsh
+	 * @param value1
+	 *            被减数
+	 * @param value2
+	 *            减数
+	 * @return 差。类型为value1和value2中精度较高的类型。其中精度从大到小定义为：BigDecimal > double >
+	 *         float > long > int > short > byte
+	 */
+	public static Number subtractNumricalValue(Number value1, Number value2) {
+		// value1或value2为null时，作0值处理
+		if (value2 == null) {
+			return value1;
+		}
+
+		// value1为null时，返回value2的负值
+		if (value1 == null) {
+			if (value2 instanceof BigDecimal) {
+				return ((BigDecimal) value2).negate();
+			} else {
+				value1 = new Byte("0");
+			}
+		}
+
+		// 按照数值的精度，将两个值处理成相同类型：BigDecimal > double > float > long > int > short
+		// > byte
+		if (value1 instanceof BigDecimal || value2 instanceof BigDecimal) {
+			BigDecimal val1 = value1 instanceof BigDecimal ? (BigDecimal) value1 : new BigDecimal(value1.toString());
+			BigDecimal val2 = value2 instanceof BigDecimal ? (BigDecimal) value2 : new BigDecimal(value2.toString());
+			return val1.subtract(val2);
+		} else if (value1 instanceof Double || value2 instanceof Double) {
+			return value1.doubleValue() - value2.doubleValue();
+		} else if (value1 instanceof Float || value2 instanceof Float) {
+			return value1.floatValue() - value2.floatValue();
+		} else if (value1 instanceof Long || value2 instanceof Long) {
+			return value1.longValue() - value2.longValue();
+		} else if (value1 instanceof Integer || value2 instanceof Integer) {
+			return value1.intValue() - value2.intValue();
+		} else if (value1 instanceof Short || value2 instanceof Short) {
+			return value1.shortValue() - value2.shortValue();
+		} else if (value1 instanceof Byte || value2 instanceof Byte) {
+			return value1.byteValue() - value2.byteValue();
+		} else {
+			throw new RuntimeException("不支持执行计算的类型");
+		}
+	}
+
+	private static int genScale(BigDecimal bd) {
+		int scale = bd.scale();
+		if (scale < Constants.DEFAULT_SCALE_INNER) {
+			scale = Constants.DEFAULT_SCALE_INNER;
+		}
+		return scale;
+	}
+
+	/**
+	 * 两个数相除：指定舍入模式
+	 * -精度：max(num1的精度, 10)
+	 * -舍入模式：roundingMode
+	 * 
+	 * @author qiuxs
+	 * @param num1
+	 *            除数
+	 * @param num2
+	 *            被除数
+	 * @param roundingMode
+	 *            舍入模式
+	 * @return
+	 */
+	public static BigDecimal divide(BigDecimal num1, BigDecimal num2, RoundingMode roundingMode) {
+		if (num1 == null || num2 == null) {
+			return null;
+		}
+		if (NumberUtils.equals(num2, BigDecimal.ZERO)) {
+			ExceptionUtils.throwLogicalException("arith_divide_zero_divisor");
+		}
+		int scale = genScale(num1);
+		return divide(num1, num2, scale, roundingMode);
+	}
+
+	/**
+	 * 两个数相除：指定精度和舍入模式
+	 * 
+	 * @author fengdg
+	 * @param num1
+	 *            除数
+	 * @param num2
+	 *            被除数
+	 * @param scale
+	 *            精度
+	 * @param roundingMode
+	 *            舍入模式
+	 * @return
+	 */
+	public static BigDecimal divide(BigDecimal num1, BigDecimal num2, int scale, RoundingMode roundingMode) {
+		if (num1 == null || num2 == null) {
+			return null;
+		}
+		if (NumberUtils.equals(num2, BigDecimal.ZERO)) {
+			ExceptionUtils.throwLogicalException("arith_divide_zero_divisor");
+		}
+		return num1.divide(num2, scale, roundingMode);
+	}
+
+	public static Long longValueOf(Integer integer) {
+		if (null == integer) {
+			return null;
+		}
+		return Long.valueOf(integer);
+	}
 
 	/**
 	 * 比较数字大小

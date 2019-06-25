@@ -11,9 +11,11 @@ public class DateFormatUtils {
 
 	public static final String yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
 
+	public static final String yyyy_MM_dd_HH_MM_SS_CN = "yyyy年MM月dd日HH时mm分ss秒";
+
 	private static FastDateFormat dataParser = FastDateFormat.getInstance(yyyy_MM_dd);
 	private static FastDateFormat timeParser = FastDateFormat.getInstance(yyyy_MM_dd_HH_mm_ss);
-
+	
 	public static Date parseDate(String dateString) {
 		try {
 			return dataParser.parse(dateString);

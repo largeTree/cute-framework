@@ -12,17 +12,20 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.qiuxs.cuteframework.core.FrmLogger;
 import com.qiuxs.cuteframework.core.basic.Constants;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 
 public class SecurityUtil {
 
+	private static Logger log = LogManager.getLogger(SecurityUtil.class);
+
 	public static String sha1Hex(String str) {
 		return DigestUtils.sha1Hex(str);
 	}
-	
+
 	public static String byteToHex(final byte[] hash) {
 		Formatter formatter = new Formatter();
 		for (byte b : hash) {
@@ -42,7 +45,7 @@ public class SecurityUtil {
 			crypt.update(orginal.getBytes(Constants.UTF_8));
 			signature = byteToHex(crypt.digest());
 		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-			FrmLogger.log.error("加密出错：" + e.getMessage());
+			log.error("加密出错：" + e.getMessage());
 		}
 		return signature;
 	}
@@ -63,7 +66,7 @@ public class SecurityUtil {
 			byte[] b = alg.digest();
 			signature = Base64.encodeBase64String(b);
 		} catch (NoSuchAlgorithmException e) {
-			FrmLogger.log.error("加密出错：" + e.getMessage());
+			log.error("加密出错：" + e.getMessage());
 		}
 		return signature;
 	}
@@ -96,7 +99,7 @@ public class SecurityUtil {
 			byte[] rawHmac = mac.doFinal(src.getBytes(Constants.UTF_8));
 			hexBytes = byteToHex(rawHmac);
 		} catch (NoSuchAlgorithmException | UnsupportedEncodingException | InvalidKeyException e) {
-			FrmLogger.log.error("加密出错：" + e.getMessage());
+			log.error("加密出错：" + e.getMessage());
 		}
 		return hexBytes;
 	}
@@ -109,7 +112,7 @@ public class SecurityUtil {
 			crypt.update(src.getBytes(Constants.UTF_8));
 			signature = byteToHex(crypt.digest());
 		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-			FrmLogger.log.error("加密出错：" + e.getMessage());
+			log.error("加密出错：" + e.getMessage());
 		}
 		return signature;
 	}

@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
+import com.qiuxs.cuteframework.core.context.TLVariableHolder;
 
 
 
@@ -37,6 +38,8 @@ public abstract class CallableAsyncTask<P, V> extends AbstractAsyncTask<P> imple
 		} catch (Throwable e) {
 			log.error("Callable Async Task exec ext = " + e.getLocalizedMessage(), e);
 			throw ExceptionUtils.unchecked(e);
+		} finally {
+			TLVariableHolder.clear();
 		}
 	}
 

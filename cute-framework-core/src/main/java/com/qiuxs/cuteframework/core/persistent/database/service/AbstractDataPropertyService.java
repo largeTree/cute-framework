@@ -15,7 +15,7 @@ import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.ex.ErrorCodes;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
-import com.qiuxs.cuteframework.core.basic.utils.ReflectUtils;
+import com.qiuxs.cuteframework.core.basic.utils.reflect.FieldUtils;
 import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
@@ -289,9 +289,9 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 			BaseField field = prop.getField();
 			String fileName = field.getName();
 			try {
-				Object value = ReflectUtils.getFieldValue(bean, fileName);
+				Object value = FieldUtils.getFieldValue(bean, fileName);
 				if (value == null) {
-					ReflectUtils.setFieldValue(bean, fileName, field.getDefaultValue());
+					FieldUtils.setFieldValue(bean, fileName, field.getDefaultValue());
 				}
 			} catch (ReflectiveOperationException e) {
 				log.warn(this.getPojoClass().getName() + " has no Field [name=" + fileName + "]");

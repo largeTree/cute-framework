@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.web.interceptors.AbstractHandlerInterceptor;
 
@@ -28,9 +29,7 @@ public class CuteWebAppConfig extends WebMvcConfigurationSupport {
 
 	@Override
 	protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/**/*.svg","/**/*.html", "/**/*.js", "/**/imgs/**", "/**/*.css", "/**/*.png", "/**/*.gif",
-				"/**/*.json", "/**/*.apk")
-				.addResourceLocations("/");
+		registry.addResourceHandler("/**/*.svg", "/**/*.html", "/**/*.js", "/**/imgs/**", "/**/*.css", "/**/*.png", "/**/*.gif", "/**/*.json", "/**/*.apk").addResourceLocations("/");
 	}
 
 	@Override
@@ -46,14 +45,12 @@ public class CuteWebAppConfig extends WebMvcConfigurationSupport {
 		customerHandlerInterceptors.ifPresent((interceptors) -> {
 			interceptors.forEach(interceptor -> {
 				InterceptorRegistration interceptorReg = registry.addInterceptor(interceptor);
-				Optional<List<String>> pathPatterns = interceptor.getPathPatterns();
-				pathPatterns.ifPresent(paths -> {
-					interceptorReg.addPathPatterns(paths);
-				});
-				Optional<List<String>> excludes = interceptor.getExcludes();
-				excludes.ifPresent(paths -> {
-					interceptorReg.excludePathPatterns(paths);
-				});
+				List<String> pathPatterns = interceptor.getPathPatterns();
+				if (ListUtils.isNotEmpty(pathPatterns)) {
+					interceptorReg.addPathPatterns(pathPatterns);
+				}
+				List<String> excludes = interceptor.getExcludes();
+				interceptorReg.excludePathPatterns(excludes);
 				interceptorReg.order(interceptor.getOrder());
 			});
 		});
@@ -65,8 +62,7 @@ public class CuteWebAppConfig extends WebMvcConfigurationSupport {
 	 * @return
 	 */
 	private Optional<List<AbstractHandlerInterceptor>> getCustomerHandlerInterceptors() {
-		String[] handlerInterceptorNames = ApplicationContextHolder
-				.getBeanNamesForType(AbstractHandlerInterceptor.class);
+		String[] handlerInterceptorNames = ApplicationContextHolder.getBeanNamesForType(AbstractHandlerInterceptor.class);
 		List<AbstractHandlerInterceptor> handlerInterceptors = null;
 		int size = handlerInterceptorNames.length;
 		if (size > 0) {

@@ -81,8 +81,16 @@ public class EnvironmentContext implements EnvironmentAware {
 		this.environment = environment;
 	}
 
+	public String getEnvValue(String key) {
+		return this.environment.getProperty(key);
+	}
+
 	public <T> T getEnvValue(String key, Class<T> targetType) {
 		return this.environment.getProperty(key, targetType);
+	}
+
+	public <T> T getEnvValue(String key, Class<T> targetType, T defVal) {
+		return this.environment.getProperty(key, targetType, defVal);
 	}
 
 	public static EnvironmentContext getEnvContext() {

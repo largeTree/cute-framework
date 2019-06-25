@@ -13,8 +13,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
-import com.qiuxs.cuteframework.core.basic.utils.ReflectUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
+import com.qiuxs.cuteframework.core.basic.utils.reflect.MethodUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.web.WebConstants;
@@ -65,7 +65,7 @@ public class ApiHolder implements ApplicationListener<ContextRefreshedEvent> {
 			String actionName = clz.getSimpleName();
 			// 简化ActionName
 			actionName = StringUtils.firstToLowerCase(actionName.replace("Action", ""));
-			List<Method> apiMethods = ReflectUtils.getDeclaredMethods(clz, Api.class, true);
+			List<Method> apiMethods = MethodUtils.getDeclaredMethods(clz, Api.class, true);
 			for (Iterator<Method> iter = apiMethods.iterator(); iter.hasNext();) {
 				Method method = iter.next();
 				// 忽略权限验证

@@ -1,7 +1,7 @@
 package com.qiuxs.cuteframework.web.interceptors;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -33,7 +33,7 @@ public abstract class AbstractHandlerInterceptor implements HandlerInterceptor {
 	 * @author qiuxs  
 	 * @return
 	 */
-	public Optional<List<String>> getPathPatterns() {
+	public List<String> getPathPatterns() {
 		return ListUtils.genList("/**");
 	}
 
@@ -43,8 +43,8 @@ public abstract class AbstractHandlerInterceptor implements HandlerInterceptor {
 	 * @author qiuxs  
 	 * @return
 	 */
-	public Optional<List<String>> getExcludes() {
-		return Optional.empty();
+	public List<String> getExcludes() {
+		return new ArrayList<>();
 	}
 
 }

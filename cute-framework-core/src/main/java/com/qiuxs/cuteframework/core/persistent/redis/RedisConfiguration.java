@@ -1,86 +1,194 @@
 package com.qiuxs.cuteframework.core.persistent.redis;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.PostConstruct;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.context.EnvironmentAware;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 
+import com.qiuxs.cuteframework.core.basic.constants.SymbolConstants;
+import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Protocol;
+import redis.clients.util.Pool;
 
 @Configuration
-public class RedisConfiguration implements EnvironmentAware {
+@ConfigurationProperties(prefix = RedisConfiguration.PREFIX)
+public class RedisConfiguration {
 
 	private static Logger log = LogManager.getLogger(RedisConfiguration.class);
 
-	//	@Value("${spring.redis.host}")
+	protected static final String PREFIX = "spring.redis";
+
+	public static final String DEFAUL_POOL = "redisDefaultPool";
+
+	/** 地址 */
 	private String host;
 
-	//	@Value("${spring.redis.port}")
-	private Integer port;
+	/** 端口 */
+	private Integer port = Protocol.DEFAULT_PORT;
 
-	//	@Value("${spring.redis.timeout}")
-	private Integer timeout;
+	/** 超时时间 */
+	private Integer timeout = Protocol.DEFAULT_TIMEOUT;
 
-	//	@Value("${spring.redis.jedis.pool.max-idle}")
-	private Integer maxIdle;
-	
-	private Integer maxTotal;
+	/** 连接池配置信息 */
+	private RedisPoolConfig pool;
 
-	//	@Value("${spring.redis.jedis.pool.max-wait}")
-	private Long maxWaitMillis;
-
-	//	@Value("${spring.redis.password}")
+	/** 密码 */
 	private String password;
 
-	private boolean hasConfig = false;
+	/** 默认数据索引 */
+	private Integer defaultIndex = Protocol.DEFAULT_DATABASE;
 
-	@Override
-	public void setEnvironment(Environment environment) {
-		this.host = environment.getProperty("spring.redis.host");
-		this.port = environment.getProperty("spring.redis.port", int.class);
-		this.timeout = environment.getProperty("spring.redis.timeout", int.class);
-		this.maxIdle = environment.getProperty("spring.redis.jedis.pool.max-idle", int.class);
-		this.maxTotal = environment.getProperty("spring.redis.jedis.pool.max-total", int.class);
-		this.maxWaitMillis = environment.getProperty("spring.redis.jedis.pool.max-wait", long.class);
-		this.password = environment.getProperty("spring.redis.password");
-		hasConfig = StringUtils.isNotBlank(host);
+	/** 配置持有对象 */
+	private static RedisConfiguration redisConfiguration;
+
+	/** 已创建的连接池缓存 */
+	private static Map<String, Pool<Jedis>> jedisPoolMap = new ConcurrentHashMap<>();
+
+	/**
+	 * 获取jedis连接池
+	 * 
+	 * 2019年6月15日 下午10:23:53
+	 * @auther qiuxs
+	 * @return
+	 */
+	public static Pool<Jedis> getJedisPool() {
+		return getJedisPool(DEFAUL_POOL, redisConfiguration.defaultIndex);
 	}
 
-	@Bean
-	public JedisPool redisPoolFactory() {
-		if (!hasConfig) {
-			return null;
+	/**
+	 * 获取jedis连接池
+	 * 
+	 * 2019年6月15日 下午10:23:53
+	 * @auther qiuxs
+	 * @return
+	 */
+	public static Pool<Jedis> getJedisPool(String poolName) {
+		return getJedisPool(poolName, redisConfiguration.defaultIndex);
+	}
+
+	/**
+	 * 获取指定的链接池
+	 * 
+	 * 2019年6月15日 下午10:29:04
+	 * @auther qiuxs
+	 * @param poolName
+	 * @return
+	 */
+	public static Pool<Jedis> getJedisPool(String poolName, int dbIdx) {
+		if (jedisPoolMap.size() == 0) {
+			ExceptionUtils.throwRuntimeException("not inited ...");
 		}
-		
-		// 设置默认配置
-		this.initDefaultConfig();
-		
-		if (log.isDebugEnabled()) {
-			log.debug("JedisPoolConfig[host=" + this.host + ",port=" + this.port + ",password=" + this.password
-					+ ",timeout=" + this.timeout + ",max-idle=" + this.maxIdle + ",max-wait=" + this.maxWaitMillis
-					+ "]");
+		String poolKey = poolName + SymbolConstants.SEPARATOR_HYPHEN + dbIdx;
+		Pool<Jedis> jedisPool = jedisPoolMap.get(poolKey);
+		if (jedisPool == null) {
+			synchronized (jedisPoolMap) {
+				jedisPool = jedisPoolMap.get(poolKey);
+				if (jedisPool == null) {
+					jedisPool = redisConfiguration.initPool(dbIdx);
+					jedisPoolMap.put(poolKey, jedisPool);
+				}
+			}
 		}
-		
-		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-		jedisPoolConfig.setMaxIdle(maxIdle);
-		jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
-		jedisPoolConfig.setMaxTotal(maxTotal);
-		JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password);
-		log.info("inited jedisPool....");
 		return jedisPool;
 	}
 
-	private void initDefaultConfig() {
-		this.port = this.port == null ? 6379 : this.port;
-		this.timeout = this.timeout == null ? 0 : this.timeout;
-		this.maxIdle = this.maxIdle == null ? 8 : this.maxIdle;
-		this.maxWaitMillis = this.maxWaitMillis == null ? -1 : this.maxWaitMillis;
-		this.maxTotal = this.maxTotal == null ? 8 : this.maxTotal;
+	/**
+	 * 初始化默认连接池
+	 * 
+	 * 2019年6月15日 下午11:08:19
+	 * @auther qiuxs
+	 */
+	@PostConstruct
+	public void initDefaultPoll() {
+		if (StringUtils.isBlank(this.getHost())) {
+			return;
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("JedisPoolConfig[host=" + this.getHost() + ",port=" + this.getPort() + ",password=" + this.getPassword() + ",timeout=" + this.getTimeout() + ",max-idle=" + this.getPool().getMaxIdle() + ",max-wait=" + this.getPool().getMaxWaitMillis() + "]");
+		}
+
+		Pool<Jedis> jedisPool = this.initPool(this.defaultIndex);
+		RedisConfiguration.jedisPoolMap.put(DEFAUL_POOL, jedisPool);
+
+		// 缓存一个自身对象
+		redisConfiguration = this;
+		log.info("inited default jedisPool....");
 	}
-	
+
+	/**
+	 * 初始化一个连接池
+	 * 
+	 * 2019年6月15日 下午11:13:23
+	 * @auther qiuxs
+	 * @param dbIdx
+	 * @return
+	 */
+	private Pool<Jedis> initPool(int dbIdx) {
+		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+		jedisPoolConfig.setMaxIdle(this.getPool().getMaxIdle());
+		jedisPoolConfig.setMaxWaitMillis(this.getPool().getMaxWaitMillis());
+		jedisPoolConfig.setMaxTotal(this.getPool().getMaxTotal());
+		JedisPool jedisPool = new JedisPool(jedisPoolConfig, this.getHost(), this.getPort(), this.getTimeout(), this.getPassword(), dbIdx);
+		return jedisPool;
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public Integer getPort() {
+		return port;
+	}
+
+	public void setPort(Integer port) {
+		this.port = port;
+	}
+
+	public Integer getTimeout() {
+		return timeout;
+	}
+
+	public void setTimeout(Integer timeout) {
+		this.timeout = timeout;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Integer getDefaultIndex() {
+		return defaultIndex;
+	}
+
+	public void setDefaultIndex(Integer defaultIndex) {
+		this.defaultIndex = defaultIndex;
+	}
+
+	public RedisPoolConfig getPool() {
+		this.pool = this.pool == null ? new RedisPoolConfig() : this.pool;
+		return pool;
+	}
+
+	public void setPool(RedisPoolConfig pool) {
+		this.pool = pool;
+	}
 }
