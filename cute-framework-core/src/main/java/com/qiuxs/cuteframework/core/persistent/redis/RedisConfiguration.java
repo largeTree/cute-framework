@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import com.qiuxs.cuteframework.core.basic.constants.SymbolConstants;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
+import com.qiuxs.cuteframework.core.persistent.redis.config.JedisConfig;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -34,19 +35,19 @@ public class RedisConfiguration {
 	private String host;
 
 	/** 端口 */
-	private Integer port = Protocol.DEFAULT_PORT;
+	private int port = Protocol.DEFAULT_PORT;
 
 	/** 超时时间 */
-	private Integer timeout = Protocol.DEFAULT_TIMEOUT;
+	private int timeout = Protocol.DEFAULT_TIMEOUT;
 
-	/** 连接池配置信息 */
-	private RedisPoolConfig pool;
+	/** jedis配置 */
+	private JedisConfig jedis;
 
 	/** 密码 */
 	private String password;
 
 	/** 默认数据索引 */
-	private Integer defaultIndex = Protocol.DEFAULT_DATABASE;
+	private int defaultIndex = Protocol.DEFAULT_DATABASE;
 
 	/** 配置持有对象 */
 	private static RedisConfiguration redisConfiguration;
@@ -58,6 +59,7 @@ public class RedisConfiguration {
 	 * 获取jedis连接池
 	 * 
 	 * 2019年6月15日 下午10:23:53
+	 * 
 	 * @auther qiuxs
 	 * @return
 	 */
@@ -69,6 +71,7 @@ public class RedisConfiguration {
 	 * 获取jedis连接池
 	 * 
 	 * 2019年6月15日 下午10:23:53
+	 * 
 	 * @auther qiuxs
 	 * @return
 	 */
@@ -80,6 +83,7 @@ public class RedisConfiguration {
 	 * 获取指定的链接池
 	 * 
 	 * 2019年6月15日 下午10:29:04
+	 * 
 	 * @auther qiuxs
 	 * @param poolName
 	 * @return
@@ -106,6 +110,7 @@ public class RedisConfiguration {
 	 * 初始化默认连接池
 	 * 
 	 * 2019年6月15日 下午11:08:19
+	 * 
 	 * @auther qiuxs
 	 */
 	@PostConstruct
@@ -115,10 +120,12 @@ public class RedisConfiguration {
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("JedisPoolConfig[host=" + this.getHost() + ",port=" + this.getPort() + ",password=" + this.getPassword() + ",timeout=" + this.getTimeout() + ",max-idle=" + this.getPool().getMaxIdle() + ",max-wait=" + this.getPool().getMaxWaitMillis() + "]");
+			log.debug("JedisPoolConfig[host=" + this.getHost() + ",port=" + this.getPort() + ",password="
+					+ this.getPassword() + ",timeout=" + this.getTimeout() + ",max-idle=" + this.getJedis().getPool().getMaxIdle()
+					+ ",max-wait=" + this.getJedis().getPool().getMaxWaitMillis() + "]");
 		}
 
-		Pool<Jedis> jedisPool = this.initPool(this.defaultIndex);
+		Pool<Jedis> jedisPool = this.initPool(this.getDefaultIndex());
 		RedisConfiguration.jedisPoolMap.put(DEFAUL_POOL, jedisPool);
 
 		// 缓存一个自身对象
@@ -130,20 +137,22 @@ public class RedisConfiguration {
 	 * 初始化一个连接池
 	 * 
 	 * 2019年6月15日 下午11:13:23
+	 * 
 	 * @auther qiuxs
 	 * @param dbIdx
 	 * @return
 	 */
 	private Pool<Jedis> initPool(int dbIdx) {
 		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-		jedisPoolConfig.setMaxIdle(this.getPool().getMaxIdle());
-		jedisPoolConfig.setMaxWaitMillis(this.getPool().getMaxWaitMillis());
-		jedisPoolConfig.setMaxTotal(this.getPool().getMaxTotal());
-		JedisPool jedisPool = new JedisPool(jedisPoolConfig, this.getHost(), this.getPort(), this.getTimeout(), this.getPassword(), dbIdx);
+		jedisPoolConfig.setMaxIdle(this.getJedis().getPool().getMaxIdle());
+		jedisPoolConfig.setMaxWaitMillis(this.getJedis().getPool().getMaxWaitMillis());
+		jedisPoolConfig.setMaxTotal(this.getJedis().getPool().getMaxTotal());
+		JedisPool jedisPool = new JedisPool(jedisPoolConfig, this.getHost(), this.getPort(), this.getTimeout(),
+				this.getPassword(), dbIdx);
 		return jedisPool;
 	}
 
-	public String getHost() {
+	private String getHost() {
 		return host;
 	}
 
@@ -151,23 +160,23 @@ public class RedisConfiguration {
 		this.host = host;
 	}
 
-	public Integer getPort() {
+	private int getPort() {
 		return port;
 	}
 
-	public void setPort(Integer port) {
+	public void setPort(int port) {
 		this.port = port;
 	}
 
-	public Integer getTimeout() {
+	private int getTimeout() {
 		return timeout;
 	}
 
-	public void setTimeout(Integer timeout) {
+	public void setTimeout(int timeout) {
 		this.timeout = timeout;
 	}
 
-	public String getPassword() {
+	private String getPassword() {
 		return password;
 	}
 
@@ -175,20 +184,20 @@ public class RedisConfiguration {
 		this.password = password;
 	}
 
-	public Integer getDefaultIndex() {
+	private int getDefaultIndex() {
 		return defaultIndex;
 	}
 
-	public void setDefaultIndex(Integer defaultIndex) {
+	public void setDefaultIndex(int defaultIndex) {
 		this.defaultIndex = defaultIndex;
 	}
 
-	public RedisPoolConfig getPool() {
-		this.pool = this.pool == null ? new RedisPoolConfig() : this.pool;
-		return pool;
+	private JedisConfig getJedis() {
+		return jedis;
 	}
 
-	public void setPool(RedisPoolConfig pool) {
-		this.pool = pool;
+	public void setJedis(JedisConfig jedis) {
+		this.jedis = jedis;
 	}
+
 }

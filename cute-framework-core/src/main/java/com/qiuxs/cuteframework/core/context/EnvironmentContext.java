@@ -25,6 +25,8 @@ public class EnvironmentContext implements EnvironmentAware {
 	private boolean isTest;
 	/** 是否调试模式 */
 	private boolean isDebug;
+	/** 引入进来的配置文件 */
+	private String include;
 	/** 全局环境变量 */
 	private Environment environment;
 
@@ -74,6 +76,14 @@ public class EnvironmentContext implements EnvironmentAware {
 
 	public void setDebug(boolean isDebug) {
 		this.isDebug = isDebug;
+	}
+
+	public String getInclude() {
+		return include;
+	}
+
+	public void setInclude(String include) {
+		this.include = include;
 	}
 
 	@Override
