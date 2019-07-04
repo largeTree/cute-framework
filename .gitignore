@@ -8,4 +8,4 @@
 target
 .classpath
 .project
-.factorypath
+*/.factorypath

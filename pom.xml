@@ -251,9 +251,9 @@
 	</build>
 	<repositories>
 		<repository>
-			<id>hzdlsoft</id>
-			<name>hzdlsoft Repository</name>
-			<url>http://svn.hzdlsoft.com:7081/nexus/content/groups/public/</url>
+			<id>qiuxs</id>
+			<name>qiuxs Repository</name>
+			<url>http://home.qiuxs.com:9025/nexus/content/groups/public/</url>
 			<layout>default</layout>
 			<releases>
 				<enabled>true</enabled>
@@ -267,13 +267,13 @@
 	<distributionManagement>
 		<repository>
 			<id>Releases</id>
-			<name>hzdlsoft Release Repository</name>
-			<url>http://svn.hzdlsoft.com:7081/nexus/content/repositories/releases</url>
+			<name>qiuxs Release Repository</name>
+			<url>http://home.qiuxs.com:9025/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>Snapshots</id>
-			<name>hzdlsoft Snapshot Repository</name>
-			<url>http://svn.hzdlsoft.com:7081/nexus/content/repositories/snapshots</url>
+			<name>qiuxs Snapshot Repository</name>
+			<url>http://home.qiuxs.com:9025/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
