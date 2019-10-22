@@ -10,7 +10,8 @@
 		`req_url` as reqUrl,
 		`req_start_time` as reqStartTime,
 		`req_end_time` as reqEndTime,
-		`status`
+		`status`,
+		`global_id` as globalId
 	</sql>
 
 	<sql id="insertFields">
@@ -21,7 +22,8 @@
 		`req_url`,
 		`req_start_time`,
 		`req_end_time`,
-		`status`
+		`status`,
+		`global_id`
 	</sql>
 
 	<select id="list" resultType="com.qiuxs.cuteframework.web.log.entity.ApiRequestLog" >
@@ -55,8 +57,14 @@
 		<if test="apiKey != null">
 			 and `api_key` = #{apiKey}
 		</if>
+		<if test="apiKeyLike != null">
+			 and `api_key` like concat('%', #{apiKeyLike}, '%')
+		</if>
 		<if test="serverId != null">
 			 and `server_id` = #{serverId}
+		</if>
+		<if test="serverIdLike != null">
+			 and `server_id` like concat('%', #{serverIdLike}, '%')
 		</if>
 		<if test="reqIp != null">
 			 and `req_ip` = #{reqIp}
@@ -64,14 +72,32 @@
 		<if test="reqUrl != null">
 			 and `req_url` = #{reqUrl}
 		</if>
+		<if test="reqUrlLike != null">
+			 and `req_url` like concat('%', #{reqUrlLike}, '%')
+		</if>
 		<if test="reqStartTime != null">
 			 and `req_start_time` = #{reqStartTime}
+		</if>
+		<if test="reqStartTimeGte != null">
+			 and `req_start_time` &gt;= #{reqStartTimeGte}
+		</if>
+		<if test="reqStartTimeLte != null">
+			 and `req_start_time` &lt;= #{reqStartTimeLte}
 		</if>
 		<if test="reqEndTime != null">
 			 and `req_end_time` = #{reqEndTime}
 		</if>
+		<if test="reqEndTimeGte != null">
+			 and `req_end_time` &gt;= #{reqEndTimeGte}
+		</if>
+		<if test="reqEndTimeLte != null">
+			 and `req_end_time` &lt;= #{reqEndTimeLte}
+		</if>
 		<if test="status != null">
 			and `status` = #{status}
+		</if>
+		<if test="globalId != null">
+			and `global_id` = #{globalId}
 		</if>
 	</sql>
 
@@ -100,7 +126,8 @@
 			#{reqUrl},
 			#{reqStartTime},
 			#{reqEndTime},
-			#{status}
+			#{status},
+			#{globalId}
 		)
 	</insert>
 
@@ -116,7 +143,8 @@
 				#{item.reqUrl},
 				#{item.reqStartTime},
 				#{item.reqEndTime},
-				#{item.status}
+				#{item.status},
+				#{item.globalId}
 			)
 		</foreach>
 	</insert>
@@ -149,7 +177,10 @@
 			`req_end_time` = #{reqEndTime},
 		</if>
 		<if test="status != null">
-			`status` = #{status}
+			`status` = #{status},
+		</if>
+		<if test="globalId != null">
+			`global_id` = #{globalId}
 		</if>
 	</sql>
 </mapper>

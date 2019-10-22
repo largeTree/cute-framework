@@ -7,6 +7,8 @@ import java.util.Date;
 import org.springframework.stereotype.Service;
 
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
+import com.qiuxs.cuteframework.core.basic.code.DirectCodeCenter;
+import com.qiuxs.cuteframework.core.basic.code.utils.CodeUtils;
 import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
 import com.qiuxs.cuteframework.core.persistent.database.service.AbstractDataPropertyService;
 import com.qiuxs.cuteframework.core.persistent.database.service.filter.IServiceFilter;
@@ -27,6 +29,7 @@ public class ApiRequestLogService extends AbstractDataPropertyService<Long, ApiR
 
 	public ApiRequestLogService() {
 		super(Long.class, ApiRequestLog.class, TABLE_NAME);
+		CodeUtils.genDirectCode(ApiRequestLog.class);
 	}
 
 	@Resource
@@ -66,7 +69,10 @@ public class ApiRequestLogService extends AbstractDataPropertyService<Long, ApiR
 		prop = new PropertyWrapper<Date>(new BaseField("reqEndTime", "请求结束时间", Date.class), null);
 		props.add(prop);
 		
-		prop = new PropertyWrapper<Integer>(new BaseField("status", "请求状态", Integer.class), null);
+		prop = new PropertyWrapper<Integer>(new BaseField("status", "请求状态", Integer.class), DirectCodeCenter.getDirectCodeHouse(ApiRequestLog.DOMAIN_STATUS));
+		props.add(prop);
+		
+		prop = new PropertyWrapper<Integer>(new BaseField("globalId", "全局流水号", Long.class), null);
 		props.add(prop);
 	}
 

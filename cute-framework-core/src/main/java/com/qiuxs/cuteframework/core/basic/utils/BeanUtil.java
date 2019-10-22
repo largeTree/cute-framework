@@ -21,6 +21,17 @@ public class BeanUtil extends BeanUtils {
 	private static Logger log = LogManager.getLogger(BeanUtil.class);
 
 	/**
+	 * 根据类名实例化一个对象
+	 * @param className
+	 * @return
+	 */
+	public static <T> T instantiateByName(String className) {
+		@SuppressWarnings("unchecked")
+		Class<T> clz = (Class<T>) ClassUtils.forName(className);
+		return instantiateClass(clz);
+	}
+	
+	/**
 	 * 复制对象属性，忽略为Null的值
 	 * @author qiuxs
 	 *

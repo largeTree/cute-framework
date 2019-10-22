@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiuxs.cuteframework.common.mylog.dao.MylogDao">
+
+	<sql id="allFields">
+		`id`,
+		`ip`,
+		`server_id` as serverId,
+		`user_id` as userId,
+		`global_id` as globalId,
+		`level`,
+		`class_name` as className,
+		`method`,
+		`msg`,
+		`throwable`,
+		`stacktrace`,
+		`thread_id` as threadId,
+		`error_code` as errorCode,
+		`log_time` as logTime
+	</sql>
+
+	<sql id="insertFields">
+		`id`,
+		`ip`,
+		`server_id`,
+		`user_id`,
+		`global_id`,
+		`level`,
+		`class_name`,
+		`method`,
+		`msg`,
+		`throwable`,
+		`stacktrace`,
+		`thread_id`,
+		`error_code`,
+		`log_time`
+	</sql>
+
+	<select id="list" resultType="com.qiuxs.cuteframework.common.mylog.entity.Mylog" >
+		select
+			<include refid="allFields" />
+		from `mylog`
+		<where>
+			<include refid="comnWhere" />
+		</where>
+		<if test="orderBy != null" >
+			order by ${orderBy}
+			<if test="orderByDesc != null">
+				desc
+			</if>
+		</if>
+	</select>
+	
+	<select id="getCount" resultType="Long" >
+		select 
+			count(1) 
+		from `mylog`
+		<where>
+			<include refid="comnWhere" />
+		</where>
+	</select>
+
+	<sql id="comnWhere">
+		<if test="id != null">
+			`id` = #{id}
+		</if>
+		<if test="ip != null">
+			 and `ip` = #{ip}
+		</if>
+		<if test="serverId != null">
+			 and `server_id` = #{serverId}
+		</if>
+		<if test="serverIdLike != null">
+			 and `server_id` like concat('%', #{serverIdLike}, '%')
+		</if>
+		<if test="userId != null">
+			 and `user_id` = #{userId}
+		</if>
+		<if test="globalId != null">
+			 and `global_id` = #{globalId}
+		</if>
+		<if test="level != null">
+			 and `level` = #{level}
+		</if>
+		<if test="className != null">
+			 and `class_name` = #{className}
+		</if>
+		<if test="method != null">
+			 and `method` = #{method}
+		</if>
+		<if test="msg != null">
+			 and `msg` = #{msg}
+		</if>
+		<if test="msgLike != null">
+			 and `msg` like concat('%', #{msgLike}, '%')
+		</if>
+		<if test="throwable != null">
+			 and `throwable` = #{throwable}
+		</if>
+		<if test="throwableLike != null">
+			 and `throwable` like concat('%', #{throwableLike}, '%')
+		</if>
+		<if test="stacktrace != null">
+			 and `stacktrace` = #{stacktrace}
+		</if>
+		<if test="stacktraceLike != null">
+			 and `stacktrace` like concat('%', #{stacktraceLike}, '%')
+		</if>
+		<if test="threadId != null">
+			 and `thread_id` = #{threadId}
+		</if>
+		<if test="errorCode != null">
+			 and `error_code` = #{errorCode}
+		</if>
+		<if test="logTime != null">
+			 and `log_time` = #{logTime}
+		</if>
+		<if test="logTimeGte != null">
+			and `log_time` &gt;= #{logTimeGte}
+		</if>
+		<if test="logTimeLte != null">
+			and `log_time` &lt;= #{logTimeLte}
+		</if>
+	</sql>
+
+	<select id="getByIds" resultType="com.qiuxs.cuteframework.common.mylog.entity.Mylog" >
+		select <include refid="allFields" /> from `mylog` where id in
+		<foreach collection="list" item="item" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="get" resultType="com.qiuxs.cuteframework.common.mylog.entity.Mylog" >
+		select <include refid="allFields" /> from `mylog` where id = #{id}
+	</select>
+	
+	<select id="getAll" resultType="com.qiuxs.cuteframework.common.mylog.entity.Mylog" >
+		select <include refid="allFields" /> from `mylog`
+	</select>
+
+	<delete id="deleteById" parameterType="Long" >
+		delete from `mylog` where id = #{id}
+	</delete>
+
+	<insert id="insert" parameterType="com.qiuxs.cuteframework.common.mylog.entity.Mylog">
+		insert into `mylog`(<include refid="insertFields" />)
+		values(
+			#{id},
+			#{ip},
+			#{serverId},
+			#{userId},
+			#{globalId},
+			#{level},
+			#{className},
+			#{method},
+			#{msg},
+			#{throwable},
+			#{stacktrace},
+			#{threadId},
+			#{errorCode},
+			#{logTime}
+		)
+	</insert>
+
+	<insert id="insertInBatch" parameterType="java.util.List" >
+		insert into `mylog`(<include refid="insertFields" />)
+		values
+		<foreach collection="list" item="item" separator="," >
+			(
+				#{item.id},
+				#{item.ip},
+				#{item.serverId},
+				#{item.userId},
+				#{item.globalId},
+				#{item.level},
+				#{item.className},
+				#{item.method},
+				#{item.msg},
+				#{item.throwable},
+				#{item.stacktrace},
+				#{item.threadId},
+				#{item.errorCode},
+				#{item.logTime}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="com.qiuxs.cuteframework.common.mylog.entity.Mylog" >
+		update `mylog` 
+			<set>
+				<include refid="setComn" />
+			</set>
+		where id = #{id}
+	</update>
+
+	<sql id="setComn" >
+		<if test="ip != null" >
+			`ip` = #{ip},
+		</if>
+		<if test="serverId != null" >
+			`server_id` = #{serverId},
+		</if>
+		<if test="userId != null" >
+			`user_id` = #{userId},
+		</if>
+		<if test="globalId != null" >
+			`global_id` = #{globalId},
+		</if>
+		<if test="level != null" >
+			`level` = #{level},
+		</if>
+		<if test="className != null" >
+			`class_name` = #{className},
+		</if>
+		<if test="method != null" >
+			`method` = #{method},
+		</if>
+		<if test="msg != null" >
+			`msg` = #{msg},
+		</if>
+		<if test="throwable != null" >
+			`throwable` = #{throwable},
+		</if>
+		<if test="stacktrace != null" >
+			`stacktrace` = #{stacktrace},
+		</if>
+		<if test="threadId != null" >
+			`thread_id` = #{threadId},
+		</if>
+		<if test="errorCode != null" >
+			`error_code` = #{errorCode},
+		</if>
+		<if test="logTime != null" >
+			`log_time` = #{logTime}
+		</if>
+	</sql>
+</mapper>

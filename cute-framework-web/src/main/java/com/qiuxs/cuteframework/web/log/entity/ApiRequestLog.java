@@ -2,6 +2,8 @@ package com.qiuxs.cuteframework.web.log.entity;
 
 import java.util.Date;
 
+import com.qiuxs.cuteframework.core.basic.code.annotation.Code;
+import com.qiuxs.cuteframework.core.basic.code.annotation.CodeDomain;
 import com.qiuxs.cuteframework.core.persistent.database.entity.impl.AbstractEntity;
 
 /**
@@ -17,9 +19,11 @@ public class ApiRequestLog extends AbstractEntity<Long> {
 
 	private static final long serialVersionUID = 1L;
 	
-	/** 成功 */
+	@CodeDomain
+	public static final String DOMAIN_STATUS = "domain.ApiStatus";
+	@Code(domain = DOMAIN_STATUS, caption = "成功")
 	public static final int SUCCESS = 1;
-	/** 失败 */
+	@Code(domain = DOMAIN_STATUS, caption = "失败")
 	public static final int FAILED = 0;
 	
 	/** 接口号 */
@@ -42,6 +46,9 @@ public class ApiRequestLog extends AbstractEntity<Long> {
 	
 	/** 请求状态 */
 	private Integer status;
+	
+	/** 全局流水号 */
+	private Long globalId;
 
 	/**
 	 * get the 接口号
@@ -161,4 +168,26 @@ public class ApiRequestLog extends AbstractEntity<Long> {
 		this.status = status;
 	}
 
+	/**
+	 * get the 全局流水号
+	 * 
+	 * 2019年8月2日 下午10:39:41
+	 * @auther qiuxs
+	 * @return
+	 */
+	public Long getGlobalId() {
+		return globalId;
+	}
+
+	/**
+	 * set the 全局流水号
+	 * 
+	 * 2019年8月2日 下午10:39:41
+	 * @auther qiuxs
+	 * @param status
+	 */
+	public void setGlobalId(Long globalId) {
+		this.globalId = globalId;
+	}
+	
 }

@@ -242,7 +242,6 @@ public class McFactory {
 	 * @author zhangyz created on 2013-4-26
 	 */
 	public Lock getLock(String lockName) {
-		// 2016-06-01 JinXinhua 写法改一下，因为用包含再取要多取一次
 		Lock lock = mapLock.get(lockName);
 		if (lock == null) {
 			lock = createLock(lockName);

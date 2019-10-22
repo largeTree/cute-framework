@@ -154,4 +154,18 @@ public class ClassUtils {
 			}
 		}
 	}
+
+	/**
+	 * 后去类对象，根据类名
+	 * @param className
+	 * @return
+	 */
+	public static Class<?> forName(String className) {
+		try {
+			Class<?> clz = Class.forName(className);
+			return clz;
+		} catch (Exception e) {
+			throw ExceptionUtils.unchecked(e);
+		}
+	}
 }

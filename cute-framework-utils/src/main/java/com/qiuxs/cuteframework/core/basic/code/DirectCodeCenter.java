@@ -24,6 +24,20 @@ public class DirectCodeCenter {
 	public static final int GENDER_MAN = 1;
 	@Code(domain = DOMAIN_GENDER, caption = "女")
 	public static final int GENDER_WOMEN = 2;
+	
+	@CodeDomain
+	public static final String DOMAIN_LOG_LEVEL = "domain.LogLevel";
+	
+	@Code(domain = DOMAIN_LOG_LEVEL, caption = "DEBUG")
+	public static final String DEBUG = "debug";
+	@Code(domain = DOMAIN_LOG_LEVEL, caption = "INFO")
+	public static final String INFO = "info";
+	@Code(domain = DOMAIN_LOG_LEVEL, caption = "WRAN")
+	public static final String WRAN = "wran";
+	@Code(domain = DOMAIN_LOG_LEVEL, caption = "ERROR")
+	public static final String ERROR = "error";
+	@Code(domain = DOMAIN_LOG_LEVEL, caption = "FATAL")
+	public static final String FATAL = "fatal";
 
 	private static Map<String, DirectCodeHouse<?>> codeHouses = new HashMap<>();
 

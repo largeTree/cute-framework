@@ -1,0 +1,48 @@
+.my-table {
+	border-collapse: collapse;
+	margin: 0px auto;
+	font-size: 12px;
+}
+
+.my-table td:first-child {
+	border-left: 1px #A1B7E5 solid;
+}
+
+.my-table tbody td {
+	border-top: 1px #A1B7E5 solid;
+	border-right: 1px #A1B7E5 solid;
+	border-bottom: 1px #A1B7E5 solid;
+	text-align: center;
+	white-space: nowrap;
+	overflow: hidde;
+	text-overflow: ellipsis;
+	padding-left:2px;
+	padding-right:2px
+}
+
+.my-table tfoot td {
+	border-top: 1px #A1B7E5 solid;
+	border-right: 1px #A1B7E5 solid;
+	border-bottom: 1px #A1B7E5 solid;
+	padding: 0px;
+}
+
+.my-table tfoot td td {
+	border: 0px;
+}
+
+.my-table>thead>tr>td {
+	border-top: 1px #A1B7E5 solid;
+	border-right: 1px #A1B7E5 solid;
+	border-bottom: 1px #A1B7E5 solid;
+	margin: 0px;
+	text-align: center;
+	text-align: center;
+	background-color: #E3ECFF;
+	font-weight: 600;
+	padding: 5px 3px;
+}
+
+.my-table>tbody>tr:hover {
+	background-color: #F0F0F0;
+}

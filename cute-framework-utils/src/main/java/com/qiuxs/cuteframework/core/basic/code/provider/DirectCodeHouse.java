@@ -1,6 +1,8 @@
 package com.qiuxs.cuteframework.core.basic.code.provider;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,9 +11,20 @@ import java.util.Map;
  * 2019年3月28日 下午9:21:17
  * @param <C>
  */
-public class DirectCodeHouse<C> implements ICodeTranslatable<C> {
-	
-	private Map<C, String> codeHouse = new HashMap<>();
+public class DirectCodeHouse<C> implements ICodeTranslator<C> {
+
+	private Map<C, CodeOption<C>> codeHouse = new LinkedHashMap<C, CodeOption<C>>() {
+		private static final long serialVersionUID = 244883989680981622L;
+
+		public CodeOption<C> get(Object key) {
+			CodeOption<C> codeOption = super.get(key);
+			if (codeOption == null) {
+				return CodeOption.emptyOption();
+			}
+			return codeOption;
+		}
+
+	};
 
 	/**
 	 * 添加一个code
@@ -22,9 +35,9 @@ public class DirectCodeHouse<C> implements ICodeTranslatable<C> {
 	 * @param caption
 	 */
 	public void addCode(C code, String caption) {
-		codeHouse.put(code, caption);
+		codeHouse.put(code, new CodeOption<C>(code, caption));
 	}
-	
+
 	/**
 	 * 2019年3月28日 下午9:22:15
 	 * qiuxs
@@ -32,7 +45,12 @@ public class DirectCodeHouse<C> implements ICodeTranslatable<C> {
 	 */
 	@Override
 	public String getCaption(C code) {
-		return codeHouse.get(code);
+		return codeHouse.get(code).getCaption();
+	}
+
+	@Override
+	public List<CodeOption<?>> getOptions() {
+		return new ArrayList<>(codeHouse.values());
 	}
 
 }

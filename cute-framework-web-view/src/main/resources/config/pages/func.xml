@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<dataList apiKey="func-list">
+		<search>
+			<field label="名称" type="text" name="nameLike" />
+			<field label="层级" type="text" name="level" />
+			<field label="上级菜单" type="select" name="parentId" code="c-funcs" />
+			<field label="菜单类型" type="select" name="funcType" code="funcType" />
+			<field label="终端类型" type="select" name="termCap" code="funcTermCap" />
+			<field label="备注" type="text" name="remLike" />
+		</search>
+		<table>
+			<td name="上级菜单" field="parentId" type="caption" />
+			<td name="层级" field="level" type="caption" />
+			<td name="菜单类型" field="funcType" type="caption" />
+			<td name="菜单名" field="name" type="text" />
+			<td name="终端类型" field="termCap" type="caption" />
+			<td name="显示顺序" field="showOrder" type="num" order="1" />
+			<td name="扩展属性" field="extra" type="text" length="10" />
+			<td name="备注" field="rem" type="text" length="10" />
+		</table>
+	</dataList>
+</root>

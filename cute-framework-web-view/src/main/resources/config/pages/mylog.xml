@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<dataList apiKey="mylog-list">
+		<search>
+			<field label="客户端IP" type="text" name="ip" />
+			<field label="服务器ID" type="text" name="serverIdLike" />
+			<field label="用户ID" type="text" name="userId" />
+			<field label="全局流水号" type="text" name="globalId" />
+			<field label="日志级别" type="select" name="level" code="domain.LogLevel" />
+			<field label="类名" type="text" name="classNameLike" />
+			<field label="方法名" type="text" name="methodLike" />
+			<field label="内容" type="text" name="msgLike" />
+			<field label="线程ID" type="text" name="threadId" />
+			<field label="错误代码" type="text" name="errorCode" />
+			<field label="时间起" type="datetime" name="logTimeGte" />
+			<field label="时间止" type="datetime" name="logTimeLte" />
+		</search>
+		<table>
+			<td name="id" field="id" type="hidden"  />
+			<td name="客户端IP" field="ip" type="text" width="10"/>
+			<td name="服务器ID" field="serverId" type="text" />
+			<td name="用户ID" field="userId" type="num" />
+			<td name="全局流水号" field="globalId" type="num" />
+			<td name="日志级别" field="level" type="text" />
+			<td name="类名" field="className" length="30" />
+			<td name="方法名" field="method" type="text" />
+			<td name="内容" field="msg" type="text" length="30" />
+			<td name="Throwable" field="throwable" type="text" length="30" />
+			<td name="StackTrace" field="stacktrace" type="text" length="30" />
+			<td name="线程ID" field="threadId" type="text" />
+			<td name="错误代码" field="errorCode" type="num" />
+			<td name="时间" field="logTime" type="date" />
+			<td name="操作" type="btn">
+				<btn name="查看详情" pk="id" href="/view/form?pid=mylog&amp;formId=mylog&amp;action=view" />
+			</td>
+		</table>
+	</dataList>
+	
+	<from id="mylog" getApiKey="mylog-get" saveApiKey="mylog-save" >
+		<field label="客户端IP" name="ip" type="text" />
+		<field label="服务器ID" name="serverId" type="text" />
+		<field label="用户ID" name="userId" type="text" />
+		<field label="全局流水号" name="globalId" type="num" />
+		<field label="日志级别" name="level" type="text" />
+		<field label="类名" name="className" type="text" />
+		<field label="方法名" name="method" type="text" />
+		<field label="日志内容" name="msg" type="text" />
+		<field label="线程ID"	 name="threadId" type="text" />
+		<field label="错误代码" name="errorCore" type="text" />
+		<field label="时间" name="logTime" type="datetime" />
+		<field label="Throwable" name="throwable" singleRow="1" cols="55" rows="5" type="textarea" />
+		<field label="StackTrace" name="stacktrace" singleRow="1" cols="55" rows="18" type="textarea" />
+	</from>
+	
+</root>

@@ -24,6 +24,7 @@ public class TypeAdapter {
 	public static final String BIGDECIMAL_TYPE_NAME = "BigDecimal";
 	public static final String DATE_TYPE_NAME = "Date";
 	public static final String STRING_TYPE_NAME = "String";
+	public static final String JSON_TYPE_NAME = "json";
 
 	/**
 	 * 类型适配

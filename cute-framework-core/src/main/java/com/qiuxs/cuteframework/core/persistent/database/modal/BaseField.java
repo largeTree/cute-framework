@@ -15,6 +15,7 @@ import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.INTEGER_VALUE
 import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.LONG_TYPE_NAME_SIMPLE;
 import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.LONG_VALUE_TYPE_NAME_SIMPLE;
 import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.STRING_TYPE_NAME;
+import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.JSON_TYPE_NAME;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -37,17 +38,23 @@ public class BaseField {
 	private Class<?> typeClass;
 	/** 默认值 */
 	private Object defaultValue;
-
-	public BaseField(String name, String label, Class<?> typeClass) {
-		this(name, label, typeClass, null);
+	
+	public BaseField(String name, String label, String typeName) {
+		this(name, label, typeName, null, null);
 	}
 
-	public BaseField(String name, String label, Class<?> typeClass, Object defaultValue) {
+	public BaseField(String name, String label, Class<?> typeClass) {
+		this(name, label, null, typeClass, null);
+	}
+
+	public BaseField(String name, String label, String typeName, Class<?> typeClass, Object defaultValue) {
 		this.name = name;
 		this.label = label;
 		this.typeClass = typeClass;
 		this.defaultValue = defaultValue;
-		this.type = typeClass.getSimpleName();
+		if (typeName == null && typeClass != null) {
+			this.type = typeClass.getSimpleName();
+		}
 	}
 
 	public String getName() {
@@ -86,25 +93,26 @@ public class BaseField {
 		if (this.defaultValue != null) {
 			return this.defaultValue;
 		}
-		String simpleTypeName = this.typeClass.getSimpleName();
-		if (BYTE_TYPE_NAME_SIMPLE.equals(simpleTypeName) || BYTE_VALUE_TYPE_NAME_SIMPLE.equals(simpleTypeName)) {
+		if (BYTE_TYPE_NAME_SIMPLE.equals(this.type) || BYTE_VALUE_TYPE_NAME_SIMPLE.equals(this.type)) {
 			return Byte.valueOf("0");
-		} else if (CHARACTER_TYPE_NAME_SIMPLE.equals(simpleTypeName) || CHARCTER_VALUE_TYPE_NAME_SIMPLE.equals(simpleTypeName)) {
+		} else if (CHARACTER_TYPE_NAME_SIMPLE.equals(this.type) || CHARCTER_VALUE_TYPE_NAME_SIMPLE.equals(this.type)) {
 			return '\u0000';
-		} else if (INTEGER_TYPE_NAME_SIMPLE.equals(simpleTypeName) || INTEGER_VALUE_TYPE_NAME_SIMPLE.equals(simpleTypeName)) {
+		} else if (INTEGER_TYPE_NAME_SIMPLE.equals(this.type) || INTEGER_VALUE_TYPE_NAME_SIMPLE.equals(this.type)) {
 			return 0;
-		} else if (LONG_TYPE_NAME_SIMPLE.equals(simpleTypeName) || LONG_VALUE_TYPE_NAME_SIMPLE.equals(simpleTypeName)) {
+		} else if (LONG_TYPE_NAME_SIMPLE.equals(this.type) || LONG_VALUE_TYPE_NAME_SIMPLE.equals(this.type)) {
 			return 0L;
-		} else if (FLOAT_TYPE_NAME_SIMPLE.equals(simpleTypeName) || FLOAT_VALUE_TYPE_NAME_SIMPLE.equals(simpleTypeName)) {
+		} else if (FLOAT_TYPE_NAME_SIMPLE.equals(this.type) || FLOAT_VALUE_TYPE_NAME_SIMPLE.equals(this.type)) {
 			return 0F;
-		} else if (DOUBLE_TYPE_NAME_SIMPLE.equals(simpleTypeName) || DOUBLE_VALUE_TYPE_NAME_SIMPLE.equals(simpleTypeName)) {
+		} else if (DOUBLE_TYPE_NAME_SIMPLE.equals(this.type) || DOUBLE_VALUE_TYPE_NAME_SIMPLE.equals(this.type)) {
 			return 0D;
-		} else if (BIGDECIMAL_TYPE_NAME.equals(simpleTypeName)) {
+		} else if (BIGDECIMAL_TYPE_NAME.equals(this.type)) {
 			return BigDecimal.ZERO;
-		} else if (DATE_TYPE_NAME.equals(simpleTypeName)) {
+		} else if (DATE_TYPE_NAME.equals(this.type)) {
 			return Calendar.getInstance().getTime();
-		} else if (STRING_TYPE_NAME.equals(simpleTypeName)) {
+		} else if (STRING_TYPE_NAME.equals(this.type)) {
 			return "";
+		} else if (JSON_TYPE_NAME.equals(this.type)) {
+			return null;
 		}
 		return defaultValue;
 	}

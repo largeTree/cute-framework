@@ -165,6 +165,11 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	public List<T> getByIds(Collection<PK> ids) {
 		return this.getDao().getByIds(ids);
 	}
+	
+	@Transactional(propagation = Propagation.SUPPORTS)
+	public List<T> getAll() {
+		return this.getDao().getAll();
+	}
 
 	/**
 	 * 使用Map作为参数查询

@@ -9,6 +9,7 @@ CREATE TABLE `api_request_log`(
 );
 CREATE INDEX `idx_request_log_ApiKey` ON api_request_log(`api_key`);
 ALTER TABLE `api_request_log` ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 1 COMMENT'请求状态';
+ALTER TABLE `api_request_log` ADD COLUMN `global_id` BIGINT(20) NOT NULL DEFAULT 0 COMMENT'请求状态';
 
 -- 创建视图，方便查询数据
 CREATE ALGORITHM = UNDEFINED VIEW v_api_request_log AS 

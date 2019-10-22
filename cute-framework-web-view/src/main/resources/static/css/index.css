@@ -1,0 +1,27 @@
+.left-menu {
+	padding: 4% 10% 4% 0px;
+	border-bottom: 1px solid #CCC; 
+	letter-spacing: 2px;
+	overflow: visible;
+}
+.menu-panel {
+	display: none;
+	border: 1px solid #CCC; 
+	position: fixed;
+	left: 5%;
+	float: right;
+	background-color: #FFF;
+	max-height: 80%;
+}
+.menu-title {
+	color: #FF7F00;
+	margin: 10px 0px 0px 0px;
+	font-weight: 600;
+}
+.menu-item > a:hover {
+	color: #FF7F24;
+}
+.menu-item > a {
+	color: #000;
+	text-decoration: none;
+}

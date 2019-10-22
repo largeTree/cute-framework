@@ -10,7 +10,7 @@ import com.qiuxs.cuteframework.web.WebConstants;
 @RequestMapping(value = WebConstants.SYS_CONTROLLER_PREFIX + "/server", produces = WebConstants.DEFAULT_REQUEST_PRODUCES)
 public class ServerController {
 
-	@GetMapping("/check")
+	@GetMapping("/check.do")
 	public String checkServer() {
 		return "success";
 	}

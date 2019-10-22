@@ -11,6 +11,7 @@
 		<module>cute-framework-core</module>
 		<module>cute-framework-tester</module>
 		<module>cute-framework-web</module>
+		<module>cute-framework-web-view</module>
 		<module>cute-captcha-plugin</module>
 		<module>cute-sms-plugin</module>
 		<module>cute-framework-utils</module>
@@ -21,8 +22,9 @@
 		<fastjson.version>1.2.32</fastjson.version>
 		<fluent.hc.version>4.3.5</fluent.hc.version>
 		<http.client.version>4.3.5</http.client.version>
-		<http.client.cache.version>4.3.5</http.client.cache.version>
 		<httpcore.version>4.3.2</httpcore.version>
+		<taglibs.version>1.1.2</taglibs.version>
+		<javassist.version>3.20.0-GA</javassist.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -44,6 +46,11 @@
 				<artifactId>fluent-hc</artifactId>
 				<version>${fluent.hc.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>taglibs</groupId>
+				<artifactId>standard</artifactId>
+				<version>${taglibs.version}</version>
+			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
@@ -53,7 +60,7 @@
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient-cache</artifactId>
-				<version>${http.client.cache.version}</version>
+				<version>${http.client.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
@@ -61,10 +68,10 @@
 				<version>${httpcore.version}</version>
 			</dependency>
 			<dependency>
-                <groupId>com.thoughtworks.xstream</groupId>
-                <artifactId>xstream</artifactId>
-                <version>1.4.9</version>
-            </dependency>
+				<groupId>com.thoughtworks.xstream</groupId>
+				<artifactId>xstream</artifactId>
+				<version>1.4.9</version>
+			</dependency>
 			<dependency>
 				<groupId>dom4j</groupId>
 				<artifactId>dom4j</artifactId>
@@ -77,34 +84,52 @@
 				</exclusions>
 			</dependency>
 			<dependency>
-	            <groupId>com.belerweb</groupId>
-	            <artifactId>pinyin4j</artifactId>
-	            <version>2.5.0</version>
-	        </dependency>
+				<groupId>com.belerweb</groupId>
+				<artifactId>pinyin4j</artifactId>
+				<version>2.5.0</version>
+			</dependency>
 			<dependency>
 				<groupId>commons-fileupload</groupId>
 				<artifactId>commons-fileupload</artifactId>
 				<version>1.3.2</version>
 			</dependency>
-            <dependency>
-                <groupId>commons-beanutils</groupId>
-                <artifactId>commons-beanutils</artifactId>
-                <version>1.9.2</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.5</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>20.0</version>
-            </dependency>
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>1.9.2</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.5</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>20.0</version>
+			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>cute-framework-utils</artifactId>
-					<version>${project.version}</version>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-test</artifactId>
+				<scope>test</scope>
+				<version>${spring.boot.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-starter-logging</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<!-- javassist -->
+			<dependency>
+				<groupId>org.javassist</groupId>
+				<artifactId>javassist</artifactId>
+				<version>${javassist.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

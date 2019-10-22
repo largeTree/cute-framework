@@ -3,6 +3,7 @@ package com.qiuxs.cuteframework.core.basic.utils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +19,14 @@ import com.qiuxs.cuteframework.core.basic.utils.reflect.FieldUtils;
  *
  */
 public class ListUtils extends CollectionUtils {
+
+	/**
+	 * 空列表
+	 * @return
+	 */
+	public static <T> List<T> emptyList() {
+		return Collections.emptyList();
+	}
 
 	/**
 	 * 将List中的元素以元素中某个字段为Key转为Map

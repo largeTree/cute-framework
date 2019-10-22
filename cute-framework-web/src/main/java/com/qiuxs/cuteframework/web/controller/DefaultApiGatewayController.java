@@ -47,7 +47,7 @@ public class DefaultApiGatewayController extends BaseController {
 		ApiConfig apiConfig = this.apiHolder.getApiConfig(apiKey);
 
 		// 获取所有参数
-		Map<String, String> params = RequestUtils.getRequestParams(request);
+		Map<String, String> params = RequestUtils.getRequestParams(request, compressType);
 		super.fillClientInfo(params, request);
 		super.fillServerInfo(params, request);
 		

@@ -32,6 +32,8 @@ public interface IDataPropertyService<PK extends Serializable, T extends IEntity
 
 	public T get(PK pk);
 	
+	public List<T> getAll();
+	
 	public T getMust(PK pk);
 
 	public List<T> getByIds(Collection<PK> ids);

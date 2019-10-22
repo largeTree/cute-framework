@@ -77,6 +77,10 @@ public abstract class BaseController {
 				reqLog.setReqUrl(reqUrl);
 				reqLog.setReqStartTime(new Date(Long.parseLong(startTime)));
 				reqLog.setReqEndTime(endDate);
+				String strGlobalId = LogUtils.getContextMap().get(LogConstant.COLUMN_GLOBALID);
+				if (strGlobalId != null) {
+					reqLog.setGlobalId(Long.parseLong(strGlobalId));
+				}
 				reqLog.setStatus(successFlag ? ApiRequestLog.SUCCESS : ApiRequestLog.FAILED);
 				BaseController.this.apiRequestLogService.save(reqLog);
 			}

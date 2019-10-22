@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.core.basic.utils.reflect;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -8,8 +9,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.Validate;
@@ -20,20 +23,34 @@ import com.qiuxs.cuteframework.core.basic.utils.DateFormatUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
 
 public class FieldUtils {
-	
+
 	private static final Logger log = LogManager.getLogger(FieldUtils.class);
 	
 	/**
-     * 获取clazz所有字段，平铺形式.
+	 * 获取指定类中定义的所有字段名
+	 * @param clz
+	 * @return
+	 */
+	public static Set<String> getDeclaredFieldNames(Class<?> clz) {
+		List<Field> declaredFields = getDeclaredFields(clz);
+		Set<String> fieldNames = new HashSet<>(declaredFields.size());
+		for (Field f : declaredFields) {
+			fieldNames.add(f.getName());
+		}
+		return fieldNames;
+	}
+
+	/**
+	 * 获取clazz所有字段，平铺形式.
 	 * <li>范围：含所有的存取级别；包括类字段和实例字段</li>
-     * <li>平铺：子类字段覆盖同名父类字段</li>
-     *  
-     * @author fengdg  
-     * @param clazz
-     * @return
-     */
-    public static Map<String, Field> getFieldFlatMap(final Class<?> clazz) {
-    	Map<String, Field> fieldMap = new HashMap<String, Field>();
+	 * <li>平铺：子类字段覆盖同名父类字段</li>
+	 *  
+	 * @author fengdg  
+	 * @param clazz
+	 * @return
+	 */
+	public static Map<String, Field> getFieldFlatMap(final Class<?> clazz) {
+		Map<String, Field> fieldMap = new HashMap<String, Field>();
 		for (Class<?> superClass = clazz; superClass != Object.class; superClass = superClass.getSuperclass()) {
 			Field[] fields = superClass.getDeclaredFields();
 			for (Field field : fields) {
@@ -45,7 +62,7 @@ public class FieldUtils {
 		}
 		return fieldMap;
 	}
-	
+
 	/**
 	 * 获取List字段的泛型类型，未设置泛型的返回Null
 	 * @author qiuxs
@@ -67,7 +84,7 @@ public class FieldUtils {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 获取无权限判断的字段对象
 	 * @author qiuxs
@@ -148,7 +165,7 @@ public class FieldUtils {
 			log.error("不可能抛出的异常:{}", e);
 		}
 	}
-	
+
 	/**
 	 * 设置属性值.
 	 * 可以转类型，但只能用public方法
@@ -200,12 +217,12 @@ public class FieldUtils {
 		return null;
 	}
 
-	
 	/**
 	 * 改变private/protected的成员变量为public，尽量不调用实际改动的语句，避免JDK的SecurityManager抱怨。
 	 */
 	public static void makeAccessible(Field field) {
-		if ((!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers()) || Modifier.isFinal(field.getModifiers())) && !field.isAccessible()) {
+		if ((!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers()) || Modifier.isFinal(field.getModifiers()))
+		        && !field.isAccessible()) {
 			field.setAccessible(true);
 		}
 	}
@@ -242,4 +259,31 @@ public class FieldUtils {
 		fields.addAll(getDeclaredFields(superclass));
 		return fields;
 	}
+
+	/**
+	 * 获取有指定注解的字段列表
+	 * @param clz
+	 * @param annotationClass
+	 * @return
+	 */
+	public static List<Field> getDeclaredFieldsByAnnotation(Class<?> clz, Class<? extends Annotation> annotationClass, boolean accessFlag, boolean noDup) {
+		List<Field> allFields;
+		if (noDup) {
+			allFields = getDeclaredFieldsNoDup(clz);
+		} else {
+			allFields = getDeclaredFields(clz);
+		}
+		List<Field> matchedFields = new ArrayList<>();
+		for (Field f : allFields) {
+			Annotation annotation = f.getAnnotation(annotationClass);
+			if (annotation != null) {
+				if (accessFlag) {
+					makeAccessible(f);
+				}
+				matchedFields.add(f);
+			}
+		}
+		return matchedFields;
+	}
+
 }

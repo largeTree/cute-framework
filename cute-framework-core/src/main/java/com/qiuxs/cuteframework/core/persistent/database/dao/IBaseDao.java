@@ -13,6 +13,8 @@ public interface IBaseDao<PK extends Serializable, T extends IEntity<PK>> {
 	public void deleteById(PK id);
 
 	public T get(PK id);
+	
+	public List<T> getAll();
 
 	public List<T> getByIds(Collection<PK> ids);
 

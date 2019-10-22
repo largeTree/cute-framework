@@ -131,7 +131,7 @@ public class ApiHolder implements ApplicationListener<ContextRefreshedEvent> {
 			if (oldVal != null) {
 				throw new RuntimeException("duplicate apiKey [ " + key + " ]");
 			}
-			return null;
+			return oldVal;
 		};
 	}
 
