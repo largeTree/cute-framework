@@ -6,6 +6,6 @@
 <%@ include file="common/include.jsp"%>
 </head>
 <body>
-	
+	我的桌面
 </body>
 </html>

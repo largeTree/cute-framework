@@ -101,7 +101,7 @@ body {
 	<!-- <div data-options="region:'east'" ></div> -->
 	<div id="mainTabs" class="easyui-tabs" data-options="region:'center'" style="border-top:0px;border-bottom:0px;border-right:0px;">
 		 <div title="我的桌面" data-options="closable:false" >
-		 	<iframe src="/bg/mydesktop" style="border: 0px;width: 100%;height: 100%"/>
+		 	<iframe src="view/mydesktop" style="border: 0px;width: 100%;height: 100%"/>
 	    </div>
 	</div>
 </body>
