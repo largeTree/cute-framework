@@ -42,7 +42,9 @@ public class DefaultApiGatewayController extends BaseController {
 	        HttpServletRequest request, HttpServletResponse response) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
 		long start = System.currentTimeMillis();
-
+		// 准备日志
+		super.prepareRequestLog(apiKey, request.getRequestURL().toString(), start);
+		
 		// 获取apiConfig
 		ApiConfig apiConfig = this.apiHolder.getApiConfig(apiKey);
 
@@ -50,9 +52,6 @@ public class DefaultApiGatewayController extends BaseController {
 		Map<String, String> params = RequestUtils.getRequestParams(request, compressType);
 		super.fillClientInfo(params, request);
 		super.fillServerInfo(params, request);
-		
-		// 准备日志
-		super.prepareRequestLog(apiKey, request.getRequestURL().toString(), start);
 		
 		log.info("request -> params = " + String.valueOf(params));
 
