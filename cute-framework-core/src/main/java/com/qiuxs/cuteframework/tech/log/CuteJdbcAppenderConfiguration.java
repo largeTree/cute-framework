@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import com.qiuxs.cuteframework.core.basic.Constants.DsType;
 import com.qiuxs.cuteframework.core.basic.i18n.I18nUtils;
+import com.qiuxs.cuteframework.core.log.Console;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource;
 
 @Component
@@ -37,6 +38,21 @@ public class CuteJdbcAppenderConfiguration {
 			DataSource dataSource = (DataSource) dynDataSource.getTargetDataSources().get(dynDataSource.getLogDb());
 			return dataSource.getConnection();
 		}
+		
+		/**
+		 * 校验链接是否可用
+		 * @return
+		 */
+		public boolean testConnection() {
+			try {
+				this.getConnection().close();
+				return true;
+			} catch (SQLException e) {
+				Console.log.error("get LogDb Connection Failed ext = " + e.getLocalizedMessage());
+				return false;
+			}
+		}
+		
 	}
 
 	/**
@@ -84,8 +100,13 @@ public class CuteJdbcAppenderConfiguration {
 	private Appender genJdbcAppender(String logTblName, CuteColumnConfig[] colConfig, Configuration config) {
 		String appenderName = LogConstant.JDBC_APPENDER_PREFIX + System.currentTimeMillis();
 
+		Connect conn = new Connect();
+		if (!conn.testConnection()) {
+			Console.log.warn("LogDb Connect Failed...");
+			return null;
+		}
 		// 创建EcJdbcAppender
-		Appender appender = CuteJdbcAppender.createAppender(appenderName, "true", null, new Connect(), LogConstant.JDBC_APPENDER_BUFFSIZE, logTblName, colConfig);
+		Appender appender = CuteJdbcAppender.createAppender(appenderName, "true", null, conn, LogConstant.JDBC_APPENDER_BUFFSIZE, logTblName, colConfig);
 		appender.start();
 		config.addAppender(appender);
 
@@ -148,9 +169,11 @@ public class CuteJdbcAppenderConfiguration {
 
 		Appender asyncAppender = genJdbcAppender("mylog", cc, config);
 
-		startMyJdbcAppender("com.qiuxs", asyncAppender, config);// LogManager.ROOT_LOGGER_NAME
-		startMyJdbcAppender("com.qiuxs.cuteframework.core.log.Console", asyncAppender, config);
-		//		startMyJdbcAppender("com.hzecool.core.log.logger.Nagios", asyncAppender, config);
-		ctx.updateLoggers();
+		if (asyncAppender != null) {
+			startMyJdbcAppender("com.qiuxs", asyncAppender, config);// LogManager.ROOT_LOGGER_NAME
+			startMyJdbcAppender("com.qiuxs.cuteframework.core.log.Console", asyncAppender, config);
+			//		startMyJdbcAppender("com.hzecool.core.log.logger.Nagios", asyncAppender, config);
+			ctx.updateLoggers();
+		}
 	}
 }

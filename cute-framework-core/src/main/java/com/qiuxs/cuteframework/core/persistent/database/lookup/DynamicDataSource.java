@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import com.qiuxs.cuteframework.core.basic.Constants.DsType;
 import com.qiuxs.cuteframework.core.basic.utils.TypeAdapter;
 import com.qiuxs.cuteframework.core.basic.utils.reflect.FieldUtils;
+import com.qiuxs.cuteframework.core.log.Console;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.dto.DsInfo;
 import com.qiuxs.cuteframework.tech.log.NoDbLogger;
 
@@ -126,22 +128,40 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		dataSource.setMaxWaitMillis(this.defaultTargetDataSource.getMaxWaitMillis());
 		dataSource.setValidationQuery(this.defaultTargetDataSource.getValidationQuery());
 		String dsId = dsInfo.getId();
-		this.targetDataSources.put(dsId, dataSource);
 		String type = dsInfo.getType();
-		if (DsType.ENTRY.value().equals(type)) {
-			this.mapDsTypeId.put(DsType.ENTRY.value(), dsId);
-		} else if (DsType.LOG.value().equals(type)) {
-			this.mapDsTypeId.put(DsType.LOG.value(), dsId);
-		} else if (DsType.SEQ.value().equals(type)) {
-			this.mapDsTypeId.put(DsType.SEQ.value(), dsId);
-		} else if (DsType.BIZ.value().equals(type)) {
-			@SuppressWarnings("unchecked")
-			List<String> bizDsIds = (List<String>) this.mapDsTypeId.get(DsType.BIZ.value());
-			if (bizDsIds == null) {
-				bizDsIds = new ArrayList<>();
-				this.mapDsTypeId.put(DsType.BIZ.value(), bizDsIds);
+		boolean isValid = true;
+		try {
+			dataSource.getConnection().close();
+		} catch (SQLException e) {
+			isValid = false;
+			Console.log.error("InitDataBase Failed ext = " + e.getLocalizedMessage());
+			if (!DsType.LOG.value().equals(type)) {
+				throw new RuntimeException("");
 			}
-			bizDsIds.add(dsId);
+		} finally {
+			try {
+				dataSource.close();
+			} catch (Exception e) {
+				Console.log.error("Close DataSource Failed ext = " + e.getLocalizedMessage());
+			}
+		}
+		if (isValid) {
+			this.targetDataSources.put(dsId, dataSource);
+			if (DsType.ENTRY.value().equals(type)) {
+				this.mapDsTypeId.put(DsType.ENTRY.value(), dsId);
+			} else if (DsType.LOG.value().equals(type)) {
+				this.mapDsTypeId.put(DsType.LOG.value(), dsId);
+			} else if (DsType.SEQ.value().equals(type)) {
+				this.mapDsTypeId.put(DsType.SEQ.value(), dsId);
+			} else if (DsType.BIZ.value().equals(type)) {
+				@SuppressWarnings("unchecked")
+				List<String> bizDsIds = (List<String>) this.mapDsTypeId.get(DsType.BIZ.value());
+				if (bizDsIds == null) {
+					bizDsIds = new ArrayList<>();
+					this.mapDsTypeId.put(DsType.BIZ.value(), bizDsIds);
+				}
+				bizDsIds.add(dsId);
+			}
 		}
 	}
 

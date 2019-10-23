@@ -162,7 +162,7 @@
 		<%
 			List<Field> searchFields =  search.getFields();
 			
-			Pair<List<Field>, List<List<Field>>> groupedFields = PageModelUtils.groupFields(searchFields, 7);
+			Pair<List<Field>, List<List<Field>>> groupedFields = PageModelUtils.groupFields(searchFields, 6);
 		
 			List<List<Field>> groupedSfs = groupedFields.getV2();
 			List<Field> hiddenFields = groupedFields.getV1();
@@ -199,15 +199,15 @@
 						if (!Field.TYPE_SEARCH_BTN.equals(f.getType())) {
 			%>
 						<td style="text-align: right;">
-							<label for="<%=f.getName() %>"><%=f.getLabel() %>:</label>
+							<label for="<%=f.getName() %>" style="font-size: 12px;white-space: nowrap;"><%=f.getLabel() %>:</label>
 						</td>
-						<td>
+						<td style="font-size: 12px;white-space: nowrap;">
 							<%@ include file="fromField.jsp"%>
 						</td>
 			<%
 						} else {
 			%>
-						<td style="text-align: right;"><a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="doSearch()" >查询</a></td>
+						<td style="font-size: 12px;text-align: right;white-space: nowrap;"><a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="doSearch()" >查询</a></td>
 			<%
 						}
 					}

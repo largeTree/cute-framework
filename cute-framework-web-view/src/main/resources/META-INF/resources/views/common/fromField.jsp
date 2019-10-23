@@ -2,21 +2,21 @@
 <%
 				boolean inForm = request.getAttribute("formId") != null;
 
-				int width = inForm ? 340 : 140;
-				int height = 24;
+				int width = inForm ? 128 : 110;
+				int height = 20;
 				
 				String id = RandomGenerator.getRandomStr();
 				switch(f.getType()) {
 				case Field.TYPE_DATE:
 %>
-					<input id="<%=id %>" name="<%=f.getName() %>" type="text" class="easyui-datebox" data-options="editable:false,width:<%=width %>,height:<%=height %>">
+					<input id="<%=id %>" name="<%=f.getName() %>" type="text" >
 					<img src="<%=ctxPath %>/imgs/common/clear.png" align="absmiddle" onclick="frm.clearCombValue('<%=id %>')" />
 			
 <%
 					break;
 				case Field.TYPE_DATETIME:
 %>
-					<input id="<%=id %>" name="<%=f.getName() %>" type="text" class="easyui-datetimebox" data-options="editable:false,width:<%=width %>,height:<%=height %>">
+					<input id="<%=id %>" name="<%=f.getName() %>" type="text" >
 					<img src="<%=ctxPath %>/imgs/common/clear.png" align="absmiddle" onclick="frm.clearCombValue('<%=id %>')" />
 <%
 					break;
