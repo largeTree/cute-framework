@@ -2,9 +2,6 @@
 <%
 				boolean inForm = request.getAttribute("formId") != null;
 
-				int width = inForm ? 128 : 110;
-				int height = 20;
-				
 				String id = RandomGenerator.getRandomStr();
 				switch(f.getType()) {
 				case Field.TYPE_DATE:
@@ -27,23 +24,23 @@
 					break;
 				case Field.TYPE_RSSELECT:
 %>
-					<input id="<%=id %>" class="easyui-combobox" name="<%=f.getName() %>" data-options="width:<%=width %>,height:<%=height %>,mode:'remote',url:'<%=ctxPath%>/api.do?apiKey=qd-codes&codeDomain=<%=f.getCode()%>',valueField:'code',textField:'caption'">
+					<input id="<%=id %>" class="easyui-combobox" name="<%=f.getName() %>" data-options="width:100,height:16,mode:'remote',url:'<%=ctxPath%>/api.do?apiKey=qd-codes&codeDomain=<%=f.getCode()%>',valueField:'code',textField:'caption'">
 <%
 					break;
 				case Field.TYPE_RMSELECT:
 %>
-					<input id="<%=id %>" class="easyui-combobox" name="<%=f.getName() %>" data-options="width:<%=width %>,height:<%=height %>,mode:'remote',multiple:true,url:'<%=ctxPath%>/api.do?apiKey=qd-codes&codeDomain=<%=f.getCode()%>',valueField:'code',textField:'caption'">
+					<input id="<%=id %>" class="easyui-combobox" name="<%=f.getName() %>" data-options="width:100,height:16,mode:'remote',multiple:true,url:'<%=ctxPath%>/api.do?apiKey=qd-codes&codeDomain=<%=f.getCode()%>',valueField:'code',textField:'caption'">
 <%
 					break;
 				case Field.TYPE_TEXTAREA:
 %>
-					<input id="<%=id %>" class="easyui-textbox" name="<%=f.getName() %>" data-options="multiline:true,width:<%=f.getCols() * height %>,height:<%=f.getRows() * height %>" />
+					<input id="<%=id %>" name="<%=f.getName() %>" />
 <%
 					break;
 				case Field.TYPE_TEXT:
 					default:
 %>
-					<input id="<%=id %>" class="easyui-textbox" name="<%=f.getName() %>" type="text"  data-options="width:<%=width %>,height:<%=height %>">
+					<input id="<%=id %>" name="<%=f.getName() %>" type="text" />
 <%
 				}
 %>
