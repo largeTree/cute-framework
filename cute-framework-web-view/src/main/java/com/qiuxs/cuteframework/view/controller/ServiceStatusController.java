@@ -52,6 +52,7 @@ public class ServiceStatusController {
 			dsInfo.setNumIdle(numIdle);
 			dsInfo.setDriverClassName(driverClassName);
 			dsInfo.setValidationQuery(validationQuery);
+			dsInfo.setClosed(ds.isClosed());
 			dsInfos.add(dsInfo);
 		}
 		model.put("dsInfos", dsInfos);

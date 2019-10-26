@@ -139,10 +139,12 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 				throw new RuntimeException("");
 			}
 		} finally {
-			try {
-				dataSource.close();
-			} catch (Exception e) {
-				Console.log.error("Close DataSource Failed ext = " + e.getLocalizedMessage());
+			if (!isValid) {
+    			try {
+    				dataSource.close();
+    			} catch (Exception e) {
+    				Console.log.error("Close DataSource Failed ext = " + e.getLocalizedMessage(), e);
+    			}
 			}
 		}
 		if (isValid) {

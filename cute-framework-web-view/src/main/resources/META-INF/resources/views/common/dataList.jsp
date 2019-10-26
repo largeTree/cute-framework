@@ -202,7 +202,7 @@
 							<label for="<%=f.getName() %>" style="font-size: 12px;white-space: nowrap;"><%=f.getLabel() %>:</label>
 						</td>
 						<td style="font-size: 12px;white-space: nowrap;">
-							<%@ include file="fromField.jsp"%>
+							<%@ include file="formField.jsp"%>
 						</td>
 			<%
 						} else {

@@ -48,7 +48,7 @@
 						<label for="<%=f.getName() %>"><%=f.getLabel() %>:</label>
 					</td>
 					<td <% if (f.getSingleRow() == Constants.TRUE) { out.print("colspan=\"5\""); } %>>
-						<%@ include file="fromField.jsp"%>
+						<%@ include file="formField.jsp"%>
 					</td>
 		<%
 					}

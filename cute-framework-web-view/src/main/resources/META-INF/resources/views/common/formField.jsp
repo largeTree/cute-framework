@@ -2,6 +2,9 @@
 <%
 				boolean inForm = request.getAttribute("formId") != null;
 
+				Integer width = 100;
+				Integer height = 16;
+
 				String id = RandomGenerator.getRandomStr();
 				switch(f.getType()) {
 				case Field.TYPE_DATE:
