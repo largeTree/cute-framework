@@ -36,7 +36,9 @@ public class IDGeneraterRedis implements IDGeneraterable {
 			log.error("get next id for table[" + tableName + "] failed ext = " + e.getLocalizedMessage(), e);
 			throw e;
 		} finally {
-			jedis.close();
+			if (jedis != null) {
+				jedis.close();
+			}
 		}
 	}
 
