@@ -45,15 +45,15 @@ public class McConstants {
 	}
 
 	public static String getSubSysDatabase() {
-		return EnvironmentContext.getEnvContext().getEnvValue(McConstants.SUB_SYS_CLUSTER_DATABASE_KEY, String.class, McConstants.SUB_SYS_CLUSTER_DATABASE_VAL);
+		return EnvironmentContext.getEnvValue(McConstants.SUB_SYS_CLUSTER_DATABASE_KEY, String.class, McConstants.SUB_SYS_CLUSTER_DATABASE_VAL);
 	}
 
 	public static String getSubSysMasterName() {
-		return EnvironmentContext.getEnvContext().getEnvValue(McConstants.SUB_SYS_CLUSTER_MASTER_NAME_KEY, String.class, McConstants.SUB_SYS_CLUSTER_MASTER_NAME_VAL);
+		return EnvironmentContext.getEnvValue(McConstants.SUB_SYS_CLUSTER_MASTER_NAME_KEY, String.class, McConstants.SUB_SYS_CLUSTER_MASTER_NAME_VAL);
 	}
 
 	public static String getAppClusterDatabase() {
-		String database = EnvironmentContext.getEnvContext().getEnvValue(McConstants.APP_CLUSTER_DATABASE_KEY, String.class);
+		String database = EnvironmentContext.getEnvValue(McConstants.APP_CLUSTER_DATABASE_KEY, String.class);
 		if (StringUtils.isEmpty(database)) {
 			database = getDefaultDatabase();
 		}
@@ -61,7 +61,7 @@ public class McConstants {
 	}
 
 	public static String getAppClusterMasterName() {
-		String masterName = EnvironmentContext.getEnvContext().getEnvValue(McConstants.APP_CLUSTER_MASTER_NAME_KEY);
+		String masterName = EnvironmentContext.getEnvValue(McConstants.APP_CLUSTER_MASTER_NAME_KEY);
 		if (StringUtils.isEmpty(masterName)) {
 			masterName = getDefaultMasterName();
 		}

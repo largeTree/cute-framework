@@ -32,7 +32,7 @@ public class IDGenerateUtil {
 
 	private static String getSeqType() {
 		if (seqType == null) {
-			seqType = ApplicationContextHolder.getBean(EnvironmentContext.class).getSeqType();
+			seqType = EnvironmentContext.getSeqType();
 		}
 		return seqType;
 	}

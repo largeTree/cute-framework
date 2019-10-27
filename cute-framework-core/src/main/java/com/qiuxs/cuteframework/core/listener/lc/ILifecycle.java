@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.core.listener.lc;
 
+import org.springframework.boot.context.event.ApplicationStartedEvent;
 
 public interface ILifecycle {
 
@@ -12,7 +13,7 @@ public interface ILifecycle {
 	/**
 	 * 初始化完成后执行
 	 */
-	public default void started() {
+	public default void started(ApplicationStartedEvent event) {
 	}
 
 	/**

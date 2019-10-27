@@ -364,4 +364,21 @@ public class ReflectUtils {
 		return null;
 	}
 
+	/**
+	 * 获取clazz的所有实现了rootIfc的接口集
+	 * @param clazz
+	 * @param rootIfc
+	 */
+	public static List<Class<?>> getInterfaces(Class<?> clazz, Class<?> rootIfc) {
+		List<Class<?>> ifcList = new ArrayList<>();
+		Class<?>[] ifcs = clazz.getInterfaces();
+		for (Class<?> ifc : ifcs) {
+			if (rootIfc.isAssignableFrom(ifc) && !rootIfc.equals(ifc)) {
+				ifcList.add(ifc);
+				ifcList.addAll(getInterfaces(ifc, rootIfc));
+			}
+		}
+		return ifcList;
+	}
+
 }

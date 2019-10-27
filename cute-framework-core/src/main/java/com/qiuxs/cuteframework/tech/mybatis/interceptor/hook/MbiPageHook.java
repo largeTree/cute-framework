@@ -9,6 +9,8 @@ import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 import com.qiuxs.cuteframework.core.FrmLogger;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
@@ -17,6 +19,8 @@ import com.qiuxs.cuteframework.tech.mybatis.interceptor.utils.MbiUtils;
 @Component
 public class MbiPageHook implements IMbiHook {
 
+	private static Logger log = LogManager.getLogger(MbiDsHook.class);
+	
 	public static final String DB_COUNT = "__count";
 
 	@Override
@@ -26,6 +30,7 @@ public class MbiPageHook implements IMbiHook {
 
 	@Override
 	public void beforeStatement(Invocation invocation) {
+		log.info("MbiPageHook");
 		StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
 		MetaObject metaStatementHandler = MbiUtils.getMetaObject(statementHandler);
 		// 获取分页

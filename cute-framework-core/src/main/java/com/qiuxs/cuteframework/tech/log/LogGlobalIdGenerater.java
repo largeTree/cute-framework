@@ -27,7 +27,7 @@ public class LogGlobalIdGenerater {
 		if (StringUtils.isBlank(logDb)) {
 			return 0L;
 		}
-		String oldDsId = DataSourceContext.setDsId(logDb);
+		String oldDsId = DataSourceContext.setUpDs(logDb);
 		Connection conn = null;
 		Statement stat = null;
 		ResultSet rs = null;
@@ -42,7 +42,7 @@ public class LogGlobalIdGenerater {
 		} catch (Exception e) {
 			log.error("gen Next Log Global Id Error ext=" + e.getLocalizedMessage(), e);
 		} finally {
-			DataSourceContext.setDsId(oldDsId);
+			DataSourceContext.setUpDs(oldDsId);
 			close(rs);
 			close(stat);
 			close(conn);

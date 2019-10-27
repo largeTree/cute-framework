@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,7 @@ import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IFlag;
+import com.qiuxs.cuteframework.core.persistent.database.lookup.DsTypeRegister;
 import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
 import com.qiuxs.cuteframework.core.persistent.database.service.filter.IInsertFilter;
@@ -39,8 +42,8 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropert
  * @version 1.0.0
  */
 public abstract class AbstractDataPropertyService<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>>
-		extends AbstractPropertyService<PK, T> implements IDataPropertyService<PK, T, D> {
-	
+        extends AbstractPropertyService<PK, T> implements IDataPropertyService<PK, T, D> {
+
 	/** 批量操作一次多少条 */
 	private static final int BATCH_ONCE = 200;
 
@@ -53,6 +56,11 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	public AbstractDataPropertyService(Class<PK> pkClass, Class<T> pojoClass, String tableName) {
 		super(pkClass, pojoClass);
 		this.tableName = tableName;
+	}
+
+	@PostConstruct
+	protected void registerDsType() {
+		DsTypeRegister.register(this.getDao(), IBaseDao.class, this.getDsId(), this.getDsType(), this.getPojoClass());
 	}
 
 	/**
@@ -90,7 +98,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 			this.getDao().deleteById(id);
 		}
 	}
-	
+
 	/**
 	 * 2019年3月21日 下午10:44:05
 	 * qiuxs
@@ -104,10 +112,10 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 			flagBean.setFlag(IFlag.VALID);
 			this.getDao().update(bean);
 		} else {
-			
+
 		}
 	}
-	
+
 	/**
 	 * 停用记录实现
 	 * 2019年3月21日 下午10:38:54
@@ -122,10 +130,10 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 			flagBean.setFlag(IFlag.INVALID);
 			this.getDao().update(bean);
 		} else {
-			
+
 		}
 	}
-	
+
 	/**
 	 * 根据ID获取一行记录
 	 * 
@@ -153,7 +161,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		}
 		return bean;
 	}
-	
+
 	/**
 	 * 根据ID获取多行记录
 	 * 
@@ -165,7 +173,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	public List<T> getByIds(Collection<PK> ids) {
 		return this.getDao().getByIds(ids);
 	}
-	
+
 	@Transactional(propagation = Propagation.SUPPORTS)
 	public List<T> getAll() {
 		return this.getDao().getAll();
@@ -185,7 +193,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	public List<T> findByMap(Map<String, Object> params, PageInfo pageInfo) {
 		return this.getDao().list(params, pageInfo);
 	}
-	
+
 	/**
 	 * 使用Map作为参数查询
 	 * 
@@ -243,7 +251,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 			this.getDao().insertInBatch(once);
 		}
 		// 执行后置操作
-		for (Iterator<T> iter = all.iterator();iter.hasNext();) {
+		for (Iterator<T> iter = all.iterator(); iter.hasNext();) {
 			T bean = iter.next();
 			this.postCreate(bean);
 			this.postSave(null, bean);
@@ -273,13 +281,13 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		if (bean.getCreatedTime() == null) {
 			bean.setCreatedTime(new Date());
 		}
-		
+
 		// 默认为有效的状态
 		if (bean instanceof IFlag) {
 			IFlag flagBean = (IFlag) bean;
 			flagBean.setFlag(IFlag.VALID);
 		}
-		
+
 		this.initDefault(bean);
 	}
 

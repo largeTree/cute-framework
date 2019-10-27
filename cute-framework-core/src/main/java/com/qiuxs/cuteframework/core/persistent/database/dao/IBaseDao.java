@@ -8,7 +8,7 @@ import java.util.Map;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
 
-public interface IBaseDao<PK extends Serializable, T extends IEntity<PK>> {
+public interface IBaseDao<PK extends Serializable, T extends IEntity<PK>> extends IBasicDao {
 
 	public void deleteById(PK id);
 

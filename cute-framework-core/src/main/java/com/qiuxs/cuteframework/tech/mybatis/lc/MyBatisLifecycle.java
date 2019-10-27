@@ -2,6 +2,7 @@ package com.qiuxs.cuteframework.tech.mybatis.lc;
 
 import javax.annotation.Resource;
 
+import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.stereotype.Component;
 
 import com.qiuxs.cuteframework.core.listener.lc.ILifecycle;
@@ -20,7 +21,7 @@ public class MyBatisLifecycle implements ILifecycle {
 	}
 
 	@Override
-	public void started() {
+	public void started(ApplicationStartedEvent event) {
 		if (this.mybatisConfig.isAutoRefresh()) {
 			MybatisMapperRefresher.startRefresher(this.mybatisConfig.getMapperLocations());
 		}

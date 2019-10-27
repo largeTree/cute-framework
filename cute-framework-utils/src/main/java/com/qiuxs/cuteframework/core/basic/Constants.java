@@ -28,6 +28,8 @@ public class Constants {
 		LOG,
 		/**数据源类型:序列库*/
 		SEQ,
+		/** 直接指定dsId */
+		DIRECT,
 		/**不支持，用于手动设置*/
 		UNKNOWN;
 		public String value() {

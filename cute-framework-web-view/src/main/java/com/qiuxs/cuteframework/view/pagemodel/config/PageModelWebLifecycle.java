@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.view.pagemodel.config;
 
+import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.stereotype.Component;
 
 import com.qiuxs.cuteframework.core.listener.lc.ILifecycle;
@@ -13,7 +14,7 @@ public class PageModelWebLifecycle implements ILifecycle {
 	}
 
 	@Override
-	public void started() {
+	public void started(ApplicationStartedEvent event) {
 		PageModeConfiguration.init();
 	}
 

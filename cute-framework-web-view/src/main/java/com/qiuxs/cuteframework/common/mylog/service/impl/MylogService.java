@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.qiuxs.cuteframework.common.mylog.dao.MylogDao;
 import com.qiuxs.cuteframework.common.mylog.entity.Mylog;
 import com.qiuxs.cuteframework.common.mylog.service.IMylogService;
+import com.qiuxs.cuteframework.core.basic.Constants.DsType;
 import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
 import com.qiuxs.cuteframework.core.persistent.database.service.AbstractDataPropertyService;
@@ -36,6 +37,11 @@ public class MylogService extends AbstractDataPropertyService<Long, Mylog, Mylog
 	@Override
 	protected MylogDao getDao() {
 		return this.mylogDao;
+	}
+	
+	@Override
+	public String getDsType() {
+		return DsType.LOG.value();
 	}
 
 	@Override

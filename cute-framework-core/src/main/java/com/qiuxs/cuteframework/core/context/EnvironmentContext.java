@@ -30,56 +30,56 @@ public class EnvironmentContext implements EnvironmentAware {
 	/** 全局环境变量 */
 	private Environment environment;
 
-	public String getAppName() {
-		return appName;
+	public static String getAppName() {
+		return getEnvContext().appName;
 	}
 
 	public void setAppName(String appName) {
 		this.appName = appName;
 	}
 
-	public String getSeqType() {
-		return seqType;
+	public static String getSeqType() {
+		return getEnvContext().seqType;
 	}
 
 	public void setSeqType(String seqType) {
 		this.seqType = seqType;
 	}
 
-	public int getSeqDbIndex() {
-		return seqDbIndex;
+	public static int getSeqDbIndex() {
+		return getEnvContext().seqDbIndex;
 	}
 
 	public void setSeqDbIndex(int seqDbIndex) {
 		this.seqDbIndex = seqDbIndex;
 	}
 
-	public String getServerId() {
-		return serverId;
+	public static String getServerId() {
+		return getEnvContext().serverId;
 	}
 
 	public void setServerId(String serverId) {
 		this.serverId = serverId;
 	}
 
-	public boolean isTest() {
-		return isTest;
+	public static boolean isTest() {
+		return getEnvContext().isTest;
 	}
 
 	public void setTest(boolean isTest) {
 		this.isTest = isTest;
 	}
 
-	public boolean isDebug() {
-		return isDebug;
+	public static boolean isDebug() {
+		return getEnvContext().isDebug;
 	}
 
 	public void setDebug(boolean isDebug) {
 		this.isDebug = isDebug;
 	}
 
-	public String getVersion() {
-		return version;
+	public static String getVersion() {
+		return getEnvContext().version;
 	}
 
 	public void setVersion(String version) {
@@ -91,16 +91,16 @@ public class EnvironmentContext implements EnvironmentAware {
 		this.environment = environment;
 	}
 
-	public String getEnvValue(String key) {
-		return this.environment.getProperty(key);
+	public static String getEnvValue(String key) {
+		return getEnvContext().environment.getProperty(key);
 	}
 
-	public <T> T getEnvValue(String key, Class<T> targetType) {
-		return this.environment.getProperty(key, targetType);
+	public static <T> T getEnvValue(String key, Class<T> targetType) {
+		return getEnvContext().environment.getProperty(key, targetType);
 	}
 
-	public <T> T getEnvValue(String key, Class<T> targetType, T defVal) {
-		return this.environment.getProperty(key, targetType, defVal);
+	public static <T> T getEnvValue(String key, Class<T> targetType, T defVal) {
+		return getEnvContext().environment.getProperty(key, targetType, defVal);
 	}
 
 	public static EnvironmentContext getEnvContext() {

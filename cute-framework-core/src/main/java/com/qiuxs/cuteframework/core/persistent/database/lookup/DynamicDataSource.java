@@ -25,6 +25,9 @@ import com.qiuxs.cuteframework.tech.log.NoDbLogger;
 
 public class DynamicDataSource extends AbstractRoutingDataSource {
 
+	private static volatile boolean inited = false;
+	private static DynamicDataSource dynamicDataSource;
+
 	/** 查询数据库配置用的sql */
 	private static final String SELECT_DS_SQL = "SELECT id,url,driver_class as driverClass,user_name AS userName,`password`,`type`,`flag`,`max_num` AS maxNum,`used_num` AS usedNum FROM ds_info;";
 
@@ -36,6 +39,24 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 
 	/** 数据库类型对应的数据ID,业务库List<String>,非业务库String */
 	private Map<String, Object> mapDsTypeId = new HashMap<>();
+
+	public DynamicDataSource() {
+		boolean inited = DynamicDataSource.inited;
+		DynamicDataSource.inited = true;
+		DynamicDataSource.dynamicDataSource = this;
+		mapDsTypeId.put(DsType.BIZ.value(), new ArrayList<>());
+		if (inited) {
+			String msg = "DynamicDataSource 重复初始化!!!";
+			Console.log.error(msg, new Exception());
+		}
+	}
+
+	public static DynamicDataSource getDynamicDataSource() {
+		if (dynamicDataSource == null) {
+			throw new RuntimeException("数据源还未初始化!!!");
+		}
+		return dynamicDataSource;
+	}
 
 	@Override
 	protected Object determineCurrentLookupKey() {
@@ -60,9 +81,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	 */
 	private void fillTragetDataSources() {
 		List<DsInfo> dsInfos = new ArrayList<>();
-		try (Connection conn = this.defaultTargetDataSource.getConnection();
-				PreparedStatement stat = conn.prepareStatement(SELECT_DS_SQL);
-				ResultSet rs = stat.executeQuery();) {
+		try (Connection conn = this.defaultTargetDataSource.getConnection(); PreparedStatement stat = conn.prepareStatement(SELECT_DS_SQL); ResultSet rs = stat.executeQuery();) {
 			while (rs.next()) {
 				dsInfos.add(this.parseDsInfo(rs));
 			}
@@ -140,11 +159,11 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 			}
 		} finally {
 			if (!isValid) {
-    			try {
-    				dataSource.close();
-    			} catch (Exception e) {
-    				Console.log.error("Close DataSource Failed ext = " + e.getLocalizedMessage(), e);
-    			}
+				try {
+					dataSource.close();
+				} catch (Exception e) {
+					Console.log.error("Close DataSource Failed ext = " + e.getLocalizedMessage(), e);
+				}
 			}
 		}
 		if (isValid) {
@@ -158,10 +177,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 			} else if (DsType.BIZ.value().equals(type)) {
 				@SuppressWarnings("unchecked")
 				List<String> bizDsIds = (List<String>) this.mapDsTypeId.get(DsType.BIZ.value());
-				if (bizDsIds == null) {
-					bizDsIds = new ArrayList<>();
-					this.mapDsTypeId.put(DsType.BIZ.value(), bizDsIds);
-				}
+				this.mapDsTypeId.put(DsType.BIZ.value(), bizDsIds);
 				bizDsIds.add(dsId);
 			}
 		}
@@ -235,6 +251,26 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	 */
 	public Object getDsId(String dsType) {
 		return this.mapDsTypeId.get(dsType);
+	}
+
+	/**
+	 * 获取非业务库类型，最终返回entryDb
+	 * @param dsType
+	 * @return
+	 */
+	public String getNonBizDsId(String dsType) {
+		if (DsType.BIZ.value().equals(dsType)) {
+			throw new RuntimeException("数据库类型错误");
+		}
+		Object dsId = getDsId(dsType);
+		if (dsId == null) {
+			if (DsType.BIZ.value().equals(dsType)) {
+				return "entrydb";
+			} else {
+				return getEntryDb();
+			}
+		}
+		return String.valueOf(dsId);
 	}
 
 }

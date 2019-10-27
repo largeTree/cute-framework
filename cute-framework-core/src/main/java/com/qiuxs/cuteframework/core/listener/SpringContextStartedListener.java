@@ -23,7 +23,7 @@ public class SpringContextStartedListener implements ApplicationListener<Applica
 		List<ILifecycle> lifecycles = LifecycleContainer.getLifecycles();
 		for (ILifecycle lifecycle : lifecycles) {
 			try {
-				lifecycle.started();
+				lifecycle.started(event);
 			} catch (Exception e) {
 				log.error("Lifecycle@" + lifecycle.getClass() + " started Faild ext = " + e.getLocalizedMessage(), e);
 			}

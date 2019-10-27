@@ -18,7 +18,7 @@ import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
  * @param <T>
  * @param <D>
  */
-public interface IDataPropertyService<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>> extends IPropertyService<PK, T> {
+public interface IDataPropertyService<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>> extends IPropertyService<PK, T>, IDataSourceService {
 
 	public void setId(T bean);
 

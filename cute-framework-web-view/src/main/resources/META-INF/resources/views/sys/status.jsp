@@ -20,7 +20,7 @@
 	<table width="98%" class="my-table">
 		<thead>
 			<tr>
-				<td colspan="9" style="text-align: left;padding-left: 2%;">数据库状态</td>
+				<td colspan="10" style="text-align: left;padding-left: 2%;">数据库状态</td>
 			</tr>
 			<tr>
 				<td>链接ID</td>
