@@ -53,7 +53,7 @@ public class RedisConfiguration {
 	private static RedisConfiguration redisConfiguration;
 
 	/** 已创建的连接池缓存 */
-	private static Map<String, Pool<Jedis>> jedisPoolMap = new ConcurrentHashMap<>();
+	private static Map<String, JedisPool> jedisPoolMap = new ConcurrentHashMap<>();
 
 	/**
 	 * 获取jedis连接池
@@ -63,7 +63,7 @@ public class RedisConfiguration {
 	 * @auther qiuxs
 	 * @return
 	 */
-	public static Pool<Jedis> getJedisPool() {
+	public static JedisPool getJedisPool() {
 		return getJedisPool(DEFAUL_POOL, redisConfiguration.defaultIndex);
 	}
 
@@ -75,7 +75,7 @@ public class RedisConfiguration {
 	 * @auther qiuxs
 	 * @return
 	 */
-	public static Pool<Jedis> getJedisPool(String poolName) {
+	public static JedisPool getJedisPool(String poolName) {
 		return getJedisPool(poolName, redisConfiguration.defaultIndex);
 	}
 
@@ -88,12 +88,12 @@ public class RedisConfiguration {
 	 * @param poolName
 	 * @return
 	 */
-	public static Pool<Jedis> getJedisPool(String poolName, int dbIdx) {
+	public static JedisPool getJedisPool(String poolName, int dbIdx) {
 		if (jedisPoolMap.size() == 0) {
 			ExceptionUtils.throwRuntimeException("not inited ...");
 		}
 		String poolKey = poolName + SymbolConstants.SEPARATOR_HYPHEN + dbIdx;
-		Pool<Jedis> jedisPool = jedisPoolMap.get(poolKey);
+		JedisPool jedisPool = jedisPoolMap.get(poolKey);
 		if (jedisPool == null) {
 			synchronized (jedisPoolMap) {
 				jedisPool = jedisPoolMap.get(poolKey);
@@ -125,7 +125,7 @@ public class RedisConfiguration {
 					+ ",max-wait=" + this.getJedis().getPool().getMaxWaitMillis() + "]");
 		}
 
-		Pool<Jedis> jedisPool = this.initPool(this.getDefaultIndex());
+		JedisPool jedisPool = this.initPool(this.getDefaultIndex());
 		RedisConfiguration.jedisPoolMap.put(DEFAUL_POOL, jedisPool);
 
 		// 缓存一个自身对象
@@ -142,7 +142,7 @@ public class RedisConfiguration {
 	 * @param dbIdx
 	 * @return
 	 */
-	private Pool<Jedis> initPool(int dbIdx) {
+	private JedisPool initPool(int dbIdx) {
 		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
 		jedisPoolConfig.setMaxIdle(this.getJedis().getPool().getMaxIdle());
 		jedisPoolConfig.setMaxWaitMillis(this.getJedis().getPool().getMaxWaitMillis());
