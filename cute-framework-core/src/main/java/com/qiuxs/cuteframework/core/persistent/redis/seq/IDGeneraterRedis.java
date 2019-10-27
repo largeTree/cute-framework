@@ -1,5 +1,7 @@
 package com.qiuxs.cuteframework.core.persistent.redis.seq;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
@@ -11,6 +13,8 @@ import redis.clients.jedis.JedisPool;
 
 @Service
 public class IDGeneraterRedis implements IDGeneraterable {
+	
+	private static Logger log = LogManager.getLogger(IDGeneraterRedis.class);
 
 	private static final String POOL_NAME = "seq_pool";
 
@@ -29,6 +33,7 @@ public class IDGeneraterRedis implements IDGeneraterable {
 			Long next = jedis.incrBy(getKey(tableName), 1L);
 			return next;
 		} catch (Exception e) {
+			log.error("get next id for table[" + tableName + "] failed ext = " + e.getLocalizedMessage(), e);
 			throw e;
 		} finally {
 			jedis.close();
