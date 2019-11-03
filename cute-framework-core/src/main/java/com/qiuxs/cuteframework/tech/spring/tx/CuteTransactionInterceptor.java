@@ -1,10 +1,18 @@
 package com.qiuxs.cuteframework.tech.spring.tx;
 
 import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
+import com.qiuxs.cuteframework.core.tx.local.SpringTxContext;
+
+/**
+ * 
+ * @author qiuxs
+ *
+ */
 public class CuteTransactionInterceptor extends TransactionInterceptor {
 
 	private static final long serialVersionUID = 5661136630296337304L;
@@ -16,7 +24,18 @@ public class CuteTransactionInterceptor extends TransactionInterceptor {
 
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		return super.invoke(invocation);
+		// 保存事务状态
+		SpringTxContext.saveTxContext(invocation);
+		// 获取真实的目标类
+		Class<?> targetClass = (invocation.getThis() != null ? AopUtils.getTargetClass(invocation.getThis()) : null);
+		return invokeWithinTransaction(invocation.getMethod(), targetClass, new InvocationCallback() {
+
+			@Override
+			public Object proceedWithInvocation() throws Throwable {
+				Object result = invocation.proceed();
+				return result;
+			}
+		});
 	}
 
 	@Override

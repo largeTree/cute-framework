@@ -42,8 +42,6 @@ public class DefaultApiGatewayController extends BaseController {
 	        HttpServletRequest request, HttpServletResponse response) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
 		long start = System.currentTimeMillis();
-		// 准备日志
-		super.prepareRequestLog(apiKey, request.getRequestURL().toString(), start);
 		
 		// 获取apiConfig
 		ApiConfig apiConfig = this.apiHolder.getApiConfig(apiKey);
@@ -68,9 +66,6 @@ public class DefaultApiGatewayController extends BaseController {
 		String compressedResult = this.compressResult(actionResult, compressType);
 		
 		log.info("response -> costMs = " + (System.currentTimeMillis() - start));
-		
-		// 日志入库
-		super.logRequest(true);
 		
 		return compressedResult;
 	}

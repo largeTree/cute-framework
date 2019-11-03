@@ -25,4 +25,6 @@ public class SymbolConstants {
 	public static final String SEPARATOR_QUESTION = "?";
 
 	public static final String SEPARATOR_AND = "&";
+
+	public static final String SEPARATOR_EQ = "=";
 }

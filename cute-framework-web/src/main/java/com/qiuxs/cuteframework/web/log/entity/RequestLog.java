@@ -15,7 +15,7 @@ import com.qiuxs.cuteframework.core.persistent.database.entity.impl.AbstractEnti
  *
  */
 
-public class ApiRequestLog extends AbstractEntity<Long> {
+public class RequestLog extends AbstractEntity<Long> {
 
 	private static final long serialVersionUID = 1L;
 	

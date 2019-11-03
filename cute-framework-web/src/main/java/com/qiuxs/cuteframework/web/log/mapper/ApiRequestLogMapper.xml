@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qiuxs.cuteframework.web.log.dao.ApiRequestLogDao">
+<mapper namespace="com.qiuxs.cuteframework.web.log.dao.RequestLogDao">
 
 	<sql id="allFields">
 		`id`,
@@ -26,10 +26,10 @@
 		`global_id`
 	</sql>
 
-	<select id="list" resultType="com.qiuxs.cuteframework.web.log.entity.ApiRequestLog" >
+	<select id="list" resultType="com.qiuxs.cuteframework.web.log.entity.RequestLog" >
 		select
 			<include refid="allFields" />
-		from `api_request_log`
+		from `request_log`
 		<where>
 			<include refid="comnWhere" />
 		</where>
@@ -44,7 +44,7 @@
 	<select id="getCount" resultType="Long" >
 		select 
 			count(1) 
-		from `api_request_log`
+		from `request_log`
 		<where>
 			<include refid="comnWhere" />
 		</where>
@@ -101,23 +101,23 @@
 		</if>
 	</sql>
 
-	<select id="getByIds" resultType="com.qiuxs.cuteframework.web.log.entity.ApiRequestLog" >
-		select <include refid="allFields" /> from `api_request_log` where id in
+	<select id="getByIds" resultType="com.qiuxs.cuteframework.web.log.entity.RequestLog" >
+		select <include refid="allFields" /> from `request_log` where id in
 		<foreach collection="list" item="item" open="(" separator="," close=")" >
 			#{item}
 		</foreach>
 	</select>
 
-	<select id="get" resultType="com.qiuxs.cuteframework.web.log.entity.ApiRequestLog" >
-		select <include refid="allFields" /> from `api_request_log` where id = #{id}
+	<select id="get" resultType="com.qiuxs.cuteframework.web.log.entity.RequestLog" >
+		select <include refid="allFields" /> from `request_log` where id = #{id}
 	</select>
 
 	<delete id="deleteById" parameterType="Long" >
-		delete from `api_request_log` where id = #{id}
+		delete from `request_log` where id = #{id}
 	</delete>
 
-	<insert id="insert" parameterType="com.qiuxs.cuteframework.web.log.entity.ApiRequestLog">
-		insert into `api_request_log`(<include refid="insertFields" />)
+	<insert id="insert" parameterType="com.qiuxs.cuteframework.web.log.entity.RequestLog">
+		insert into `request_log`(<include refid="insertFields" />)
 		values(
 			#{id},
 			#{apiKey},
@@ -132,7 +132,7 @@
 	</insert>
 
 	<insert id="insertInBatch" parameterType="java.util.List" >
-		insert into `api_request_log`(<include refid="insertFields" />)
+		insert into `request_log`(<include refid="insertFields" />)
 		values
 		<foreach collection="list" item="item" separator="," >
 			(
@@ -149,8 +149,8 @@
 		</foreach>
 	</insert>
 
-	<update id="update" parameterType="com.qiuxs.cuteframework.web.log.entity.ApiRequestLog" >
-		update `api_request_log` 
+	<update id="update" parameterType="com.qiuxs.cuteframework.web.log.entity.RequestLog" >
+		update `request_log` 
 			<set>
 				<include refid="setComn" />
 			</set>

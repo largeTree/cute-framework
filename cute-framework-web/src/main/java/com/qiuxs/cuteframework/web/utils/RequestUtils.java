@@ -2,13 +2,14 @@ package com.qiuxs.cuteframework.web.utils;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.alibaba.fastjson.JSONObject;
-import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
+import com.qiuxs.cuteframework.core.basic.constants.SymbolConstants;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.web.action.ActionConstants;
 
 /**
@@ -20,7 +21,25 @@ import com.qiuxs.cuteframework.web.action.ActionConstants;
  * @version 1.0.0
  */
 public class RequestUtils {
-	
+
+	/**
+	 * 拆分请求字符串
+	 * @param queryString
+	 * @return
+	 */
+	public static Map<String, String> splitQueryString(String queryString) {
+		if (StringUtils.isBlank(queryString)) {
+			return Collections.emptyMap();
+		}
+		String[] k_vs = queryString.split(SymbolConstants.SEPARATOR_AND);
+		Map<String, String> kvMap = new HashMap<>();
+		for (String kv : k_vs) {
+			String[] k_v = kv.split(SymbolConstants.SEPARATOR_EQ);
+			kvMap.put(k_v[0], k_v[1]);
+		}
+		return kvMap;
+	}
+
 	/**
 	 * 将请求参数转化为Map方便使用
 	 *  

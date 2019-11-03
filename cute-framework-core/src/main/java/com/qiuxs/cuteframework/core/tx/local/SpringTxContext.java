@@ -1,16 +1,22 @@
-package com.qiuxs.cuteframework.tech.spring.tx;
+package com.qiuxs.cuteframework.core.tx.local;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.aopalliance.intercept.MethodInvocation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.jdbc.datasource.ConnectionHolder;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.context.TLVariableHolder;
+import com.qiuxs.cuteframework.core.persistent.database.lookup.DataSourceContext;
+import com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource;
 
 /**
  * Spring事务上下文
@@ -19,8 +25,14 @@ import com.qiuxs.cuteframework.core.context.TLVariableHolder;
  */
 public class SpringTxContext {
 
+	private static Logger log = LogManager.getLogger(SpringTxContext.class);
+
 	/** 事务监听器初始化状态 */
 	private static final String TL_INITED_KEY = "stx_synchronization_init_flag";
+	/** 事务方法执行缓存 */
+	private static final String TL_TX_METHOD_INVOCATION = "stx_method_invocation";
+	/** 事务数据源ID */
+	private static final String TL_TX_DSID = "stx_tx_dsId";
 	/** 提交之后操作，不论提交是否成功 */
 	private static final String TL_AFTER_COMMIT_HANDLE = "stx_after_commit";
 	/** 事务完成之后操作，提交成功调用commited,失败调用rolledBack,状态未知调用unkonw */
@@ -117,6 +129,94 @@ public class SpringTxContext {
 	private static boolean isInited() {
 		Boolean inited = TLVariableHolder.getVariable(TL_INITED_KEY);
 		return inited != null && inited.booleanValue();
+	}
+
+	/**
+	 * 保存事务状态，并设置事务数据源
+	 * @param invocation
+	 */
+	public static void saveTxContext(MethodInvocation invocation) {
+		if (getTxMethodInvocation() != null) {
+			return; // 一个大事务会调用多次service的方法，但只要记住第一个就行了，事务开始时使用的数据源
+		}
+		setTxMethodInvocation(invocation);
+		Object svc = invocation.getThis();
+		String dsId = null;
+		if (svc != null && DataSourceContext.isDsSwitchAuto()) {
+			dsId = DataSourceContext.getDsIdBySvc(svc);
+		} else {
+			dsId = DataSourceContext.getDsId();
+		}
+
+		// 保存事务数据源ID
+		setTxDsId(dsId);
+
+		if (dsId != null) {
+			// 设置当前线程需要的事务id
+			DataSourceContext.setUpDs(dsId);
+		}
+	}
+
+	/**
+	 * 判断当前数据源是否等于事务数据源
+	 * @return
+	 */
+	public static boolean isTxDsId() {
+		String curDsId = DataSourceContext.getDsId();
+		String txDsId = getTxDsId();
+		if (StringUtils.equals(curDsId, txDsId)) {
+			if (log.isDebugEnabled()) {
+				log.debug("curDsId = " + curDsId + ", txDsId = " + txDsId);
+			}
+			return true;
+		} else {
+			DynamicDataSource dds = DynamicDataSource.getDynamicDataSource();
+			String entryDb = dds.getEntryDb();
+			if (log.isDebugEnabled()) {
+				log.debug("curDsId = " + curDsId + ", txDsId = " + txDsId + ", entryDsId = " + entryDb);
+			}
+			if (curDsId == null && entryDb.equals(txDsId)) {
+				return true;
+			} else if (txDsId == null && entryDb.equals(curDsId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 获取事务数据源ID
+	 * @return
+	 */
+	public static String getTxDsId() {
+		return TLVariableHolder.getVariable(TL_TX_DSID);
+	}
+
+	/**
+	 * 保存事务数据源ID
+	 * @param dsId
+	 */
+	private static void setTxDsId(String dsId) {
+		if (log.isDebugEnabled()) {
+			log.debug("Tx DsId = " + dsId);
+		}
+		TLVariableHolder.setVariable(TL_TX_DSID, dsId);
+	}
+
+	/**
+	 * 保存事务方法执行上下文
+	 * @param invocation
+	 */
+	public static void setTxMethodInvocation(MethodInvocation invocation) {
+		TLVariableHolder.setVariable(TL_TX_METHOD_INVOCATION, invocation);
+	}
+
+	/**
+	 * 获取事务方法执行上下文
+	 * @return
+	 */
+	public static MethodInvocation getTxMethodInvocation() {
+		return TLVariableHolder.getVariable(TL_TX_METHOD_INVOCATION);
 	}
 
 }

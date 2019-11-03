@@ -1,8 +1,8 @@
 package com.qiuxs.cuteframework.web.log.service;
 
-import com.qiuxs.cuteframework.web.log.dao.ApiRequestLogDao;
-import com.qiuxs.cuteframework.web.log.entity.ApiRequestLog;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService;
+import com.qiuxs.cuteframework.web.log.dao.RequestLogDao;
+import com.qiuxs.cuteframework.web.log.entity.RequestLog;
 
 
 /**
@@ -11,6 +11,6 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropert
  * 创建时间 ：2019-05-30 22:26:46
  * @author qiuxs
  */
-public interface IApiRequestLogService extends IDataPropertyService<Long, ApiRequestLog, ApiRequestLogDao> {
+public interface IRequestLogService extends IDataPropertyService<Long, RequestLog, RequestLogDao> {
 
 }

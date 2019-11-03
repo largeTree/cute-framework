@@ -39,7 +39,7 @@ public class IDGeneraterDatabase implements IDGeneraterable {
 	private DynamicDataSource dataSource;
 
 	@Override
-	public Object getNextId(String tableName) {
+	public Long getNextId(String tableName) {
 		DataSource seqDateSource = dataSource.getTargetDataSources().get(dataSource.getSeqDb());
 		Connection conn = null;
 		Statement stam = null;

@@ -4,9 +4,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.qiuxs.cuteframework.core.context.TLVariableHolder;
+import com.qiuxs.cuteframework.tech.mybatis.MyBatisManager;
 
 /**
  * 功能描述: 请求开始和结束时清理一下线程变量<br/>
@@ -17,21 +17,21 @@ import com.qiuxs.cuteframework.core.context.TLVariableHolder;
  * @version 1.0.0
  */
 @Component
-public class ThreadLocalVariableInterceptor extends AbstractHandlerInterceptor {
+public class ControllerCleanInterceptor extends AbstractHandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
+	        throws Exception {
 		TLVariableHolder.clear();
 		return true;
 	}
 
 	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-			ModelAndView modelAndView) throws Exception {
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+		MyBatisManager.closeSession();
 		TLVariableHolder.clear();
 	}
-
+	
 	@Override
 	public int getOrder() {
 		// 优先级设置为高

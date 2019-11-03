@@ -5,8 +5,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
-import com.qiuxs.cuteframework.tech.spring.tx.AfterCompletionRunnable;
-import com.qiuxs.cuteframework.tech.spring.tx.SpringTxContext;
+import com.qiuxs.cuteframework.core.tx.local.AfterCompletionRunnable;
+import com.qiuxs.cuteframework.core.tx.local.SpringTxContext;
 
 /**
  * 异步任务执行器

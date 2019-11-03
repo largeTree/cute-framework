@@ -20,6 +20,9 @@ public class LogConstant {
 	public static final String MDC_KEY_REQURL = "reqUrl";
 	public static final String MDC_KEY_START_TIME = "startTime";
 	public static final String MDC_KEY_FLAG = "__flag";
+	
+	/** globalId序列名 */
+	public static final String GLOBAL_ID_SEQ = "log_global_id";
 
 	/**
 	 * jdbc日志appender缓存大小

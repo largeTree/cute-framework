@@ -1,21 +1,23 @@
 package com.qiuxs.cuteframework.web.log.service.impl;
 
-import java.util.List;
-import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
+import com.qiuxs.cuteframework.core.basic.Constants.DsType;
 import com.qiuxs.cuteframework.core.basic.code.DirectCodeCenter;
 import com.qiuxs.cuteframework.core.basic.code.utils.CodeUtils;
 import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
+import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
 import com.qiuxs.cuteframework.core.persistent.database.service.AbstractDataPropertyService;
 import com.qiuxs.cuteframework.core.persistent.database.service.filter.IServiceFilter;
 import com.qiuxs.cuteframework.core.persistent.database.service.filter.impl.IdGenerateFilter;
-import com.qiuxs.cuteframework.web.log.dao.ApiRequestLogDao;
-import com.qiuxs.cuteframework.web.log.entity.ApiRequestLog;
-import com.qiuxs.cuteframework.web.log.service.IApiRequestLogService;
+import com.qiuxs.cuteframework.web.log.dao.RequestLogDao;
+import com.qiuxs.cuteframework.web.log.entity.RequestLog;
+import com.qiuxs.cuteframework.web.log.service.IRequestLogService;
 /**
  * 请求日志记录服务类
  *
@@ -23,25 +25,38 @@ import com.qiuxs.cuteframework.web.log.service.IApiRequestLogService;
  *
  */
 @Service
-public class ApiRequestLogService extends AbstractDataPropertyService<Long, ApiRequestLog, ApiRequestLogDao> implements IApiRequestLogService {
+public class RequestLogService extends AbstractDataPropertyService<Long, RequestLog, RequestLogDao> implements IRequestLogService {
 
-	private static final String TABLE_NAME = "api_request_log";
+	private static final String TABLE_NAME = "request_log";
 
-	public ApiRequestLogService() {
-		super(Long.class, ApiRequestLog.class, TABLE_NAME);
-		CodeUtils.genDirectCode(ApiRequestLog.class);
+	public RequestLogService() {
+		super(Long.class, RequestLog.class, TABLE_NAME);
+		CodeUtils.genDirectCode(RequestLog.class);
 	}
 
 	@Resource
-	private ApiRequestLogDao apiRequestLogDao;
+	private RequestLogDao apiRequestLogDao;
 
 	@Override
-	protected ApiRequestLogDao getDao() {
+	protected RequestLogDao getDao() {
 		return this.apiRequestLogDao;
+	}
+	
+	@Override
+	public String getDsType() {
+		return DsType.LOG.value();
+	}
+	
+	/***
+	 * 目的是去除事务标记
+	 */
+	@Override
+	public void save(RequestLog bean) {
+		super.save(bean);
 	}
 
 	@Override
-	protected void initServiceFilters(List<IServiceFilter<Long, ApiRequestLog>> serviceFilters) {
+	protected void initServiceFilters(List<IServiceFilter<Long, RequestLog>> serviceFilters) {
 		serviceFilters.add(new IdGenerateFilter<>(TABLE_NAME));
 	}
 
@@ -69,7 +84,7 @@ public class ApiRequestLogService extends AbstractDataPropertyService<Long, ApiR
 		prop = new PropertyWrapper<Date>(new BaseField("reqEndTime", "请求结束时间", Date.class), null);
 		props.add(prop);
 		
-		prop = new PropertyWrapper<Integer>(new BaseField("status", "请求状态", Integer.class), DirectCodeCenter.getDirectCodeHouse(ApiRequestLog.DOMAIN_STATUS));
+		prop = new PropertyWrapper<Integer>(new BaseField("status", "请求状态", Integer.class), DirectCodeCenter.getDirectCodeHouse(RequestLog.DOMAIN_STATUS));
 		props.add(prop);
 		
 		prop = new PropertyWrapper<Integer>(new BaseField("globalId", "全局流水号", Long.class), null);

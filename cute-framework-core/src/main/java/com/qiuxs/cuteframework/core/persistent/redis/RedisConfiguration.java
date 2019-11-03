@@ -15,11 +15,9 @@ import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.persistent.redis.config.JedisConfig;
 
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
-import redis.clients.util.Pool;
 
 @Configuration
 @ConfigurationProperties(prefix = RedisConfiguration.PREFIX)

@@ -45,7 +45,7 @@ public class RedisLock implements Lock {
 	public RedisLock(String name) {
 		this.name = "lock:" + name;
 		if (serverid == null) {
-			serverid = EnvironmentContext.getEnvContext().getServerId();
+			serverid = EnvironmentContext.getServerId();
 		}
 	}
 

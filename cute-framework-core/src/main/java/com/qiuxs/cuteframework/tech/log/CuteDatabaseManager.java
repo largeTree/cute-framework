@@ -118,8 +118,8 @@ public class CuteDatabaseManager extends AbstractDatabaseManager {
 						}
 					} else {
 						//手动插入serverid，保证未通过LogFilter的日志也能记录serverid
-						if (LogConstant.COLUMN_SERVERID.equals(column.name) && EnvironmentContext.getEnvContext().getServerId() != null) {
-							this.statement.setString(i++, EnvironmentContext.getEnvContext().getServerId());
+						if (LogConstant.COLUMN_SERVERID.equals(column.name) && EnvironmentContext.getServerId() != null) {
+							this.statement.setString(i++, EnvironmentContext.getServerId());
 						} else if (column.isUnicode) {
 							this.statement.setNString(i++, column.layout.toSerializable(event));
 						} else {

@@ -8,6 +8,7 @@ import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.context.TLVariableHolder;
 import com.qiuxs.cuteframework.core.context.UserContext;
+import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataSourceService;
 
 /**
  * 数据源上下文
@@ -147,6 +148,20 @@ public class DataSourceContext {
 			return dsIdMap.get(nameSpace);
 		} else {
 			return getDsIdByDsType(dsType);
+		}
+	}
+
+	/**
+	 * 根据服务类获取数据源
+	 * @param svc
+	 * @return
+	 */
+	public static String getDsIdBySvc(Object svc) {
+		if (svc instanceof IDataSourceService) {
+			IDataSourceService dsSvc = (IDataSourceService) svc;
+			return getDsIdByDsType(dsSvc.getDsType());
+		} else {
+			return getDsIdByDsType(DsType.BIZ.value());
 		}
 	}
 

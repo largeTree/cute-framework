@@ -15,6 +15,7 @@ import com.qiuxs.cuteframework.core.persistent.database.lookup.DataSourceContext
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource;
 
 @Service
+@Deprecated
 public class LogGlobalIdGenerater {
 
 	private static Logger log = LogManager.getLogger(LogGlobalIdGenerater.class);

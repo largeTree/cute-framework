@@ -3,7 +3,7 @@ package com.qiuxs.cuteframework.web.log.dao;
 import org.springframework.stereotype.Repository;
 
 import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
-import com.qiuxs.cuteframework.web.log.entity.ApiRequestLog;
+import com.qiuxs.cuteframework.web.log.entity.RequestLog;
 
 /**
  * 请求日志记录Dao接口
@@ -13,6 +13,6 @@ import com.qiuxs.cuteframework.web.log.entity.ApiRequestLog;
  *
  */
 @Repository
-public interface ApiRequestLogDao extends IBaseDao<Long, ApiRequestLog> {
+public interface RequestLogDao extends IBaseDao<Long, RequestLog> {
 
 }

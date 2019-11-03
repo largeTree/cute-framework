@@ -1,4 +1,4 @@
-package com.qiuxs.cuteframework.tech.spring.tx;
+package com.qiuxs.cuteframework.core.tx.local;
 
 /**
  * 

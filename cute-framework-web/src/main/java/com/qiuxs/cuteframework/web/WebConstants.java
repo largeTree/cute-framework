@@ -23,4 +23,24 @@ public class WebConstants {
 		/** ApiKey不存在 */
 		public static final int API_KEY_NOT_EXISTS = WEB_ERROR_CODE - 1;
 	}
+	
+	public enum HttpHeader {
+		
+		/** 状态 */
+		STATUS("r-s"),
+		/** 真实ip */
+		REAL_IP("r-ip");
+		
+		private String val;
+
+		private HttpHeader(String val) {
+			this.val = val;;
+		}
+
+		public String value() {
+			return this.val;
+		}
+		
+	}
+	
 }

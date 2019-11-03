@@ -21,7 +21,7 @@ public class IDGeneraterRedis implements IDGeneraterable {
 	private static final String PREFIX = "seq:";
 
 	@Override
-	public Object getNextId(String tableName) {
+	public Long getNextId(String tableName) {
 		JedisPool jedisPool = RedisConfiguration.getJedisPool(POOL_NAME, EnvironmentContext.getSeqDbIndex());
 		if (jedisPool == null) {
 			throw new RuntimeException("No RedisPool Configuration");

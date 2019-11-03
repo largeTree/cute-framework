@@ -116,7 +116,7 @@ public class ApiHolder implements ApplicationListener<ContextRefreshedEvent> {
 
 		public ApiConfig get(Object key) {
 			// debug模式每次都自动刷新apiConfig
-			if (EnvironmentContext.getEnvContext().isDebug()) {
+			if (EnvironmentContext.isDebug()) {
 				ApiHolder.this.refreshApiConfig(ApplicationContextHolder.getApplicationContext());
 			}
 			ApiConfig val = super.get(key);

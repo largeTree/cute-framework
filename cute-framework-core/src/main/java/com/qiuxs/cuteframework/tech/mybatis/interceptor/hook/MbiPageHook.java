@@ -12,6 +12,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
+
 import com.qiuxs.cuteframework.core.FrmLogger;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
 import com.qiuxs.cuteframework.tech.mybatis.interceptor.utils.MbiUtils;
@@ -30,7 +31,6 @@ public class MbiPageHook implements IMbiHook {
 
 	@Override
 	public void beforeStatement(Invocation invocation) {
-		log.info("MbiPageHook");
 		StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
 		MetaObject metaStatementHandler = MbiUtils.getMetaObject(statementHandler);
 		// 获取分页
@@ -71,6 +71,9 @@ public class MbiPageHook implements IMbiHook {
 		try {
 			Connection conn = (Connection) invocation.getArgs()[0];
 			StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
+			if (log.isDebugEnabled()) {
+				log.debug("auto total sql::" + countSql);
+			}
 			stat = conn.prepareStatement(countSql);
 			statementHandler.parameterize(stat);
 			rs = stat.executeQuery();
