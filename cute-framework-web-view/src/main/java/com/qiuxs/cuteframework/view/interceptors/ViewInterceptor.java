@@ -6,8 +6,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -33,7 +31,7 @@ public class ViewInterceptor extends AbstractHandlerInterceptor {
 
 	@Override
 	public List<String> getPathPatterns() {
-		return ListUtils.genList("/bg/**");
+		return ListUtils.genList("/view/**");
 	}
 
 }

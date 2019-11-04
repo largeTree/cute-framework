@@ -18,7 +18,7 @@ public class ViewController {
 
 	@RequestMapping
 	public String index(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		modelMap.put("appName", EnvironmentContext.getEnvContext().getAppName());
+		modelMap.put("appName", EnvironmentContext.getAppName());
 		return "index";
 	}
 

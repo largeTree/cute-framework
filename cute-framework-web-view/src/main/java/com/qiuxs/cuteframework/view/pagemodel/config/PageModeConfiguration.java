@@ -46,7 +46,7 @@ public class PageModeConfiguration {
 	 * @return
 	 */
 	public static Page getPage(String pageId) {
-		if (EnvironmentContext.getEnvContext().isDebug()) {
+		if (EnvironmentContext.isDebug()) {
 			initById(pageId);
 		}
 		return pageModels.get(pageId);
@@ -69,7 +69,7 @@ public class PageModeConfiguration {
 
 	private static Page initByRes(Resource res) {
 		try {
-			Document doc = ClassPathResourceUtil.getResourceXmlDoc(res);
+			Document doc = XmlUtil.readAsDocument(res);
 			Element root = doc.getRootElement();
 			Page page = new Page();
 			// 查询列表

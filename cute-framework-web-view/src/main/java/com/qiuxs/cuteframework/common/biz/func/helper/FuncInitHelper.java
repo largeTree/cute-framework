@@ -58,7 +58,7 @@ public class FuncInitHelper {
 		this.tlShowOrder.set(new AtomicInteger(0));
 		for (Resource res : resList) {
 			try {
-				Document funcXml = ClassPathResourceUtil.getResourceXmlDoc(res);
+				Document funcXml = XmlUtil.readAsDocument(res);
 				Element rootE = funcXml.getRootElement();
 				List<Func> allFunc = this.parseChildren("", rootE);
 				this.saveFuncs(allFunc);

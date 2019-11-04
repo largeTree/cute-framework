@@ -2,6 +2,7 @@ package com.qiuxs.cuteframework.core.basic.utils.converter;
 
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
@@ -35,6 +36,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
+import org.springframework.core.io.Resource;
 
 import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
@@ -63,6 +65,27 @@ public class XmlUtil {
 
 	private static ConcurrentMap<Class<?>, JAXBContext> jaxbContexts = new ConcurrentHashMap<Class<?>, JAXBContext>();
 
+	/**
+	 * 从资源中读取xml文档
+	 * 
+	 * @param res
+	 * @return
+	 * @throws IOException
+	 * @throws DocumentException
+	 * @throws Exception
+	 */
+	public static Document readAsDocument(Resource res) throws IOException, DocumentException {
+		InputStream is = res.getInputStream();
+		try {
+			SAXReader reader = new SAXReader();
+			Document doc = null;
+			doc = reader.read(is);
+			return doc;
+		} finally {
+			is.close();
+		}
+	}
+	
 	/**
 	 * Java Object->Xml without encoding.
 	 */

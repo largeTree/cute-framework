@@ -1,7 +1,6 @@
 package com.qiuxs.cuteframework.core.basic.code.provider;
 
 import java.io.Serializable;
-import java.util.Collections;
 
 /***
  * 单个选项

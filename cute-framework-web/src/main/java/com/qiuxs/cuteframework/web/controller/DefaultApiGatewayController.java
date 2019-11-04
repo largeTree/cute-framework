@@ -22,16 +22,13 @@ import com.qiuxs.cuteframework.web.action.IAction;
 import com.qiuxs.cuteframework.web.auth.ApiAuthService;
 import com.qiuxs.cuteframework.web.bean.ActionResult;
 import com.qiuxs.cuteframework.web.controller.api.ApiConfig;
-import com.qiuxs.cuteframework.web.controller.api.ApiHolder;
+import com.qiuxs.cuteframework.web.controller.api.ApiConfigHolder;
 import com.qiuxs.cuteframework.web.utils.RequestUtils;
 
 @RestController
 public class DefaultApiGatewayController extends BaseController {
 	
 	private static final Logger log = LogManager.getLogger(DefaultApiGatewayController.class);
-
-	@Resource
-	private ApiHolder apiHolder;
 
 	@Resource
 	private ApiAuthService apiAuthService;
@@ -44,7 +41,7 @@ public class DefaultApiGatewayController extends BaseController {
 		long start = System.currentTimeMillis();
 		
 		// 获取apiConfig
-		ApiConfig apiConfig = this.apiHolder.getApiConfig(apiKey);
+		ApiConfig apiConfig = ApiConfigHolder.getApiConfig(apiKey);
 
 		// 获取所有参数
 		Map<String, String> params = RequestUtils.getRequestParams(request, compressType);
@@ -80,8 +77,8 @@ public class DefaultApiGatewayController extends BaseController {
 	 * @throws IllegalAccessException 
 	 */
 	public String doAction(ApiConfig apiConfig, Map<String, String> params) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		IAction action = apiConfig.getBean();
-		Method method = apiConfig.getMethod();
+		IAction action = apiConfig.getAction();
+		Method method = apiConfig.getMethodObj();
 		int paramCount = apiConfig.getParamCount();
 		
 		// action返回结果

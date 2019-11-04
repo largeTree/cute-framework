@@ -62,7 +62,9 @@ public class LogFilter implements Filter {
 			String ip = RequestUtils.getRemoteAddr((HttpServletRequest) request);
 			// 来源IP
 			reqLog.setReqIp(ip);
-			LogUtils.putMDC(LogConstant.MDC_KEY_APIKEY, apiKey);
+			if (apiKey != null) {
+				LogUtils.putMDC(LogConstant.MDC_KEY_APIKEY, apiKey);
+			}
 			LogUtils.putMDC("ip", ip);
 			// 全局日志识别号
 			Long globalId = IDGenerateUtil.getNextId(LogConstant.GLOBAL_ID_SEQ);

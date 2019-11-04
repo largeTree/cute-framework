@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<module id="func">
+		<api key="func-list" bean="funcAction" method="list" login="0" auth="0" desc="" />
+		<api key="func-initFunc" bean="funcAction" method="initFunc" login="0" auth="0" desc="" />
+		<api key="func-tree" bean="funcAction" method="funcTree" login="0" auth="0" desc="" />
+	</module>
+	<module id="log">
+		<api key="mylog-list" bean="mylogAction" method="list" login="0" auth="0" desc="" />
+		<api key="mylog-get" bean="mylogAction" method="get" login="0" auth="0" desc="" />
+		<api key="requestLog-list" bean="requestLogAction" method="list" login="0" auth="0" desc="" />
+	</module>
+</root>

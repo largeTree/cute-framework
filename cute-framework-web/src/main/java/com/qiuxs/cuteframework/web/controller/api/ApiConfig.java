@@ -22,9 +22,13 @@ public class ApiConfig {
 	/** 是否需要授权 */
 	private boolean authFlag;
 	/** action对象 */
-	private IAction bean;
-	/** 持有方法对象 */
-	private Method method;
+	private String bean;
+	/** action持有对象 */
+	private IAction action;
+	/** 方法名 */
+	private String method;
+	/** 方法持有对象 */
+	private Method methodObj;
 	/** 忽略默认响应 */
 	private boolean ignoreDefaultResp;
 	/** 参数个数 */
@@ -62,20 +66,36 @@ public class ApiConfig {
 		this.authFlag = authFlag;
 	}
 
-	public IAction getBean() {
+	public String getBean() {
 		return bean;
 	}
 
-	public void setBean(IAction bean) {
+	public void setBean(String bean) {
 		this.bean = bean;
 	}
 
-	public Method getMethod() {
+	public IAction getAction() {
+		return action;
+	}
+
+	public void setAction(IAction action) {
+		this.action = action;
+	}
+
+	public String getMethod() {
 		return method;
 	}
 
-	public void setMethod(Method method) {
+	public void setMethod(String method) {
 		this.method = method;
+	}
+
+	public Method getMethodObj() {
+		return methodObj;
+	}
+
+	public void setMethodObj(Method methodObj) {
+		this.methodObj = methodObj;
 	}
 
 	public boolean isIgnoreDefaultResp() {

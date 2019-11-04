@@ -1,17 +1,17 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
-import org.dom4j.io.SAXReader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
+
+import com.qiuxs.cuteframework.core.basic.utils.converter.XmlUtil;
 
 public class ClassPathResourceUtil {
 	/** 能查询到多个UrlResource，包含最外层项目和依赖的jar包中classpath路径下的所有xx文件 */
@@ -128,27 +128,6 @@ public class ClassPathResourceUtil {
 	}
 
 	/**
-	 * 从资源中读取xml文档
-	 * 
-	 * @param res
-	 * @return
-	 * @throws IOException
-	 * @throws DocumentException
-	 * @throws Exception
-	 */
-	public static Document getResourceXmlDoc(Resource res) throws IOException, DocumentException {
-		InputStream is = res.getInputStream();
-		try {
-			SAXReader reader = new SAXReader();
-			Document doc = null;
-			doc = reader.read(is);
-			return doc;
-		} finally {
-			is.close();
-		}
-	}
-
-	/**
 	 * 从某个资源中读取xml文档
 	 * 
 	 * @param path
@@ -163,7 +142,7 @@ public class ClassPathResourceUtil {
 		if (res == null) {
 			throw new RuntimeException("Could not find classpath:" + path);
 		}
-		return getResourceXmlDoc(res);
+		return XmlUtil.readAsDocument(res);
 	}
 
 	/**
