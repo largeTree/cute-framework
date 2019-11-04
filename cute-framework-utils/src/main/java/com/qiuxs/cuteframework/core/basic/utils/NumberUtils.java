@@ -270,4 +270,13 @@ public class NumberUtils {
 		return num == null || num.longValue() == 0;
 	}
 
+	/**
+	 * 如果参数为null则返回0
+	 * @param totalResults
+	 * @return
+	 */
+	public static Long defaultLong(Long num) {
+		return num == null ? 0L : num;
+	}
+
 }
