@@ -16,6 +16,7 @@
 		<module>cute-sms-plugin</module>
 		<module>cute-framework-utils</module>
 		<module>webservice-injector</module>
+		<module>cute-code-generate</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
