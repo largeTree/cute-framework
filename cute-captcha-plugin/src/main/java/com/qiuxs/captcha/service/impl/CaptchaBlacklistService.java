@@ -47,9 +47,9 @@ public class CaptchaBlacklistService extends AbstractDataPropertyService<Long, C
 			ExceptionUtils.throwLogicalException(blacklist.getReason());
 		}
 	}
-
+	
 	@Override
-	protected void preCreate(CaptchaBlacklist bean) {
+	protected void initCreate(CaptchaBlacklist bean) {
 		// 没设置的设置为默认值
 		if (StringUtils.isBlank(bean.getReason())) {
 			bean.setReason(this.captchaEnvironmentConfig.getDefaultBalcklistReason());
@@ -57,9 +57,9 @@ public class CaptchaBlacklistService extends AbstractDataPropertyService<Long, C
 		if (NumberUtils.isEmpty(bean.getTimeLimit())) {
 			bean.setTimeLimit(this.captchaEnvironmentConfig.getDefaultTimeLimit());
 		}
-		super.preCreate(bean);
+		super.initCreate(bean);
 	}
-	
+
 	@Override
 	protected CaptchaBlacklistDao getDao() {
 		return this.captchaBlacklistDao;

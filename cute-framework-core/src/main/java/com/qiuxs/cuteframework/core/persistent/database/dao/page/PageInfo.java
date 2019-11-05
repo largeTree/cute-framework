@@ -29,9 +29,6 @@ public class PageInfo extends RowBounds {
 	/** 总行数 */
 	private Integer total;
 
-	/** 不分页 */
-	public static final PageInfo NO_PAGE_INFO = new PageInfo(1, RowBounds.NO_ROW_LIMIT);
-	
 	/** 默认分页 */
 	public static final PageInfo DEFAULT_PAGE_INFO = new PageInfo(1, DEFAULT_PAGESIZE);
 	
@@ -52,6 +49,22 @@ public class PageInfo extends RowBounds {
 		this.setOffset(this.offset);
 	}
 
+	/**
+	 * 不分页的分页对象
+	 * @return
+	 */
+	public static PageInfo makeNoPageInfo() {
+		return new PageInfo(1, RowBounds.NO_ROW_LIMIT);
+	}
+	
+	/**
+	 * 默认分页对象
+	 * @return
+	 */
+	public static PageInfo makeDefaultPageInfo() {
+		return new PageInfo(1, DEFAULT_PAGESIZE);
+	}
+	
 	/**
 	 * 构造分页对象
 	 * @author qiuxs

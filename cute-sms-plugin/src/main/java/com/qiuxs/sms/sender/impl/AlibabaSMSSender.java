@@ -2,7 +2,11 @@ package com.qiuxs.sms.sender.impl;
 
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.aliyuncs.CommonRequest;
+import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.http.MethodType;
@@ -16,6 +20,8 @@ import com.qiuxs.sms.sender.ISMSSener;
  * 2019年3月28日 下午11:42:03
  */
 public class AlibabaSMSSender implements ISMSSener {
+	
+	private static Logger log = LogManager.getLogger(AlibabaSMSSender.class);
 	
 	private static final String DOMAIN = "dysmsapi.aliyuncs.com";
 	
@@ -46,14 +52,20 @@ public class AlibabaSMSSender implements ISMSSener {
 		CommonRequest request = new CommonRequest();
 		request.setProtocol(ProtocolType.HTTPS);
 		request.setMethod(MethodType.POST);
-        request.setDomain(DOMAIN);
-        request.setVersion("2019-04-09");
-        request.setAction("SendSms");
-        request.putQueryParameter("RegionId", "cn-hangzhou");
-        request.putQueryParameter("PhoneNumbers", mobile);
-        request.putQueryParameter("SignName", signName);
-        request.putQueryParameter("TemplateCode", templateId);
-        request.putQueryParameter("TemplateParam", "{\"captcha\":\"123456\"}");
+		request.setDomain(DOMAIN);
+		request.setVersion("2019-04-09");
+		request.setAction("SendSms");
+		request.putQueryParameter("RegionId", "cn-hangzhou");
+		request.putQueryParameter("PhoneNumbers", mobile);
+		request.putQueryParameter("SignName", signName);
+		request.putQueryParameter("TemplateCode", templateId);
+		request.putQueryParameter("TemplateParam", "{\"captcha\":\"123456\"}");
+		try {
+			CommonResponse commonResponse = this.client.getCommonResponse(request);
+			log.info(commonResponse.getData());
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 }

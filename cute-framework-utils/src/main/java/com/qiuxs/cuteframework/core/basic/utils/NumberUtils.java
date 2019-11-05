@@ -279,4 +279,18 @@ public class NumberUtils {
 		return num == null ? 0L : num;
 	}
 
+	/**
+	 * 字符串转BigDecimal
+	 *  new BigDecimal(strNum);
+	 * @author qiuxs  
+	 * @param strNum
+	 * @return
+	 */
+	public static BigDecimal parseBigDecimal(String strNum) {
+		if (StringUtils.isBlank(strNum)) {
+			return BigDecimal.ZERO;
+		}
+		return new BigDecimal(strNum);
+	}
+
 }

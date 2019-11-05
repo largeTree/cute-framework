@@ -218,9 +218,12 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	public void create(T bean) {
 		this.initCreate(bean);
 		this.preSave(null, bean);
-		this.getDao().insert(bean);
 		postSave(null, bean);
 		postCreate(bean);
+	}
+	
+	protected void createInner(T bean) {
+		this.getDao().insert(bean);
 	}
 
 	@Override
@@ -258,9 +261,13 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		}
 	}
 
-	protected void preCreate(T bean) {
-	}
 
+	/**
+	 * 后置创建
+	 *  
+	 * @author qiuxs  
+	 * @param bean
+	 */
 	protected void postCreate(T bean) {
 		List<IInsertFilter<PK, T>> insertFilters = this.getInsertFilters();
 		for (IInsertFilter<PK, T> filter : insertFilters) {
@@ -268,8 +275,13 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		}
 	}
 
-	private void initCreate(T bean) {
-		this.preCreate(bean);
+	/**
+	 * 初始化创建
+	 *  
+	 * @author qiuxs  
+	 * @param bean
+	 */
+	protected void initCreate(T bean) {
 		List<IInsertFilter<PK, T>> insertFilters = this.getInsertFilters();
 		for (IInsertFilter<PK, T> filter : insertFilters) {
 			filter.preInsert(bean);
@@ -350,12 +362,42 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	public void update(T bean) {
 		// 默认为Null，需要时自行实现
 		T oldBean = this.getOld(bean.getId());
-		if (this.initUpdate(oldBean, bean)) {
-			preSave(oldBean, bean);
-			this.getDao().update(bean);
-		}
+		this.initUpdate(oldBean, bean);
+		preSave(oldBean, bean);
+
+		this.updateInner(bean);
+
 		postUpdate(oldBean, bean);
 		postSave(oldBean, bean);
+	}
+	
+	protected void updateInner(T bean) {
+		this.getDao().update(bean);
+	}
+	
+	/**
+	 * 批量更新
+	 *  
+	 * @author qiuxs  
+	 * @param beans
+	 */
+	public void updateInBatch(Collection<T> beans) {
+		if (ListUtils.isEmpty(beans)) {
+			return;
+		}
+		for (T bean : beans) {
+			T oldBean = this.getOld(bean.getId());
+			this.initUpdate(oldBean, bean);
+			this.preSave(oldBean, bean);
+		}
+		for (T bean : beans) {
+			this.updateInner(bean);
+		}
+		for (T bean : beans) {
+			T oldBean = this.getOld(bean.getId());
+			postUpdate(oldBean, bean);
+			postSave(oldBean, bean);
+		}
 	}
 
 	/**
@@ -369,18 +411,13 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	}
 
 	/**
-	 * 更新前操作
-	 * 
-	 * @author qiuxs
+	 * 初始化更新
+	 *  
+	 * @author qiuxs  
 	 * @param oldBean
 	 * @param newBean
-	 * @return
 	 */
-	protected boolean preUpdate(T oldBean, T newBean) {
-		return true;
-	}
-
-	private boolean initUpdate(T oldBean, T newBean) {
+	protected void initUpdate(T oldBean, T newBean) {
 		List<IUpdateFilter<PK, T>> updateFilters = this.getUpdateFilters();
 		for (IUpdateFilter<PK, T> filter : updateFilters) {
 			filter.preUpdate(oldBean, newBean);
@@ -390,7 +427,6 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 			newBean.setUpdatedBy(userLite.getUserId());
 		}
 		newBean.setUpdatedTime(new Date());
-		return this.preUpdate(oldBean, newBean);
 	}
 
 	/**
