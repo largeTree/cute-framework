@@ -218,6 +218,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	public void create(T bean) {
 		this.initCreate(bean);
 		this.preSave(null, bean);
+		this.createInner(bean);
 		postSave(null, bean);
 		postCreate(bean);
 	}
