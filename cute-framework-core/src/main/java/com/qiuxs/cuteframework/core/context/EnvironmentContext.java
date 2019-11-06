@@ -27,6 +27,8 @@ public class EnvironmentContext implements EnvironmentAware {
 	private boolean isDebug;
 	/** 引入进来的配置文件 */
 	private String version;
+	/** web索引 */
+	private int webIndex;
 	/** 全局环境变量 */
 	private Environment environment;
 
@@ -84,6 +86,14 @@ public class EnvironmentContext implements EnvironmentAware {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public static int getWebIndex() {
+		return getEnvContext().webIndex;
+	}
+
+	public void setWebIndex(int webIndex) {
+		this.webIndex = webIndex;
 	}
 
 	@Override

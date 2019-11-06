@@ -73,8 +73,11 @@ public class MybatisMapperRefresher implements java.lang.Runnable {
 
 		beforeTime = System.currentTimeMillis();
 
-		log.debug("[location] " + location);
-		log.debug("[configuration] " + configuration);
+		boolean debugEnabled = log.isDebugEnabled();
+		if (debugEnabled) {
+			log.debug("[location] " + location);
+			log.debug("[configuration] " + configuration);
+		}
 
 		// 启动刷新线程
 		final MybatisMapperRefresher runnable = this;
@@ -84,16 +87,22 @@ public class MybatisMapperRefresher implements java.lang.Runnable {
 
 				if (location == null) {
 					location = new HashSet<>();
-					log.debug("MapperLocation's length:" + mapperLocations.size());
+					if (debugEnabled) {
+						log.debug("MapperLocation's length:" + mapperLocations.size());
+					}
 					for (Resource mapperLocation : mapperLocations) {
 						String s = mapperLocation.toString().replaceAll("\\\\", "/");
 						s = s.substring("file [".length(), s.length() - 1);
 						if (!location.contains(s)) {
 							location.add(s);
-							log.debug("Location:" + s);
+							if (debugEnabled) {
+								log.debug("Location:" + s);
+							}
 						}
 					}
-					log.debug("Locarion's size:" + location.size());
+					if (debugEnabled) {
+						log.debug("Locarion's size:" + location.size());
+					}
 				}
 
 				try {
@@ -183,6 +192,7 @@ public class MybatisMapperRefresher implements java.lang.Runnable {
 				XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(inputStream, configuration, resource,
 						configuration.getSqlFragments());
 				xmlMapperBuilder.parse();
+				log.info("Refershed MyBatis Mapper [" + resource + "]");
 			} catch (Exception e) {
 				throw new NestedIOException("Failed to parse mapping resource: '" + resource + "'", e);
 			} finally {

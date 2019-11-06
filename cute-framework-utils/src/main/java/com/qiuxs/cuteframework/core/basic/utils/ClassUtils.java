@@ -160,10 +160,11 @@ public class ClassUtils {
 	 * @param className
 	 * @return
 	 */
-	public static Class<?> forName(String className) {
+	@SuppressWarnings("unchecked")
+	public static <T> Class<T> forName(String className) {
 		try {
 			Class<?> clz = Class.forName(className);
-			return clz;
+			return (Class<T>) clz;
 		} catch (Exception e) {
 			throw ExceptionUtils.unchecked(e);
 		}

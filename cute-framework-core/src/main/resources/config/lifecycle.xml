@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<lc class="com.qiuxs.cuteframework.tech.mybatis.lc.MyBatisLifecycle" />
+	<lc class="com.qiuxs.cuteframework.core.timertask.TimerLifcycle" />
+</root>

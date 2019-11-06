@@ -7,6 +7,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableTransactionManagement
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan(basePackages = { "com.qiuxs" })
 @MapperScan(basePackages = { "com.qiuxs.**.dao" })
 @EnableAutoConfiguration
+@EnableAspectJAutoProxy(exposeProxy=true, proxyTargetClass=true) 
 public abstract class AbstractServletInitializer extends SpringBootServletInitializer {
 
 	@Override

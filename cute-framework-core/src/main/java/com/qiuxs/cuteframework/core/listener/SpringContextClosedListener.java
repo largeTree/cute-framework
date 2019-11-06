@@ -8,8 +8,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
-import com.qiuxs.cuteframework.core.listener.lc.ILifecycle;
-import com.qiuxs.cuteframework.core.listener.lc.LifecycleContainer;
+import com.qiuxs.cuteframework.core.listener.lc.IWebLifecycle;
+import com.qiuxs.cuteframework.core.listener.lc.WebLifecycleContainer;
 
 @Component
 public class SpringContextClosedListener implements ApplicationListener<ContextClosedEvent> {
@@ -18,11 +18,11 @@ public class SpringContextClosedListener implements ApplicationListener<ContextC
 
 	@Override
 	public void onApplicationEvent(ContextClosedEvent event) {
-		List<ILifecycle> lifecycles = LifecycleContainer.getLifecycles();
+		List<IWebLifecycle> lifecycles = WebLifecycleContainer.getLifecycles();
 		for (int i = lifecycles.size() - 1; i >= 0; i--) {
-			ILifecycle lifecycle = lifecycles.get(i);
+			IWebLifecycle lifecycle = lifecycles.get(i);
 			try {
-				lifecycle.destroyed();
+				lifecycle.lastDestory();
 			} catch (Exception e) {
 				log.error("Lifecycle@" + lifecycle.getClass() + ", destroy Failed ext = " + e.getLocalizedMessage(), e);
 			}

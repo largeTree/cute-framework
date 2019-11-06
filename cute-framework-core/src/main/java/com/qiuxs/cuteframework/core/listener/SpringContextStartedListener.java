@@ -8,8 +8,8 @@ import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.qiuxs.cuteframework.core.listener.lc.ILifecycle;
-import com.qiuxs.cuteframework.core.listener.lc.LifecycleContainer;
+import com.qiuxs.cuteframework.core.listener.lc.IWebLifecycle;
+import com.qiuxs.cuteframework.core.listener.lc.WebLifecycleContainer;
 
 @Component
 public class SpringContextStartedListener implements ApplicationListener<ApplicationStartedEvent> {
@@ -18,12 +18,10 @@ public class SpringContextStartedListener implements ApplicationListener<Applica
 
 	@Override
 	public void onApplicationEvent(ApplicationStartedEvent event) {
-		LifecycleContainer.loadLifecycle(event.getApplicationContext());
-
-		List<ILifecycle> lifecycles = LifecycleContainer.getLifecycles();
-		for (ILifecycle lifecycle : lifecycles) {
+		List<IWebLifecycle> lifecycles = WebLifecycleContainer.getLifecycles();
+		for (IWebLifecycle lifecycle : lifecycles) {
 			try {
-				lifecycle.started(event);
+				lifecycle.lastInit();
 			} catch (Exception e) {
 				log.error("Lifecycle@" + lifecycle.getClass() + " started Faild ext = " + e.getLocalizedMessage(), e);
 			}
