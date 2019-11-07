@@ -288,7 +288,7 @@ public class NumberUtils {
 	 */
 	public static BigDecimal parseBigDecimal(String strNum) {
 		if (StringUtils.isBlank(strNum)) {
-			return BigDecimal.ZERO;
+			return null;
 		}
 		return new BigDecimal(strNum);
 	}

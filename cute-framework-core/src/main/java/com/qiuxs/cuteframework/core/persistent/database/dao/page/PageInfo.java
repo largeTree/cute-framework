@@ -47,6 +47,8 @@ public class PageInfo extends RowBounds {
 		this.offset = (pageNo - 1) * pageSize;
 		this.setLimit(pageSize);
 		this.setOffset(this.offset);
+		this.pageNo = pageNo;
+		this.pageSize = pageSize;
 	}
 
 	/**
