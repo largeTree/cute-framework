@@ -1,5 +1,9 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringMapMessage;
 
@@ -158,6 +162,28 @@ public class ExceptionUtils {
 				return e;
 			} else {
 				e = cause;
+			}
+		}
+	}
+	
+	/**
+	 * 获取异常的堆栈信息
+	 *  
+	 * @author qiuxs  
+	 * @param e
+	 * @return
+	 */
+	public static String getStackTrace(Throwable e) {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		try {
+			e.printStackTrace(pw);
+			return sw.toString();
+		} finally {
+			try {
+				pw.close();
+				sw.close();
+			} catch (IOException e1) {
 			}
 		}
 	}

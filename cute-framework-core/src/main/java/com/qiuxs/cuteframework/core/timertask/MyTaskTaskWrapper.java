@@ -6,6 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
+import com.qiuxs.cuteframework.core.basic.utils.dingtalk.NoticeLogger;
 
 /**
  * 
@@ -40,7 +42,9 @@ public class MyTaskTaskWrapper extends TimerTask {
 			successCount++;
 		} catch (Throwable e) {
 			failedCount++;
-			log.error(this.task.getClass().getName() + ", execute Failed ext = " + e.getLocalizedMessage(), e);
+			String msg = this.task.getClass().getName() + ", execute Failed ext = " + e.getLocalizedMessage();
+			log.error(msg, e);
+			NoticeLogger.error(msg, ExceptionUtils.getStackTrace(e));
 		}
 	}
 
