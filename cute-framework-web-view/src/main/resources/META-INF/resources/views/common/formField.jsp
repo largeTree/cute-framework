@@ -2,22 +2,34 @@
 <%
 				boolean inForm = request.getAttribute("formId") != null;
 
-				Integer width = 100;
-				Integer height = 16;
+				Integer width = 110;
+				Integer height = 21;
 
 				String id = RandomGenerator.getRandomStr();
+				
 				switch(f.getType()) {
 				case Field.TYPE_DATE:
 %>
-					<input id="<%=id %>" name="<%=f.getName() %>" type="text" >
+					<input id="<%=id %>" name="<%=f.getName() %>" type="text" readonly>
 					<img src="<%=ctxPath %>/imgs/common/clear.png" align="absmiddle" onclick="frm.clearCombValue('<%=id %>')" />
-			
+					<script type="text/javascript">
+						mycal=new dhtmlXCalendarObject('<%=id %>');
+				   	 	mycal.setDateFormat("%Y-%m-%d");
+				     	mycal.hideTime();
+					</script>
 <%
 					break;
 				case Field.TYPE_DATETIME:
 %>
-					<input id="<%=id %>" name="<%=f.getName() %>" type="text" >
+					<input id="<%=id %>" name="<%=f.getName() %>" type="text" readonly>
 					<img src="<%=ctxPath %>/imgs/common/clear.png" align="absmiddle" onclick="frm.clearCombValue('<%=id %>')" />
+					<%-- <script>
+					  jQuery(function() {  jQuery("#<%=id %>").datetimepicker({  			format: "Y-m-d H:i:s" });   });   
+					</script> --%>
+					<script type="text/javascript">
+						mycal=new dhtmlXCalendarObject('<%=id %>');
+				   	 	mycal.setDateFormat("%Y-%m-%d %H:%i:%s");
+					</script>
 <%
 					break;
 				case Field.TYPE_SELECT:

@@ -5,14 +5,17 @@
 	if (theme == null) {
 		theme = "default";
 	}
-	String version = EnvironmentContext.getEnvContext().getVersion();
+	String version = EnvironmentContext.getVersion();
 %>
 
-<link rel="stylesheet" type="text/css" href="<%=ctxPath %>/easyui/themes/<%=theme %>/easyui.css?ver=<%=version %>" />
-<link rel="stylesheet" type="text/css" href="<%=ctxPath %>/easyui/themes/icon.css?ver=<%=version %>" />
-<script type="text/javascript" src="<%=ctxPath %>/easyui/jquery.min.js?ver=<%=version %>"></script>
-<script type="text/javascript" src="<%=ctxPath %>/easyui/jquery.easyui.min.js?ver=<%=version %>"></script>
-<script type="text/javascript" src="<%=ctxPath %>/easyui/locale/easyui-lang-zh_CN.js?ver=<%=version %>"></script>
+<link rel="stylesheet" type="text/css" href="<%=ctxPath %>/thirdparts/easyui/themes/<%=theme %>/easyui.css?ver=<%=version %>" />
+<link rel="stylesheet" type="text/css" href="<%=ctxPath %>/thirdparts/easyui/themes/icon.css?ver=<%=version %>" />
+<script type="text/javascript" src="<%=ctxPath %>/thirdparts/easyui/jquery.min.js?ver=<%=version %>"></script>
+<script type="text/javascript" src="<%=ctxPath %>/thirdparts/easyui/jquery.easyui.min.js?ver=<%=version %>"></script>
+<script type="text/javascript" src="<%=ctxPath %>/thirdparts/easyui/locale/easyui-lang-zh_CN.js?ver=<%=version %>"></script>
+
+<link rel="stylesheet" type="text/css" href="<%=ctxPath %>/thirdparts/dhtmlxSuite/dhtmlxCalendar/dhtmlxcalendar.css?ver=<%=version %>" />
+<script type="text/javascript" src="<%=ctxPath %>/thirdparts/dhtmlxSuite/dhtmlxCalendar/dhtmlxcalendar.js?ver=<%=version %>"></script>
 
 <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/css/common.css?ver=<%=version %>" />
 

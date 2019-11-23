@@ -1,3 +1,7 @@
+<%@page import="com.qiuxs.cuteframework.core.basic.utils.CollectionUtils"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.HashSet"%>
+<%@page import="java.util.Set"%>
 <%@page import="com.qiuxs.cuteframework.core.basic.bean.Pair"%>
 <%@page import="com.qiuxs.cuteframework.view.pagemodel.utils.PageModelUtils"%>
 <%@page import="com.qiuxs.cuteframework.core.basic.utils.JsonUtils"%>
@@ -162,7 +166,7 @@
 		<%
 			List<Field> searchFields =  search.getFields();
 			
-			Pair<List<Field>, List<List<Field>>> groupedFields = PageModelUtils.groupFields(searchFields, 6);
+			Pair<List<Field>, List<List<Field>>> groupedFields = PageModelUtils.groupFields(searchFields, 5);
 		
 			List<List<Field>> groupedSfs = groupedFields.getV2();
 			List<Field> hiddenFields = groupedFields.getV1();
@@ -189,7 +193,7 @@
 		<%
 			}
 		%>
-		<table>
+		<table width="99%">
 			<%
 				for (List<Field> sfRow : groupedSfs) {
 			%>
@@ -205,10 +209,6 @@
 							<%@ include file="formField.jsp"%>
 						</td>
 			<%
-						} else {
-			%>
-						<td style="font-size: 12px;text-align: right;white-space: nowrap;"><a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="doSearch()" >查询</a></td>
-			<%
 						}
 					}
 			%>
@@ -216,6 +216,11 @@
 			<%
 				}
 			%>
+				<tr>
+					<td colspan="10" style="text-align: center;">
+						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="doSearch()" >查询</a>
+					</td>
+				</tr>
 			</table>
 		</form>
 	</div>

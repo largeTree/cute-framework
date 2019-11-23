@@ -20,7 +20,6 @@ public class CodeTranslateAction implements IAction {
 	@Resource
 	private CodeTranslateService codeTranslateService;
 
-	@Api(value = "qd-codes", login = false)
 	public ActionResult queryCodeOptions(Map<String, String> params) {
 		String codeDomain = MapUtils.getStringMust(params, "codeDomain");
 		List<CodeOption<?>> codeOptions = this.codeTranslateService.getCodeOptions(codeDomain);
