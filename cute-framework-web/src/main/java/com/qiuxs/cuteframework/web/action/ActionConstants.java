@@ -10,6 +10,8 @@ public class ActionConstants {
 	public static final String REQUEST_URL = "__requestUrl";
 	/** 端口 */
 	public static final String REQUEST_PORT = "__port";
+	/**  */
+	public static final String REQUEST_SCHEME = "__scheme";
 	/** 会话ID */
 	public static final String PARAM_SESSION_ID = "sessionId";
 	/** json参数key */
