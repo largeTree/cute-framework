@@ -11,7 +11,6 @@ import com.qiuxs.cuteframework.common.biz.func.service.impl.CodeTranslateService
 import com.qiuxs.cuteframework.core.basic.code.provider.CodeOption;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.web.action.IAction;
-import com.qiuxs.cuteframework.web.annotation.Api;
 import com.qiuxs.cuteframework.web.bean.ActionResult;
 
 @Service

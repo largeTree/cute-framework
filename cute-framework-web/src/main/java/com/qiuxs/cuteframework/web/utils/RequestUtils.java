@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import com.qiuxs.cuteframework.core.basic.constants.SymbolConstants;
@@ -22,6 +23,22 @@ import com.qiuxs.cuteframework.web.action.ActionConstants;
  */
 public class RequestUtils {
 
+	/**
+	 * 获取cookies
+	 * @param req
+	 * @return
+	 */
+	public static Map<String, String> getCookies(HttpServletRequest req) {
+		Cookie[] cookies = req.getCookies();
+		Map<String, String> cookiesMap = new HashMap<>();
+		if (cookies != null) {
+    		for (Cookie ck : cookies) {
+    			cookiesMap.put(ck.getName(), ck.getValue());
+    		}
+		}
+		return cookiesMap;
+	}
+	
 	/**
 	 * 拆分请求字符串
 	 * @param queryString
