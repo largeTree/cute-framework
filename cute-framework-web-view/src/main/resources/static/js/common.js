@@ -93,5 +93,51 @@ var frm = {
 			fromData[f.name] = f.value;
 		}
 		return fromData;
+	},
+	post: function(url, params) {
+		return this._ajax(url, params, 'post', null, false);
+	},
+	get: function(url) {
+		return this._ajax(url, {}, 'get', null, false);
+	},
+	postApi: function(url, apiKey, params, jsonParam) {
+		params = params || {};
+		params.apiKey = apiKey;
+		if (jsonParam) {
+			params.jsonParam = JSON.stringify(jsonParam);
+		}
+		return this._ajax(url, params, 'post', null, true);
+	},
+	getApi: function(url, apiKey) {
+		return this._ajax(url + "?apiKey=" + apiKey, {}, 'get', null, true);
+	},
+	_ajax: function (url, params, method, timeout, isApi) {
+		if (!timeout) {
+			timeout = 1500;
+		}
+		return new Promise(function(resolve, reject) { 
+			$.ajax({
+				url: url,
+				data: params,
+				type: method,
+				timeout: timeout,
+				success: function(data, status) {
+					if (isApi) {
+						if (data.code === 0) {
+							resolve(data.data);
+						} else {
+							reject(data, status);
+						}
+					}
+				},
+				error: function(xhr, errorMsg, e) {
+					reject({
+						xhr: xhr,
+						msg: errorMsg,
+						e: e
+					});
+				}
+			});
+		});
 	}
 };
