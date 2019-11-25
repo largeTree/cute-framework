@@ -21,13 +21,13 @@ import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.web.utils.RequestUtils;
 
 @WebFilter(filterName = "authFilter", urlPatterns = {
-        "/views/*"
+        "/view/*"
 })
 public class AuthFilter implements Filter {
 
 	private static Logger log = LogManager.getLogger(AuthFilter.class);
 	
-	private static final String LOGIN_PATH_KEY = "loginPath";
+	private static final String LOGIN_PATH_KEY = "login-path";
 	private static final String DEFAULT_LOGIN_PATH = "/login";
 
 	@Override
