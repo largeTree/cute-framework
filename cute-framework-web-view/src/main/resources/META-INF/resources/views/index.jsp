@@ -1,5 +1,5 @@
 <%@page import="java.util.ArrayList"%>
-<%@page import="com.qiuxs.cuteframework.common.biz.func.service.IFuncService"%>
+<%@page import="com.qiuxs.cuteframework.web.common.biz.func.service.IFuncService"%>
 <%@page import="java.util.List"%>
 <%@page import="com.qiuxs.cuteframework.core.basic.code.tree.TreeItem"%>
 <%@page import="com.qiuxs.cuteframework.core.context.ApplicationContextHolder"%>

@@ -17,14 +17,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
+import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.web.utils.RequestUtils;
 
 @WebFilter(filterName = "authFilter", urlPatterns = {
-        "/view/*"
+        "/views/*"
 })
 public class AuthFilter implements Filter {
 
 	private static Logger log = LogManager.getLogger(AuthFilter.class);
+	
+	private static final String LOGIN_PATH_KEY = "loginPath";
+	private static final String DEFAULT_LOGIN_PATH = "/login";
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -34,8 +38,8 @@ public class AuthFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		boolean authFlag = false;
+		HttpServletRequest req = (HttpServletRequest) request;
 		try {
-			HttpServletRequest req = (HttpServletRequest) request;
 			Map<String, String> cookiesMap = RequestUtils.getCookies(req);
 			String auth = cookiesMap.get("auth");
 			if (StringUtils.isNotBlank(auth) && this.checkAuth(auth)) {
@@ -47,7 +51,7 @@ public class AuthFilter implements Filter {
 
 		if (!authFlag) {
 			HttpServletResponse resp = (HttpServletResponse) response;
-			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			resp.sendRedirect(req.getContextPath() + this.getLoginPath());
 			return;
 		} else {
 			chain.doFilter(request, response);
@@ -55,6 +59,17 @@ public class AuthFilter implements Filter {
 
 	}
 
+	private String getLoginPath() {
+		String loginPath = EnvironmentContext.getEnvValue(LOGIN_PATH_KEY);
+		if (StringUtils.isBlank(loginPath)) {
+			loginPath = DEFAULT_LOGIN_PATH;
+		}
+		if (!loginPath.startsWith("/")) {
+			loginPath = "/" + loginPath;
+		}
+		return loginPath;
+	}
+	
 	private boolean checkAuth(String auth) {
 		return StringUtils.isNotBlank(auth);
 	}

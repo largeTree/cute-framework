@@ -102,15 +102,15 @@ public class EnvironmentContext implements EnvironmentAware {
 	}
 
 	public static String getEnvValue(String key) {
-		return getEnvContext().environment.getProperty(key);
+		return getEnvContext().environment.getProperty(genKey(key));
 	}
 
 	public static <T> T getEnvValue(String key, Class<T> targetType) {
-		return getEnvContext().environment.getProperty(key, targetType);
+		return getEnvContext().environment.getProperty(genKey(key), targetType);
 	}
 
 	public static <T> T getEnvValue(String key, Class<T> targetType, T defVal) {
-		return getEnvContext().environment.getProperty(key, targetType, defVal);
+		return getEnvContext().environment.getProperty(genKey(key), targetType, defVal);
 	}
 
 	public static EnvironmentContext getEnvContext() {
@@ -118,6 +118,10 @@ public class EnvironmentContext implements EnvironmentAware {
 			EnvironmentContext.environmentContext = ApplicationContextHolder.getBean(EnvironmentContext.class);
 		}
 		return EnvironmentContext.environmentContext;
+	}
+	
+	private static String genKey(String key) {
+		return PREFIX + "." + key;
 	}
 
 }
