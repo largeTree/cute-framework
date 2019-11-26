@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.qiuxs.cuteframework.core.basic.constants.SymbolConstants;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.web.action.ActionConstants;
+import com.qiuxs.cuteframework.web.bean.ReqParam;
 
 /**
  * 功能描述: Http请求转换工具<br/>  
@@ -67,13 +68,13 @@ public class RequestUtils {
 	 * 	压缩方式
 	 * @return
 	 */
-	public static Map<String, String> getRequestParams(HttpServletRequest request, String compressType) {
+	public static ReqParam getRequestParams(HttpServletRequest request, String compressType) {
 		Map<String, String> params = getRequestParams(request);
 		String jsonParam = params.get(ActionConstants.PARAM_JSONPARAM);
 		if (compressType != null && jsonParam != null) {
 			// TODO 解压jsonParam
 		}
-		return params;
+		return new ReqParam(params);
 	}
 
 	/**

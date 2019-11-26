@@ -114,18 +114,29 @@ var frm = {
 	},
 	postApi: function(url, apiKey, params, jsonParam) {
 		params = params || {};
-		params.apiKey = apiKey;
 		if (jsonParam) {
 			params.jsonParam = JSON.stringify(jsonParam);
 		}
-		return this._ajax(url, params, 'post', null, true);
+		return this._ajax(this._appendApiKey(url, apiKey), params, 'post', null, true);
+	},
+	_appendApiKey(url, apiKey) {
+		if (url.indexOf('?') > 0) {
+			url = url + '&';
+		} else {
+			url = url + '?';
+		}
+		return url + 'apiKey=' + apiKey;
 	},
 	getApi: function(url, apiKey) {
-		return this._ajax(url + "?apiKey=" + apiKey, {}, 'get', null, true);
+		return this._ajax(this.__appendApiKey(url, apiKey), {}, 'get', null, true);
 	},
 	_ajax: function (url, params, method, timeout, isApi) {
 		if (!timeout) {
-			timeout = 1500;
+			timeout = 15000;
+		}
+		var sid = $.cookie('sid');
+		if (sid && sid.length > 0) {
+			params.sessionId = sid;
 		}
 		return new Promise(function(resolve, reject) { 
 			$.ajax({

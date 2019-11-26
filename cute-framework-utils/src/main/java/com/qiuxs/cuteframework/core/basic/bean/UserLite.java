@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
+// TODO: Auto-generated Javadoc
 /**
  * 功能描述: 简单会话持有对象<br/>
  * 新增原因: TODO<br/>
@@ -17,34 +18,38 @@ import java.util.Map;
  */
 public class UserLite implements Serializable {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -3008176462742444808L;
 
 	/**  当前用户ID. */
 	private Long userId;
-	
+
 	/**  单元ID. */
 	private Long unitId;
-	
+
 	/**  登陆名，账号. */
 	private String loginId;
-	
+
 	/**  用户名. */
 	private String name;
-	
+
 	/**  sessionId. */
 	private String sessionId;
-	
+
 	/**  登陆时间. */
 	private Date loginTime;
-	
+
 	/**  请求地址. */
 	private String requestUrl;
-	
+
 	/**  客户端IP地址. */
 	private String clientIp;
-	
+
 	/**  扩展字段. */
 	private Map<String, Object> extProps;
+
+	/**  用户类型. */
+	private int userType;
 
 	/**
 	 * Gets the 当前用户ID.
@@ -206,6 +211,24 @@ public class UserLite implements Serializable {
 	 */
 	public void setExtProps(Map<String, Object> extProps) {
 		this.extProps = extProps;
+	}
+
+	/**
+	 * Gets the 用户类型.
+	 *
+	 * @return the 用户类型
+	 */
+	public int getUserType() {
+		return userType;
+	}
+
+	/**
+	 * Sets the 用户类型.
+	 *
+	 * @param userType the new 用户类型
+	 */
+	public void setUserType(int userType) {
+		this.userType = userType;
 	}
 
 }

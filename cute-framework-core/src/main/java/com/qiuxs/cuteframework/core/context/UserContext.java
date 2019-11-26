@@ -24,6 +24,11 @@ public class UserContext {
 	private static final Map<String, UserLite> SESSION_HOLDER = new ConcurrentHashMap<>();
 	/** 用户ID和sessionId对应关系 */
 	private static final Map<Long, String> USER_ID_SESSION_ID_HOLDER = new ConcurrentHashMap<>();
+	
+	/** 用户类型：管理员 */
+	public static final int USER_TYPE_ADMIN = 0;
+	/** 用户类型：普通用户 */
+	public static final int USER_TYPE_USER = 1;
 
 	/**
 	 * 添加一个会话信息

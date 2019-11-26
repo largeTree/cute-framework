@@ -20,16 +20,17 @@ import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.web.WebConstants;
 import com.qiuxs.cuteframework.web.action.IAction;
+import com.qiuxs.cuteframework.web.bean.ReqParam;
 
 public class ApiConfigHolder {
 
 	private static Logger log = LogManager.getLogger(ApiConfigHolder.class);
-	
+
 	private static final String API_CONFIG_PATH = "classpath*:/config/apiConfig.xml";
 
 	/** Api缓存 */
 	private static Map<String, ApiConfig> apiMap;
-	
+
 	static {
 		init();
 	}
@@ -45,10 +46,10 @@ public class ApiConfigHolder {
 		if (apiConfig.getAction() == null || apiConfig.getMethodObj() == null) {
 			IAction action = ApplicationContextHolder.getBean(apiConfig.getBean());
 			String methodName = apiConfig.getMethod();
-			Method method = MethodUtils.getPublicMethod(action.getClass(), methodName, Map.class);
+			Method method = MethodUtils.getPublicMethod(action.getClass(), methodName, ReqParam.class);
 			int paramCount = 1;
 			if (method == null) {
-				method = MethodUtils.getPublicMethod(action.getClass(), methodName, Map.class, String.class);
+				method = MethodUtils.getPublicMethod(action.getClass(), methodName, ReqParam.class, String.class);
 				paramCount = 2;
 			}
 			if (method == null) {
@@ -69,7 +70,7 @@ public class ApiConfigHolder {
 	public static boolean containsApi(String apiKey) {
 		return apiMap.containsKey(apiKey);
 	}
-	
+
 	private static void init() {
 		Map<String, ApiConfig> tempApiMap = new StrictApiMap();
 		List<Resource> apiConfigFiles = ClassPathResourceUtil.getResourceList(API_CONFIG_PATH);
@@ -96,7 +97,7 @@ public class ApiConfigHolder {
 		}
 		apiMap = tempApiMap;
 	}
-	
+
 	/**
 	 * 用于存储ApiConfig的严格Map
 	 * @author qiuxs

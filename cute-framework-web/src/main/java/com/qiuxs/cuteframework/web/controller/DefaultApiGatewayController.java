@@ -21,6 +21,7 @@ import com.qiuxs.cuteframework.web.action.ActionConstants;
 import com.qiuxs.cuteframework.web.action.IAction;
 import com.qiuxs.cuteframework.web.auth.ApiAuthService;
 import com.qiuxs.cuteframework.web.bean.ActionResult;
+import com.qiuxs.cuteframework.web.bean.ReqParam;
 import com.qiuxs.cuteframework.web.controller.api.ApiConfig;
 import com.qiuxs.cuteframework.web.controller.api.ApiConfigHolder;
 import com.qiuxs.cuteframework.web.utils.RequestUtils;
@@ -44,7 +45,7 @@ public class DefaultApiGatewayController extends BaseController {
 		ApiConfig apiConfig = ApiConfigHolder.getApiConfig(apiKey);
 
 		// 获取所有参数
-		Map<String, String> params = RequestUtils.getRequestParams(request, compressType);
+		ReqParam params = RequestUtils.getRequestParams(request, compressType);
 		super.fillClientInfo(params, request);
 		super.fillServerInfo(params, request);
 		
