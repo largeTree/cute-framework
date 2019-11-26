@@ -136,6 +136,10 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	 *            创建时间：2018年7月27日 下午11:59:03
 	 */
 	private void fillOneDs(DsInfo dsInfo) {
+		String dsId = dsInfo.getId();
+		boolean isValid = true;
+		String type = dsInfo.getType();
+		
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setUrl(dsInfo.getUrl());
 		dataSource.setUsername(dsInfo.getUserName());
@@ -146,16 +150,18 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		dataSource.setMinIdle(this.defaultTargetDataSource.getMinIdle());
 		dataSource.setMaxWaitMillis(this.defaultTargetDataSource.getMaxWaitMillis());
 		dataSource.setValidationQuery(this.defaultTargetDataSource.getValidationQuery());
-		String dsId = dsInfo.getId();
-		String type = dsInfo.getType();
-		boolean isValid = true;
+		if (DsType.SEQ.value().equals(type)) {
+			dataSource.setDefaultAutoCommit(true);
+		} else {
+			dataSource.setDefaultAutoCommit(this.defaultTargetDataSource.getDefaultAutoCommit());
+		}
 		try {
 			dataSource.getConnection().close();
 		} catch (SQLException e) {
 			isValid = false;
 			Console.log.error("InitDataBase Failed ext = " + e.getLocalizedMessage());
 			if (!DsType.LOG.value().equals(type)) {
-				throw new RuntimeException("");
+				throw new RuntimeException("DataBase init Failed + " + e.getLocalizedMessage(), e);
 			}
 		} finally {
 			if (!isValid) {

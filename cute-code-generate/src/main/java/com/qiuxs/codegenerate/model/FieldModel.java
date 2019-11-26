@@ -57,7 +57,7 @@ public class FieldModel {
 		this.ignoreEntity = ignoreEntity;
 	}
 
-	private String getJavaType(String dbType) {
+	public static String getJavaType(String dbType) {
 		String javaType = null;
 		switch (dbType) {
 		case "enum":
@@ -69,9 +69,11 @@ public class FieldModel {
 		case "bigint":
 			javaType = Long.class.getSimpleName();
 			break;
+		case "json":
+			javaType = "JSONObject";
+			break;
 		case "varchar":
 		case "char":
-		case "json":
 		case "text":
 		case "longtext":
 			javaType = String.class.getSimpleName();

@@ -47,15 +47,17 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	/** 批量操作一次多少条 */
 	private static final int BATCH_ONCE = 200;
 
-	private String tableName;
-
+	private final String tableName;
+	private final String pkField;
+	
 	private List<IServiceFilter<PK, T>> serviceFilters;
 	private List<IInsertFilter<PK, T>> insertFilters;
 	private List<IUpdateFilter<PK, T>> updateFilters;
 
-	public AbstractDataPropertyService(Class<PK> pkClass, Class<T> pojoClass, String tableName) {
+	public AbstractDataPropertyService(Class<PK> pkClass, Class<T> pojoClass, String tableName, String pkField) {
 		super(pkClass, pojoClass);
 		this.tableName = tableName;
+		this.pkField = pkField;
 	}
 
 	@PostConstruct
@@ -79,23 +81,45 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	public String getTableName() {
 		return this.tableName;
 	}
+	
+	/**
+	 * 获取主键字段名
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public String getPkField() {
+		return this.pkField;
+	}
 
 	/**
 	 * 删除一个对象
-	 * 
-	 * @see com.qiuxs.frm.persistent.service.IDataService#deleteById(java.lang.Object)
+	 * @see com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService#deleteById(java.io.Serializable)
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void deleteById(PK id) {
+	public int deleteById(PK id) {
 		T bean = this.getMust(id);
+		if (bean != null) {
+			return this.delete(bean);
+		}
+		return 0;
+	}
+	
+	/**
+	 * 删除一个对象
+	 * @see com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService#delete(com.qiuxs.cuteframework.core.persistent.database.entity.IEntity)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public int delete(T bean) {
 		// 实现了IFlag接口的默认软删除
 		if (bean instanceof IFlag) {
 			IFlag flagBean = (IFlag) bean;
 			flagBean.setFlag(IFlag.DELETED);
-			this.getDao().update(bean);
+			return this.getDao().update(bean);
 		} else {
-			this.getDao().deleteById(id);
+			return this.getDao().deleteById(bean.getId());
 		}
 	}
 

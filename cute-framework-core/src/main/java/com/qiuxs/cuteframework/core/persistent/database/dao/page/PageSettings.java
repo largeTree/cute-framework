@@ -27,7 +27,7 @@ public class PageSettings {
 		}
 		// 默认使用不分页
 		if (pageInfo == null) {
-			pageInfo = PageInfo.DEFAULT_PAGE_INFO;
+			pageInfo = PageInfo.makeDefaultPageInfo();
 		}
 		return pageInfo;
 	}

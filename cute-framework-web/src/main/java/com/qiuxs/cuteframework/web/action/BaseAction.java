@@ -13,8 +13,6 @@ import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageSettings;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService;
-import com.qiuxs.cuteframework.web.WebConstants;
-import com.qiuxs.cuteframework.web.annotation.Api;
 import com.qiuxs.cuteframework.web.bean.ActionResult;
 
 /**
@@ -34,7 +32,6 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * qiuxs
 	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#list(java.util.Map, java.lang.String)
 	 */
-	@Api(WebConstants.AUTO_API_KEY)
 	@Override
 	public ActionResult list(Map<String, String> params, String jsonData) {
 		PageInfo pageInfo = PageSettings.preparePageInfo(params);
@@ -63,7 +60,6 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * qiuxs
 	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#get(java.util.Map)
 	 */
-	@Api(WebConstants.AUTO_API_KEY)
 	@Override
 	public ActionResult get(Map<String, String> params) {
 		T bean = super.getById(params);
@@ -89,7 +85,6 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * qiuxs
 	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#save(java.util.Map, java.lang.String)
 	 */
-	@Api(WebConstants.AUTO_API_KEY)
 	@Override
 	public ActionResult save(Map<String, String> params, String jsonData) {
 		JSONObject jsonObject = JsonUtils.parseJSONObject(jsonData);
@@ -102,7 +97,6 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * qiuxs
 	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#delete(java.util.Map)
 	 */
-	@Api(WebConstants.AUTO_API_KEY)
 	@Override
 	public ActionResult delete(Map<String, String> params) {
 		super.deleteById(params);
@@ -114,7 +108,6 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * qiuxs
 	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#disable(java.util.Map)
 	 */
-	@Api(WebConstants.AUTO_API_KEY)
 	@Override
 	public ActionResult disable(Map<String, String> params) {
 		super.disableById(params);
@@ -126,7 +119,6 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * qiuxs
 	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#enable(java.util.Map)
 	 */
-	@Api(WebConstants.AUTO_API_KEY)
 	@Override
 	public ActionResult enable(Map<String, String> params) {
 		super.enableById(params);

@@ -29,9 +29,10 @@ import com.qiuxs.cuteframework.web.common.biz.func.service.IFuncService;
 public class FuncService extends AbstractDataPropertyService<String, Func, FuncDao> implements IFuncService {
 
 	private static final String TABLE_NAME = "ct_func";
+	private static final String PK_FIELD = "id";
 
 	public FuncService() {
-		super(String.class, Func.class, TABLE_NAME);
+		super(String.class, Func.class, TABLE_NAME, PK_FIELD);
 	}
 
 	@Resource

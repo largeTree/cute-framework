@@ -31,13 +31,13 @@
 	
 	<select id="getCount" resultType="Long" >
 		select 
-			count(1) 
+			IFNULL(count(1), 0)
 		from `${tableName}`
 		<where>
 			<include refid="comnWhere" />
 		</where>
 	</select>
-
+	
 	<sql id="comnWhere">
 		<#list fields as field>
 		<if test="${field.name} != null">
@@ -56,7 +56,38 @@
 	<select id="get" resultType="${packageName}.entity.${className}" >
 		select <include refid="allFields" /> from `${tableName}` where id = ${r'#{id}'}
 	</select>
-
+	<#if (ukFields?size > 0)>
+	
+	<select id="getCountByUk" resultType="Long">
+		select 
+			IFNULL(count(1), 0)
+		from `${tableName}`
+		<where>
+			<include refid="ukWhere" />
+		</where>
+	</select>
+	
+	<select id="getByUk" resultType="${packageName}.entity.${className}">
+		select
+			<include refid="allFields" />
+		from `${tableName}`
+		<where>
+			<include refid="ukWhere" />
+		</where>
+	</select>
+	
+	<sql id="ukWhere">
+		<if test="${pkField}Ne != null" >
+			and ${pkField} &lt;&gt; ${r'#{'}${pkField}Ne${r'}'}
+		</if>
+		<#list ukFields as field>
+		<if test="${field.name} != null">
+			<#if field_index &gt; 0> and </#if>`${field.columnName}` = ${r'#{'}${field.name}${r'}'}
+		</if>
+		</#list>
+	</sql>
+	
+	</#if>
 	<delete id="deleteById" parameterType="Long" >
 		delete from `${tableName}` where id = ${r'#{id}'}
 	</delete>

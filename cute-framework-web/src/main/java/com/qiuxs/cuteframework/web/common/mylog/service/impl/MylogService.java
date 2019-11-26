@@ -26,9 +26,10 @@ import com.qiuxs.cuteframework.web.common.mylog.service.IMylogService;
 public class MylogService extends AbstractDataPropertyService<Long, Mylog, MylogDao> implements IMylogService {
 
 	private static final String TABLE_NAME = "mylog";
+	private static final String PK_FIELD = "id";
 
 	public MylogService() {
-		super(Long.class, Mylog.class, TABLE_NAME);
+		super(Long.class, Mylog.class, TABLE_NAME, PK_FIELD);
 	}
 
 	@Resource

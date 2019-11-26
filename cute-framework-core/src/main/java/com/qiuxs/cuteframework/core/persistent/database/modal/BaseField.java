@@ -20,6 +20,9 @@ import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.JSON_TYPE_NAM
 import java.math.BigDecimal;
 import java.util.Calendar;
 
+import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.utils.TypeAdapter;
+
 /**
  * 基础字段配置
  * 
@@ -53,7 +56,11 @@ public class BaseField {
 		this.typeClass = typeClass;
 		this.defaultValue = defaultValue;
 		if (typeName == null && typeClass != null) {
-			this.type = typeClass.getSimpleName();
+			if (JSONObject.class.isAssignableFrom(typeClass)) {
+				this.type = TypeAdapter.JSON_TYPE_NAME;
+			} else {
+				this.type = typeClass.getSimpleName();
+			}
 		}
 	}
 

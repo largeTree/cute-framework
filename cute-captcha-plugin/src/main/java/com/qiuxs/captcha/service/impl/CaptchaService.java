@@ -26,9 +26,10 @@ import com.qiuxs.captcha.service.ICaptchaService;
 public class CaptchaService extends AbstractDataPropertyService<Long, Captcha, CaptchaDao> implements ICaptchaService {
 
 	private static final String TABLE_NAME = "cute_captcha";
+	private static final String PK_FIELD = "id";
 
 	public CaptchaService() {
-		super(Long.class, Captcha.class, TABLE_NAME);
+		super(Long.class, Captcha.class, TABLE_NAME, PK_FIELD);
 	}
 
 	@Resource

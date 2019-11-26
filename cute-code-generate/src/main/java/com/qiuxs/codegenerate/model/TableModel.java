@@ -1,10 +1,14 @@
 package com.qiuxs.codegenerate.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.qiuxs.codegenerate.task.TableBuilderService;
+import com.qiuxs.codegenerate.utils.ComnUtils;
 
 public class TableModel {
 
@@ -14,6 +18,7 @@ public class TableModel {
 	private String packageName;
 	private String prefix;
 	private String pkClass;
+	private String pkField;
 	private String superClass = "com.qiuxs.cuteframework.core.persistent.database.entity.impl.AbstractEntity";
 	private String simpleSuperClass = "AbstractEntity";
 	private String className;
@@ -28,9 +33,10 @@ public class TableModel {
 	private Set<String> unkonwTypes = new HashSet<>();
 
 	private List<FieldModel> fields;
+	private List<FieldModel> ukFields = new ArrayList<FieldModel>();
 
 	private Set<String> importClasses = new HashSet<>();
-
+	
 	public boolean isBuildFlag() {
 		return buildFlag;
 	}
@@ -77,6 +83,14 @@ public class TableModel {
 
 	public void setPkClass(String pkClass) {
 		this.pkClass = pkClass;
+	}
+
+	public String getPkField() {
+		return pkField;
+	}
+
+	public void setPkField(String pkField) {
+		this.pkField = ComnUtils.formatName(pkField, null);
 	}
 
 	public String getSuperClass() {
@@ -157,11 +171,19 @@ public class TableModel {
 				hasError = true;
 				return;
 			}
-			if (Date.class.getSimpleName().equals(field.getJavaType())) {
-				this.importClasses.add(Date.class.getName() + ";");
-			}
-			if (BigDecimal.class.getSimpleName().equals(field.getJavaType())) {
-				this.importClasses.add(BigDecimal.class.getName() + ";");
+			
+			// 不在忽略字段列表的需要导入类
+			if (!TableBuilderService.IGNORE_ENTITY_FIELDS.contains(field.getName())) {
+				if (Date.class.getSimpleName().equals(field.getJavaType())) {
+					// 日期类型
+					this.importClasses.add(Date.class.getName() + ";");
+				} else if (BigDecimal.class.getSimpleName().equals(field.getJavaType())) {
+					// BigDecimal
+					this.importClasses.add(BigDecimal.class.getName() + ";");
+				} else if ("JSONObject".equals(field.getJavaType())) {
+					// JSONObject
+					this.importClasses.add("com.alibaba.fastjson.JSONObject;");
+				}
 			}
 		});
 	}
@@ -196,6 +218,14 @@ public class TableModel {
 
 	public void setSimpleSuperClass(String simpleSuperClass) {
 		this.simpleSuperClass = simpleSuperClass;
+	}
+
+	public List<FieldModel> getUkFields() {
+		return ukFields;
+	}
+
+	public void setUkFields(List<FieldModel> ukFields) {
+		this.ukFields = ukFields;
 	}
 
 }

@@ -33,30 +33,22 @@
 					</script>
 <%
 					break;
-				case Field.TYPE_SELECT:
+				case Field.TYPE_LIST:
 %>
 					<select id="<%=id %>" class="my-input" name="<%=f.getName() %>">
 						<option value="" selected> - 请选择 - </option>
 					</select>
 					<script type="text/javascript">
-						frm.postApi('<%=ctxPath%>/api.do', 'qd-codes', {codeDomain: '<%=f.getCode()%>'}).then(function(data) {
-							var rows = data.rows;
-							var $sec = $('#<%=id %>');
-							for (var item of rows) {
-								$sec.append('<option value="' + item.code + '">' + item.caption + '</option>');
-							}
-						});
+						frm.setList('<%=id %>', '<%=f.getCode()%>');
 					</script>
 <%
 					break;
-				case Field.TYPE_RSSELECT:
+				case Field.TYPE_ACLIST:
 %>
-					<input id="<%=id %>" class="easyui-combobox my-input" name="<%=f.getName() %>" data-options="width:100,height:16,mode:'remote',url:'<%=ctxPath%>/api.do?apiKey=qd-codes&codeDomain=<%=f.getCode()%>',valueField:'code',textField:'caption'">
-<%
-					break;
-				case Field.TYPE_RMSELECT:
-%>
-					<input id="<%=id %>" class="easyui-combobox my-input" name="<%=f.getName() %>" data-options="width:100,height:16,mode:'remote',multiple:true,url:'<%=ctxPath%>/api.do?apiKey=qd-codes&codeDomain=<%=f.getCode()%>',valueField:'code',textField:'caption'">
+					<input id="<%=id %>" class="my-input" name="<%=f.getName() %>" data-options="width:100,height:16,mode:'remote',url:'<%=ctxPath%>/api.do?apiKey=qd-codes&codeDomain=<%=f.getCode()%>',valueField:'code',textField:'caption'">
+					<script type="text/javascript">
+						frm.setAcList('<%=id %>', '<%=f.getCode()%>');
+					</script>
 <%
 					break;
 				case Field.TYPE_TEXTAREA:

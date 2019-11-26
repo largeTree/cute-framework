@@ -28,9 +28,10 @@ import com.qiuxs.cuteframework.web.log.service.IRequestLogService;
 public class RequestLogService extends AbstractDataPropertyService<Long, RequestLog, RequestLogDao> implements IRequestLogService {
 
 	private static final String TABLE_NAME = "request_log";
+	private static final String PK_FIELD = "id";
 
 	public RequestLogService() {
-		super(Long.class, RequestLog.class, TABLE_NAME);
+		super(Long.class, RequestLog.class, TABLE_NAME, PK_FIELD);
 		CodeUtils.genDirectCode(RequestLog.class);
 	}
 

@@ -29,12 +29,13 @@ import com.qiuxs.cuteframework.core.persistent.database.service.filter.impl.IdGe
 public class CaptchaBlacklistService extends AbstractDataPropertyService<Long, CaptchaBlacklist, CaptchaBlacklistDao> implements ICaptchaBlacklistService {
 
 	private static final String TABLE_NAME = "cute_captcha_blacklist";
+	private static final String PK_FIELD = "id";
 	
 	@Resource
 	private CaptchaEnvironmentConfig captchaEnvironmentConfig;
 	
 	public CaptchaBlacklistService() {
-		super(Long.class, CaptchaBlacklist.class, TABLE_NAME);
+		super(Long.class, CaptchaBlacklist.class, TABLE_NAME, PK_FIELD);
 	}
 
 	@Resource

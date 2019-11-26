@@ -6,7 +6,7 @@
 			<field label="服务器ID" type="text" name="serverIdLike" />
 			<field label="用户ID" type="text" name="userId" />
 			<field label="全局流水号" type="text" name="globalId" />
-			<field label="日志级别" type="select" name="level" code="domain.LogLevel" />
+			<field label="日志级别" type="list" name="level" code="domain.LogLevel" />
 			<field label="类名" type="text" name="classNameLike" />
 			<field label="方法名" type="text" name="methodLike" />
 			<field label="内容" type="text" name="msgLike" />

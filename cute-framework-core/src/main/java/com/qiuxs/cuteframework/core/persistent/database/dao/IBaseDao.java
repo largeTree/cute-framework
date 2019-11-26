@@ -10,7 +10,7 @@ import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
 
 public interface IBaseDao<PK extends Serializable, T extends IEntity<PK>> extends IBasicDao {
 
-	public void deleteById(PK id);
+	public int deleteById(PK id);
 
 	public T get(PK id);
 	
@@ -26,7 +26,7 @@ public interface IBaseDao<PK extends Serializable, T extends IEntity<PK>> extend
 
 	public void insert(T bean);
 	
-	public void insertInBatch(List<T> beans);
+	public int insertInBatch(List<T> beans);
 
-	public void update(T bean);
+	public int update(T bean);
 }

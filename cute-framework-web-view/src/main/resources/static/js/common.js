@@ -94,6 +94,18 @@ var frm = {
 		}
 		return fromData;
 	},
+	setList: function(id, codeName) {
+		frm.postApi(this.getCtxPath() + '/api.do', 'qd-codes', {codeDomain: codeName}).then(function(data) {
+			var rows = data.rows;
+			var $sec = $('#' + id);
+			for (var item of rows) {
+				$sec.append('<option value="' + item.code + '">' + item.caption + '</option>');
+			}
+		});
+	},
+	setAcList: function(id, codeName) {
+		
+	},
 	post: function(url, params) {
 		return this._ajax(url, params, 'post', null, false);
 	},
@@ -141,3 +153,7 @@ var frm = {
 		});
 	}
 };
+
+var httpUtil = {
+		
+}

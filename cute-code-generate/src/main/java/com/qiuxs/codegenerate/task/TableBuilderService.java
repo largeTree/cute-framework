@@ -33,8 +33,9 @@ public class TableBuilderService extends Service<Boolean> {
 	private static Logger log = Logger.getLogger(TableBuilderService.class);
 
 	private static final String COLUMNS_SQL = "SELECT COLUMN_NAME,DATA_TYPE,COLUMN_COMMENT,COLUMN_KEY FROM information_schema.`COLUMNS` WHERE TABLE_NAME = ? AND TABLE_SCHEMA = DATABASE()";
+	private static final String UK_SQL = "SELECT GROUP_CONCAT(column_name) FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_NAME = ? AND non_unique = 0 AND index_name <> 'PRIMARY' GROUP BY INDEX_NAME;";
 	
-	private static final Set<String> IGNORE_ENTITY_FIELDS = new HashSet<>();
+	public static final Set<String> IGNORE_ENTITY_FIELDS = new HashSet<>();
 	static {
 		IGNORE_ENTITY_FIELDS.add("id");
 		IGNORE_ENTITY_FIELDS.add("createdBy");
@@ -67,8 +68,7 @@ public class TableBuilderService extends Service<Boolean> {
 				TableBuilderService.this.conn = DatabaseContext.getConnection(null);
 				List<TableModel> tableModels = CodeTemplateContext.getAllBuildTableModels();
 				tableModels.forEach(tm -> {
-					List<FieldModel> fieldsByTableName = TableBuilderService.this.getFieldsByTableName(tm);
-					tm.setFields(fieldsByTableName);
+					TableBuilderService.this.fillFieldsByTableName(tm);
 					if (tm.isHasError()) {
 						Set<String> unkonwTypes = tm.getUnkonwTypes();
 						StringBuilder sb = new StringBuilder();
@@ -161,10 +161,26 @@ public class TableBuilderService extends Service<Boolean> {
 		}
 	}
 
-	private List<FieldModel> getFieldsByTableName(TableModel tm) {
+	private void fillFieldsByTableName(TableModel tm) {
 		List<FieldModel> fields = new ArrayList<FieldModel>();
+		List<FieldModel> ukFields = new ArrayList<FieldModel>();
 		try {
 			PreparedStatement statement = this.conn.prepareStatement(COLUMNS_SQL);
+			PreparedStatement ukStatement = this.conn.prepareStatement(UK_SQL);
+			ukStatement.setString(1, tm.getTableName());
+			ResultSet ukRs = ukStatement.executeQuery();
+			String sukFields = null;
+			if (ukRs.next()) {
+				sukFields = ukRs.getString(1);
+			}
+			Set<String> ukFieldNames = new HashSet<String>();
+			if (sukFields != null) {
+				String[] sUks = sukFields.split(",");
+				for (String f : sUks) {
+					ukFieldNames.add(f);
+				}
+			}
+			
 			statement.setString(1, tm.getTableName());
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
@@ -174,17 +190,23 @@ public class TableBuilderService extends Service<Boolean> {
 				field.setComment(rs.getString(3));
 				if ("pri".equalsIgnoreCase(rs.getString(4))) {
 					tm.setPkClass(field.getJavaType());
+					tm.setPkField(field.getColumnName());
 				}
 				field.setIgnoreEntity(IGNORE_ENTITY_FIELDS.contains(field.getName()));
 				fields.add(field);
+				if (ukFieldNames.size() > 0 && ukFieldNames.contains(field.getColumnName())) {
+					ukFields.add(field);
+				}
 			}
 			if (tm.getPkClass() == null) {
 				tm.setHasError(true);
 			}
 		} catch (SQLException e) {
 			log.error("ext=" + e.getLocalizedMessage(), e);
+			tm.setHasError(true);
 		}
-		return fields;
+		tm.setFields(fields);
+		tm.setUkFields(ukFields);
 	}
 
 }

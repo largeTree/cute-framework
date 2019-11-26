@@ -42,10 +42,13 @@ public interface IDataPropertyService<PK extends Serializable, T extends IEntity
 	
 	public List<T> findByMap(Map<String, Object> params);
 
-	public void deleteById(PK pk);
+	public int delete(T bean);
+	
+	public int deleteById(PK pk);
 
 	public void disable(PK pk);
 
 	public void enable(PK pk);
+
 
 }

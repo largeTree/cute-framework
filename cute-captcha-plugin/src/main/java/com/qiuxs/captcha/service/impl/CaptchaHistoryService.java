@@ -28,9 +28,10 @@ import com.qiuxs.cuteframework.core.persistent.database.service.filter.impl.IdGe
 public class CaptchaHistoryService extends AbstractDataPropertyService<Long, CaptchaHistory, CaptchaHistoryDao> implements ICaptchaHistoryService {
 
 	private static final String TABLE_NAME = "cute_captcha_history";
+	private static final String PK_FIELD = "id";
 
 	public CaptchaHistoryService() {
-		super(Long.class, CaptchaHistory.class, TABLE_NAME);
+		super(Long.class, CaptchaHistory.class, TABLE_NAME, PK_FIELD);
 	}
 
 	@Resource

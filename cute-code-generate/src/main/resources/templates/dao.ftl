@@ -2,7 +2,11 @@ package ${packageName}.dao;
 
 import org.springframework.stereotype.Repository;
 
+<#if (ukFields?size == 0)>
 import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
+<#else>
+import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseUKDao;
+</#if>
 import ${packageName}.entity.${className};
 
 /**
@@ -13,6 +17,6 @@ import ${packageName}.entity.${className};
  *
  */
 @Repository
-public interface ${className}Dao extends IBaseDao<${pkClass}, ${className}> {
+public interface ${className}Dao extends <#if (ukFields?size == 0)>IBaseDao<#else>IBaseUKDao</#if><${pkClass}, ${className}> {
 
 }

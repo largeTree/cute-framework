@@ -13,9 +13,8 @@ public class Field {
 	public static final String TYPE_TEXTAREA = "textarea";
 	public static final String TYPE_DATE = "date";
 	public static final String TYPE_DATETIME = "datetime";
-	public static final String TYPE_SELECT = "select";
-	public static final String TYPE_RSSELECT = "rsselect";
-	public static final String TYPE_RMSELECT = "rmselect";
+	public static final String TYPE_LIST = "list";
+	public static final String TYPE_ACLIST = "aclist";
 	
 	public static final Field SEARCH_BTN = new Field() {
 		@Override

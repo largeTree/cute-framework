@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.qiuxs.cuteframework.core.basic.code.tree.TreeItem;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.web.action.BaseAction;
-import com.qiuxs.cuteframework.web.annotation.Api;
 import com.qiuxs.cuteframework.web.bean.ActionResult;
 import com.qiuxs.cuteframework.web.common.biz.func.dao.FuncDao;
 import com.qiuxs.cuteframework.web.common.biz.func.entity.Func;
@@ -33,13 +32,11 @@ public class FuncAction extends BaseAction<String, Func, FuncDao, IFuncService> 
 	@Resource
 	private FuncInitHelper funcInitHelper;
 
-	@Api(value = "func-initFunc", login = false)
 	public ActionResult initFunc() {
 		this.funcInitHelper.init();
 		return ActionResult.SUCCESS_INSTANCE;
 	}
 	
-	@Api("func-tree")
 	public ActionResult funcTree(Map<String, String> params) {
 		boolean includeSub = MapUtils.getBooleanValue(params, "includeSub", false);
 		String parentId = MapUtils.getString(params, "parentId");
