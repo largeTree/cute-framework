@@ -25,6 +25,7 @@ public class ActionResult {
 	public static final ActionResult FAILED_INSTANCE = new ActionResult(CODE_FAILED, MSG_FAILED);
 
 	private int code;
+	private long globalId;
 	private String msg;
 	private Object data;
 
@@ -93,6 +94,14 @@ public class ActionResult {
 
 	public void setCode(int code) {
 		this.code = code;
+	}
+
+	public long getGlobalId() {
+		return globalId;
+	}
+
+	public void setGlobalId(long globalId) {
+		this.globalId = globalId;
 	}
 
 	public String getMsg() {

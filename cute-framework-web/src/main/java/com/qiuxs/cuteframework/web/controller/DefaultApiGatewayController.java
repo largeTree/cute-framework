@@ -2,7 +2,6 @@ package com.qiuxs.cuteframework.web.controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
+import com.qiuxs.cuteframework.tech.log.LogConstant;
+import com.qiuxs.cuteframework.tech.log.LogUtils;
 import com.qiuxs.cuteframework.web.WebConstants;
 import com.qiuxs.cuteframework.web.action.ActionConstants;
 import com.qiuxs.cuteframework.web.action.IAction;
@@ -77,13 +78,13 @@ public class DefaultApiGatewayController extends BaseController {
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
 	 */
-	public String doAction(ApiConfig apiConfig, Map<String, String> params) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public String doAction(ApiConfig apiConfig, ReqParam params) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		IAction action = apiConfig.getAction();
 		Method method = apiConfig.getMethodObj();
 		int paramCount = apiConfig.getParamCount();
 		
 		// action返回结果
-		Object actionResult;
+		ActionResult actionResult;
 		if (paramCount > 0) {
 			// 构造参数
 			Object[] args = new Object[apiConfig.getParamCount()];
@@ -92,25 +93,24 @@ public class DefaultApiGatewayController extends BaseController {
 				args[1] = params.get(ActionConstants.PARAM_JSONPARAM);
 			}
 			// 调用action方法
-			actionResult = method.invoke(action, args);
+			actionResult = (ActionResult) method.invoke(action, args);
 		} else {
 			// 调用无参Action方法
-			actionResult = method.invoke(action);
+			actionResult = (ActionResult) method.invoke(action);
 		}
 
 		// 默认返回成功
 		if (actionResult == null) {
 			actionResult = ActionResult.SUCCESS_INSTANCE;
 		}
-
-		// 转为json
-		String jsonResult;
-		if (actionResult instanceof String) {
-			jsonResult = (String) actionResult;
-		} else {
-			jsonResult = JsonUtils.toJSONString(actionResult);
+		
+		String globalId = LogUtils.getContextMap().get(LogConstant.COLUMN_GLOBALID);
+		if (globalId != null) {
+			actionResult.setGlobalId(Long.parseLong(globalId));
 		}
-		return jsonResult;
+		
+		// 转为json
+		return JsonUtils.toJSONString(actionResult);
 	}
 
 	/**

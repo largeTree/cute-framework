@@ -1,7 +1,6 @@
 package com.qiuxs.cuteframework.web.common.biz.func.action;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -11,6 +10,7 @@ import com.qiuxs.cuteframework.core.basic.code.tree.TreeItem;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.web.action.BaseAction;
 import com.qiuxs.cuteframework.web.bean.ActionResult;
+import com.qiuxs.cuteframework.web.bean.ReqParam;
 import com.qiuxs.cuteframework.web.common.biz.func.dao.FuncDao;
 import com.qiuxs.cuteframework.web.common.biz.func.entity.Func;
 import com.qiuxs.cuteframework.web.common.biz.func.helper.FuncInitHelper;
@@ -37,7 +37,7 @@ public class FuncAction extends BaseAction<String, Func, FuncDao, IFuncService> 
 		return ActionResult.SUCCESS_INSTANCE;
 	}
 	
-	public ActionResult funcTree(Map<String, String> params) {
+	public ActionResult funcTree(ReqParam params) {
 		boolean includeSub = MapUtils.getBooleanValue(params, "includeSub", false);
 		String parentId = MapUtils.getString(params, "parentId");
 		List<TreeItem> funcTree = this.funcService.funcTree(parentId, includeSub);

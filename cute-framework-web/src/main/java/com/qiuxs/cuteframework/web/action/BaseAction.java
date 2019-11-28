@@ -14,6 +14,7 @@ import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageSettings;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService;
 import com.qiuxs.cuteframework.web.bean.ActionResult;
+import com.qiuxs.cuteframework.web.bean.ReqParam;
 
 /**
  * 基础Action提供基础Api
@@ -33,7 +34,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#list(java.util.Map, java.lang.String)
 	 */
 	@Override
-	public ActionResult list(Map<String, String> params, String jsonData) {
+	public ActionResult list(ReqParam params, String jsonData) {
 		PageInfo pageInfo = PageSettings.preparePageInfo(params);
 		List<T> list = super.list(JsonUtils.parseJSONObject(jsonData), pageInfo);
 		return this.responseList(MapUtils.getBooleanValue(params, ActionConstants.PARAM_WRAPPER, false), list, pageInfo.getTotal(), pageInfo.getSumrow());
@@ -61,7 +62,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#get(java.util.Map)
 	 */
 	@Override
-	public ActionResult get(Map<String, String> params) {
+	public ActionResult get(ReqParam params) {
 		T bean = super.getById(params);
 		return this.responseEntity(MapUtils.getBooleanValue(params, ActionConstants.PARAM_WRAPPER, false), bean);
 	}
@@ -86,7 +87,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#save(java.util.Map, java.lang.String)
 	 */
 	@Override
-	public ActionResult save(Map<String, String> params, String jsonData) {
+	public ActionResult save(ReqParam params, String jsonData) {
 		JSONObject jsonObject = JsonUtils.parseJSONObject(jsonData);
 		T bean = super.save(params, jsonObject);
 		return new ActionResult(MapUtils.genMap(ActionResult.RES_KEY_VAL, bean.getId()));
@@ -98,7 +99,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#delete(java.util.Map)
 	 */
 	@Override
-	public ActionResult delete(Map<String, String> params) {
+	public ActionResult delete(ReqParam params) {
 		super.deleteById(params);
 		return ActionResult.SUCCESS_INSTANCE;
 	}
@@ -109,7 +110,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#disable(java.util.Map)
 	 */
 	@Override
-	public ActionResult disable(Map<String, String> params) {
+	public ActionResult disable(ReqParam params) {
 		super.disableById(params);
 		return ActionResult.SUCCESS_INSTANCE;
 	}
@@ -120,7 +121,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * @see com.qiuxs.cuteframework.web.action.IBaseAction#enable(java.util.Map)
 	 */
 	@Override
-	public ActionResult enable(Map<String, String> params) {
+	public ActionResult enable(ReqParam params) {
 		super.enableById(params);
 		return ActionResult.SUCCESS_INSTANCE;
 	}

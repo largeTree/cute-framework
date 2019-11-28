@@ -2,7 +2,6 @@ package com.qiuxs.cuteframework.web.action;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
@@ -12,6 +11,7 @@ import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService;
+import com.qiuxs.cuteframework.web.bean.ReqParam;
 
 /**
  * 基础数据操作Action实现
@@ -39,7 +39,7 @@ public abstract class AbstractDataPropertyAction<PK extends Serializable, T exte
 	 * @see com.qiuxs.cuteframework.web.action.IDataPropertyAction#save(java.util.Map, com.alibaba.fastjson.JSONObject)
 	 */
 	@Override
-	public T save(Map<String, String> params, JSONObject jsonData) {
+	public T save(ReqParam params, JSONObject jsonData) {
 		T bean = this.fromJSON(jsonData);
 		this.getService().save(bean);
 		return bean;
@@ -66,7 +66,7 @@ public abstract class AbstractDataPropertyAction<PK extends Serializable, T exte
 	 * @see com.qiuxs.cuteframework.web.action.IDataPropertyAction#get(java.util.Map)
 	 */
 	@Override
-	public T getById(Map<String, String> params) {
+	public T getById(ReqParam params) {
 		PK pk = this.getPkDirect(params);
 		return this.getService().get(pk);
 	}
@@ -87,7 +87,7 @@ public abstract class AbstractDataPropertyAction<PK extends Serializable, T exte
 	 * @see com.qiuxs.cuteframework.web.action.IDataPropertyAction#deleteById(java.util.Map)
 	 */
 	@Override
-	public void deleteById(Map<String, String> params) {
+	public void deleteById(ReqParam params) {
 		PK pk = this.getPkDirect(params);
 		this.getService().deleteById(pk);
 	}
@@ -98,7 +98,7 @@ public abstract class AbstractDataPropertyAction<PK extends Serializable, T exte
 	 * @see com.qiuxs.cuteframework.web.action.IDataPropertyAction#disableById(java.util.Map)
 	 */
 	@Override
-	public void disableById(Map<String, String> params) {
+	public void disableById(ReqParam params) {
 		PK pk = this.getPkDirect(params);
 		this.getService().disable(pk);
 	}
@@ -109,7 +109,7 @@ public abstract class AbstractDataPropertyAction<PK extends Serializable, T exte
 	 * @see com.qiuxs.cuteframework.web.action.IDataPropertyAction#enableById(java.util.Map)
 	 */
 	@Override
-	public void enableById(Map<String, String> params) {
+	public void enableById(ReqParam params) {
 		PK pk = this.getPkDirect(params);
 		this.getService().enable(pk);
 	}
@@ -121,7 +121,7 @@ public abstract class AbstractDataPropertyAction<PK extends Serializable, T exte
 	 * @return PK
 	 */
 	@SuppressWarnings("unchecked")
-	protected PK getPkDirect(Map<String, String> params) {
+	protected PK getPkDirect(ReqParam params) {
 		String pk = MapUtils.getStringMust(params, PK_KEY);
 		return (PK) TypeAdapter.adapter(pk, this.getService().getPkClass());
 	}

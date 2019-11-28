@@ -1,8 +1,7 @@
 package com.qiuxs.cuteframework.web.action;
 
-import java.util.Map;
-
 import com.qiuxs.cuteframework.web.bean.ActionResult;
+import com.qiuxs.cuteframework.web.bean.ReqParam;
 
 public interface IBaseAction extends IAction {
 	/**
@@ -14,14 +13,14 @@ public interface IBaseAction extends IAction {
 	 * @param jsonData
 	 * @return
 	 */
-	ActionResult list(Map<String, String> params, String jsonData);
+	ActionResult list(ReqParam params, String jsonData);
 	
 	/**
 	 * 根据ID获取单个bean
 	 * 2019年3月22日 下午9:05:23
 	 * qiuxs
 	 */
-	ActionResult get(Map<String, String> params);
+	ActionResult get(ReqParam params);
 
 	/**
 	 * 保存bean
@@ -32,7 +31,7 @@ public interface IBaseAction extends IAction {
 	 * @param jsonData
 	 * @return
 	 */
-	ActionResult save(Map<String, String> params, String jsonData);
+	ActionResult save(ReqParam params, String jsonData);
 
 	/**
 	 * 根据ID删除bean
@@ -42,7 +41,7 @@ public interface IBaseAction extends IAction {
 	 * @param params
 	 * @return
 	 */
-	ActionResult delete(Map<String, String> params);
+	ActionResult delete(ReqParam params);
 
 	/**
 	 * 根据ID停用一行记录
@@ -52,7 +51,7 @@ public interface IBaseAction extends IAction {
 	 * @param params
 	 * @return
 	 */
-	ActionResult disable(Map<String, String> params);
+	ActionResult disable(ReqParam params);
 
 	/**
 	 * 根据ID启用一行记录
@@ -62,5 +61,5 @@ public interface IBaseAction extends IAction {
 	 * @param params
 	 * @return
 	 */
-	ActionResult enable(Map<String, String> params);
+	ActionResult enable(ReqParam params);
 }

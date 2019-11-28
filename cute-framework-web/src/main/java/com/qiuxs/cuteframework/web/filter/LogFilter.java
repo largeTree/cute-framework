@@ -74,17 +74,17 @@ public class LogFilter implements Filter {
 			log.error("put logMDC ext=" + e.getLocalizedMessage(), e);
 		}
 		
-		boolean isSuccess = false;
+		int status = RequestLog.FAILED;
 		try {
 			chain.doFilter(request, response);
-			isSuccess = true;
+			status = RequestLog.SUCCESS;
 		} catch (Exception e) {
 			log.error("chain.doFilter ext=" + e.getLocalizedMessage(), e);
 		} 
 		
 		try {
 			// 状态
-			reqLog.setStatus(isSuccess ? RequestLog.SUCCESS : RequestLog.FAILED);
+			reqLog.setStatus(status);
 			// 结束时间
 			reqLog.setReqEndTime(new Date());
 			reqLog.setServerId(EnvironmentContext.getServerId());
