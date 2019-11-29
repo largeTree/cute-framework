@@ -133,13 +133,14 @@ public class MD5Util {
 	
 	
 	public static void main(String[] args) {
-		for (int i = 0; i< 1000; i++) {
-//			String input = RandomGenerator.getRandomStringByLength(10);
-			GUIDGenerator myGUID = new GUIDGenerator();
-			String input = myGUID.toString();
-			MD5Encode(input, Constant.UTF8);
-		}
-		System.out.println("finish");
+//		for (int i = 0; i< 1000; i++) {
+////			String input = RandomGenerator.getRandomStringByLength(10);
+//			GUIDGenerator myGUID = new GUIDGenerator();
+//			String input = myGUID.toString();
+//			MD5Encode(input, Constant.UTF8);
+//		}
+//		System.out.println("finish");
+		syso
 	}
 	
 }

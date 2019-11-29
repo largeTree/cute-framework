@@ -31,7 +31,7 @@
 			<td name="错误代码" field="errorCode" type="num" />
 			<td name="时间" field="logTime" type="date" />
 			<td name="操作" type="btn">
-				<btn name="查看详情" pk="id" href="/views/sys/viewlog.jsp?pid=mylog&amp;formId=mylog&amp;action=view" />
+				<btn name="查看详情" pk="id" href="/views/sys/viewlog.jsp" />
 			</td>
 		</table>
 	</dataList>

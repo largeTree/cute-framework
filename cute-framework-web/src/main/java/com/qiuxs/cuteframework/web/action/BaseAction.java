@@ -36,7 +36,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	@Override
 	public ActionResult list(ReqParam params, String jsonData) {
 		PageInfo pageInfo = PageSettings.preparePageInfo(params);
-		List<T> list = super.list(JsonUtils.parseJSONObject(jsonData), pageInfo);
+		List<T> list = this.list(JsonUtils.parseJSONObject(jsonData), pageInfo);
 		return this.responseList(MapUtils.getBooleanValue(params, ActionConstants.PARAM_WRAPPER, false), list, pageInfo.getTotal(), pageInfo.getSumrow());
 	}
 
@@ -63,7 +63,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 */
 	@Override
 	public ActionResult get(ReqParam params) {
-		T bean = super.getById(params);
+		T bean = this.getById(params);
 		return this.responseEntity(MapUtils.getBooleanValue(params, ActionConstants.PARAM_WRAPPER, false), bean);
 	}
 
@@ -89,7 +89,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	@Override
 	public ActionResult save(ReqParam params, String jsonData) {
 		JSONObject jsonObject = JsonUtils.parseJSONObject(jsonData);
-		T bean = super.save(params, jsonObject);
+		T bean = this.save(params, jsonObject);
 		return new ActionResult(MapUtils.genMap(ActionResult.RES_KEY_VAL, bean.getId()));
 	}
 
@@ -100,7 +100,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 */
 	@Override
 	public ActionResult delete(ReqParam params) {
-		super.deleteById(params);
+		this.deleteById(params);
 		return ActionResult.SUCCESS_INSTANCE;
 	}
 
@@ -111,7 +111,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 */
 	@Override
 	public ActionResult disable(ReqParam params) {
-		super.disableById(params);
+		this.disableById(params);
 		return ActionResult.SUCCESS_INSTANCE;
 	}
 
@@ -122,7 +122,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 */
 	@Override
 	public ActionResult enable(ReqParam params) {
-		super.enableById(params);
+		this.enableById(params);
 		return ActionResult.SUCCESS_INSTANCE;
 	}
 }

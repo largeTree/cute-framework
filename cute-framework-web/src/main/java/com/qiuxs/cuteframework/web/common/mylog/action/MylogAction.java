@@ -5,6 +5,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.qiuxs.cuteframework.web.action.BaseAction;
+import com.qiuxs.cuteframework.web.bean.ActionResult;
+import com.qiuxs.cuteframework.web.bean.ReqParam;
 import com.qiuxs.cuteframework.web.common.mylog.dao.MylogDao;
 import com.qiuxs.cuteframework.web.common.mylog.entity.Mylog;
 import com.qiuxs.cuteframework.web.common.mylog.service.IMylogService;
@@ -26,5 +28,5 @@ public class MylogAction extends BaseAction<Long, Mylog, MylogDao, IMylogService
 	protected IMylogService getService() {
 		return this.mylogService;
 	}
-
+	
 }

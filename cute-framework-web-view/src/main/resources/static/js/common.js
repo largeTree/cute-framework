@@ -22,9 +22,17 @@ var frm = {
 			content : content
 		});
 	},
-	opWin : function (id, title, href, onOpen, onClose) {
+	opWin : function (id, title, href, pk, onOpen, onClose) {
 		var $div = $(document.createElement('div'));
 		$div.attr('id', id);
+		if (href && pk) {
+			if (href.indexOf('?') > 0) {
+				href = href + '&';
+			} else {
+				href = href + '?';
+			}
+			href = href + 'pk=' + pk;
+		}
 		var content = constants.tabsContent.replace('${href}', this.getCtxPath() + href);
 		var height = window.innerHeight * 0.85;
 		var width = window.innerWidth * 0.85;

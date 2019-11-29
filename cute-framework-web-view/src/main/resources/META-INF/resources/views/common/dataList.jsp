@@ -145,7 +145,7 @@
 	function doProcess(event, name, pk, href, apiKey, js) {
 		if (href) {
 			var id = new Date().getTime();
-			top.frm.opWin(id, name, href, null, function() {
+			top.frm.opWin(id, name, href, pk, null, function() {
 				var pageOptions = $('#pp').pagination('options');
 				doSearch(pageOptions.pageNumber, pageOptions.pageSize);
 			});
