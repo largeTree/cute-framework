@@ -43,7 +43,7 @@ public class AuthFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		try {
 			Map<String, String> cookiesMap = RequestUtils.getCookies(req);
-			String auth = cookiesMap.get("auth");
+			String auth = cookiesMap.get("sid");
 			if (StringUtils.isNotBlank(auth) && this.checkAuth(auth)) {
 				authFlag = true;
 			}

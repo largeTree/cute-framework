@@ -127,7 +127,6 @@ public class ExceptionUtils {
 	 */
 	public static JSONObject buildError(Throwable e) {
 		JSONObject error = new JSONObject();
-		e = getRtootThrowable(e);
 		if (e instanceof LogicException) {
 			error.put("code", ((LogicException) e).getErrorCode());
 			error.put(ERROR_MSG, e.getLocalizedMessage());
@@ -154,7 +153,7 @@ public class ExceptionUtils {
 	 * @param e
 	 * @return
 	 */
-	private static Throwable getRtootThrowable(Throwable e) {
+	public static Throwable getRtootThrowable(Throwable e) {
 		Throwable cause;
 		for (;;) {
 			cause = e.getCause();

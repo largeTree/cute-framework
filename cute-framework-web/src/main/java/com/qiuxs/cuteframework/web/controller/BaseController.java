@@ -8,11 +8,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.ex.LoginException;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
+import com.qiuxs.cuteframework.tech.log.LogConstant;
+import com.qiuxs.cuteframework.tech.log.LogUtils;
 import com.qiuxs.cuteframework.web.WebConstants.HttpHeader;
 import com.qiuxs.cuteframework.web.action.ActionConstants;
 import com.qiuxs.cuteframework.web.log.entity.RequestLog;
@@ -31,7 +35,14 @@ public abstract class BaseController {
 	@ExceptionHandler
 	public String handlerException(Throwable e, HttpServletResponse response) {
 		response.addIntHeader(HttpHeader.STATUS.value(), RequestLog.FAILED);
+		e = ExceptionUtils.getRtootThrowable(e);
+		if (e instanceof LoginException) {
+			// 登陆异常，返回标准状态码
+			response.addHeader("needLogin", "true");
+			response.setStatus(HttpStatus.UNAUTHORIZED.value());
+		}
 		JSONObject error = ExceptionUtils.logError(log, e);
+		error.put("globalId", LogUtils.getContextMap().get(LogConstant.COLUMN_GLOBALID));
 		return error.toJSONString();
 	}
 

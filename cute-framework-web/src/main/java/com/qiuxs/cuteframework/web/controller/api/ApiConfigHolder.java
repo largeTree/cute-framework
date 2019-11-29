@@ -12,6 +12,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.springframework.core.io.Resource;
 
+import com.qiuxs.cuteframework.core.basic.Constants;
 import com.qiuxs.cuteframework.core.basic.utils.ClassPathResourceUtil;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.converter.XmlUtil;
@@ -86,7 +87,18 @@ public class ApiConfigHolder {
 					Iterator<Element> apis = module.elementIterator("api");
 					while (apis.hasNext()) {
 						ApiConfig apiConfig = new ApiConfig();
-						XmlUtil.setBeanByElement(apiConfig, apis.next());
+						Element next = apis.next();
+						XmlUtil.setBeanByElement(apiConfig, next);
+						String login = next.attributeValue("login");
+						apiConfig.setLoginFlag(Constants.TRUE_STR.equals(login));
+						String auth = next.attributeValue("auth");
+						apiConfig.setAuthFlag(Constants.TRUE_STR.equals(auth));
+						String type = next.attributeValue("type");
+						if (type == null) {
+							apiConfig.setType(ApiConfig.API_TYPE_USER);
+						} else {
+							apiConfig.setType(Integer.parseInt(type));
+						}
 						tempApiMap.put(apiConfig.getKey(), apiConfig);
 					}
 				}

@@ -108,7 +108,6 @@ public class UserContext {
 		if (!ignoreException && userLite == null) {
 			ExceptionUtils.throwLoginException();
 		}
-		setUserLite(userLite);
 		return userLite;
 	}
 
