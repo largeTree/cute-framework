@@ -156,8 +156,9 @@ var frm = {
 				error: function(xhr, errorMsg, e) {
 					reject({
 						xhr: xhr,
+						data: JSON.parse(xhr.responseText),
 						msg: errorMsg,
-						e: e
+						status: xhr.status
 					});
 				}
 			});
