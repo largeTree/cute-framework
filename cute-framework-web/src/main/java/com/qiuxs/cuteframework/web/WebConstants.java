@@ -10,6 +10,8 @@ public class WebConstants {
 	/** 自动生成apiKey */
 	public static final String AUTO_API_KEY = "auto";
 	
+	/** 运维控制器 */
+	public static final String DEVOPS_CONTROLLER_PREFIX = "/devops";
 	/** 系统控制器前缀 */
 	public static final String SYS_CONTROLLER_PREFIX = "/sys";
 	/** 默认RequestMapper.produces */

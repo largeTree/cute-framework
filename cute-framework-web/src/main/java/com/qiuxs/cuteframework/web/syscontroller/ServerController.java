@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.qiuxs.cuteframework.web.WebConstants;
 
 @RestController
-@RequestMapping(value = WebConstants.SYS_CONTROLLER_PREFIX + "/server", produces = WebConstants.DEFAULT_REQUEST_PRODUCES)
+@RequestMapping(value = WebConstants.DEVOPS_CONTROLLER_PREFIX + "/server", produces = WebConstants.DEFAULT_REQUEST_PRODUCES)
 public class ServerController {
 
 	@GetMapping("/check.do")
