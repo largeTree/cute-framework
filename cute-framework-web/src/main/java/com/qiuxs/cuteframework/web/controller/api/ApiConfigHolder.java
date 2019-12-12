@@ -47,14 +47,18 @@ public class ApiConfigHolder {
 		if (apiConfig.getAction() == null || apiConfig.getMethodObj() == null) {
 			IAction action = ApplicationContextHolder.getBean(apiConfig.getBean());
 			String methodName = apiConfig.getMethod();
-			Method method = MethodUtils.getPublicMethod(action.getClass(), methodName, ReqParam.class);
-			int paramCount = 1;
+			Method method = MethodUtils.getPublicMethod(action.getClass(), methodName);
+			int paramCount = 0;
+			if (method == null) {
+				method = MethodUtils.getPublicMethod(action.getClass(), methodName, ReqParam.class);
+    			paramCount = 1;
+			}
 			if (method == null) {
 				method = MethodUtils.getPublicMethod(action.getClass(), methodName, ReqParam.class, String.class);
 				paramCount = 2;
 			}
 			if (method == null) {
-				throw new RuntimeException("");
+				throw new RuntimeException("action_method_not_found");
 			}
 			apiConfig.setAction(action);
 			apiConfig.setMethodObj(method);
