@@ -1,3 +1,5 @@
+<%@page import="com.qiuxs.cuteframework.view.pagemodel.FormModel"%>
+<%@page import="com.qiuxs.cuteframework.view.pagemodel.Page"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -5,8 +7,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>ViewForm</title>
+<%
+	Page pageModel = (Page) request.getAttribute("pageModel");
+	String formId = (String) request.getAttribute("formId");
+	FormModel formModel = pageModel.getForm(formId);
+%>
 </head>
 <body>
-
+	
 </body>
 </html>

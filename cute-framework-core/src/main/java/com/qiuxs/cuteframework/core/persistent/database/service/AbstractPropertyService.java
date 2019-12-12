@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.Constants;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
+import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
 import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
@@ -55,7 +56,7 @@ public abstract class AbstractPropertyService<PK extends Serializable, T extends
 	}
 
 	protected List<PropertyWrapper<?>> getProperties() {
-		if (this.properties == null) {
+		if (this.properties == null || EnvironmentContext.isDebug()) {
 			this.properties = new ArrayList<>();
 			this.initProps(this.properties);
 		}

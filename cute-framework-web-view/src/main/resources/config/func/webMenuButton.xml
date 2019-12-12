@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<root>
+<root order="-99999">
 	<menu id="10" name="系统管理" funcType="1">
 		<menu id="10" name="系统监控" funcType="2">
 			<menu id="10" name="数据库状态" page="/sys/status" funcType="3" />

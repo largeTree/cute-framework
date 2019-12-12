@@ -6,7 +6,7 @@ package com.qiuxs.cuteframework.view.pagemodel;
  *
  */
 public class Field {
-	
+
 	public static final String TYPE_HIDDEN = "hidden";
 	public static final String TYPE_SEARCH_BTN = "searchBtn";
 	public static final String TYPE_TEXT = "text";
@@ -15,14 +15,14 @@ public class Field {
 	public static final String TYPE_DATETIME = "datetime";
 	public static final String TYPE_LIST = "list";
 	public static final String TYPE_ACLIST = "aclist";
-	
+
 	public static final Field SEARCH_BTN = new Field() {
 		@Override
 		public String getType() {
 			return TYPE_SEARCH_BTN;
 		}
 	};
-	
+
 	/** 标签 */
 	private String label;
 	/** 字段类型 */
@@ -32,7 +32,7 @@ public class Field {
 	/** 字段为选择型字段时的编码翻译器名称 */
 	private String code;
 	/** 默认值 */
-	private String defVal;
+	private String defval;
 	/** 列数 */
 	private int cols = 15;
 	/** 行数 */
@@ -72,12 +72,12 @@ public class Field {
 		this.code = code;
 	}
 
-	public String getDefVal() {
-		return defVal;
+	public String getDefval() {
+		return defval;
 	}
 
-	public void setDefVal(String defVal) {
-		this.defVal = defVal;
+	public void setDefval(String defval) {
+		this.defval = defval;
 	}
 
 	public int getCols() {
@@ -103,5 +103,5 @@ public class Field {
 	public void setSingleRow(int singleRow) {
 		this.singleRow = singleRow;
 	}
-	
+
 }

@@ -39,7 +39,7 @@
 						<option value="" selected> - 请选择 - </option>
 					</select>
 					<script type="text/javascript">
-						frm.setList('<%=id %>', '<%=f.getCode()%>');
+						frm.setList('<%=id %>', '<%=f.getCode()%>', '<%=f.getDefval() %>');
 					</script>
 <%
 					break;

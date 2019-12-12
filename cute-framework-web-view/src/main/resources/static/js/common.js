@@ -102,12 +102,16 @@ var frm = {
 		}
 		return fromData;
 	},
-	setList: function(id, codeName) {
+	setList: function(id, codeName, defval) {
 		frm.postApi(this.getCtxPath() + '/api.do', 'qd-codes', {codeDomain: codeName}).then(function(data) {
 			var rows = data.rows;
 			var $sec = $('#' + id);
 			for (var item of rows) {
-				$sec.append('<option value="' + item.code + '">' + item.caption + '</option>');
+				if (defval && defval == item.code) {
+					$sec.append('<option value="' + item.code + '" selected>' + item.caption + '</option>');
+				} else {
+					$sec.append('<option value="' + item.code + '">' + item.caption + '</option>');
+				}
 			}
 		});
 	},

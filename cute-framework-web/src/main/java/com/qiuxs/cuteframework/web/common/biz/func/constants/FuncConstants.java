@@ -18,4 +18,9 @@ public class FuncConstants {
 	@Code(domain = FUNC_TYPE_DOMAIN, caption = "行级按钮")
 	public static final int FUNC_TYPE_LINE_BTN = 5;
 
+	@CodeDomain
+	public static final String FUNC_TERM_TYPE_DOMAIN = "funcTermType.domain";
+	@Code(domain = FUNC_TERM_TYPE_DOMAIN, caption = "Web")
+	public static final long FUNC_TERM_TYPE_WEB = 0;
+
 }

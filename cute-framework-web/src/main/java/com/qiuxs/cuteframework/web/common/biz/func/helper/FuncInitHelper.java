@@ -2,6 +2,7 @@ package com.qiuxs.cuteframework.web.common.biz.func.helper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,13 +56,10 @@ public class FuncInitHelper {
 		if (resList.size() == 0) {
 			return;
 		}
-		this.tlShowOrder.set(new AtomicInteger(0));
+		List<Document> docs = new ArrayList<>();
 		for (Resource res : resList) {
 			try {
-				Document funcXml = XmlUtil.readAsDocument(res);
-				Element rootE = funcXml.getRootElement();
-				List<Func> allFunc = this.parseChildren("", rootE);
-				this.saveFuncs(allFunc);
+				docs.add(XmlUtil.readAsDocument(res));
 			} catch (IOException | DocumentException e) {
 				StringBuilder sb = new StringBuilder("init Func Failed");
 				if (res != null && res.exists()) {
@@ -72,6 +70,32 @@ public class FuncInitHelper {
 				throw ExceptionUtils.unchecked(e);
 			}
 		}
+		
+		docs.sort(new Comparator<Document>() {
+
+			@Override
+			public int compare(Document o1, Document o2) {
+				String order1 = o1.getRootElement().attributeValue("order");
+				String order2 = o2.getRootElement().attributeValue("order");
+				if (order1 == null) {
+					order1 = "10";
+				}
+				if (order2 == null) {
+					order2 = "10";
+				}
+				int iOrder1 = Integer.parseInt(order1);
+				int iOrder2 = Integer.parseInt(order2);
+				return iOrder1 > iOrder2 ? 1 : iOrder1 == iOrder2 ? 0 : -1;
+			}
+		});
+		
+		this.tlShowOrder.set(new AtomicInteger(0));
+		List<Func> allFunc = new ArrayList<>();
+		for (Document funcXml : docs) {
+			Element rootE = funcXml.getRootElement();
+			allFunc.addAll(this.parseChildren("", rootE));
+		}
+		this.saveFuncs(allFunc);
 	}
 
 	/**

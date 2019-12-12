@@ -2,7 +2,6 @@
 <root>
 	<dataList apiKey="requestLog-list">
 		<search>
-			<field label="是否翻译" type="hidden" name="wrapper" defVal="true" />
 			<field label="接口" type="text" name="apiKeyLike" />
 			<field label="服务器ID" type="text" name="serverIdLike" />
 			<field label="客户端IP" type="text" name="reqIp" />
