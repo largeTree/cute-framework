@@ -48,6 +48,11 @@
 		pageNo = pageNo || 1;
 		pageSize = pageSize || 20;
 		var params = collectSearchParams();
+		
+		if (!params.wrapper) {
+			params.wrapper = "true";
+		}
+		
 		loadData(params, pageNo, pageSize);
 	}
 
@@ -103,7 +108,7 @@
 	}
 	
 	/** 追加一行 */
-	function appendRow($tbody, row, theads, rowIdx) {
+	function appendRow($tbody, row, theads, rowIdx, formatter) {
 		var $tr = $(document.createElement('tr'));
 		for (var i = 0;i < theads.length; i++) {
 			var $td = $(document.createElement('td'));
@@ -123,16 +128,25 @@
 				}
 			} else {
 				var tLen = parseInt($thead.attr('t-len'));
-				var tVal;
-				if (tType === '<%=Td.TD_TYPE_CAPTION %>') {
-					tVal = row['_caption'][$thead.attr('t-field')];
-				} else {
-					tVal = row[$thead.attr('t-field')];
+				var tVal = row[$thead.attr('t-field')];
+				var _caption = row['_caption'];
+				
+				// 翻译类型且没自定义翻译器的情况下使用默认的caption格式化方法
+				if (!formatter && typeof formatter != 'function' && tType === '<%=Td.TD_TYPE_CAPTION %>') {
+					formatter = defaultCaptionFormatter;
 				}
+
+				// 有自定义格式话的话格式化一下
+				if (formatter && typeof formatter === 'function') {
+					tVal = formatter(row, tVal, rowIdx, $thead);
+				}
+				
+				// 根据配置限制以下长度
 				if (tLen > 0 && tVal && tVal.length > tLen) {
 					$td.attr('title', tVal);
 					tVal = tVal.substring(0, tLen) + '...';
 				}
+				
 				$td.html(tVal);
 				$td.attr('style', $thead.attr('t-style'));
 			}
@@ -145,7 +159,7 @@
 	function doProcess(event, name, pk, href, apiKey, js) {
 		if (href) {
 			var id = new Date().getTime();
-			top.frm.opWin(id, name, href, null, function() {
+			top.frm.opWin(id, name, href, pk, null, function() {
 				var pageOptions = $('#pp').pagination('options');
 				doSearch(pageOptions.pageNumber, pageOptions.pageSize);
 			});
@@ -153,6 +167,16 @@
 			
 		} else if (js) {
 			
+		}
+	}
+	
+	/** 默认翻译列格式化方法 */
+	function defaultCaptionFormatter(row, tVal, rowIdx, $thead) {
+		var showVal;
+		if (row._caption && (showVal = row._caption[$thead.attr('t-field')]) != null) {
+			return showVal;
+		} else {
+			return tVal;
 		}
 	}
 	
@@ -189,7 +213,7 @@
 		<%
 			for (Field f : hiddenFields) {
 		%>
-			<input type="hidden" name="<%=f.getName() %>" value="<%=f.getDefVal() %>" />
+			<input type="hidden" name="<%=f.getName() %>" value="<%=f.getDefval() %>" />
 		<%
 			}
 		%>
@@ -230,6 +254,7 @@
 			<tr>
 				<td seq>序号</td>
 				<%
+					int showTds = 0;
 					// 上方定义了tds
 					for (int i = 0; i < tds.size(); i++) {
 						Td td = tds.get(i);
@@ -237,6 +262,11 @@
 					<td t-len="<%=td.getLength() %>" t-field="<%=td.getField() %>" t-sortable="<%=td.getOrder() %>" t-type="<%=td.getType() %>" t-style="<%
 						StringBuilder hStyle = new StringBuilder();
 						StringBuilder cStyle = new StringBuilder();
+						// 显示的列数
+						if (!td.getType().equals(Td.TD_TYPE_HIDE)) {
+							showTds++;
+						}
+						
 						switch (td.getType()) {
 						case Td.TD_TYPE_HIDE:
 							cStyle.append("display: none;");
@@ -266,7 +296,7 @@
 		</tbody>
 		<tfoot>
 			<tr>
-				<td colspan="<%=tds.size()%>">
+				<td colspan="<%=showTds + 1 /* 显示的列数加一列序号 */%>">
 					<div id="pp" style="background: #efefef;"></div>
 				</td>
 			</tr>

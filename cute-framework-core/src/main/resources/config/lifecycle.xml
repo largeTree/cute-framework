@@ -2,4 +2,5 @@
 <root>
 	<lc class="com.qiuxs.cuteframework.tech.mybatis.lc.MyBatisLifecycle" />
 	<lc class="com.qiuxs.cuteframework.core.timertask.TimerLifcycle" />
+	<lc class="com.qiuxs.cuteframework.core.lc.DirectCodeWebLefecycle" />
 </root>

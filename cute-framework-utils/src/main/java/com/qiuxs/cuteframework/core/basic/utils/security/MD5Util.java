@@ -103,4 +103,8 @@ public class MD5Util {
 		return hex.toString();
 	}
 	
+	public static void main(String[] args) {
+		System.out.println(MD5Encode("123456", "utf-8"));
+	}
+	
 }

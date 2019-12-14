@@ -11,12 +11,12 @@
 		</search>
 		<table>
 			<td name="上级菜单" field="parentId" type="caption" />
+			<td name="菜单名" field="name" type="text" />
 			<td name="层级" field="level" type="caption" />
 			<td name="菜单类型" field="funcType" type="caption" />
-			<td name="菜单名" field="name" type="text" />
 			<td name="终端类型" field="termCap" type="caption" />
 			<td name="显示顺序" field="showOrder" type="num" order="1" />
-			<td name="扩展属性" field="extra" type="text" length="10" />
+			<td name="扩展属性" field="extra" />
 			<td name="备注" field="rem" type="text" length="10" />
 		</table>
 	</dataList>
