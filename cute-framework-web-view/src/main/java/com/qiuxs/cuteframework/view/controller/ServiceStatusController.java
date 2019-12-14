@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import com.qiuxs.cuteframework.web.WebConstants;
 
 @Controller
 @RequestMapping(value = WebConstants.SYS_CONTROLLER_PREFIX)
+@DependsOn("dataSource")
 public class ServiceStatusController {
 
 	@Resource
@@ -27,7 +29,7 @@ public class ServiceStatusController {
 
 	@RequestMapping("/status")
 	public String dsStatus(ModelMap model) {
-		Map<Object, DataSource> dataSources = dynamicDataSource.getTargetDataSources();
+		Map<Object, DataSource> dataSources = this.dynamicDataSource.getTargetDataSources();
 		List<DataSourceInfo> dsInfos = new ArrayList<>();
 		for (Iterator<Map.Entry<Object, DataSource>> iter = dataSources.entrySet().iterator(); iter.hasNext();) {
 			Entry<Object, DataSource> entry = iter.next();

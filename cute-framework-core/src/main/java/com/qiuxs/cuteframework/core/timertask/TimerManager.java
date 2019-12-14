@@ -3,6 +3,7 @@ package com.qiuxs.cuteframework.core.timertask;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 
 /**
@@ -24,6 +25,9 @@ public class TimerManager {
 	 * @author qiuxs
 	 */
 	public static void destory() {
+		if (ListUtils.isEmpty(timers)) {
+			return;
+		}
 		for (MyTimer timer : timers) {
 			timer.stop();
 		}

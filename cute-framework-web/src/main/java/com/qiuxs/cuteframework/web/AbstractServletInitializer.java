@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan(basePackages = { "com.qiuxs" })
 @MapperScan(basePackages = { "com.qiuxs.**.dao" })
 @EnableAutoConfiguration
-@EnableAspectJAutoProxy(exposeProxy=true, proxyTargetClass=true) 
+@EnableAspectJAutoProxy(exposeProxy = true, proxyTargetClass = true)
 public abstract class AbstractServletInitializer extends SpringBootServletInitializer {
 
 	@Override
