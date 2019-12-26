@@ -12,20 +12,24 @@ import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.stereotype.Component;
 
 import com.qiuxs.ws.anno.WSReference;
 import com.qiuxs.ws.config.spring.WSReferenceBean;
 import com.qiuxs.ws.filter.Filter;
 import com.qiuxs.ws.filter.FilterChainBuilder;
 
+@Component
+@ConditionalOnBean(value = WsConsumer.class)
 public class WsConsumer implements BeanPostProcessor, BeanFactoryPostProcessor {
 
 	private final ConcurrentHashMap<String, WSReferenceBean<?>> wsReferenceBeans = new ConcurrentHashMap<>();
 
 	private List<Filter> filters;
-	
+
 	private FilterChainBuilder filterChainBuilder;
-	
+
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		String[] filterNames = beanFactory.getBeanNamesForType(Filter.class);
@@ -42,7 +46,6 @@ public class WsConsumer implements BeanPostProcessor, BeanFactoryPostProcessor {
 			this.filterChainBuilder = new FilterChainBuilder(this.filters);
 		}
 	}
-
 
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -113,7 +116,7 @@ public class WsConsumer implements BeanPostProcessor, BeanFactoryPostProcessor {
 		}
 		return referenceBean.getObject();
 	}
-	
+
 	/**
 	 * 调用链建造器
 	 *  
