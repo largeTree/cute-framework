@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:webfragment="http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd" metadata-complete="true" version="3.0">
+	<name>cute-web</name>
+	<distributable />
+	<!-- 禁用log4j自动启动 <context-param> <param-name>isLog4jAutoInitializationDisabled</param-name> <param-value>true</param-value> </context-param> -->
+	<listener>
+		<listener-class>com.qiuxs.cuteframework.web.context.listener.CuteServletContextFirstListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.qiuxs.cuteframework.web.context.listener.CuteServletContextMiddleLoadListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.qiuxs.cuteframework.web.context.listener.CuteServletContextLastListener</listener-class>
+	</listener>
+	<ordering>
+		<before>
+			<others />
+		</before>
+	</ordering>
+</web-fragment>

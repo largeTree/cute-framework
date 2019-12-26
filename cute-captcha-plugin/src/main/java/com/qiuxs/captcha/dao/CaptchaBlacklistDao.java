@@ -1,10 +1,10 @@
 package com.qiuxs.captcha.dao;
 
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import com.qiuxs.captcha.entity.CaptchaBlacklist;
 import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
+import com.qiuxs.cuteframework.tech.mybatis.dao.MyBatisRepository;
 
 /**
  * Dao接口
@@ -13,7 +13,7 @@ import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
  * @author qiuxs
  *
  */
-@Repository
+@MyBatisRepository
 public interface CaptchaBlacklistDao extends IBaseDao<Long, CaptchaBlacklist> {
 
 	/**

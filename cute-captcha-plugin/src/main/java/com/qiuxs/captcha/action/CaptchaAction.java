@@ -4,11 +4,10 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.qiuxs.cuteframework.web.action.BaseAction;
-
-import com.qiuxs.captcha.entity.Captcha;
 import com.qiuxs.captcha.dao.CaptchaDao;
+import com.qiuxs.captcha.entity.Captcha;
 import com.qiuxs.captcha.service.ICaptchaService;
+import com.qiuxs.cuteframework.web.action.BaseAction;
 
 /**
  * 验证码Action

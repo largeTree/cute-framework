@@ -1,6 +1,5 @@
 package com.qiuxs.captcha.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
  * 2019年4月2日 下午10:50:33
  */
 @Component
-@ConfigurationProperties(prefix = CaptchaEnvironmentConfig.PREFIX)
 public class CaptchaEnvironmentConfig {
 
 	protected static final String PREFIX = "cute.captcha";

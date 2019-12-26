@@ -1,137 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.qiuxs</groupId>
+
+	<parent>
+		<groupId>com.qiuxs</groupId>
+		<artifactId>qiuxs-mvn-parent</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
 	<artifactId>cute-framework-parent</artifactId>
 	<packaging>pom</packaging>
 	<version>2.0-SNAPSHOT</version>
 	<modules>
-		<module>cute-framework-core</module>
-		<module>cute-framework-tester</module>
-		<module>cute-framework-web</module>
-		<module>cute-framework-web-view</module>
+		<module>cute-core</module>
+		<module>cute-tester</module>
+		<module>cute-web</module>
+		<module>cute-web-view</module>
 		<module>cute-captcha-plugin</module>
 		<module>cute-sms-plugin</module>
-		<module>cute-framework-utils</module>
+		<module>cute-utils</module>
 		<module>webservice-injector</module>
 		<module>cute-code-generate</module>
+		<module>cute-jetty</module>
 	</modules>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.boot.version>2.0.1.RELEASE</spring.boot.version>
-		<fastjson.version>1.2.32</fastjson.version>
-		<fluent.hc.version>4.3.5</fluent.hc.version>
-		<http.client.version>4.3.5</http.client.version>
-		<httpcore.version>4.3.2</httpcore.version>
-		<taglibs.version>1.1.2</taglibs.version>
-		<javassist.version>3.20.0-GA</javassist.version>
-	</properties>
 	<dependencyManagement>
 		<dependencies>
-			<!-- SpringBoot -->
 			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>${spring.boot.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.alibaba</groupId>
-				<artifactId>fastjson</artifactId>
-				<version>${fastjson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>fluent-hc</artifactId>
-				<version>${fluent.hc.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>taglibs</groupId>
-				<artifactId>standard</artifactId>
-				<version>${taglibs.version}</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>${http.client.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient-cache</artifactId>
-				<version>${http.client.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpcore</artifactId>
-				<version>${httpcore.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.thoughtworks.xstream</groupId>
-				<artifactId>xstream</artifactId>
-				<version>1.4.9</version>
-			</dependency>
-			<dependency>
-				<groupId>dom4j</groupId>
-				<artifactId>dom4j</artifactId>
-				<version>1.6.1</version>
-				<exclusions>
-					<exclusion>
-						<groupId>xml-apis</groupId>
-						<artifactId>xml-apis</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>com.belerweb</groupId>
-				<artifactId>pinyin4j</artifactId>
-				<version>2.5.0</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-fileupload</groupId>
-				<artifactId>commons-fileupload</artifactId>
-				<version>1.3.2</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-beanutils</groupId>
-				<artifactId>commons-beanutils</artifactId>
-				<version>1.9.2</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>2.5</version>
-			</dependency>
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>20.0</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>cute-framework-utils</artifactId>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>cute-utils</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-test</artifactId>
-				<scope>test</scope>
-				<version>${spring.boot.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-starter-logging</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<!-- javassist -->
-			<dependency>
-				<groupId>org.javassist</groupId>
-				<artifactId>javassist</artifactId>
-				<version>${javassist.version}</version>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>cute-core</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -275,20 +178,8 @@
 			</testResource>
 		</testResources>
 	</build>
-	<!-- <repositories>
-		<repository>
-			<id>qiuxs</id>
-			<name>qiuxs Repository</name>
-			<url>http://home.qiuxs.com:9025/nexus/content/groups/public/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories> -->
+	<!-- <repositories> <repository> <id>qiuxs</id> <name>qiuxs Repository</name> <url>http://home.qiuxs.com:9025/nexus/content/groups/public/</url> <layout>default</layout> <releases> 
+		<enabled>true</enabled> </releases> <snapshots> <enabled>true</enabled> </snapshots> </repository> </repositories> -->
 
 	<distributionManagement>
 		<repository>
