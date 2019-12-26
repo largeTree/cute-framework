@@ -1,9 +1,8 @@
 package com.qiuxs.captcha.dao;
 
-import org.springframework.stereotype.Repository;
-
-import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
 import com.qiuxs.captcha.entity.CaptchaHistory;
+import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
+import com.qiuxs.cuteframework.tech.mybatis.dao.MyBatisRepository;
 
 /**
  * 验证码历史记录Dao接口
@@ -12,7 +11,7 @@ import com.qiuxs.captcha.entity.CaptchaHistory;
  * @author qiuxs
  *
  */
-@Repository
+@MyBatisRepository
 public interface CaptchaHistoryDao extends IBaseDao<Long, CaptchaHistory> {
 
 }

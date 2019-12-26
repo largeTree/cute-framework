@@ -124,4 +124,10 @@ public class WsConsumer implements BeanPostProcessor, BeanFactoryPostProcessor {
 		return this.filterChainBuilder;
 	}
 
+
+	@Override
+	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+		return null;
+	}
+
 }

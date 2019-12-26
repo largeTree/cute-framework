@@ -11,11 +11,6 @@
 		支持类似dubbo注入Rpc服务的方式注入WebService
 	</description>
 
-	<properties>
-		<spring.version>5.0.5.RELEASES</spring.version>
-		<junit.version>4.12</junit.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -23,7 +18,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
+			<artifactId>spring-context-support</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.javassist</groupId>

@@ -4,11 +4,10 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.qiuxs.cuteframework.web.action.BaseAction;
-
-import com.qiuxs.captcha.entity.CaptchaHistory;
 import com.qiuxs.captcha.dao.CaptchaHistoryDao;
+import com.qiuxs.captcha.entity.CaptchaHistory;
 import com.qiuxs.captcha.service.ICaptchaHistoryService;
+import com.qiuxs.cuteframework.web.action.BaseAction;
 
 /**
  * 验证码历史记录Action
