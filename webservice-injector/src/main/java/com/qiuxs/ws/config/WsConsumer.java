@@ -21,7 +21,6 @@ import com.qiuxs.ws.filter.Filter;
 import com.qiuxs.ws.filter.FilterChainBuilder;
 
 @Component
-@ConditionalOnBean(value = WsConsumer.class)
 public class WsConsumer implements BeanPostProcessor, BeanFactoryPostProcessor {
 
 	private final ConcurrentHashMap<String, WSReferenceBean<?>> wsReferenceBeans = new ConcurrentHashMap<>();
