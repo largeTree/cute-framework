@@ -56,7 +56,7 @@ public class DefaultXMLConfiguration extends AbstractConfiguration {
 	}
 
 	private void parseElements(Element e) {
-		String path = e.getPath();
+		String path = e.getPath().substring(1).replace("/", ".");
 		if (UConfigUtils.MERGE_TYPE_REPLACE.equals(this.merge)) {
 			// 合并方式
 			super.put(path, e.getText());
