@@ -21,9 +21,6 @@
 
 	<!-- 配置数据源 -->
 	<bean id="propertyConfigurer" class="com.qiuxs.cuteframework.tech.spring.config.CutePropertyPlaceholderConfigurer">
-		<property name="location">
-			<value>classpath:/config/db.properties</value>
-		</property>
 	</bean>
 
 	<bean id="entryDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">

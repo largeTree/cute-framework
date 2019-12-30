@@ -25,8 +25,8 @@ import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
  */
 public class UConfigUtils {
 
-	private static final String ABSOLUTE_PREFIX = "file:///";
-	private static final String CLASSPATH_PREFIX = "classpath";
+	public static final String FILE_SYS_PREFIX = "file://";
+	public static final String CLASSPATH_PREFIX = "classpath";
 
 	/** 入口配置文件 */
 	private static final String ROOT_CONFIG_FILE = CLASSPATH_PREFIX + ":/root.xml";
@@ -110,11 +110,19 @@ public class UConfigUtils {
 
 	}
 
+	/**
+	 * 初始化properties配置文件
+	 *  
+	 * @author qiuxs  
+	 * @param domainId
+	 * @param merge
+	 * @param paths
+	 * @return
+	 */
 	private static IConfiguration initProperties(String domainId, String merge, List<String> paths) {
-		
-		
-		
-		return null;
+		DefaultPropertiesConfiguration configuration = new DefaultPropertiesConfiguration(merge);
+		configuration.addPaths(paths);
+		return configuration;
 	}
 
 	/**
@@ -128,7 +136,7 @@ public class UConfigUtils {
 	 */
 	private static IConfiguration initXML(String domainId, String merge, List<String> paths) {
 		DefaultXMLConfiguration configuration = new DefaultXMLConfiguration(merge);
-		
+		configuration.addPaths(paths);
 		return configuration;
 	}
 

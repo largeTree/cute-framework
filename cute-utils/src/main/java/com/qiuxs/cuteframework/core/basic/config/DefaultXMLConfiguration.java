@@ -6,7 +6,9 @@ import java.util.List;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
+import com.qiuxs.cuteframework.core.basic.utils.ClassPathResourceUtil;
 import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
+import com.qiuxs.cuteframework.core.basic.utils.converter.XmlUtil;
 
 /**
  * 默认的xml配置实现
@@ -63,6 +65,44 @@ public class DefaultXMLConfiguration extends AbstractConfiguration {
 			if (!super.containsKey(path)) {
 				super.put(path, e.getText());
 			}
+		}
+	}
+
+	/**
+	 * 按文件地址添加配置
+	 *  
+	 * @author qiuxs  
+	 * @param paths
+	 */
+	public void addPaths(List<String> paths) {
+		for (String path : paths) {
+			this.addPath(path);
+		}
+	}
+
+	/**
+	 * 添加文件地址
+	 *  
+	 * @author qiuxs  
+	 * @param path
+	 */
+	public void addPath(String path) {
+		try {
+			Document document = null;
+			if (path.startsWith(UConfigUtils.CLASSPATH_PREFIX)) {
+				// classpath下的文件
+				document = ClassPathResourceUtil.getResourceXmlDoc(path);
+				this.addDocument(document);
+			} else if (path.startsWith(UConfigUtils.FILE_SYS_PREFIX)) {
+				// 文件系统中的文件
+				document = XmlUtil.readAsDocument(path);
+			}
+			if (document == null) {
+				return;
+			}
+			this.addDocument(document);
+		} catch (Exception e) {
+			log.warn(path + ", config load failed...");
 		}
 	}
 

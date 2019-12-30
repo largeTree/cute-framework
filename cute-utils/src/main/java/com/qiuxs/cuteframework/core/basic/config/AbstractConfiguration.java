@@ -3,9 +3,14 @@ package com.qiuxs.cuteframework.core.basic.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 
 public abstract class AbstractConfiguration implements IConfiguration {
+	
+	protected static Logger log = LogManager.getLogger(AbstractConfiguration.class);
 
 	/** 合并方式：默认为替换 */
 	protected String merge = UConfigUtils.MERGE_TYPE_REPLACE;
