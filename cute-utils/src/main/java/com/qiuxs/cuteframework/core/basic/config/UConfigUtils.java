@@ -128,7 +128,7 @@ public class UConfigUtils {
 	 */
 	private static IConfiguration initXML(String domainId, String merge, List<String> paths) {
 		DefaultXMLConfiguration configuration = new DefaultXMLConfiguration(merge);
-
+		
 		return configuration;
 	}
 

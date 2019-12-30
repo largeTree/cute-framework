@@ -12,7 +12,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>cute-framework-web</artifactId>
+			<artifactId>cute-web</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
