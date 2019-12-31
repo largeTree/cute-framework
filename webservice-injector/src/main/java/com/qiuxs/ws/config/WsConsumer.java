@@ -12,14 +12,12 @@ import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.stereotype.Component;
 
 import com.qiuxs.ws.anno.WSReference;
 import com.qiuxs.ws.config.spring.WSReferenceBean;
 import com.qiuxs.ws.filter.Filter;
 import com.qiuxs.ws.filter.FilterChainBuilder;
 
-@Component
 public class WsConsumer implements BeanPostProcessor, BeanFactoryPostProcessor {
 
 	private final ConcurrentHashMap<String, WSReferenceBean<?>> wsReferenceBeans = new ConcurrentHashMap<>();
@@ -128,7 +126,7 @@ public class WsConsumer implements BeanPostProcessor, BeanFactoryPostProcessor {
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		return null;
+		return bean;
 	}
 
 }
