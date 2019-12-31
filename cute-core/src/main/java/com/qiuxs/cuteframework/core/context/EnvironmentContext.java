@@ -1,123 +1,84 @@
 package com.qiuxs.cuteframework.core.context;
 
-import org.springframework.context.EnvironmentAware;
-import org.springframework.core.env.Environment;
+import com.qiuxs.cuteframework.core.basic.config.IConfiguration;
+import com.qiuxs.cuteframework.core.basic.config.UConfigUtils;
 
-public class EnvironmentContext implements EnvironmentAware {
+/**
+ * 环境参数上下文
+ * 功能描述: <p>  
+ * 新增原因: TODO<p>  
+ * 新增日期: 2019年12月31日 上午10:05:29 <p>  
+ *  
+ * @author qiuxs   
+ * @version 1.0.0
+ */
+public class EnvironmentContext {
 
-	private static EnvironmentContext environmentContext;
+	protected static final String DOMAIN_KEY = "env";
 
-	protected static final String PREFIX = "env";
-
-	/** 应用名 */
-	private String appName;
-	/** 服务器名 */
-	private String serverId;
-	/** 序列类型 */
-	private String seqType;
-	/** 序列所在数据库索引 */
-	private int seqDbIndex;
-	/** 是否测试模式 */
-	private boolean isTest;
-	/** 是否调试模式 */
-	private boolean isDebug;
-	/** 引入进来的配置文件 */
-	private String version;
-	/** web索引 */
-	private int webIndex;
-	/** 全局环境变量 */
-	private Environment environment;
+	private static IConfiguration domain;
 
 	public static String getAppName() {
-		return getEnvContext().appName;
-	}
-
-	public void setAppName(String appName) {
-		this.appName = appName;
+		return getDoamin().getString("app-name");
 	}
 
 	public static String getSeqType() {
-		return getEnvContext().seqType;
-	}
-
-	public void setSeqType(String seqType) {
-		this.seqType = seqType;
+		return getDoamin().getString("seq-type");
 	}
 
 	public static int getSeqDbIndex() {
-		return getEnvContext().seqDbIndex;
-	}
-
-	public void setSeqDbIndex(int seqDbIndex) {
-		this.seqDbIndex = seqDbIndex;
+		return getDoamin().getInt("db-seq-index", 0);
 	}
 
 	public static String getServerId() {
-		return getEnvContext().serverId;
-	}
-
-	public void setServerId(String serverId) {
-		this.serverId = serverId;
+		return getDoamin().getString("server-id");
 	}
 
 	public static boolean isTest() {
-		return getEnvContext().isTest;
-	}
-
-	public void setTest(boolean isTest) {
-		this.isTest = isTest;
+		return getDoamin().getBool("is-test", false);
 	}
 
 	public static boolean isDebug() {
-		return getEnvContext().isDebug;
-	}
-
-	public void setDebug(boolean isDebug) {
-		this.isDebug = isDebug;
+		return getDoamin().getBool("is-debug", false);
 	}
 
 	public static String getVersion() {
-		return getEnvContext().version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
+		return getDoamin().getString("version");
 	}
 
 	public static int getWebIndex() {
-		return getEnvContext().webIndex;
+		return getDoamin().getInt("web-index", 0);
 	}
 
-	public void setWebIndex(int webIndex) {
-		this.webIndex = webIndex;
-	}
-
-	@Override
-	public void setEnvironment(Environment environment) {
-		this.environment = environment;
+	public static boolean isTimerTaskOpen() {
+		return getDoamin().getBool("timer-task-open", false);
 	}
 
 	public static String getEnvValue(String key) {
-		return getEnvContext().environment.getProperty(genKey(key));
+		return getDoamin().getString(key);
 	}
 
-	public static <T> T getEnvValue(String key, Class<T> targetType) {
-		return getEnvContext().environment.getProperty(genKey(key), targetType);
+	public static int getIntValue(String key, int defVal) {
+		return getDoamin().getInt(key, defVal);
 	}
 
-	public static <T> T getEnvValue(String key, Class<T> targetType, T defVal) {
-		return getEnvContext().environment.getProperty(genKey(key), targetType, defVal);
+	public static String getString(String key) {
+		return getDoamin().getString(key);
 	}
 
-	public static EnvironmentContext getEnvContext() {
-		if (EnvironmentContext.environmentContext == null) {
-			EnvironmentContext.environmentContext = ApplicationContextHolder.getBean(EnvironmentContext.class);
+	public static String getString(String key, String defVal) {
+		return getDoamin().getString(key, defVal);
+	}
+
+	public static boolean getBool(String key, boolean defVal) {
+		return getDoamin().getBool(key, defVal);
+	}
+
+	private static IConfiguration getDoamin() {
+		if (EnvironmentContext.domain == null) {
+			EnvironmentContext.domain = UConfigUtils.getDomain(DOMAIN_KEY);
 		}
-		return EnvironmentContext.environmentContext;
-	}
-	
-	private static String genKey(String key) {
-		return PREFIX + "." + key;
+		return EnvironmentContext.domain;
 	}
 
 }

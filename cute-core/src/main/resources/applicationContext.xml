@@ -58,14 +58,14 @@
 		</property>
 	</bean>
 
-	<bean id="dyncmicDataSource" class="com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource">
+	<bean id="dynamicDataSource" class="com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource">
 		<property name="defaultTargetDataSource" ref="entryDataSource" />
 	</bean>
 
 
 	<!-- 配置SessionFactory，使用上面的数据源作为数据库连接 -->
 	<bean id="sqlSessionFactory" class="com.qiuxs.cuteframework.tech.mybatis.tx.CuteSqlSessionFactoryBean"><!-- org.mybatis.spring.SqlSessionFactoryBean -->
-		<property name="dataSource" ref="dyncmicDataSource" />
+		<property name="dataSource" ref="dynamicDataSource" />
 		<property name="mapperLocations">
 			<array>
 				<value>classpath*:/com/qiuxs/**/mapper/*.xml</value>
@@ -81,7 +81,7 @@
 
 	<!-- 声明式事务管理 -->
 	<bean id="transactionManager" class="com.qiuxs.cuteframework.tech.spring.tx.CuteDataSourceTransactionManager">
-		<property name="dataSource" ref="dyncmicDataSource" />
+		<property name="dataSource" ref="dynamicDataSource" />
 	</bean>
 
 	<bean class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">
@@ -101,7 +101,7 @@
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.qiuxs.**.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
-		<property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate" />
+		<!-- <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate" /> -->
 		<property name="annotationClass" value="com.qiuxs.cuteframework.tech.mybatis.dao.MyBatisRepository" /><!-- org.apache.ibatis.annotations.Mapper -->
 	</bean>
 

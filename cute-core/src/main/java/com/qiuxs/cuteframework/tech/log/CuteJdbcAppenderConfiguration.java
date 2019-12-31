@@ -29,7 +29,7 @@ public class CuteJdbcAppenderConfiguration {
 	/** buffer满时不等待，直接写到ERROR_REF中 */
 	private static final String ERROR_REF = "ErrorFile";
 
-	@Resource(name = "dataSource")
+	@Resource
 	private DynamicDataSource dynDataSource;
 
 	// inner class

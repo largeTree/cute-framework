@@ -8,6 +8,7 @@ import org.dom4j.Element;
 
 import com.qiuxs.cuteframework.core.basic.utils.ClassPathResourceUtil;
 import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.basic.utils.converter.XmlUtil;
 
 /**
@@ -43,27 +44,32 @@ public class DefaultXMLConfiguration extends AbstractConfiguration {
 			throw new NullPointerException("Null document...");
 		}
 		Element rootElement = document.getRootElement();
+		String rootPath = rootElement.getPath();
 		Iterator<Element> eles = rootElement.elementIterator();
-		this.parseElements(eles);
+		this.parseElements(rootPath, eles);
 	}
 
-	private void parseElements(Iterator<Element> eles) {
+	private void parseElements(String rootPath, Iterator<Element> eles) {
 		while (eles.hasNext()) {
 			Element e = eles.next();
-			this.parseElements(e);
-			this.parseElements(e.elementIterator());
+			this.parseElements(rootPath, e);
+			this.parseElements(rootPath, e.elementIterator());
 		}
 	}
 
-	private void parseElements(Element e) {
-		String path = e.getPath().substring(1).replace("/", ".");
+	private void parseElements(String rootPath, Element e) {
+		String path = e.getPath().replace(rootPath + "/", "").replace("/", ".");
+		String text = e.getTextTrim();
+		if (StringUtils.isBlank(text)) {
+			return;
+		}
 		if (UConfigUtils.MERGE_TYPE_REPLACE.equals(this.merge)) {
 			// 合并方式
-			super.put(path, e.getText());
+			super.put(path, text);
 		} else if (UConfigUtils.MERGE_TYPE_ORDER.equals(this.merge)) {
 			// 顺序方式
 			if (!super.containsKey(path)) {
-				super.put(path, e.getText());
+				super.put(path, text);
 			}
 		}
 	}

@@ -21,7 +21,6 @@ import com.qiuxs.cuteframework.web.WebConstants;
 
 @Controller
 @RequestMapping(value = WebConstants.SYS_CONTROLLER_PREFIX)
-@DependsOn("dataSource")
 public class ServiceStatusController {
 
 	@Resource

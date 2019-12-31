@@ -24,6 +24,12 @@ public abstract class AbstractConfiguration implements IConfiguration {
 	public String getString(String key) {
 		return this.values.get(key);
 	}
+	
+	@Override
+	public String getString(String key, String defVal) {
+		String val = MapUtils.getString(this.values, key);
+		return val == null ? defVal : val;
+	}
 
 	@Override
 	public Integer getInteger(String key) {
@@ -48,6 +54,16 @@ public abstract class AbstractConfiguration implements IConfiguration {
 	public long getLongValue(String key, long defaultVal) {
 		return MapUtils.getLongValue(this.values, key, defaultVal);
 	}
+	
+	@Override
+	public boolean getBool(String key, boolean defaultVal) {
+		return MapUtils.getBooleanValue(this.values, key, defaultVal);
+	}
+	
+	@Override
+	public Boolean getBoolean(String key) {
+		return MapUtils.getBoolean(this.values, key);
+	}
 
 	@Override
 	public Map<String, String> toMap() {
@@ -68,6 +84,11 @@ public abstract class AbstractConfiguration implements IConfiguration {
 
 	protected boolean containsKey(String key) {
 		return this.values.containsKey(key);
+	}
+	
+	@Override
+	public String toString() {
+		return "[merge = " + this.merge + ", values = " + this.values.toString() + "]";
 	}
 
 }

@@ -44,7 +44,7 @@ public class SpringTxContext {
 	 * @return
 	 */
 	public static boolean isTransactional() {
-		DataSource dataSource = ApplicationContextHolder.getBean(DataSource.class);
+		DataSource dataSource = DynamicDataSource.getDynamicDataSource();
 		ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(dataSource);
 		if (conHolder != null && conHolder.getConnectionHandle() != null) {
 			return true;

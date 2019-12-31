@@ -22,7 +22,7 @@ public class McConstants {
 	public static final String SUB_SYS_CLUSTER_MASTER_NAME_VAL = "mymaster";
 	/**不同子系统一般设置成不同值*/
 	public static final String SUB_SYS_CLUSTER_DATABASE_KEY = "mc_redis_pool_db";
-	public static final String SUB_SYS_CLUSTER_DATABASE_VAL = "0";
+	public static final int SUB_SYS_CLUSTER_DATABASE_VAL = 0;
 
 	//应用集群内的Redis配置项和配置值
 	public static final String APP_CLUSTER_MASTER_NAME_KEY = "sess_redis_master_name";
@@ -34,9 +34,9 @@ public class McConstants {
 	public static final String DEF_MASTER_NAME_KEY = SUB_SYS_CLUSTER_MASTER_NAME_KEY;
 	public static final String DEF_MASTER_NAME_VAL = SUB_SYS_CLUSTER_MASTER_NAME_VAL;
 	public static final String DEF_DATABASE_KEY = SUB_SYS_CLUSTER_DATABASE_KEY;
-	public static final String DEF_DATABASE_VAL = SUB_SYS_CLUSTER_DATABASE_VAL;
+	public static final int DEF_DATABASE_VAL = SUB_SYS_CLUSTER_DATABASE_VAL;
 
-	public static String getDefaultDatabase() {
+	public static int getDefaultDatabase() {
 		return getSubSysDatabase();
 	}
 
@@ -44,19 +44,16 @@ public class McConstants {
 		return getSubSysMasterName();
 	}
 
-	public static String getSubSysDatabase() {
-		return EnvironmentContext.getEnvValue(McConstants.SUB_SYS_CLUSTER_DATABASE_KEY, String.class, McConstants.SUB_SYS_CLUSTER_DATABASE_VAL);
+	public static int getSubSysDatabase() {
+		return EnvironmentContext.getIntValue(McConstants.SUB_SYS_CLUSTER_DATABASE_KEY, SUB_SYS_CLUSTER_DATABASE_VAL);
 	}
 
 	public static String getSubSysMasterName() {
-		return EnvironmentContext.getEnvValue(McConstants.SUB_SYS_CLUSTER_MASTER_NAME_KEY, String.class, McConstants.SUB_SYS_CLUSTER_MASTER_NAME_VAL);
+		return EnvironmentContext.getString(McConstants.SUB_SYS_CLUSTER_MASTER_NAME_KEY, McConstants.SUB_SYS_CLUSTER_MASTER_NAME_VAL);
 	}
 
-	public static String getAppClusterDatabase() {
-		String database = EnvironmentContext.getEnvValue(McConstants.APP_CLUSTER_DATABASE_KEY, String.class);
-		if (StringUtils.isEmpty(database)) {
-			database = getDefaultDatabase();
-		}
+	public static int getAppClusterDatabase() {
+		int database = EnvironmentContext.getIntValue(McConstants.APP_CLUSTER_DATABASE_KEY, getDefaultDatabase());
 		return database;
 	}
 

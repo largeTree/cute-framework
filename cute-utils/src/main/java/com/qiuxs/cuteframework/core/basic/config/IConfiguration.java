@@ -13,7 +13,13 @@ import java.util.Map;
  */
 public interface IConfiguration {
 
+	public Boolean getBoolean(String key);
+	
+	public boolean getBool(String key, boolean defaultVal);
+	
 	public String getString(String key);
+
+	public String getString(String key, String defVal);
 
 	public Integer getInteger(String key);
 
