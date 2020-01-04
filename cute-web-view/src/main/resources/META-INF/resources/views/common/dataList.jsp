@@ -200,7 +200,7 @@
 			// 添加查询按钮
 			// 最后一行如果满了、则新增一行
 			if (lastRow.size() == 7) {
-				lastRow = new ArrayList<>();
+				lastRow = new ArrayList<Field>();
 				lastRow.add(Field.SEARCH_BTN);
 				groupedSfs.add(lastRow);
 			} else {

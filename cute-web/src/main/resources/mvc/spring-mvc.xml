@@ -9,6 +9,13 @@
 			http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<context:component-scan base-package="com.qiuxs.**.controller" />
+	
+	<!-- 视图解析器 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />

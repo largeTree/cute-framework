@@ -11,7 +11,8 @@
 	<mvc:resources mapping="/tpls/**" location="/static/tpls/" />
 	<mvc:resources mapping="/jsons/**" location="/static/jsons/" />
 	<mvc:resources mapping="/images/**" location="/static/images/" />
-	<mvc:resources mapping="/javascripts/**" location="/static/javascripts/" />
-	<mvc:resources mapping="/stylesheets/**" location="/static/stylesheets/" />
+	<mvc:resources mapping="/js/**" location="/static/js/" />
+	<mvc:resources mapping="/css/**" location="/static/css/" />
+	<mvc:resources mapping="/thirdparts/**" location="/static/thirdparts/" />
 	<mvc:resources mapping="/favicon.ico" location="/WEB-INF/favicon.ico" />
 </beans>

@@ -41,7 +41,7 @@
 				for (DataSourceInfo dsInfo : dsInfos) {
 			%>
 				<!-- 活动链接超过最大链接的90%时显示报警色 -->
-				<tr class="<% if((dsInfo.getNumActive() / dsInfo.getMaxTotal()) > 0.9) {out.print("warn-line");} %>">
+				<tr class="<% if((dsInfo.getNumActive() / dsInfo.getMaxActive()) > 0.9) {out.print("warn-line");} %>">
 					<td><%=dsInfo.getDsId() %></td>
 					<td><%=String.valueOf(dsInfo.getClosed()).toUpperCase() %></td>
 					<td><%=dsInfo.getMaxIdle() %></td>

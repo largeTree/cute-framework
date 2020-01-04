@@ -66,7 +66,7 @@ public class IDGeneraterDatabase implements IDGeneraterable {
 	}
 
 	private void createSequenceTable(Statement stam, String seqName) throws SQLException {
-		stam.execute(CREATE_SQL);
+		stam.execute(MessageFormat.format(CREATE_SQL, seqName));
 	}
 
 	private Long getNextId(Statement stam, String seqName) throws SQLException {

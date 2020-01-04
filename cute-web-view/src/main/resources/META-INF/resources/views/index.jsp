@@ -49,13 +49,13 @@ body {
 						List<TreeItem> children = funcItem.getChildren();
 						for (TreeItem child : children) {
 							List<TreeItem> menus = child.getChildren();
-							List<List<TreeItem>> menuCols = new ArrayList<>();
-							List<TreeItem> oneCol = new ArrayList<>();
+							List<List<TreeItem>> menuCols = new ArrayList<List<TreeItem>>();
+							List<TreeItem> oneCol = new ArrayList<TreeItem>();
 							for (TreeItem ti : menus) {
 								oneCol.add(ti);
 								if (oneCol.size() == 30) {
 									menuCols.add(oneCol);
-									oneCol = new ArrayList<>();
+									oneCol = new ArrayList<TreeItem>();
 								}
 							}
 							if (oneCol.size() > 0) {
