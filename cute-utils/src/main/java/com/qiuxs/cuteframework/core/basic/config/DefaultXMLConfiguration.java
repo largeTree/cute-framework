@@ -94,12 +94,13 @@ public class DefaultXMLConfiguration extends AbstractConfiguration {
 	 */
 	public void addPath(String path) {
 		try {
+			path = super.handlePath(path);
 			Document document = null;
 			if (path.startsWith(UConfigUtils.CLASSPATH_PREFIX)) {
 				// classpath下的文件
 				document = ClassPathResourceUtil.getResourceXmlDoc(path);
 				this.addDocument(document);
-			} else if (path.startsWith(UConfigUtils.FILE_SYS_PREFIX)) {
+			} else {
 				// 文件系统中的文件
 				document = XmlUtil.readAsDocument(path);
 			}

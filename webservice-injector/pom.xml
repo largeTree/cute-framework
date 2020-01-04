@@ -7,6 +7,7 @@
 		<version>2.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>webservice-injector</artifactId>
+	<packaging>jar</packaging>
 	<description>
 		支持类似dubbo注入Rpc服务的方式注入WebService
 	</description>
@@ -34,17 +35,7 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
+				<artifactId>maven-resources-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import com.qiuxs.cuteframework.core.basic.ex.StackTraceRecorder;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DataSourceContext;
 import com.qiuxs.cuteframework.tech.mybatis.interceptor.utils.MbiUtils;
 
@@ -33,7 +32,7 @@ public class MbiDsHook implements IMbiHook {
 			if (dsType != null) {
 				dsId = DataSourceContext.getDsIdByNameSpace(nameSpace);
 				if (log.isDebugEnabled()) {
-					log.debug("ms.id = " + ms.getId() + ", dsType = " + dsType + ", dsId = " + dsId, new StackTraceRecorder());
+					log.debug("ms.id = " + ms.getId() + ", dsType = " + dsType + ", dsId = " + dsId);
 				}
 				if (dsId != null) {
 					DataSourceContext.setUpDs(dsId);

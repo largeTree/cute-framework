@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 
 public abstract class AbstractConfiguration implements IConfiguration {
 	
@@ -89,6 +90,14 @@ public abstract class AbstractConfiguration implements IConfiguration {
 	@Override
 	public String toString() {
 		return "[merge = " + this.merge + ", values = " + this.values.toString() + "]";
+	}
+
+	public String handlePath(String path) {
+		// 替换路径中的系统属性
+		path = StringUtils.replaceSystemProp(path);
+		path = path.replace("\\", "/");
+		path = path.replace("file:///", "");
+		return path;
 	}
 
 }

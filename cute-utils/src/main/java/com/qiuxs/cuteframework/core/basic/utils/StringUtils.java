@@ -9,6 +9,30 @@ package com.qiuxs.cuteframework.core.basic.utils;
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
+	/**
+	 * 替换变量
+	 *  
+	 * @author qiuxs  
+	 * @param path
+	 * @return
+	 */
+	public static String replaceSystemProp(String path) {
+		int length = path.length();
+		StringBuilder newPath = new StringBuilder();
+		for (int i = 0; i < length; i++) {
+			char c = path.charAt(i);
+			if (c == '$') {
+				int endIdx = path.indexOf("}", i + 1);
+				String propName = path.substring(i + 2, endIdx);
+				i = endIdx;
+				newPath.append(System.getProperty(propName));
+			} else {
+				newPath.append(c);
+			}
+		}
+		return newPath.toString();
+	}
+	
 	/***
 	 * 下划线命名转为驼峰命名
 	 * 
@@ -88,6 +112,12 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			sb.append(str);
 		}
 		return sb.toString();
+	}
+	
+	public static void main(String[] args) {
+		String path = "file:\\\\${user.home}\\xxx";
+		path = replaceSystemProp(path);
+		System.out.println(path);
 	}
 
 }

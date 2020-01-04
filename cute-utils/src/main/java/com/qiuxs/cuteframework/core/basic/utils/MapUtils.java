@@ -32,6 +32,29 @@ public class MapUtils {
 
 		return map;
 	}
+	
+	/**
+	 * 
+	 *  
+	 * @author qiuxs  
+	 * @param keyValues
+	 * @return
+	 */
+	public static Map<String, String> genStringMap(Object...keyValues) {
+		if (keyValues == null || keyValues.length == 0) {
+			return new HashMap<String, String>();
+		}
+		if (keyValues.length % 2 != 0) {
+			throw new RuntimeException("Key/Value 必须成对出现");
+		}
+		Map<String, String> map = new HashMap<String, String>();
+
+		for (int i = 0; i < keyValues.length - 1; i+=2) {
+			map.put(keyValues[i] == null ? null : String.valueOf(keyValues[i]), String.valueOf(keyValues[i + 1]));
+		}
+
+		return map;
+	}
 
 	/**
 	 * 获取String值 为Null时 返回 Null

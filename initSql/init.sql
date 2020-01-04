@@ -1,14 +1,15 @@
 CREATE TABLE `ds_info` (
-	`id` VARCHAR(10) PRIMARY KEY COMMENT'数据源ID',
-	`url` VARCHAR(200) NOT NULL COMMENT'连接url',
-	`driver_class` VARCHAR(200) NOT NULL COMMENT'驱动类',
-	`user_name` VARCHAR(32) NOT NULL COMMENT'用户名',
-	`password` VARCHAR(32) NOT NULL COMMENT'密码',
-	`type` VARCHAR(32) NOT NULL COMMENT'数据库类型',
-	`flag` TINYINT(3) NOT NULL COMMENT'数据库状态',
-	`max_num` INT(11) NOT NULL COMMENT'最大使用数',
-	`used_num` INT(11) NOT NULL COMMENT'已使用数量'
-);
+  `id` VARCHAR(10) NOT NULL COMMENT '数据源ID',
+  `url` VARCHAR(200) NOT NULL COMMENT '连接url',
+  `driver_class` VARCHAR(200) NOT NULL COMMENT '驱动类',
+  `user_name` VARCHAR(32) NOT NULL COMMENT '用户名',
+  `password` VARCHAR(32) NOT NULL COMMENT '密码',
+  `type` VARCHAR(32) NOT NULL COMMENT '数据库类型',
+  `flag` TINYINT(3) NOT NULL COMMENT '数据库状态',
+  `max_num` INT(11) NOT NULL COMMENT '最大使用数',
+  `used_num` INT(11) NOT NULL COMMENT '已使用数量',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `log_global_id_seq`(
 	`id` BIGINT(20) PRIMARY KEY AUTO_INCREMENT,

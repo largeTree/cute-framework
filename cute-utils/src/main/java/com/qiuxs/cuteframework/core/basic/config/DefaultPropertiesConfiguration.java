@@ -8,6 +8,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import com.qiuxs.cuteframework.core.basic.utils.ClassPathResourceUtil;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 
 /**
  * 默认Properties配置
@@ -45,6 +46,7 @@ public class DefaultPropertiesConfiguration extends AbstractConfiguration {
 
 	public void addPath(String path) {
 		try {
+			path = super.handlePath(path);
 			Properties prop = null;
 			if (path.startsWith(UConfigUtils.CLASSPATH_PREFIX)) {
 				// classpath下的文件
@@ -55,7 +57,7 @@ public class DefaultPropertiesConfiguration extends AbstractConfiguration {
 					prop = null;
 					log.error("load Properties[" + path + "] failed, ext = " + e);
 				}
-			} else if (path.startsWith(UConfigUtils.FILE_SYS_PREFIX)) {
+			} else {
 				// 文件系统中的文件
 				prop = new Properties();
 				try {

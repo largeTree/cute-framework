@@ -45,7 +45,7 @@ public class UConfigUtils {
 	public static final String MERGE_TYPE_LAST_ONE = "lastOne";
 
 	public static final String DOMAIN_DB = "db";
-	
+
 	private static Map<String, IConfiguration> configDomains;
 
 	public static IConfiguration getDomain(String domain) {
@@ -81,8 +81,9 @@ public class UConfigUtils {
 			if (path == null) {
 				throw new IllegaRootConfigException("domain [ " + domainId + "] has no default config file");
 			}
-
+			
 			List<String> paths = new ArrayList<String>();
+			
 			paths.add(path);
 
 			Iterator<Element> extendConfig = domain.elementIterator(EXTEND_CONFIG_ITEM);
@@ -104,7 +105,7 @@ public class UConfigUtils {
 				throw new IllegaRootConfigException("unkone domain type[" + type + "]");
 			}
 			mapDomains.put(domainId, configuration);
-			
+
 			configDomains = mapDomains;
 		}
 
