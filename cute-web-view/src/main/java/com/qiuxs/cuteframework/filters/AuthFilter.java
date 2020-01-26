@@ -62,7 +62,9 @@ public class AuthFilter implements Filter {
 	}
 
 	private void goLogin(HttpServletRequest req, ServletResponse resp) throws IOException {
-		((HttpServletResponse) resp).sendRedirect(req.getContextPath() + this.getLoginPath());
+		String requestURI = req.getRequestURI();
+		String redirectPath = req.getContextPath() + this.getLoginPath() + "?redirect=" + requestURI + "&api=" + this.getLoginApiKey();
+		((HttpServletResponse) resp).sendRedirect(redirectPath);
 	}
 
 	private String getLoginPath() {
@@ -74,6 +76,11 @@ public class AuthFilter implements Filter {
 			loginPath = "/" + loginPath;
 		}
 		return loginPath;
+	}
+	
+	private String getLoginApiKey() {
+		String loginApiKey = EnvironmentContext.getEnvValue("login-api-key");
+		return loginApiKey;
 	}
 
 	private boolean checkAuth(String auth) {

@@ -17,11 +17,11 @@ import com.qiuxs.cuteframework.web.action.IAction;
  */
 public class ApiConfig {
 
-	/**  接口类型：管理接口. */
-	public static final int API_TYPE_ADMIN = 0;
+	/**  接口类型：后台接口. */
+	public static final long API_TYPE_ADMIN = 1 << 0;
 	
-	/**  接口类型：用户接口. */
-	public static final int API_TYPE_USER = 1;
+	/**  接口类型：前端接口. */
+	public static final long API_TYPE_USER = 1 << 1;
 
 	/**  apiKey. */
 	private String key;
@@ -36,7 +36,7 @@ public class ApiConfig {
 	private boolean authFlag;
 	
 	/**  接口类型. */
-	private int type;
+	private long type;
 	
 	/**  action对象. */
 	private String bean;
@@ -133,7 +133,7 @@ public class ApiConfig {
 	 *
 	 * @return the 接口类型
 	 */
-	public int getType() {
+	public long getType() {
 		return type;
 	}
 
@@ -142,7 +142,7 @@ public class ApiConfig {
 	 *
 	 * @param type the new 接口类型
 	 */
-	public void setType(int type) {
+	public void setType(long type) {
 		this.type = type;
 	}
 
