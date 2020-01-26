@@ -96,7 +96,7 @@ public abstract class AbstractConfiguration implements IConfiguration {
 		// 替换路径中的系统属性
 		path = StringUtils.replaceSystemProp(path);
 		path = path.replace("\\", "/");
-		path = path.replace("file:///", "");
+		path = path.replace("file://", "");
 		return path;
 	}
 
