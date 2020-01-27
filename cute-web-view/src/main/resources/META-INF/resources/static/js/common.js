@@ -114,7 +114,7 @@ var frm = {
 	},
 	setList: function(id, codeName, defval) {
 		frm.postApi(this.getCtxPath() + '/api.do', 'qd-codes', {codeDomain: codeName}).then(function(data) {
-			var rows = data.rows;
+			var rows = data.data.rows;
 			var $sec = $('#' + id);
 			for (var item of rows) {
 				if (defval && defval == item.code) {
@@ -136,7 +136,7 @@ var frm = {
 	},
 	postApi: function(url, apiKey, params, jsonParam) {
 		params = params || {};
-		if (jsonParam) {
+		if (jsonParam && (typeof jsonParam) != 'string') {
 			params.jsonParam = JSON.stringify(jsonParam);
 		}
 		return this._ajax(this._appendApiKey(url, apiKey), params, 'post', null, true);
@@ -150,13 +150,19 @@ var frm = {
 		return url + 'apiKey=' + apiKey;
 	},
 	getApi: function(url, apiKey) {
-		return this._ajax(this.__appendApiKey(url, apiKey), {}, 'get', null, true);
+		return this._ajax(this._appendApiKey(url, apiKey), {}, 'get', null, true);
 	},
 	_ajax: function (url, params, method, timeout, isApi) {
 		if (!timeout) {
 			timeout = 15000;
 		}
 		var sid = $.cookie('sid');
+		if (!sid) {
+			var userLite = localStorage.getItem('userLite');
+			if (userLite) {
+				sid = userLite.sessionId;
+			}
+		}
 		if (sid && sid.length > 0) {
 			params.sessionId = sid;
 		}
@@ -169,10 +175,12 @@ var frm = {
 				success: function(data, status) {
 					if (isApi) {
 						if (data.code === 0) {
-							resolve(data.data);
+							resolve(data);
 						} else {
 							reject(data, status);
 						}
+					} else {
+						resolve(data);
 					}
 				},
 				error: function(xhr, errorMsg, e) {
@@ -187,7 +195,3 @@ var frm = {
 		});
 	}
 };
-
-var httpUtil = {
-		
-}

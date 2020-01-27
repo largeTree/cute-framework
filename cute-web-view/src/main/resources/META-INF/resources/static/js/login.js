@@ -15,6 +15,7 @@ function doLogin(loginApi, redirect) {
 		userName : userName,
 		pwd : pwd
 	}).then(function(data) {
+		data = data.data;
 		localStorage.setItem("userLite", data);
 		$.cookie('sid', data.sessionId);
 		if (!redirect) {
@@ -59,7 +60,7 @@ function onKeyPress(event) {
 		if (itemId === 'uid') {
 			$('#pwd').focus();
 		} else if (itemId == 'pwd') {
-			doLogin();
+			$('#login-btn').click();
 		}
 	}
 }

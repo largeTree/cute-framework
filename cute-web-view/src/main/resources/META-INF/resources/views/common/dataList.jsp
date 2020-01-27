@@ -43,6 +43,8 @@
 			out.print(btnConfig);
 	%>;
 	
+	var __dataList = [];
+	
 	/** 触发搜索 */
 	function doSearch(pageNo, pageSize) {
 		pageNo = pageNo || 1;
@@ -63,35 +65,36 @@
 	
 	/** 加载数据 */
 	function loadData(param, pageNo, pageSize) {
-		frm.showLoading();
+		top.frm.showLoading();
 		param = param || {};
 		param.pageNo = pageNo || 1;
 		param.pageSize = pageSize || 20;
-		$.post(ctxPath + '/api.do?apiKey=' + apiKey, param, function(data, status) {
-			if ('success' === status && data.code === 0) {
-				applyData(data.data.rows, data.data.total, param.pageNo, param.pageSize);
-			} else {
-				$.messager.alert('Error', data.msg, 'error');
-			}
-			frm.finishLoading();
+		frm.postApi(ctxPath + '/api.do', apiKey, param, param.jsonParam).then(function(data) {
+			data = data.data;
+			applyData(data.rows, data.total, param.pageNo, param.pageSize);
+			top.frm.finishLoading();
+		}, function(data) {
+			$.messager.alert('Error', data.data.msg, 'error');
+			top.frm.finishLoading();
 		});
 	}
 	
 	/** 将数据刷到页面上 */
 	function applyData(dataList, total, pageNo, pageSize) {
 		setPagination(total, pageNo, pageSize);
+		__dataList = dataList;
 		// 填充数据
 		var $dataTable = $('#data-list');
 		var theads = $dataTable.find('thead td');
 		var $tbody = $dataTable.children('tbody');
 		$tbody.empty();
-		var rowIdx = ((pageNo - 1) * pageSize) + 1;
+		var rowNum = ((pageNo - 1) * pageSize) + 1;
 		for (var i = 0;i < dataList.length; i++) {
-			appendRow($tbody, dataList[i], theads, rowIdx++);
+			appendRow($tbody, dataList[i], theads, rowNum++, i);
 		}
 	}
 	
-	// 设置分页栏
+	/** 设置分页栏 */
 	function setPagination(total, pageNo, pageSize) {
 		// 创建分页工具栏				
 		$('#pp').pagination({
@@ -108,14 +111,14 @@
 	}
 	
 	/** 追加一行 */
-	function appendRow($tbody, row, theads, rowIdx, formatter) {
+	function appendRow($tbody, row, theads, rowNum, rowIdx, formatter) {
 		var $tr = $(document.createElement('tr'));
 		for (var i = 0;i < theads.length; i++) {
 			var $td = $(document.createElement('td'));
 			var $thead = $(theads[i]);
 			var tType = $thead.attr('t-type');
 			if($thead[0].hasAttribute('seq')) {
-				$td.html(rowIdx);
+				$td.html(rowNum);
 			} else if (tType === '<%=Td.TD_TYPE_BTN %>') {
 				for (var btn of tdBtns) {
 					// [{"href":"from?pid=mylog&fromId=mylog&action=view","name":"查看详情","pk":"id"}]
@@ -123,6 +126,8 @@
 					var pk = btn.pk ? row[btn.pk] : null;
 					$btn.attr('onclick', "doProcess(event, '" + btn.name + "'," + (pk ? "'" + pk + "'" : null) + ", " + (btn.href ? "'" + btn.href + "'" : null) + ", " + (btn.apiKey ? "'" + btn.apiKey + "'" : null) + ", " + (btn.js ? "'" + btn.js + "'" : null) + ")");
 					$btn.attr('href', 'javascript:void(0)');
+					$btn.attr('data-row-idx', rowIdx);
+					$btn.attr('data-params', btn.params);
 					$btn.html(btn.name);
 					$td.append($btn);
 				}
@@ -157,6 +162,27 @@
 	
 	/** 单击行按钮时触发 */
 	function doProcess(event, name, pk, href, apiKey, js) {
+		var _target = $(event.currentTarget);
+		var rowIdx = _target.data('row-idx');
+		var row = __dataList[rowIdx];
+		
+		var paramCfg = _target.data('params');
+		var params = {};
+		if (paramCfg) {
+			var k_v = paramCfg.split('&');
+			for (var i = 0; i < k_v.length; i++) {
+				var pair = k_v[i].split('=');
+				var key = pair[0];
+				var val = pair[1];
+				if (val.startWith('{')) {
+					val = val.substring(1, val.length - 1);
+					params[key] = row[val];
+				} else {
+					params[key] = val;
+				}
+			}
+		}
+		
 		if (href) {
 			var id = new Date().getTime();
 			top.frm.opWin(id, name, href, pk, null, function() {
@@ -164,10 +190,25 @@
 				doSearch(pageOptions.pageNumber, pageOptions.pageSize);
 			});
 		} else if (apiKey) {
-			
+			callApiKey(pk, apiKey, row, params);
 		} else if (js) {
-			
+			window[js](pk, row);
 		}
+	}
+
+	/** 调用接口 */
+	function callApiKey(pk, apiKey, row, params) {
+		top.frm.showLoading();
+		if (!params.pk) {
+			params.pk = pk;
+		}
+		frm.postApi(ctxPath + '/api.do', apiKey, params, {}).then(function(data) {
+			alert(data.msg);
+			top.frm.finishLoading();
+		}, function(data) {
+			alert(data.msg);
+			top.frm.finishLoading();
+		});
 	}
 	
 	/** 默认翻译列格式化方法 */

@@ -159,4 +159,15 @@ public class UserContext {
 		UserLite userLite = getUserLiteOpt();
 		return userLite == null ? null : userLite.getUserId();
 	}
+
+	/**
+	 * sessionId是否有效
+	 *  
+	 * @author qiuxs  
+	 * @param sessionId
+	 * @return
+	 */
+	public static boolean isValid(String sessionId) {
+		return getSessionMap().get(sessionId) != null;
+	}
 }

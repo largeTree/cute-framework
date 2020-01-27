@@ -43,10 +43,18 @@ public class ExceptionUtils {
 	 * @author qiuxs
 	 */
 	public static void throwLoginException(int errorCode, String msgId, Object... args) {
-		String formatedMsg = I18nUtils.getMessageByLang(Constants.DEFAULT_LANG, msgId, args);
-		throw new LoginException(errorCode, formatedMsg);
+		throw newLoginException(errorCode, msgId, args);
+	}
+	
+	public static LoginException newLoginException(String msgId, Object...args) {
+		return newLoginException(ErrorCodes.SessionError.SESSION_INVALID, msgId, args);
 	}
 
+	public static LoginException newLoginException(int errorCode, String msgId, Object...args) {
+		String formatedMsg = I18nUtils.getMessageByLang(Constants.DEFAULT_LANG, msgId, args);
+		return new LoginException(errorCode, formatedMsg);
+	}
+	
 	/**
 	 * 使用指定的消息格式抛出逻辑异常
 	 * 
@@ -68,12 +76,20 @@ public class ExceptionUtils {
 	 * 创建时间：2018年7月26日 下午10:11:23
 	 */
 	public static void throwLogicalException(int errorCode, String msgId, Object... args) {
-		String formatedMsg = I18nUtils.getMessageByLang(Constants.DEFAULT_LANG, msgId, args);
-		throwLogicalExceptionInner(errorCode, formatedMsg);
+		throwLogicalExceptionInner(errorCode, msgId, args);
 	}
 
-	private static void throwLogicalExceptionInner(int errorCode, String msg) {
-		throw new LogicException(errorCode, msg);
+	private static void throwLogicalExceptionInner(int errorCode, String msgId, Object... args) {
+		throw newLogicException(errorCode, msgId, args);
+	}
+
+	public static LogicException newLogicException(String msgId, Object... args) {
+		return newLogicException(ErrorCodes.LOGIC_EXCEPTION_CODE, msgId, args);
+	}
+
+	public static LogicException newLogicException(int errorCode, String msgId, Object... args) {
+		String formatedMsg = I18nUtils.getMessageByLang(Constants.DEFAULT_LANG, msgId, args);
+		return new LogicException(errorCode, formatedMsg);
 	}
 
 	/**
@@ -164,7 +180,7 @@ public class ExceptionUtils {
 			}
 		}
 	}
-	
+
 	/**
 	 * 获取异常的堆栈信息
 	 *  

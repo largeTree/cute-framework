@@ -382,7 +382,7 @@ public class XmlUtil {
 	 * @param ele
 	 * @throws Exception
 	 */
-	public static void setBeanByElement(Object bean, Element ele) throws Exception {
+	public static void setBeanByElement(Object bean, Element ele) {
 		PropertyDescriptor[] arrPropDesc = PropertyUtils.getPropertyDescriptors(bean);
 		for (PropertyDescriptor propDesc : arrPropDesc) {
 			String fileTypeName = propDesc.getPropertyType().toString();
@@ -399,7 +399,16 @@ public class XmlUtil {
 				val = propValue;
 			}
 
-			PropertyUtils.setProperty(bean, propName, val);
+			try {
+				PropertyUtils.setProperty(bean, propName, val);
+			} catch (Exception e) {
+				String msg = "setBean[" + bean.getClass().getName() + "] Prop[" + propName + "] failed, ext = " + e.getLocalizedMessage();
+				if (log.isDebugEnabled()) {
+					log.debug(msg, e);
+				} else {
+					log.warn(msg);
+				}
+			}
 		}
 	}
 

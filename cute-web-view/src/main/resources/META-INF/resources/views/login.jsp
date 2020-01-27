@@ -62,7 +62,7 @@
 	    	</tr>
 	    	<tr>
 	    		<td colspan="3" style="text-align: center;">
-	    			<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="doLogin('<%=loginApi %>', '<%=redirect %>')">登陆</a>
+	    			<a id="login-btn" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="doLogin('<%=loginApi %>', '<%=redirect %>')">登陆</a>
 	    		</td>
 	    	</tr>
 	    </table>

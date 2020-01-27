@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
+import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.web.utils.RequestUtils;
 
 @WebFilter(filterName = "authFilter", urlPatterns = {
@@ -43,8 +44,8 @@ public class AuthFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		try {
 			Map<String, String> cookiesMap = RequestUtils.getCookies(req);
-			String auth = cookiesMap.get("sid");
-			if (StringUtils.isNotBlank(auth) && this.checkAuth(auth)) {
+			String sessionId = cookiesMap.get("sid");
+			if (StringUtils.isNotBlank(sessionId) && this.checkAuth(sessionId)) {
 				authFlag = true;
 			}
 		} catch (Exception e) {
@@ -83,8 +84,8 @@ public class AuthFilter implements Filter {
 		return loginApiKey;
 	}
 
-	private boolean checkAuth(String auth) {
-		return StringUtils.isNotBlank(auth);
+	private boolean checkAuth(String sessionId) {
+		return StringUtils.isNotBlank(sessionId) && UserContext.isValid(sessionId);
 	}
 
 	@Override

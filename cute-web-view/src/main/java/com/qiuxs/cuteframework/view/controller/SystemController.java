@@ -20,10 +20,15 @@ import com.qiuxs.cuteframework.web.WebConstants;
 
 @Controller
 @RequestMapping(value = WebConstants.SYS_CONTROLLER_PREFIX)
-public class ServiceStatusController {
+public class SystemController {
 
 	@Resource
 	private DynamicDataSource dynamicDataSource;
+	
+	@RequestMapping("/dataMaintain")
+	public String dataMaintain(ModelMap model) {
+		return "sys/dataMaintain";
+	}
 
 	@RequestMapping("/status")
 	public String dsStatus(ModelMap model) {
