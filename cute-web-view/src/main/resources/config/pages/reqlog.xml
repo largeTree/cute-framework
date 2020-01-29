@@ -21,7 +21,7 @@
 			<td name="结束时间" field="reqEndTime" type="datetime" />
 			<td name="客户端IP地址" field="reqIp" type="text" />
 			<td name="请求url" field="reqUrl" />
-			<td name="状态" field="status" type="caption" />
+			<td name="状态" field="status" type="num" />
 		</table>
 	</dataList>
 	

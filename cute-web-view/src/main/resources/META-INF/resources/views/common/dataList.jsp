@@ -14,7 +14,6 @@
 <%@page import="java.util.List"%>
 <%@page import="com.qiuxs.cuteframework.view.pagemodel.Table"%>
 <%@page import="com.qiuxs.cuteframework.view.pagemodel.Page"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -118,6 +117,7 @@
 			var $thead = $(theads[i]);
 			var tType = $thead.attr('t-type');
 			if($thead[0].hasAttribute('seq')) {
+				$td.css('width', '4em');
 				$td.html(rowNum);
 			} else if (tType === '<%=Td.TD_TYPE_BTN %>') {
 				for (var btn of tdBtns) {

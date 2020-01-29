@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<redis>
+	<timeout>0</timeout>
+	<max-wait-millis>-1</max-wait-millis>
+	<max-total>20</max-total>
+	<max-idle>8</max-idle>
+	<min-idle>0</min-idle>
+</redis>

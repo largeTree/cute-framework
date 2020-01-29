@@ -9,7 +9,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,11 +20,11 @@ import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.web.utils.RequestUtils;
 
-@WebFilter(filterName = "authFilter", urlPatterns = {
+/*@WebFilter(filterName = "authFilter", urlPatterns = {
         "/",
         "/sys/*",
         "/view/*"
-})
+})*/
 public class AuthFilter implements Filter {
 
 	private static Logger log = LogManager.getLogger(AuthFilter.class);
@@ -35,7 +34,6 @@ public class AuthFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-
 	}
 
 	@Override

@@ -7,21 +7,24 @@ import javax.annotation.PostConstruct;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 
+import com.qiuxs.cuteframework.core.basic.config.IConfiguration;
+import com.qiuxs.cuteframework.core.basic.config.UConfigUtils;
 import com.qiuxs.cuteframework.core.basic.constants.SymbolConstants;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
-import com.qiuxs.cuteframework.core.persistent.redis.config.JedisConfig;
 
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
 
+@Component
 public class RedisConfiguration {
 
 	private static Logger log = LogManager.getLogger(RedisConfiguration.class);
 
-	protected static final String PREFIX = "spring.redis";
+	protected static final String CONFIG_DOMAIN = "rds";
 
 	public static final String DEFAUL_POOL = "redisDefaultPool";
 
@@ -34,14 +37,20 @@ public class RedisConfiguration {
 	/** 超时时间 */
 	private int timeout = Protocol.DEFAULT_TIMEOUT;
 
-	/** jedis配置 */
-	private JedisConfig jedis;
-
 	/** 密码 */
 	private String password;
 
 	/** 默认数据索引 */
 	private int defaultIndex = Protocol.DEFAULT_DATABASE;
+
+	/** 最大空闲 */
+	private int maxIdle;
+	/** 最小空闲 */
+	private int minIdle;
+	/** 最大连接 */
+	private int maxTotal;
+	/** 最大等待时常 */
+	private long maxWaitMillis;
 
 	/** 配置持有对象 */
 	private static RedisConfiguration redisConfiguration;
@@ -109,14 +118,25 @@ public class RedisConfiguration {
 	 */
 	@PostConstruct
 	public void initDefaultPoll() {
+		
+		IConfiguration configuration = UConfigUtils.getDomain(CONFIG_DOMAIN);
+		this.host = configuration.getString("host");
+		this.port = configuration.getInt("port", Protocol.DEFAULT_PORT);
+		this.password = configuration.getString("password");
+		this.timeout = configuration.getInt("timeout", Protocol.DEFAULT_TIMEOUT);
+		this.maxIdle = configuration.getInt("max-idle", 8);
+		this.minIdle = configuration.getInt("min-idle", 0);
+		this.maxWaitMillis = configuration.getInt("max-wait-millis", -1);
+		this.maxTotal = configuration.getInt("max-total", 20);
+		
 		if (StringUtils.isBlank(this.getHost())) {
 			return;
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("JedisPoolConfig[host=" + this.getHost() + ",port=" + this.getPort() + ",password="
-					+ this.getPassword() + ",timeout=" + this.getTimeout() + ",max-idle=" + this.getJedis().getPool().getMaxIdle()
-					+ ",max-wait=" + this.getJedis().getPool().getMaxWaitMillis() + "]");
+			log.debug("JedisPoolConfig[host = " + this.getHost() + ", port = " + this.getPort() + ", password = "+ this.getPassword() 
+					+ ", timeout = " + this.getTimeout() + ", max-idle = " + this.getMaxIdle()
+					+ ", min-idle = " + this.getMinIdle() + ", max-total = " + this.getMaxTotal() + ", max-wait = " + this.getMaxWaitMillis() + "]");
 		}
 
 		JedisPool jedisPool = this.initPool(this.getDefaultIndex());
@@ -138,9 +158,9 @@ public class RedisConfiguration {
 	 */
 	private JedisPool initPool(int dbIdx) {
 		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-		jedisPoolConfig.setMaxIdle(this.getJedis().getPool().getMaxIdle());
-		jedisPoolConfig.setMaxWaitMillis(this.getJedis().getPool().getMaxWaitMillis());
-		jedisPoolConfig.setMaxTotal(this.getJedis().getPool().getMaxTotal());
+		jedisPoolConfig.setMaxIdle(this.getMaxIdle());
+		jedisPoolConfig.setMaxWaitMillis(this.getMaxWaitMillis());
+		jedisPoolConfig.setMaxTotal(this.getMaxTotal());
 		JedisPool jedisPool = new JedisPool(jedisPoolConfig, this.getHost(), this.getPort(), this.getTimeout(),
 				this.getPassword(), dbIdx);
 		return jedisPool;
@@ -150,48 +170,36 @@ public class RedisConfiguration {
 		return host;
 	}
 
-	public void setHost(String host) {
-		this.host = host;
-	}
-
 	private int getPort() {
 		return port;
-	}
-
-	public void setPort(int port) {
-		this.port = port;
 	}
 
 	private int getTimeout() {
 		return timeout;
 	}
 
-	public void setTimeout(int timeout) {
-		this.timeout = timeout;
-	}
-
 	private String getPassword() {
 		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	private int getDefaultIndex() {
 		return defaultIndex;
 	}
 
-	public void setDefaultIndex(int defaultIndex) {
-		this.defaultIndex = defaultIndex;
+	public int getMaxIdle() {
+		return maxIdle;
 	}
 
-	private JedisConfig getJedis() {
-		return jedis;
+	public int getMinIdle() {
+		return minIdle;
 	}
 
-	public void setJedis(JedisConfig jedis) {
-		this.jedis = jedis;
+	public int getMaxTotal() {
+		return maxTotal;
 	}
 
+	public long getMaxWaitMillis() {
+		return maxWaitMillis;
+	}
+	
 }
