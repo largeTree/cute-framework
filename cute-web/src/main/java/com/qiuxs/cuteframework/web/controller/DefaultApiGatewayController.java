@@ -64,7 +64,12 @@ public class DefaultApiGatewayController extends BaseController {
 		// 根据压缩类型返回结果
 		String compressedResult = this.compressResult(actionResult, compressType);
 		
-		log.info("response -> costMs = " + (System.currentTimeMillis() - start));
+		String logRes = compressedResult;
+		if (logRes.length() > 10000) {
+			logRes = logRes.substring(0, 10000);
+		}
+		
+		log.info("response -> costMs = " + (System.currentTimeMillis() - start) + ", res = " + logRes);
 		
 		return compressedResult;
 	}

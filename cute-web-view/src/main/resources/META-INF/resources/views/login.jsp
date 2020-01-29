@@ -46,6 +46,14 @@
 		padding: 5px;
 	}
 </style>
+<script type="text/javascript">
+
+/** 登录页必须在最上层，如果不是在最上层的话，将最上层地址重新指定为当前地址 */
+if (self != top) {
+	top.location.href = self.location.href;
+}
+
+</script>
 </head>
 <body style="text-align: center;">
 	<div id="dd" class="easyui-dialog" title="登陆" style="width:400px;height:200px;"
