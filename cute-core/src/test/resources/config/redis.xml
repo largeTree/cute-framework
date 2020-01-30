@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<redis>
+	<timeout>0</timeout>
+	<index>1</index>
+	<host>127.0.0.1</host>
+	<port>6379</port>
+	<password>qiuxs1162</password>
+</redis>

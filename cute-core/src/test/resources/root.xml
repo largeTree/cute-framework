@@ -1,0 +1,27 @@
+<domanins>
+	<domain id="env" merge="replace" type="xml">
+		<default path="classpath:/env.xml" />
+		<extend path="file://${user.home}/wxbot/env.xml" />
+		<extend path="file:///web/etc/wxbot/env.xml" />
+	</domain>
+	<domain id="db" merge="replace" type="properties">
+		<default path="classpath:/config/db.properties" />
+		<extend path="file://${user.home}/wxbot/db.properties" />
+        <extend path="file:///web/etc/wxbot/db.properties" />
+	</domain>
+	<domain id="wx" merge="replace" type="xml">
+		<default path="classpath:/config/wx.xml" />
+		<extend path="file://${user.home}/wxbot/wx.xml" />
+        <extend path="file:///web/etc/wxbot/wx.xml" />
+	</domain>
+	<domain id="tb" merge="replace" type="xml">
+		<default path="classpath:/config/tb.xml" />
+		<extend path="file://${user.home}/wxbot/tb.xml" />
+        <extend path="file:///web/etc/wxbot/tb.xml" />
+	</domain>
+	<domain id="rds" merge="replace" type="xml">
+		<default path="classpath*:/config/redis.xml" />
+		<extend path="file:///${user.home}/datac/redis.xml" />
+		<extend path="file:///web/etc/datac/redis.xml" />
+	</domain>
+</domanins>
