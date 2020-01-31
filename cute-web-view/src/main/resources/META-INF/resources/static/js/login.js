@@ -11,7 +11,7 @@ function doLogin(loginApi, redirect) {
 		return;
 	}
 
-	frm.postApi(frm.getCtxPath() + '/api.do', loginApi, {
+	frm.postApi(loginApi, {
 		userName : userName,
 		pwd : pwd
 	}).then(function(data) {

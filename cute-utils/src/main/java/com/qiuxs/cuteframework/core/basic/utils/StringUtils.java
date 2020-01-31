@@ -8,9 +8,26 @@ package com.qiuxs.cuteframework.core.basic.utils;
  *
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
+	
+	/**
+	 * 检测路径最前面是否有/，没有的自动加上
+	 *  
+	 * @author qiuxs  
+	 * @param path
+	 * @return
+	 */
+	public static String handlePath(String path) {
+		if (isBlank(path)) {
+			return path;
+		}
+		if (!path.startsWith("/")) {
+			return append("/", path);
+		}
+		return path;
+	}
 
 	/**
-	 * 替换变量
+	 * 替换系统属性或环境变量
 	 *  
 	 * @author qiuxs  
 	 * @param path
@@ -25,7 +42,11 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 				int endIdx = path.indexOf("}", i + 1);
 				String propName = path.substring(i + 2, endIdx);
 				i = endIdx;
-				newPath.append(System.getProperty(propName));
+				String val = System.getProperty(propName);
+				if (StringUtils.isBlank(val)) {
+					val = System.getenv(propName);
+				}
+				newPath.append(val);
 			} else {
 				newPath.append(c);
 			}
@@ -65,7 +86,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 *        驼峰命名的字符串
 	 */
 
-	public static String HumpToUnderline(String para) {
+	public static String humpToUnderline(String para) {
 		StringBuilder sb = new StringBuilder(para);
 		int temp = 0;//定位
 		if (!para.contains("_")) {

@@ -113,7 +113,7 @@ var frm = {
 		return fromData;
 	},
 	setList: function(id, codeName, defval) {
-		frm.postApi(this.getCtxPath() + '/api.do', 'qd-codes', {codeDomain: codeName}).then(function(data) {
+		frm.postApi('qd-codes', {codeDomain: codeName}).then(function(data) {
 			var rows = data.data.rows;
 			var $sec = $('#' + id);
 			for (var item of rows) {
@@ -134,12 +134,15 @@ var frm = {
 	get: function(url) {
 		return this._ajax(url, {}, 'get', null, false);
 	},
-	postApi: function(url, apiKey, params, jsonParam) {
+	postApi: function(apiKey, params, jsonParam) {
 		params = params || {};
 		if (jsonParam && (typeof jsonParam) != 'string') {
 			params.jsonParam = JSON.stringify(jsonParam);
 		}
-		return this._ajax(this._appendApiKey(url, apiKey), params, 'post', null, true);
+		return this._ajax(this._appendApiKey(this.getCtxPath() + '/api.do', apiKey), params, 'post', null, true);
+	},
+	getApi: function(apiKey) {
+		return this._ajax(this._appendApiKey(this.getCtxPath() + '/api.do', apiKey), {}, 'get', null, true);
 	},
 	_appendApiKey(url, apiKey) {
 		if (url.indexOf('?') > 0) {
@@ -148,9 +151,6 @@ var frm = {
 			url = url + '?';
 		}
 		return url + 'apiKey=' + apiKey;
-	},
-	getApi: function(url, apiKey) {
-		return this._ajax(this._appendApiKey(url, apiKey), {}, 'get', null, true);
 	},
 	_ajax: function (url, params, method, timeout, isApi) {
 		if (!timeout) {

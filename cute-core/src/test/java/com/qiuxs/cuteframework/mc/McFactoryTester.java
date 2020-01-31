@@ -9,7 +9,6 @@ import org.junit.Test;
 import com.qiuxs.cuteframework.core.basic.utils.generator.RandomGenerator;
 import com.qiuxs.cuteframework.core.persistent.redis.RedisConfiguration;
 import com.qiuxs.cuteframework.tech.mc.McFactory;
-import com.qiuxs.cuteframework.tech.mc.McFactory.McServerType;
 
 public class McFactoryTester {
 
@@ -21,7 +20,7 @@ public class McFactoryTester {
 	
 	@Test
 	public void testRedisMap() {
-		McFactory.init(McServerType.redis);
+		McFactory.init();
 		Map<String, String> map = McFactory.getFactory().createMap(String.class, String.class, 10, "test_string_map");
 		String val = RandomGenerator.getRandomStringByLength(10);
 		map.put("key", val);

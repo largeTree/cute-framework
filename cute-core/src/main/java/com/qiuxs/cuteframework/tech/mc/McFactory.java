@@ -12,7 +12,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.core.log.Console;
+import com.qiuxs.cuteframework.core.persistent.redis.RedisConfiguration;
 import com.qiuxs.cuteframework.tech.lock.distlock.redis.RedisLock;
 import com.qiuxs.cuteframework.tech.mc.redis.utils.RedisList;
 import com.qiuxs.cuteframework.tech.mc.redis.utils.RedisMap;
@@ -35,14 +37,11 @@ public class McFactory {
 	/**  缓存对象名set,防止单服务器内部重名. */
 	private Set<String> mcName = new HashSet<String>();
 
-	/** The db index. */
-	private int dbIndex = 0;
-
 	/**
 	 * 分布式集合类型枚举<br>
-	 * 2016-05-26 JinXinhua seq(序列)只实现了redis.
+	 * 2016-05-26 qiuxs seq(序列)只实现了redis.
 	 *
-	 * @author zhangyz created on 2013-5-9
+	 * @author qiuxs created on 2013-5-9
 	 * @since Framework 1.0
 	 */
 	public enum McType {
@@ -74,10 +73,14 @@ public class McFactory {
 		redis
 	}
 	
+	static {
+		McFactory.init();
+	}
+	
 	/**
 	 * 检查有无重名；但分布式环境下多台服务器检查名字有无重复还无法做到！.
 	 *
-	 * @author zhangyz created on 2013-5-9
+	 * @author qiuxs created on 2013-5-9
 	 * @param mcType the mc type
 	 * @param name the name
 	 * @throws RuntimeException the runtime exception
@@ -93,17 +96,18 @@ public class McFactory {
 	/**
 	 * 使用分布式内存情况下，需要在调用之前设置一下参数，只需在系统启动时设置一次即可。.
 	 *
-	 * @author zhangyz created on 2013-12-19
+	 * @author qiuxs created on 2013-12-19
 	 * @param srvType            使用的服务类型
 	 */
-	public static void init(McServerType srvType) {
-		serverType = srvType;
+	public static void init() {
+		McServerType serverType = EnvironmentContext.getMcServerType();
+		McFactory.serverType = serverType;
 	}
 
 	/**
 	 * 单例模式，获取map工厂。初始化配置.
 	 *
-	 * @author zhangyz created on 2013-3-9
+	 * @author qiuxs created on 2013-3-9
 	 * @return the factory
 	 */
 	public static McFactory getFactory() {
@@ -161,7 +165,7 @@ public class McFactory {
 		Map<K, V> map = null;
 		switch (serverType) {
 		case redis:
-			map = new RedisMap<K, V>(mapId, dbIndex);
+			map = new RedisMap<K, V>(mapId, RedisConfiguration.getDefaultDbIndex());
 			break;
 		case local:
 			if (initSize <= 0)
@@ -203,7 +207,7 @@ public class McFactory {
 		Set<V> ret = null;
 		switch (serverType) {
 		case redis:
-			ret = new RedisSet<V>(setId, dbIndex);
+			ret = new RedisSet<V>(setId, RedisConfiguration.getDefaultDbIndex());
 			break;
 		case local:
 			ret = new HashSet<V>();

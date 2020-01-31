@@ -9,7 +9,7 @@
 var ctxPath = top.frm.getCtxPath();
 function exec(apiKey) {
 	top.frm.showLoading();
-	frm.getApi(ctxPath + '/api.do', apiKey).then(function(data) {
+	frm.postApi(apiKey, {}, {}).then(function(data) {
 		alert(data.msg);
 		top.frm.finishLoading();
 	}, function(data) {
