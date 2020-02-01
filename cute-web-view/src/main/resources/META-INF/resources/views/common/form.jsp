@@ -19,9 +19,11 @@
 	Page pageModel = (Page) request.getAttribute("pageModel");
 	String formId = (String) request.getAttribute("formId");
 	String action = request.getParameter("action");
+	String dlgId = request.getParameter("dlgId");
+	String autoClose = request.getParameter("autoClose");
 	
 	FormModel form = pageModel.getForm(formId);
-	String pk = request.getParameter("pk");
+	String pk = request.getParameter("id");
 %>
 
 <style type="text/css">
@@ -65,7 +67,7 @@ top.frm.showLoading();
 						Field f = fs.get(j);
 		%>
 					<td style="text-align: right;">
-						<label for="<%=f.getName() %>"><%=f.getLabel() %>:</label>
+						<label for="<%=f.getName() %>"><%=f.getLabel() %><% if (f.getRequired() == 1) {out.print("<span style=\"color:red;\">*</span>");} %>:</label>
 					</td>
 					<td <% if (f.getSingleRow() == Constants.TRUE) { out.print("colspan=\"7\""); } %>>
 						<%@ include file="formField.jsp" %>
@@ -110,7 +112,7 @@ top.frm.showLoading();
 					for (Field f : fs) {
 		%>
 						<td style="text-align: right;">
-							<label for="<%=f.getName() %>"><%=f.getLabel() %>:</label>
+							<label for="<%=f.getName() %>"><%=f.getLabel() %><% if (f.getRequired() == 1) {out.print("<span style=\"color:red;\">*</span>");} %>:</label>
 						</td>
 						<td <% if (f.getSingleRow() == Constants.TRUE) { out.print("colspan=\"7\""); } %>>
 							<%@ include file="formField.jsp" %>
@@ -137,18 +139,27 @@ top.frm.showLoading();
 			getApi: '<%=form.getGetApiKey() %>',
 			saveApiKey: '<%=form.getSaveApiKey() %>',
 			action: '<%=action %>',
-			pk: '<%=pk %>'
+			dlgId: '<%=dlgId %>',
+			autoClose: '<%=autoClose %>'
+			<% if (pk != null) {out.print(",pk:'" + pk + "'");} %>
 	}
 	
 	function doSave() {
-		top.frm.showLoading();
 		
 		var jsonParams = collectJsonParams();
-		var params = {
-				pk: formPage.pk
+		if (jsonParams == null) {
+			return;
 		}
+		var params = {
+		}
+		if (formPage.pk) {
+			params.id = formPage.pk;
+		}
+		
+		top.frm.showLoading();
 		frm.postApi(formPage.saveApiKey, params, jsonParams).then(function(data) {
 			alert(data.msg);
+			autoClose();
 			top.frm.finishLoading();
 		}, function (err) {
 			var msg;
@@ -162,9 +173,17 @@ top.frm.showLoading();
 		});
 	}
 	
+	function autoClose() {
+		if (formPage.dlgId && formPage.dlgId.length > 0 && formPage.autoClose === 'true') {
+			top.frm.closeWin(formPage.dlgId);
+		}
+	}
+	
 	function collectJsonParams() {
 		var $formSections = $('.form-section');
 		var params = {};
+		
+		var errFlag = false;
 		for (var i = 0; i < $formSections.length; i++) {
 			var $section = $($formSections[i]);
 			var id = $section.attr('id');
@@ -179,29 +198,24 @@ top.frm.showLoading();
 			}
 			
 			var $fields = $('#' + id + ' .my-input');
-			
 			for (var j = 0; j < $fields.length; j++) {
 				var $field = $($fields[j]);
-				node[$field.attr('name')] = $field.val();
+				var val = $field.val();
+				var reqFlag = $field.data('req');
+				if (reqFlag === 1 && (!val || val.length === 0)) {
+					errFlag = true;
+					$field.addClass('err-input');
+				}
+				node[$field.attr('name')] = val;
 			}
 			
+		}
+		if (errFlag) {
+			return null;
 		}
 		return params;
 	}
 
-	if ('edit' === formPage.action) {
-		frm.postApi(formPage.getApi, {id: formPage.pk}, {}).then(function(data) {
-			var data = data.data;
-			applyData(data);
-			top.frm.finishLoading();
-		}, function(err) {
-			top.frm.finishLoading();
-			console.error(err);
-		});
-	} else {
-		top.frm.finishLoading();
-	}
-	
 	function applyData(data) {
 		var $formSections = $('.form-section');
 		for (var i = 0; i < $formSections.length; i++) {
@@ -225,5 +239,29 @@ top.frm.showLoading();
 			}
 		}
 	}
+	
+	$(() => {
+		if ('edit' === formPage.action) {
+			frm.postApi(formPage.getApi, {id: formPage.pk}, {}).then(function(data) {
+				var data = data.data;
+				applyData(data);
+				top.frm.finishLoading();
+			}, function(err) {
+				top.frm.finishLoading();
+				console.error(err);
+			});
+		} else {
+			top.frm.finishLoading();
+		}
+		
+		// 失去焦点时，校验是否输入了值，有值的情况  清楚错误标记
+		$('.my-input').bind('blur', function() {
+			var $this = $(this);
+			var val = $this.val();
+			if (val) {
+				$this.removeClass('err-input');
+			}
+		});
+	});
 </script>
 </html>

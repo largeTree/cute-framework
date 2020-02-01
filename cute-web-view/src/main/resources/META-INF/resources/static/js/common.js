@@ -32,17 +32,14 @@ var frm = {
 			content : content
 		});
 	},
-	opWin : function (id, title, href, pk, onOpen, onClose) {
+	opWin : function (id, title, href, pk, onOpen, onClose, autoClose) {
 		var $div = $(document.createElement('div'));
 		$div.attr('id', id);
-		if (href && pk) {
-			if (href.indexOf('?') > 0) {
-				href = href + '&';
-			} else {
-				href = href + '?';
-			}
-			href = href + 'pk=' + pk;
-		}
+		
+		href = this.appendQueryString(href, 'id', pk);
+		href = this.appendQueryString(href, 'dlgId', id);
+		href = this.appendQueryString(href, 'autoClose', autoClose);
+		
 		var content = constants.tabsContent.replace('${href}', this.getCtxPath() + href);
 		var height = window.innerHeight * 0.85;
 		var width = window.innerWidth * 0.85;
@@ -64,6 +61,20 @@ var frm = {
 				}
 			}
 		});
+	},
+	closeWin: function(id) {
+		$('#' + id).window('close');
+	},
+	appendQueryString:function(href, key, val) {
+		if (href && val) {
+			if (href.indexOf('?') > 0) {
+				href = href + '&';
+			} else {
+				href = href + '?';
+			}
+			href = href + key + '=' + val;
+		}
+		return href;
 	},
 	showLoading : function() {
 		$("#my-mask").show();

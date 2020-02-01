@@ -145,6 +145,9 @@
 					$btn.attr('onclick', "doProcess(event, '" + rowIdx + "', '" + j + "')");
 					$btn.attr('href', 'javascript:void(0)');
 					$btn.html(btn.name);
+					if ($td.children().length > 0) {
+						$td.append(' ');
+					}
 					$td.append($btn);
 				}
 			} else {
@@ -207,13 +210,16 @@
 		if (href) {
 			var id = new Date().getTime();
 			top.frm.opWin(id, name, href, pk, null, function() {
-				var pageOptions = $('#pp').pagination('options');
-				doSearch(pageOptions.pageNumber, pageOptions.pageSize);
-			});
-		} else if (apiKey) {
-			callApiKey(pk, apiKey, row, params);
-		} else if (js) {
-			window[js](pk, row);
+				refreshPage();				
+			}, true);
+		} else {
+			if (confirm('确定操作吗？')) {			
+				if (apiKey) {
+					callApiKey(pk, apiKey, row, params);
+				} else if (js) {
+					window[js](pk, row);
+				}			
+			}
 		}
 	}
 
@@ -221,15 +227,21 @@
 	function callApiKey(pk, apiKey, row, params) {
 		top.frm.showLoading();
 		if (!params.pk) {
-			params.pk = pk;
+			params.id = pk;
 		}
 		frm.postApi(apiKey, params, {}).then(function(data) {
 			alert(data.msg);
 			top.frm.finishLoading();
+			refreshPage();
 		}, function(data) {
 			alert(data.msg);
 			top.frm.finishLoading();
 		});
+	}
+	
+	function refreshPage() {
+		var pageOptions = $('#pp').pagination('options');
+		doSearch(pageOptions.pageNumber, pageOptions.pageSize);
 	}
 	
 	/** 默认翻译列格式化方法 */
@@ -266,23 +278,35 @@
 	
 	$(() => {
 		doSearch();
+		$('.my-input').bind('keypress', function(event) {
+			if (event.keyCode === 13) {
+				if ($(event.currentTarget).val()) {
+					doSearch();			
+				}
+			}
+		});
 	});
 </script>
 </head>
 <body>
 	<%
 		List<ListButton> buttons = dataList.getButtons();
+		if (CollectionUtils.isNotEmpty(buttons)) {
 	%>
-	<div class="list-buttons">
-		<%
-			for (int i = 0; i < buttons.size(); i++) {
-				ListButton lb = buttons.get(i);
-		%>
-			<a href="javascript:void(0)" class="easyui-linkbutton" <% if (StringUtils.isNotBlank(lb.getIcon())) {out.print("data-options=\"iconCls:'" + lb.getIcon() + "'\"");} %> onclick="buttonClick(event, '<%=i %>')" ><%=lb.getText() %></a>
-		<%
-			}
-		%>
-	</div>
+		<div class="list-buttons">
+			<%
+				for (int i = 0; i < buttons.size(); i++) {
+					ListButton lb = buttons.get(i);
+			%>
+				<a href="javascript:void(0)" class="easyui-linkbutton" <% if (StringUtils.isNotBlank(lb.getIcon())) {out.print("data-options=\"iconCls:'" + lb.getIcon() + "'\"");} %> onclick="buttonClick(event, '<%=i %>')" ><%=lb.getText() %></a>
+			<%
+				}
+			%>
+		</div>
+	<%
+		}
+	%>
+	
 	<div style="padding: 5px; margin: 0px auto; width:99%; overflow: hidden;">
 		<%
 			List<Field> searchFields =  search.getFields();
