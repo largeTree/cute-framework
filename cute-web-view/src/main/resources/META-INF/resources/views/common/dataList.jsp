@@ -226,7 +226,7 @@
 	/** 调用接口 */
 	function callApiKey(pk, apiKey, row, params) {
 		top.frm.showLoading();
-		if (!params.pk) {
+		if (params && !params.pk) {
 			params.id = pk;
 		}
 		frm.postApi(apiKey, params, {}).then(function(data) {

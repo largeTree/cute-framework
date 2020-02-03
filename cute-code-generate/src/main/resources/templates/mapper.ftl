@@ -82,7 +82,7 @@
 		</if>
 		<#list ukFields as field>
 		<if test="${field.name} != null">
-			<#if field_index &gt; 0> and </#if>`${field.columnName}` = ${r'#{'}${field.name}${r'}'}
+			and `${field.columnName}` = ${r'#{'}${field.name}${r'}'}
 		</if>
 		</#list>
 	</sql>

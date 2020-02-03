@@ -45,7 +45,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
         extends AbstractPropertyService<PK, T> implements IDataPropertyService<PK, T, D> {
 
 	/** 批量操作一次多少条 */
-	private static final int BATCH_ONCE = 200;
+	protected static final int BATCH_ONCE = 200;
 
 	private final String tableName;
 	private final String pkField;
