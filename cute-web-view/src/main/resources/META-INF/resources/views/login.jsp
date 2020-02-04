@@ -1,3 +1,5 @@
+<%@page import="com.qiuxs.cuteframework.core.basic.utils.StringUtils"%>
+<%@page import="com.qiuxs.cuteframework.view.config.ViewConfig"%>
 <%@page import="com.qiuxs.cuteframework.core.context.EnvironmentContext"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -12,8 +14,12 @@
 		theme = "metro";
 	}
 	String version = EnvironmentContext.getVersion();
-	String loginApi = request.getParameter("api");
+	String loginApi = ViewConfig.getLoginApiKey();
 	String redirect = request.getParameter("redirect");
+	// 没传redirect的情况，跳转到欢迎页面
+	if (StringUtils.isBlank(redirect)) {
+		redirect = ctxPath + ViewConfig.getWelcomePath();
+	}
 %>
 
 <script type="text/javascript" src="<%=ctxPath %>/thirdparts/jq/jquery.min.js?ver=<%=version %>"></script>

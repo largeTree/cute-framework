@@ -3,7 +3,6 @@ package com.qiuxs.cuteframework.web.controller;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,7 +31,6 @@ public class DefaultApiGatewayController extends BaseController {
 	
 	private static final Logger log = LogManager.getLogger(DefaultApiGatewayController.class);
 
-	@Resource
 	private ApiAuthService apiAuthService;
 
 	@RequestMapping(value = "/api.do", produces = WebConstants.DEFAULT_REQUEST_PRODUCES)
@@ -53,10 +51,10 @@ public class DefaultApiGatewayController extends BaseController {
 		log.info("request -> params = " + String.valueOf(params));
 
 		// 检查sessionId
-		this.apiAuthService.checkAndSetSession(apiConfig, params);
+		this.getApiAuthService().checkAndSetSession(apiConfig, params);
 
 		// 授权检查
-		this.apiAuthService.authCheck(apiConfig, params);
+		this.getApiAuthService().authCheck(apiConfig, params);
 
 		// 调用Action
 		String actionResult = this.doAction(apiConfig, params);
@@ -64,7 +62,7 @@ public class DefaultApiGatewayController extends BaseController {
 		// 根据压缩类型返回结果
 		String compressedResult = this.compressResult(actionResult, compressType);
 		
-		String logRes = compressedResult;
+		String logRes = actionResult;
 		if (logRes.length() > 10000) {
 			logRes = logRes.substring(0, 10000);
 		}
@@ -116,6 +114,20 @@ public class DefaultApiGatewayController extends BaseController {
 		
 		// 转为json
 		return JsonUtils.toJSONString(actionResult);
+	}
+	
+	/**
+	 * 获取api授权服务
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	private ApiAuthService getApiAuthService() {
+		// 为空的情况下 初始化一个
+		if (this.apiAuthService == null) {
+			this.apiAuthService = ApiAuthService.getApiAuthService();
+		}
+		return this.apiAuthService;
 	}
 
 	/**

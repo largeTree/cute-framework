@@ -195,11 +195,18 @@ var frm = {
 					}
 				},
 				error: function(xhr, errorMsg, e) {
+					var status = xhr.status;
+					// 会话已过期或没有登陆
+					if (status === 401) {
+						var loginPath = xhr.getResponseHeader('loginPath');
+						top.location.href = top.frm.getCtxPath() + loginPath;
+						return;
+					}
 					reject({
 						xhr: xhr,
 						data: JSON.parse(xhr.responseText),
 						msg: errorMsg,
-						status: xhr.status
+						status: status
 					});
 				}
 			});

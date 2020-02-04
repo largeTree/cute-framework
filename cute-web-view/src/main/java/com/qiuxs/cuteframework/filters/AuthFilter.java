@@ -16,25 +16,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
-import com.qiuxs.cuteframework.core.context.EnvironmentContext;
-import com.qiuxs.cuteframework.core.context.UserContext;
+import com.qiuxs.cuteframework.view.config.ViewConfig;
+import com.qiuxs.cuteframework.web.auth.ApiAuthService;
 import com.qiuxs.cuteframework.web.utils.RequestUtils;
 
 public class AuthFilter implements Filter {
 
 	private static Logger log = LogManager.getLogger(AuthFilter.class);
 
-	private static final String LOGIN_PATH_KEY = "login-path";
-	private static final String DEFAULT_LOGIN_PATH = "/login";
-	
-	private static final String WELCOME_PATH = "welcome-path";
-	private static final String DEFAULT_WELCOME_PATH = "/view";
-	
-	private static final String LOGIN_API_KEY = "login-api-key";
-	
 	private static final String AUTHC_KEY = "Authc";
 	private static final String COOKIE_SESSIONID = "sid";
 
+	private ApiAuthService apiAuthService; 
+	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 	}
@@ -51,7 +45,7 @@ public class AuthFilter implements Filter {
 				Map<String, String> cookiesMap = RequestUtils.getCookies(req);
 				sessionId = cookiesMap.get(COOKIE_SESSIONID);
 			}
-			if (StringUtils.isNotBlank(sessionId) && this.checkAuth(sessionId)) {
+			if (StringUtils.isNotBlank(sessionId) && this.getApiAuthService().checkAndSetSession(sessionId)) {
 				authFlag = true;
 			}
 		} catch (Exception e) {
@@ -75,52 +69,15 @@ public class AuthFilter implements Filter {
 	 * @throws IOException
 	 */
 	private void goLogin(HttpServletRequest req, ServletResponse resp) throws IOException {
-		String redirectPath = req.getContextPath() + this.getLoginPath() + "?redirect=" + req.getContextPath() + this.getWelcomePath() + "&api=" + this.getLoginApiKey();
+		String redirectPath = req.getContextPath() + ViewConfig.getLoginPath();
 		((HttpServletResponse) resp).sendRedirect(redirectPath);
 	}
 
-	/**
-	 * 登陆页，会话失效后重定向到此处
-	 *  
-	 * @author qiuxs  
-	 * @return
-	 */
-	private String getLoginPath() {
-		String loginPath = EnvironmentContext.getString(LOGIN_PATH_KEY, DEFAULT_LOGIN_PATH);
-		return StringUtils.handlePath(loginPath);
-	}
-	
-	/**
-	 * 欢迎页，登陆成功后重定向到此处
-	 *  
-	 * @author qiuxs  
-	 * @return
-	 */
-	private String getWelcomePath() {
-		String welcomePath = EnvironmentContext.getString(WELCOME_PATH, DEFAULT_WELCOME_PATH);
-		return StringUtils.handlePath(welcomePath);
-	}
-	
-	/**
-	 * 登陆接口号，传递到登陆页面，共登录页调用
-	 *  
-	 * @author qiuxs  
-	 * @return
-	 */
-	private String getLoginApiKey() {
-		String loginApiKey = EnvironmentContext.getString(LOGIN_API_KEY);
-		return loginApiKey;
-	}
-
-	/**
-	 * 检查会话是否有效
-	 *  
-	 * @author qiuxs  
-	 * @param sessionId
-	 * @return
-	 */
-	private boolean checkAuth(String sessionId) {
-		return UserContext.isValid(sessionId);
+	private ApiAuthService getApiAuthService() {
+		if (this.apiAuthService == null) {
+			this.apiAuthService = ApiAuthService.getApiAuthService();
+		}
+		return this.apiAuthService;
 	}
 
 	@Override
