@@ -69,6 +69,23 @@ public class MapUtils {
 	}
 
 	/**
+	 * 获取String值，不存在时返回默认值
+	 *  
+	 * @author qiuxs  
+	 * @param map
+	 * @param key
+	 * @param defVal
+	 * @return
+	 */
+	public static String getString(Map<String, ?> map, String key, String defVal) {
+		String string = getString(map, key);
+		if (string == null) {
+			string = defVal;
+		}
+		return string;
+	}
+
+	/**
 	 * 获取String值 不存在或值为Null时 抛出异常
 	 * 
 	 * @param map
@@ -92,6 +109,23 @@ public class MapUtils {
 	 */
 	public static Integer getInteger(Map<String, ?> map, String key) throws NumberFormatException {
 		return TypeAdapter.toInteger(map.get(key));
+	}
+	
+	/**
+	 * 获取int值、不存在返回默认值
+	 *  
+	 * @author qiuxs  
+	 * @param map
+	 * @param key
+	 * @param defVal
+	 * @return
+	 */
+	public static int getIntValue(Map<String, ?> map, String key, int defVal) {
+		Integer integer = getInteger(map, key);
+		if (integer == null) {
+			integer = defVal;
+		}
+		return integer;
 	}
 
 	/**

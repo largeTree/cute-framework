@@ -29,6 +29,18 @@ public class ReqParam extends HashMap<String, String> {
 	public Integer getInteger(String key) {
 		return MapUtils.getInteger(this, key);
 	}
+	
+	public Long getLong(String key, long defVal) {
+		return MapUtils.getLongValue(this, key, defVal);
+	}
+
+	public String getString(String key, String defVal) {
+		return MapUtils.getString(this, key, defVal);
+	}
+
+	public Integer getInteger(String key, int defVal) {
+		return MapUtils.getIntValue(this, key, defVal);
+	}
 
 	/**
 	 * 请求地址

@@ -145,15 +145,32 @@ var frm = {
 	get: function(url) {
 		return this._ajax(url, {}, 'get', null, false);
 	},
-	postApi: function(apiKey, params, jsonParam) {
+	login: function(apiKey, params, jsonParam) {
 		params = params || {};
 		if (jsonParam && (typeof jsonParam) != 'string') {
 			params.jsonParam = JSON.stringify(jsonParam);
 		}
 		return this._ajax(this._appendApiKey(this.getCtxPath() + '/api.do', apiKey), params, 'post', null, true);
 	},
+	postApi: function(apiKey, params, jsonParam) {
+		params = params || {};
+		if (jsonParam && (typeof jsonParam) != 'string') {
+			params.jsonParam = JSON.stringify(jsonParam);
+		}
+		return this._ajax(this._appendApiKey(this.getCtxPath() + '/api.do', apiKey), params, 'post', null, true).then(function(data){return data;}, this._sessionTimeHandler);
+	},
 	getApi: function(apiKey) {
-		return this._ajax(this._appendApiKey(this.getCtxPath() + '/api.do', apiKey), {}, 'get', null, true);
+		return this._ajax(this._appendApiKey(this.getCtxPath() + '/api.do', apiKey), {}, 'get', null, true).then(function(data){return data;}, this._sessionTimeHandler);
+	},
+	_sessionTimeHandler(err) {
+		// 会话已过期或没有登陆
+		if (err.status === 401) {
+			var loginPath = xhr.getResponseHeader('loginPath');
+			if (loginPath) {
+				top.location.href = top.frm.getCtxPath() + loginPath;
+				return;
+			}
+		}
 	},
 	_appendApiKey(url, apiKey) {
 		if (url.indexOf('?') > 0) {
@@ -196,12 +213,6 @@ var frm = {
 				},
 				error: function(xhr, errorMsg, e) {
 					var status = xhr.status;
-					// 会话已过期或没有登陆
-					if (status === 401) {
-						var loginPath = xhr.getResponseHeader('loginPath');
-						top.location.href = top.frm.getCtxPath() + loginPath;
-						return;
-					}
 					reject({
 						xhr: xhr,
 						data: JSON.parse(xhr.responseText),
