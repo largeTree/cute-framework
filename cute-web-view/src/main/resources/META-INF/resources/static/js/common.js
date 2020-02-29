@@ -171,6 +171,7 @@ var frm = {
 				return;
 			}
 		}
+		return err;
 	},
 	_appendApiKey(url, apiKey) {
 		if (url.indexOf('?') > 0) {
