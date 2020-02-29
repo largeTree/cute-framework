@@ -157,10 +157,10 @@ var frm = {
 		if (jsonParam && (typeof jsonParam) != 'string') {
 			params.jsonParam = JSON.stringify(jsonParam);
 		}
-		return this._ajax(this._appendApiKey(this.getCtxPath() + '/api.do', apiKey), params, 'post', null, true).then(function(data){return data;}, this._sessionTimeHandler);
+		return this._ajax(this._appendApiKey(this.getCtxPath() + '/api.do', apiKey), params, 'post', null, true).then(function(data){return Promise.resolve(data);}, this._sessionTimeHandler);
 	},
 	getApi: function(apiKey) {
-		return this._ajax(this._appendApiKey(this.getCtxPath() + '/api.do', apiKey), {}, 'get', null, true).then(function(data){return data;}, this._sessionTimeHandler);
+		return this._ajax(this._appendApiKey(this.getCtxPath() + '/api.do', apiKey), {}, 'get', null, true).then(function(data){return Promise.resolve(data);}, this._sessionTimeHandler);
 	},
 	_sessionTimeHandler(err) {
 		// 会话已过期或没有登陆
@@ -171,7 +171,7 @@ var frm = {
 				return;
 			}
 		}
-		return err;
+		return Promise.reject(err);
 	},
 	_appendApiKey(url, apiKey) {
 		if (url.indexOf('?') > 0) {
