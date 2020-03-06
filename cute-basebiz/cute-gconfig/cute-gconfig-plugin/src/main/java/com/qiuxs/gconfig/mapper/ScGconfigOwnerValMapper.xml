@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiuxs.gconfig.dao.ScGconfigOwnerValDao">
+
+	<sql id="allFields">
+		`id`,
+		`code`,
+		`val`,
+		`owner_type` as ownerType,
+		`owner_id` as ownerId,
+		`created_time` as createdTime,
+		`created_by` as createdBy,
+		`updated_time` as updatedTime,
+		`updated_by` as updatedBy
+	</sql>
+
+	<sql id="insertFields">
+		`id`,
+		`code`,
+		`val`,
+		`owner_type`,
+		`owner_id`,
+		`created_time`,
+		`created_by`,
+		`updated_time`,
+		`updated_by`
+	</sql>
+
+	<select id="list" resultType="com.qiuxs.gconfig.entity.ScGconfigOwnerVal" >
+		select
+			<include refid="allFields" />
+		from `sc_gconfig_owner_val`
+		<where>
+			<include refid="comnWhere" />
+		</where>
+		<if test="orderBy != null" >
+			order by ${orderBy}
+			<if test="orderByDesc != null">
+				desc
+			</if>
+		</if>
+	</select>
+	
+	<select id="getCount" resultType="Long" >
+		select 
+			IFNULL(count(1), 0)
+		from `sc_gconfig_owner_val`
+		<where>
+			<include refid="comnWhere" />
+		</where>
+	</select>
+	
+	<sql id="comnWhere">
+		<if test="id != null">
+			`id` = #{id}
+		</if>
+		<if test="code != null">
+			 and `code` = #{code}
+		</if>
+		<if test="val != null">
+			 and `val` = #{val}
+		</if>
+		<if test="ownerType != null">
+			 and `owner_type` = #{ownerType}
+		</if>
+		<if test="ownerId != null">
+			 and `owner_id` = #{ownerId}
+		</if>
+		<if test="createdTime != null">
+			 and `created_time` = #{createdTime}
+		</if>
+		<if test="createdBy != null">
+			 and `created_by` = #{createdBy}
+		</if>
+		<if test="updatedTime != null">
+			 and `updated_time` = #{updatedTime}
+		</if>
+		<if test="updatedBy != null">
+			 and `updated_by` = #{updatedBy}
+		</if>
+	</sql>
+
+	<select id="getByIds" resultType="com.qiuxs.gconfig.entity.ScGconfigOwnerVal" >
+		select <include refid="allFields" /> from `sc_gconfig_owner_val` where id in
+		<foreach collection="list" item="item" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="get" resultType="com.qiuxs.gconfig.entity.ScGconfigOwnerVal" >
+		select <include refid="allFields" /> from `sc_gconfig_owner_val` where id = #{id}
+	</select>
+	
+	<select id="getCountByUk" resultType="Long">
+		select 
+			IFNULL(count(1), 0)
+		from `sc_gconfig_owner_val`
+		<where>
+			<include refid="ukWhere" />
+		</where>
+	</select>
+	
+	<select id="getByUk" resultType="com.qiuxs.gconfig.entity.ScGconfigOwnerVal">
+		select
+			<include refid="allFields" />
+		from `sc_gconfig_owner_val`
+		<where>
+			<include refid="ukWhere" />
+		</where>
+	</select>
+	
+	<sql id="ukWhere">
+		<if test="idNe != null" >
+			and id &lt;&gt; #{idNe}
+		</if>
+		<if test="code != null">
+			and `code` = #{code}
+		</if>
+		<if test="ownerType != null">
+			and `owner_type` = #{ownerType}
+		</if>
+		<if test="ownerId != null">
+			and `owner_id` = #{ownerId}
+		</if>
+	</sql>
+	
+	<delete id="deleteById" parameterType="Long" >
+		delete from `sc_gconfig_owner_val` where id = #{id}
+	</delete>
+
+	<insert id="insert" parameterType="com.qiuxs.gconfig.entity.ScGconfigOwnerVal">
+		insert into `sc_gconfig_owner_val`(<include refid="insertFields" />)
+		values(
+			#{id},
+			#{code},
+			#{val},
+			#{ownerType},
+			#{ownerId},
+			#{createdTime},
+			#{createdBy},
+			#{updatedTime},
+			#{updatedBy}
+		)
+	</insert>
+
+	<insert id="insertInBatch" parameterType="java.util.List" >
+		insert into `sc_gconfig_owner_val`(<include refid="insertFields" />)
+		values
+		<foreach collection="list" item="item" separator="," >
+			(
+				#{item.id},
+				#{item.code},
+				#{item.val},
+				#{item.ownerType},
+				#{item.ownerId},
+				#{item.createdTime},
+				#{item.createdBy},
+				#{item.updatedTime},
+				#{item.updatedBy}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="com.qiuxs.gconfig.entity.ScGconfigOwnerVal" >
+		update `sc_gconfig_owner_val` 
+			<set>
+				<include refid="setComn" />
+			</set>
+		where id = #{id}
+	</update>
+
+	<sql id="setComn" >
+		<if test="code != null" >
+			`code` = #{code},
+		</if>
+		<if test="val != null" >
+			`val` = #{val},
+		</if>
+		<if test="ownerType != null" >
+			`owner_type` = #{ownerType},
+		</if>
+		<if test="ownerId != null" >
+			`owner_id` = #{ownerId},
+		</if>
+		<if test="createdTime != null" >
+			`created_time` = #{createdTime},
+		</if>
+		<if test="createdBy != null" >
+			`created_by` = #{createdBy},
+		</if>
+		<if test="updatedTime != null" >
+			`updated_time` = #{updatedTime},
+		</if>
+		<if test="updatedBy != null" >
+			`updated_by` = #{updatedBy}
+		</if>
+	</sql>
+</mapper>

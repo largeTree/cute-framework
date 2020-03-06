@@ -2,12 +2,15 @@ package com.qiuxs.cuteframework.core.basic.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.qiuxs.cuteframework.core.basic.constants.SymbolConstants;
 
 /**
  * 集合工具
@@ -17,13 +20,14 @@ import java.util.Set;
  *
  */
 public class CollectionUtils {
+
 	/**
 	 * 是否是空集合
 	 * @param list
 	 * @return
 	 */
 	public static boolean isNullOrEmpty(Collection<?> coll) {
-		return coll == null ? true : coll.size() == 0;
+		return coll == null || coll.isEmpty();
 	}
 
 	public static StringForIntegerCompare intComparatorByString = new StringForIntegerCompare();
@@ -328,5 +332,24 @@ public class CollectionUtils {
 			sb.setLength(sb.length() - seq.length());
 		}
 		return sb.toString();
+	}
+
+	public static Set<String> stringToSet(String str) {
+		return stringToSet(str, SymbolConstants.SEPARATOR_COMMA);
+	}
+	
+	public static Set<String> stringToSet(String str, String sep) {
+		if (StringUtils.isBlank(str)) {
+			return Collections.emptySet();
+		}
+		if (sep == null) {
+			sep = SymbolConstants.SEPARATOR_COMMA;
+		}
+		Set<String> set = new HashSet<String>();
+		String[] split = str.split(sep);
+		for (String item : split) {
+			set.add(item.trim());
+		}
+		return set;
 	}
 }

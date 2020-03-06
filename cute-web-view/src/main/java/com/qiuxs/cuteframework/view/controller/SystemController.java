@@ -23,7 +23,7 @@ import com.qiuxs.cuteframework.web.WebConstants;
 public class SystemController {
 
 	@Resource
-	private DynamicDataSource dynamicDataSource;
+	private DataSource dataSource;
 	
 	@RequestMapping("/dataMaintain")
 	public String dataMaintain(ModelMap model) {
@@ -32,33 +32,35 @@ public class SystemController {
 
 	@RequestMapping("/status")
 	public String dsStatus(ModelMap model) {
-		Map<Object, DataSource> dataSources = this.dynamicDataSource.getTargetDataSources();
 		List<DataSourceInfo> dsInfos = new ArrayList<>();
-		for (Iterator<Map.Entry<Object, DataSource>> iter = dataSources.entrySet().iterator(); iter.hasNext();) {
-			Entry<Object, DataSource> entry = iter.next();
-			
-			BasicDataSource ds = (BasicDataSource) entry.getValue();
-			int maxIdle = ds.getMaxIdle();
-			int maxActive = ds.getMaxActive();
-			long maxWait = ds.getMaxWait();
-			Boolean defaultAutoCommit = ds.getDefaultAutoCommit();
-			int numActive = ds.getNumActive();
-			int numIdle = ds.getNumIdle();
-			String driverClassName = ds.getDriverClassName();
-			String validationQuery = ds.getValidationQuery();
-			
-			DataSourceInfo dsInfo = new DataSourceInfo();
-			dsInfo.setDsId(String.valueOf(entry.getKey()));
-			dsInfo.setMaxIdle(maxIdle);
-			dsInfo.setMaxActive(maxActive);
-			dsInfo.setMaxWait(maxWait);
-			dsInfo.setDefaultAutoCommit(defaultAutoCommit);
-			dsInfo.setNumActive(numActive);
-			dsInfo.setNumIdle(numIdle);
-			dsInfo.setDriverClassName(driverClassName);
-			dsInfo.setValidationQuery(validationQuery);
-			dsInfo.setClosed(ds.isClosed());
-			dsInfos.add(dsInfo);
+		if (this.dataSource instanceof DynamicDataSource) {
+			Map<Object, DataSource> dataSources = ((DynamicDataSource) this.dataSource).getTargetDataSources();
+			for (Iterator<Map.Entry<Object, DataSource>> iter = dataSources.entrySet().iterator(); iter.hasNext();) {
+				Entry<Object, DataSource> entry = iter.next();
+
+				BasicDataSource ds = (BasicDataSource) entry.getValue();
+				int maxIdle = ds.getMaxIdle();
+				int maxActive = ds.getMaxActive();
+				long maxWait = ds.getMaxWait();
+				Boolean defaultAutoCommit = ds.getDefaultAutoCommit();
+				int numActive = ds.getNumActive();
+				int numIdle = ds.getNumIdle();
+				String driverClassName = ds.getDriverClassName();
+				String validationQuery = ds.getValidationQuery();
+
+				DataSourceInfo dsInfo = new DataSourceInfo();
+				dsInfo.setDsId(String.valueOf(entry.getKey()));
+				dsInfo.setMaxIdle(maxIdle);
+				dsInfo.setMaxActive(maxActive);
+				dsInfo.setMaxWait(maxWait);
+				dsInfo.setDefaultAutoCommit(defaultAutoCommit);
+				dsInfo.setNumActive(numActive);
+				dsInfo.setNumIdle(numIdle);
+				dsInfo.setDriverClassName(driverClassName);
+				dsInfo.setValidationQuery(validationQuery);
+				dsInfo.setClosed(ds.isClosed());
+				dsInfos.add(dsInfo);
+			}
 		}
 		model.put("dsInfos", dsInfos);
 		return "sys/status";

@@ -138,6 +138,10 @@ public class RedisConfiguration {
 	public void initDefaultPoll() {
 		
 		IConfiguration configuration = UConfigUtils.getDomain(CONFIG_DOMAIN);
+		if (configuration == null ) {
+			log.info("NoRedis Config...");
+			return;
+		}
 		this.timeout = configuration.getInt("timeout", Protocol.DEFAULT_TIMEOUT);
 		this.maxIdle = configuration.getInt("max-idle", 8);
 		this.minIdle = configuration.getInt("min-idle", 0);

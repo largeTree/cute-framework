@@ -1,2 +1,9 @@
 11-05 10:01:45.819 INFO  [Thread-5] DatabaseContext.newConnection:106: connect to url : jdbc:mysql://127.0.0.1:3306/information_schema {}
 02-03 17:25:51.249 INFO  [Thread-5] DatabaseContext.newConnection:106: connect to url : jdbc:mysql://127.0.0.1:3306/information_schema {}
+03-02 15:29:01.917 INFO  [Thread-5] DatabaseContext.newConnection:106: connect to url : jdbc:mysql://127.0.0.1:3306/information_schema {}
+03-02 15:35:40.352 INFO  [Thread-5] DatabaseContext.newConnection:106: connect to url : jdbc:mysql://127.0.0.1:3306/information_schema {}
+03-04 09:53:57.891 INFO  [Thread-5] DatabaseContext.newConnection:106: connect to url : jdbc:mysql://127.0.0.1:3306/information_schema {}
+03-04 10:14:25.054 INFO  [Thread-5] DatabaseContext.newConnection:106: connect to url : jdbc:mysql://127.0.0.1:3306/information_schema {}
+03-04 10:22:56.876 INFO  [Thread-5] DatabaseContext.newConnection:106: connect to url : jdbc:mysql://127.0.0.1:3306/information_schema {}
+03-04 10:37:02.052 INFO  [Thread-5] DatabaseContext.newConnection:106: connect to url : jdbc:mysql://127.0.0.1:3306/information_schema {}
+03-06 17:09:15.807 INFO  [Thread-5] DatabaseContext.newConnection:106: connect to url : jdbc:mysql://127.0.0.1:3306/information_schema {}

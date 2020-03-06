@@ -23,6 +23,7 @@
 		<module>webservice-injector</module>
 		<module>cute-code-generate</module>
 		<module>cute-jetty</module>
+		<module>cute-basebiz</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -34,6 +35,46 @@
 			<dependency>
 				<groupId>com.qiuxs</groupId>
 				<artifactId>cute-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>cute-web</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>cute-web-view</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>cute-tester</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>cute-captcha-plugin</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>cute-sms-plugin</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>webservice-injector</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>cute-jetty</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>cute-basebiz</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>

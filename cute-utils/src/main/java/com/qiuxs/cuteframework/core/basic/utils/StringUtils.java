@@ -127,10 +127,10 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 *
 	 * 创建时间：2018年7月26日 下午10:24:05
 	 */
-	public static String append(String... strs) {
+	public static String append(Object... strs) {
 		StringBuilder sb = new StringBuilder();
-		for (String str : strs) {
-			sb.append(str);
+		for (Object str : strs) {
+			sb.append(String.valueOf(str));
 		}
 		return sb.toString();
 	}

@@ -93,6 +93,10 @@ public class PageInfo extends RowBounds {
 		return pageInfo;
 	}
 
+	public static PageInfo makeSinglePageInfo() {
+		return new PageInfo(1, 1);
+	}
+
 	public int getPageNo() {
 		return this.pageNo;
 	}

@@ -106,9 +106,8 @@ public class UConfigUtils {
 			}
 			mapDomains.put(domainId, configuration);
 
-			configDomains = mapDomains;
 		}
-
+		configDomains = mapDomains;
 	}
 
 	/**

@@ -33,6 +33,32 @@ public class DataSourceContext {
 	private static Map<String, Class<?>> pojoClassMap = new HashMap<>();
 	/** 单元ID和业务库的对应关系 */
 	private static Map<Long, String> unitDsMap = new HashMap<>();
+	
+	/* 序列库id */
+	private static String seqDsId;
+	/** 日志库id */
+	private static String logDsId;
+
+
+	public static String setLogDb() {
+		return setUpDs(logDsId);
+	}
+	
+	public static String getLogDb() {
+		return logDsId;
+	}
+	
+	public static String setSeqDb() {
+		return setUpDs(seqDsId);
+	}
+	
+	public static String getSeqDb() {
+		return seqDsId;
+	}
+	
+	public static void initSeqDb(String seqDsId) {
+		DataSourceContext.seqDsId = seqDsId;
+	}
 
 	public static String getDsId() {
 		String currentDsId = TLVariableHolder.getVariable(TL_DS_ID);
