@@ -10,3 +10,4 @@ target
 .project
 */.factorypath
 /cute-captcha-plugin/*.factorypath
+*/logs
