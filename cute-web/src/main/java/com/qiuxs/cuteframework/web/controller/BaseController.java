@@ -1,6 +1,5 @@
 package com.qiuxs.cuteframework.web.controller;
 
-import java.net.UnknownHostException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +18,8 @@ import com.qiuxs.cuteframework.tech.log.LogConstant;
 import com.qiuxs.cuteframework.tech.log.LogUtils;
 import com.qiuxs.cuteframework.web.WebConstants.HttpHeader;
 import com.qiuxs.cuteframework.web.action.ActionConstants;
+import com.qiuxs.cuteframework.web.context.RequestContextHolder;
 import com.qiuxs.cuteframework.web.log.entity.RequestLog;
-import com.qiuxs.cuteframework.web.utils.RequestUtils;
 
 /**
  * 控制器基类
@@ -53,12 +52,7 @@ public abstract class BaseController {
 	 * @param request
 	 */
 	protected void fillClientInfo(Map<String, String> params, HttpServletRequest request) {
-		try {
-			String remoteAddr = RequestUtils.getRemoteAddr(request);
-			params.put(ActionConstants.CLIENT_IP, remoteAddr);
-		} catch (UnknownHostException e) {
-			log.error("ext=" + e.getLocalizedMessage(), e);
-		}
+		params.put(ActionConstants.CLIENT_IP, RequestContextHolder.getCliIp());
 	}
 
 	/**
@@ -68,21 +62,9 @@ public abstract class BaseController {
 	 * @param request
 	 */
 	protected void fillServerInfo(Map<String, String> params, HttpServletRequest request) {
-		String ctxPath = request.getContextPath();
-		String requestUrl = request.getRequestURL().toString();
-		String hostPort = StringUtils.substringBefore(requestUrl, ctxPath + "/");
-
-		requestUrl = hostPort + ctxPath;
-		params.put(ActionConstants.REQUEST_URL, requestUrl);
-		params.put(ActionConstants.REQUEST_SCHEME, request.getScheme());
-		
-		hostPort = StringUtils.substringAfter(hostPort, "://");
-		String[] h_p = hostPort.split(":");
-		if (h_p.length > 0) {
-			params.put(ActionConstants.SERVER_HOST, h_p[0]);
-		}
-		if (h_p.length > 1) {
-			params.put(ActionConstants.REQUEST_PORT, h_p[1]);
-		}
+		params.put(ActionConstants.REQUEST_URL, RequestContextHolder.getRequestUrl());
+		params.put(ActionConstants.REQUEST_SCHEME, RequestContextHolder.getScheme());
+		params.put(ActionConstants.SERVER_HOST, RequestContextHolder.getServerHost());
+		params.put(ActionConstants.REQUEST_PORT, String.valueOf(RequestContextHolder.getServerPort()));
 	}
 }

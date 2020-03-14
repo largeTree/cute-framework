@@ -22,6 +22,8 @@ import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -148,6 +150,106 @@ public class HttpClientUtil {
 			}
 		}
 		return queryString.toString();
+	}
+	
+	/**
+	 * post表单返回json
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param params
+	 * @param sslFlag
+	 * @return
+	 */
+	public static JSONObject doPostRetJson(String url, Map<String, String> params, boolean sslFlag) {
+		return doPostRetJson(url, params, null, sslFlag);
+	}
+	/**
+	 * post表单返回josn
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param params
+	 * @param headers
+	 * @param sslFlag
+	 * @return
+	 */
+	public static JSONObject doPostRetJson(String url, Map<String, String> params, Map<String, String> headers, boolean sslFlag) {
+		String retString = doPostRetString(url, params, headers, sslFlag);
+		return JsonUtils.parseJSONObject(retString);
+	}
+	
+	/**
+	 * post表单返回string
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param params
+	 * @param sslFlag
+	 * @return
+	 */
+	public static String doPostRetString(String url, Map<String, String> params, boolean sslFlag) {
+		return doPostRetString(url, params, null, sslFlag);
+	}
+	
+	/**
+	 * post表单返回string
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param params
+	 * @param headers
+	 * @param sslFlag
+	 * @return
+	 */
+	public static String doPostRetString(String url, Map<String, String> params, Map<String, String> headers, boolean sslFlag) {
+		return doPostRetString(url, params, headers, null, sslFlag ? httpsClient : httpClient);
+	}
+	
+	/**
+	 * post表单
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param params
+	 * @param headers
+	 * @param sslFlag
+	 * @return
+	 */
+	private static String doPostRetString(String url, Map<String, String> params, Map<String, String> headers, String contentType, HttpClient client) {
+		try {
+			HttpPost post = new HttpPost(url);
+			
+			// 传了的有的情况下设置一下
+			if (StringUtils.isNotBlank(contentType)) {
+				post.addHeader("Content-type", contentType);
+			}
+			// 请求头
+			// post.setHeader("Content-type", ContentType.create("application/x-www-form-urlencoded", Constants.DEFAULT_CHARSET).toString());
+			if (headers != null) {
+				headers.forEach((k, v) -> {
+					post.addHeader(k, v);
+				});
+			}
+			// 请求体
+			MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+			if (params != null) {
+				params.forEach((k,v)->{
+					builder.addPart(k, new StringBody(v, ContentType.create("text/plain", Constants.DEFAULT_CHARSET)));
+				});
+			}
+			post.setEntity(builder.build());
+			HttpResponse resp = client.execute(post);
+			String respStr = EntityUtils.toString(resp.getEntity());
+			int statusCode = resp.getStatusLine().getStatusCode();
+			if (statusCode == HttpStatus.SC_OK) {
+				return respStr;
+			} else {
+				throw new HttpResponseException(statusCode, respStr);
+			}
+		} catch (IOException e) {
+			throw ExceptionUtils.unchecked(e);
+		}
 	}
 
 	/**

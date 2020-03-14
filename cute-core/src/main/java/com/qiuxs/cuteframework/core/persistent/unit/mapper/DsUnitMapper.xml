@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiuxs.cuteframework.core.persistent.unit.dao.DsUnitDao">
+
+	<select id="hasDsUnit" resultType="Long" >
+		select count(*) from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=database() and TABLE_NAME='ds_unit'
+	</select>
+
+	<sql id="allFields">
+		`id`,
+		`unit_id` as unitId,
+		`ds_id` as dsId,
+		`created_by` as createdBy,
+		`created_time` as createdTime,
+		`updated_by` as updatedBy,
+		`updated_time` as updatedTime
+	</sql>
+
+	<sql id="insertFields">
+		`id`,
+		`unit_id`,
+		`ds_id`,
+		`created_by`,
+		`created_time`,
+		`updated_by`,
+		`updated_time`
+	</sql>
+
+	<select id="list" resultType="com.qiuxs.cuteframework.core.persistent.unit.entity.DsUnit" >
+		select
+			<include refid="allFields" />
+		from `ds_unit`
+		<where>
+			<include refid="comnWhere" />
+		</where>
+		<if test="orderBy != null" >
+			order by ${orderBy}
+			<if test="orderByDesc != null">
+				desc
+			</if>
+		</if>
+	</select>
+	
+	<select id="getCount" resultType="Long" >
+		select 
+			IFNULL(count(1), 0)
+		from `ds_unit`
+		<where>
+			<include refid="comnWhere" />
+		</where>
+	</select>
+	
+	<sql id="comnWhere">
+		<if test="id != null">
+			`id` = #{id}
+		</if>
+		<if test="unitId != null">
+			 and `unit_id` = #{unitId}
+		</if>
+		<if test="dsId != null">
+			 and `ds_id` = #{dsId}
+		</if>
+		<if test="createdBy != null">
+			 and `created_by` = #{createdBy}
+		</if>
+		<if test="createdTime != null">
+			 and `created_time` = #{createdTime}
+		</if>
+		<if test="updatedBy != null">
+			 and `updated_by` = #{updatedBy}
+		</if>
+		<if test="updatedTime != null">
+			 and `updated_time` = #{updatedTime}
+		</if>
+	</sql>
+
+	<select id="getByIds" resultType="com.qiuxs.cuteframework.core.persistent.unit.entity.DsUnit" >
+		select <include refid="allFields" /> from `ds_unit` where id in
+		<foreach collection="list" item="item" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="get" resultType="com.qiuxs.cuteframework.core.persistent.unit.entity.DsUnit" >
+		select <include refid="allFields" /> from `ds_unit` where id = #{id}
+	</select>
+	
+	<select id="getCountByUk" resultType="Long">
+		select 
+			IFNULL(count(1), 0)
+		from `ds_unit`
+		<where>
+			<include refid="ukWhere" />
+		</where>
+	</select>
+	
+	<select id="getByUk" resultType="com.qiuxs.cuteframework.core.persistent.unit.entity.DsUnit">
+		select
+			<include refid="allFields" />
+		from `ds_unit`
+		<where>
+			<include refid="ukWhere" />
+		</where>
+	</select>
+	
+	<sql id="ukWhere">
+		<if test="idNe != null" >
+			and id &lt;&gt; #{idNe}
+		</if>
+		<if test="unitId != null">
+			and `unit_id` = #{unitId}
+		</if>
+		<if test="dsId != null">
+			and `ds_id` = #{dsId}
+		</if>
+	</sql>
+	
+	<delete id="deleteById" parameterType="Long" >
+		delete from `ds_unit` where id = #{id}
+	</delete>
+
+	<insert id="insert" parameterType="com.qiuxs.cuteframework.core.persistent.unit.entity.DsUnit">
+		insert into `ds_unit`(<include refid="insertFields" />)
+		values(
+			#{id},
+			#{unitId},
+			#{dsId},
+			#{createdBy},
+			#{createdTime},
+			#{updatedBy},
+			#{updatedTime}
+		)
+	</insert>
+
+	<insert id="insertInBatch" parameterType="java.util.List" >
+		insert into `ds_unit`(<include refid="insertFields" />)
+		values
+		<foreach collection="list" item="item" separator="," >
+			(
+				#{item.id},
+				#{item.unitId},
+				#{item.dsId},
+				#{item.createdBy},
+				#{item.createdTime},
+				#{item.updatedBy},
+				#{item.updatedTime}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="com.qiuxs.cuteframework.core.persistent.unit.entity.DsUnit" >
+		update `ds_unit` 
+			<set>
+				<include refid="setComn" />
+			</set>
+		where id = #{id}
+	</update>
+
+	<sql id="setComn" >
+		<if test="unitId != null" >
+			`unit_id` = #{unitId},
+		</if>
+		<if test="dsId != null" >
+			`ds_id` = #{dsId},
+		</if>
+		<if test="createdBy != null" >
+			`created_by` = #{createdBy},
+		</if>
+		<if test="createdTime != null" >
+			`created_time` = #{createdTime},
+		</if>
+		<if test="updatedBy != null" >
+			`updated_by` = #{updatedBy},
+		</if>
+		<if test="updatedTime != null" >
+			`updated_time` = #{updatedTime}
+		</if>
+	</sql>
+</mapper>

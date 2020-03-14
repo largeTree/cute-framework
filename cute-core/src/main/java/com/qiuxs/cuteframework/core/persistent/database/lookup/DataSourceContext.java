@@ -1,14 +1,21 @@
 package com.qiuxs.cuteframework.core.persistent.database.lookup;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.qiuxs.cuteframework.core.basic.Constants.DsType;
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
+import com.qiuxs.cuteframework.core.basic.utils.NumberUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.context.TLVariableHolder;
 import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataSourceService;
+import com.qiuxs.cuteframework.core.persistent.unit.DsUnitUtil;
+import com.qiuxs.cuteframework.core.persistent.unit.entity.DsUnit;
 
 /**
  * 数据源上下文
@@ -19,6 +26,8 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataSourceS
  *
  */
 public class DataSourceContext {
+
+	private static Logger log = LogManager.getLogger(DataSourceContext.class);
 
 	private static final String TL_DS_ID = "_tl_current_ds_id";
 
@@ -33,6 +42,31 @@ public class DataSourceContext {
 	private static Map<String, Class<?>> pojoClassMap = new HashMap<>();
 	/** 单元ID和业务库的对应关系 */
 	private static Map<Long, String> unitDsMap = new HashMap<>();
+
+	/* 序列库id */
+	private static String seqDsId;
+	/** 日志库id */
+	private static String logDsId;
+
+	public static String setLogDb() {
+		return setUpDs(logDsId);
+	}
+
+	public static String getLogDb() {
+		return logDsId;
+	}
+
+	public static String setSeqDb() {
+		return setUpDs(seqDsId);
+	}
+
+	public static String getSeqDb() {
+		return seqDsId;
+	}
+
+	public static void initSeqDb(String seqDsId) {
+		DataSourceContext.seqDsId = seqDsId;
+	}
 
 	public static String getDsId() {
 		String currentDsId = TLVariableHolder.getVariable(TL_DS_ID);
@@ -128,13 +162,34 @@ public class DataSourceContext {
 		if (userLite != null) {
 			Long unitId = userLite.getUnitId();
 			if (unitId != null) {
-				String dsId = unitDsMap.get(unitId);
+				String dsId = getDsId(unitId);
 				if (dsId != null) {
 					return dsId;
 				}
 			}
 		}
 		return DynamicDataSource.getDynamicDataSource().getEntryDb();
+	}
+
+	/**
+	 * 根据单元ID获取数据源
+	 *  
+	 * @author qiuxs  
+	 * @param unitId
+	 * @return
+	 */
+	public static String getDsId(Long unitId) {
+		String dsId = unitDsMap.get(unitId);
+		if (dsId == null && DsUnitUtil.hasDsUnit && NumberUtils.greaterThanZero(unitId)) {
+			DsUnitUtil.refreshUnitDs(unitId);
+			dsId = unitDsMap.get(unitId);
+		}
+		if (dsId == null) {
+			if (log.isDebugEnabled()) {
+				log.debug("getDsId dsId = null, unitId = " + unitId + ", hasDsUnit = " + DsUnitUtil.hasDsUnit + ", unitDsMap = " + unitDsMap);
+			}
+		}
+		return dsId;
 	}
 
 	/**
@@ -163,6 +218,36 @@ public class DataSourceContext {
 		} else {
 			return getDsIdByDsType(DsType.BIZ.value());
 		}
+	}
+
+	/**
+	 * 刷新全部数据源对应关系
+	 *  
+	 * @author qiuxs  
+	 * @param dsUnits
+	 */
+	public static void refreshAllDsUnit(List<DsUnit> dsUnits) {
+		Map<Long, String> tempUnitDs = new HashMap<Long, String>();
+		dsUnits.forEach(item -> {
+			tempUnitDs.put(item.getUnitId(), item.getDsId());
+		});
+		unitDsMap = tempUnitDs;
+	}
+
+	/**
+	 * 刷新单个数据源对应关系
+	 *  
+	 * @author qiuxs  
+	 * @param dsUnit
+	 */
+	public static void refreshDsUnit(DsUnit dsUnit) {
+		if (dsUnit == null) {
+			return;
+		}
+		Map<Long, String> tempUnitDs = new HashMap<Long, String>();
+		tempUnitDs.putAll(unitDsMap);
+		tempUnitDs.put(dsUnit.getUnitId(), dsUnit.getDsId());
+		unitDsMap = tempUnitDs;
 	}
 
 }

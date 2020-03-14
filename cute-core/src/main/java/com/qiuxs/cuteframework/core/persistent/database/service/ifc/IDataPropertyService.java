@@ -41,6 +41,8 @@ public interface IDataPropertyService<PK extends Serializable, T extends IEntity
 	public List<T> findByMap(Map<String, Object> params, PageInfo pageInfo);
 	
 	public List<T> findByMap(Map<String, Object> params);
+	
+	public T findByMapSingle(Map<String, Object> params);
 
 	public int delete(T bean);
 	

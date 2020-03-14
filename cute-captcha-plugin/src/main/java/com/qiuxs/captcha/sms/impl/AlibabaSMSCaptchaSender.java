@@ -1,5 +1,8 @@
 package com.qiuxs.captcha.sms.impl;
 
+import java.util.Map;
+
+import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.sms.sender.impl.AlibabaSMSSender;
 
 /**
@@ -18,6 +21,11 @@ public class AlibabaSMSCaptchaSender extends AbstractSMSCaptchaSender<AlibabaSMS
 	 */
 	public AlibabaSMSCaptchaSender(AlibabaSMSSender sender) {
 		super(sender);
+	}
+
+	@Override
+	public void sendCaptchaByTemplate(String signName, String mobile, String templateId, Map<String, String> params, String captcha) {
+		this.getSmsSender().sendSMSByTemplate(signName, mobile, templateId, MapUtils.genStringMap("captcha"));
 	}
 
 }

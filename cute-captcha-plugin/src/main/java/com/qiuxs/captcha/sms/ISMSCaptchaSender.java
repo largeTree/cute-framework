@@ -10,18 +10,6 @@ import java.util.Map;
 public interface ISMSCaptchaSender {
 
 	/**
-	 * 根据短信内容直接发送验证码
-	 * 
-	 * 2019年3月28日 下午11:14:48
-	 * @auther qiuxs
-	 * @param mobile
-	 * 		手机号
-	 * @param content
-	 * 		验证码短信内容
-	 */
-	public void sendCaptcha(String signName, String mobile, String content);
-
-	/**
 	 * 根据模板发送验证码短信
 	 * 
 	 * 2019年3月28日 下午11:17:57
@@ -31,8 +19,10 @@ public interface ISMSCaptchaSender {
 	 * @param template
 	 * 		短信模板id
 	 * @param params
-	 * 		模板参数
+	 * 		额外的参数
+	 * @param captcha
+	 * 		验证码
 	 */
-	public void sendCaptchaByTemplate(String signName, String mobile, String templateId, Map<String, String> params);
+	public void sendCaptchaByTemplate(String signName, String mobile, String templateId, Map<String,String> params, String captcha);
 
 }

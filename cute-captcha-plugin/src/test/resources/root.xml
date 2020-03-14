@@ -1,0 +1,7 @@
+<domanins>
+	<domain id="upyun" merge="replace" type="xml">
+		<default path="classpath*:/config/upyun.xml" />
+		<extend path="file:///${user.home}/wxbot/upyun.xml" />
+		<extend path="file:///web/etc/wxbot/upyun.xml" />
+	</domain>
+</domanins>

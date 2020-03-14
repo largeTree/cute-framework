@@ -11,18 +11,6 @@ import java.util.Map;
 public interface ICaptchaCombService {
 
 	/**
-	 * 发送手机验证码
-	 * 
-	 * 2019年3月28日 下午11:06:12
-	 * @auther qiuxs
-	 * @param mobile
-	 * 		手机号
-	 * @param centant
-	 * 		短信模板
-	 */
-	public void sendMobileCaptcha(String signName, String mobile, String centant);
-	
-	/**
 	 * 根据短信模板发送验证码
 	 * 
 	 * 2019年3月28日 下午11:27:06
@@ -60,6 +48,15 @@ public interface ICaptchaCombService {
 	 * @param invalidFlag
 	 * 		是否失效验证码
 	 */
-	public boolean veriftCaptcha(String mobile, String captcha, boolean invalidFlag);
+	public boolean verifyCaptcha(String mobile, String captcha, boolean invalidFlag);
+
+	/**
+	 * 生成一个验证码
+	 *  
+	 * @author qiuxs  
+	 * @param mobile
+	 * @return
+	 */
+	public String getCaptcha(String mobile);
 
 }

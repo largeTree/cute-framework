@@ -19,7 +19,6 @@ public class ControllerCleanInterceptor extends AbstractHandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 	        throws Exception {
-		TLVariableHolder.clear();
 		return true;
 	}
 

@@ -52,8 +52,7 @@ public class RandomGenerator {
 	 * @return
 	 */
 	public static String getRandCode() {
-		String code = String.valueOf(System.currentTimeMillis());
-		code = code.substring(code.length() - 6);
+		String code = getRandomStr();
 		return code;
 	}
 

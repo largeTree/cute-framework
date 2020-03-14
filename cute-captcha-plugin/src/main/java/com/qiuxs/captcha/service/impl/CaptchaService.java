@@ -49,11 +49,15 @@ public class CaptchaService extends AbstractDataPropertyService<Long, Captcha, C
 	@Override
 	@Transactional
 	public Captcha genCaptcha(String mobile, String ip) {
-		Captcha captcha = new Captcha();
-		captcha.setSessionKey(mobile);
-		captcha.setIp(ip);
-		captcha.setCaptcha(RandomGenerator.getRandCode());
-		this.save(captcha);
+		Captcha captcha = this.getBySessionKey(mobile);
+		if (captcha == null) {
+			captcha = new Captcha();
+			captcha.setSessionKey(mobile);
+			captcha.setIp(ip);
+			captcha.setCaptcha(RandomGenerator.getRandCode());
+			captcha.setTimeLimit(new Long(1000 * 60 * 30));
+			this.save(captcha);
+		}
 		return captcha;
 	}
 

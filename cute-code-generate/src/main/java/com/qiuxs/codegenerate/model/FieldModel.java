@@ -70,8 +70,6 @@ public class FieldModel {
 			javaType = Long.class.getSimpleName();
 			break;
 		case "json":
-			javaType = "JSONObject";
-			break;
 		case "varchar":
 		case "char":
 		case "text":

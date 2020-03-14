@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wx>
+	<sms>
+		<url>https://sms-api.upyun.com/api/messages</url>
+		<authorization>xxx</authorization>
+	</sms>
+	<captcha>
+		<template>2412</template>
+	</captcha>
+</wx>

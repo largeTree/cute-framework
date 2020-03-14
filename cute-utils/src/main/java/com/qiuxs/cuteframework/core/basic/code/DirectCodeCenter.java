@@ -44,6 +44,12 @@ public class DirectCodeCenter {
 	static {
 		CodeUtils.genDirectCode(DirectCodeCenter.class);
 	}
+	
+	/** 性别 */
+	public static DirectCodeHouse<Integer> GENDER = DirectCodeCenter.getDirectCodeHouse(DOMAIN_GENDER);
+	
+	/** 日志级别 */
+	public static DirectCodeHouse<Integer> LOGLEVEL = DirectCodeCenter.getDirectCodeHouse(DOMAIN_LOG_LEVEL);
 
 	/**
 	 * 创建一个直接编码集

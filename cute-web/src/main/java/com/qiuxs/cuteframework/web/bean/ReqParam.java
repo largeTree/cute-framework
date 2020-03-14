@@ -3,7 +3,9 @@ package com.qiuxs.cuteframework.web.bean;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.web.action.ActionConstants;
 
 /**
@@ -26,10 +28,28 @@ public class ReqParam extends HashMap<String, String> {
 		return MapUtils.getString(this, key);
 	}
 
+	public String getStringMust(String key) {
+		String str = MapUtils.getString(this, key);
+		if (StringUtils.isBlank(str)) {
+			ExceptionUtils.throwLogicalException("param_required", key);
+		}
+		return str; 
+	}
+
 	public Integer getInteger(String key) {
 		return MapUtils.getInteger(this, key);
 	}
 
+	/**
+	 * 获得sessionId
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public String getSessionId() {
+		return MapUtils.getString(this, ActionConstants.PARAM_SESSION_ID);
+	}
+	
 	/**
 	 * 请求地址
 	 * @return

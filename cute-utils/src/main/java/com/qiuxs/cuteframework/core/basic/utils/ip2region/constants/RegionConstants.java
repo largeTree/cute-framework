@@ -961,7 +961,7 @@ public class RegionConstants {
 	/**
 	 * 获取省编码
 	 *  
-	 * @author fengdg  
+	 * @author qiuxs  
 	 * @param provice
 	 * @return
 	 */
@@ -972,7 +972,7 @@ public class RegionConstants {
 	/**
 	 * 获取市编码
 	 *  
-	 * @author fengdg  
+	 * @author qiuxs  
 	 * @param city
 	 * @return
 	 */
@@ -1003,7 +1003,7 @@ public class RegionConstants {
 	 * 2. 查询不到按ip地址查省市
 	 * 3. 还是查不到，随时省市
 	 *  
-	 * @author fengdg  
+	 * @author qiuxs  
 	 * @param ip
 	 * @return
 	 */

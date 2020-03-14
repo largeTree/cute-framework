@@ -230,6 +230,23 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	public List<T> findByMap(Map<String, Object> params) {
 		return this.getDao().list(params);
 	}
+	
+	/**
+	 * 使用Map作为参数查询，并仅返回一行记录
+	 *  
+	 * @author qiuxs  
+	 * @param params
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS)
+	public T findByMapSingle(Map<String, Object> params) {
+		List<T> list = this.getDao().list(params, PageInfo.makeSinglePageInfo());
+		if (list.isEmpty()) {
+			return null;
+		} else {
+			return list.get(0);
+		}
+	}
 
 	/**
 	 * 新增对象

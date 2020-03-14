@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiuxs.cuteframework.core.persistent.dao.DsInfoDao">
+
+	<select id="switchBizDsId" resultType="String">
+		select
+			id
+		from ds_info 
+		where 
+			flag = 1 
+			and used_num &lt; max_num
+			and type = 'biz'
+		order by used_num 
+		limit 1
+	</select>
+	
+	<update id="addUsedNumById" >
+		update ds_info set used_num = used_num + #{addNum} where id = #{id}
+	</update>
+
+	<sql id="allFields">
+		`id`,
+		`url`,
+		`driver_class` as driverClass,
+		`user_name` as `userName`,
+		`password`,
+		`type`,
+		`flag`,
+		`max_num` as maxNum,
+		`used_num` as usedNum
+	</sql>
+
+	<sql id="insertFields">
+		`id`,
+		`url`,
+		`driver_class`,
+		`user_name`,
+		`password`,
+		`type`,
+		`flag`,
+		`max_num`,
+		`used_num`
+	</sql>
+</mapper>

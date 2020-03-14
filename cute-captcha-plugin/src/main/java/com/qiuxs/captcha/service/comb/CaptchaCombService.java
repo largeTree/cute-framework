@@ -7,50 +7,30 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.qiuxs.captcha.config.CaptchaEnvironmentConfig;
-import com.qiuxs.captcha.context.CaptchaWebContext;
 import com.qiuxs.captcha.entity.Captcha;
-import com.qiuxs.captcha.service.ICaptchaBlacklistService;
 import com.qiuxs.captcha.service.ICaptchaCombService;
 import com.qiuxs.captcha.service.ICaptchaHistoryService;
 import com.qiuxs.captcha.service.ICaptchaService;
 import com.qiuxs.captcha.sms.ISMSCaptchaSender;
 import com.qiuxs.captcha.sms.SMSCaptchaSenderRegisterCenter;
+import com.qiuxs.cuteframework.web.context.RequestContextHolder;
 
 @Service
 public class CaptchaCombService implements ICaptchaCombService {
-
-	@Resource
-	private CaptchaEnvironmentConfig captchaEnvironemtConfig;
 
 	@Resource
 	private ICaptchaService captchaService;
 
 	@Resource
 	private ICaptchaHistoryService captchaHistoryService;
-
-	@Resource
-	private ICaptchaBlacklistService captchaBlacklistService;
-
-	@Override
-	public void sendMobileCaptcha(String signName, String mobile, String template) {
-		String captcha = this.getCaptcha(mobile);
-		String content = template.replace(this.captchaEnvironemtConfig.getCapchaPlaceholder(), captcha);
-		ISMSCaptchaSender sender = SMSCaptchaSenderRegisterCenter.chooseAnSender(mobile);
-		sender.sendCaptcha(signName, mobile, content);
-	}
-
+	
 	@Override
 	public void sendMobileCaptchaByTemplate(String signName, String mobile, String templateId, Map<String, String> params) {
 		ISMSCaptchaSender sender = SMSCaptchaSenderRegisterCenter.chooseAnSender(mobile);
-		// 生成验证码
-		String captcha = this.getCaptcha(mobile);
 		if (params == null) {
 			params = new HashMap<>();
 		}
-		// 设置到模板参数中
-		params.put(this.captchaEnvironemtConfig.getCapchaPlaceholder(), captcha);
-		sender.sendCaptchaByTemplate(signName, mobile, templateId, params);
+		sender.sendCaptchaByTemplate(signName, mobile, templateId, params, this.getCaptcha(mobile));
 	}
 
 	/**
@@ -62,7 +42,7 @@ public class CaptchaCombService implements ICaptchaCombService {
 	 */
 	@Override
 	public boolean verifyCaptcha(String mobile, String captcha) {
-		return this.veriftCaptcha(mobile, captcha, true);
+		return this.verifyCaptcha(mobile, captcha, true);
 	}
 
 	/**
@@ -73,7 +53,7 @@ public class CaptchaCombService implements ICaptchaCombService {
 	 * @see com.qiuxs.captcha.service.ICaptchaCombService#veriftCaptcha(java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
-	public boolean veriftCaptcha(String mobile, String captcha, boolean invalidFlag) {
+	public boolean verifyCaptcha(String mobile, String captcha, boolean invalidFlag) {
 		Captcha captchaBean = this.captchaService.getBySessionKey(mobile);
 		if (captchaBean != null && captchaBean.checkExpire()) {
 			// 已过期的移到历史记录
@@ -101,11 +81,9 @@ public class CaptchaCombService implements ICaptchaCombService {
 	 * @param mobile
 	 * @return
 	 */
-	private String getCaptcha(String mobile) {
-		// 根据拉黑规则拉黑指定手机号
-		// 检查是否在黑名单内
-		this.captchaBlacklistService.checkInBlacklist(mobile);
-		Captcha captcha = this.captchaService.genCaptcha(mobile, CaptchaWebContext.getCliIP());
+	@Override
+	public String getCaptcha(String mobile) {
+		Captcha captcha = this.captchaService.genCaptcha(mobile, RequestContextHolder.getCliIp());
 		return captcha.getCaptcha();
 	}
 

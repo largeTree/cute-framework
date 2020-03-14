@@ -51,23 +51,11 @@ public abstract class AbstractSMSCaptchaSender<S extends ISMSSener> implements I
 	}
 
 	/**
-	 * 2019年3月28日 下午11:59:10
-	 * qiuxs
-	 * @see com.qiuxs.captcha.sms.ISMSCaptchaSender#sendCaptcha(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void sendCaptcha(String signName, String mobile, String content) {
-		this.getSmsSender().sendSMS(signName, mobile, content);
-	}
-
-	/**
 	 * 2019年3月28日 下午11:59:33
 	 * qiuxs
 	 * @see com.qiuxs.captcha.sms.ISMSCaptchaSender#sendCaptchaByTemplate(java.lang.String, java.lang.String, java.util.Map)
 	 */
 	@Override
-	public void sendCaptchaByTemplate(String signName, String mobile, String templateId, Map<String, String> params) {
-		this.getSmsSender().sendSMSByTemplate(signName, mobile, templateId, params);
-	}
+	public abstract void sendCaptchaByTemplate(String signName, String mobile, String templateId, Map<String, String> params, String captcha);
 
 }

@@ -293,4 +293,15 @@ public class NumberUtils {
 		return new BigDecimal(strNum);
 	}
 
+	/**
+	 * 判断long是否大于0
+	 *  
+	 * @author qiuxs  
+	 * @param num
+	 * @return
+	 */
+	public static boolean greaterThanZero(Long num) {
+		return num != null && num > 0;
+	}
+
 }
