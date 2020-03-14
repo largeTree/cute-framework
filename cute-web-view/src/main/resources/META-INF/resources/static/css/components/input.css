@@ -1,5 +1,12 @@
 .my-input {
 	border: #A1B7E5 solid 1px;
 	width: 12em;
+	height: 1.8em;
 	border-radius: 3px;
+}
+.err-input {
+	border: #FF3030 solid 1px;
+}
+.err-input:focus {
+	outline-color: #FF3030;
 }

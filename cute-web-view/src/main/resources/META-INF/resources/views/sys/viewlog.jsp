@@ -41,6 +41,7 @@
 		white-space:-pre-wrap;/*Opera4-6*/ 
 		white-space:-o-pre-wrap;/*Opera7*/ 
 		word-wrap:break-word;/*InternetExplorer5.5+*/　　
+		background-color:#CCCCCC;
 	} 
 </style>
 </head>
@@ -88,7 +89,8 @@
 </body>
 <script type="text/javascript">
 	$(()=>{
-		top.frm.postApi('<%=ctxPath %>/api.do', 'mylog-get', { id: '<%=request.getParameter("pk") %>' }).then((data) => {
+		top.frm.postApi('mylog-get', { id: '<%=request.getParameter("pk") %>' }).then((data) => {
+			data = data.data;
 			for (var key in data) {
 				var val = data[key];
 				$('#' + key).html(val);

@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
-import com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource;
+import com.qiuxs.cuteframework.core.persistent.database.lookup.DataSourceContext;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDGeneraterable;
 
 @Service
@@ -28,17 +28,17 @@ public class IDGeneraterDatabase implements IDGeneraterable {
 
 	private static final String GET_ID_SQL = "SELECT LAST_INSERT_ID()";
 
-	private DynamicDataSource dataSource;
+	private DataSource dataSource;
 
 	@Override
 	public Long getNextId(String seqName) {
-		DataSource seqDateSource = dataSource.getTargetDataSources().get(dataSource.getSeqDb());
 		Connection conn = null;
 		Statement stam = null;
 		ResultSet ckRs = null;
 		ResultSet idRs = null;
+		String oldDsId = DataSourceContext.setSeqDb();
 		try {
-			conn = seqDateSource.getConnection();
+			conn = dataSource.getConnection();
 			stam = conn.createStatement();
 			Long nextId = this.getNextId(stam, seqName);
 			return nextId;
@@ -58,6 +58,7 @@ public class IDGeneraterDatabase implements IDGeneraterable {
 				throw ExceptionUtils.unchecked(e);
 			}
 		} finally {
+			DataSourceContext.setUpDs(oldDsId);
 			this.close(idRs);
 			this.close(ckRs);
 			this.close(stam);
@@ -81,7 +82,7 @@ public class IDGeneraterDatabase implements IDGeneraterable {
 	}
 
 	@Resource
-	public void setDataSource(DynamicDataSource dataSource) {
+	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 

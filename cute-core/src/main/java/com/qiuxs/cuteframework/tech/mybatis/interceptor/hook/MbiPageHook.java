@@ -37,7 +37,11 @@ public class MbiPageHook implements IMbiHook {
 		RowBounds rowBounds = (RowBounds) metaStatementHandler.getValue("delegate.rowBounds");
 		if (rowBounds != null && rowBounds instanceof PageInfo) {
 			String sql = (String) metaStatementHandler.getValue("delegate.boundSql.sql");
-			int offset = rowBounds.getOffset(), limit = rowBounds.getLimit();
+			
+			PageInfo pageInfo = (PageInfo) rowBounds;
+			
+			int limit = pageInfo.getPageSize();
+			int offset = (pageInfo.getPageNo() - 1) * limit;
 			StringBuffer newSql = new StringBuffer(sql);
 			// sql不带分页参数时 自动拼接分页参数
 			if (!sql.contains("offset") && !sql.contains("limit")) {

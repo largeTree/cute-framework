@@ -10,12 +10,13 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.core.persistent.util.IDGenerateUtil;
@@ -34,7 +35,9 @@ import com.qiuxs.cuteframework.web.utils.RequestUtils;
  * @author qiuxs
  * @version 1.0.0
  */
-@WebFilter(urlPatterns = "/*")
+/*@WebFilter(filterName = "logFilter", urlPatterns = { 
+		"/*"
+})*/
 public class LogFilter implements Filter {
 
 	private static Logger log = LogManager.getLogger(LogFilter.class);
@@ -43,7 +46,6 @@ public class LogFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-
 	}
 
 	@Override
@@ -73,15 +75,19 @@ public class LogFilter implements Filter {
 		} catch (Throwable e) {
 			log.error("put logMDC ext=" + e.getLocalizedMessage(), e);
 		}
+
+		Throwable chainEx = null;
 		
 		int status = RequestLog.FAILED;
 		try {
 			chain.doFilter(request, response);
-			status = RequestLog.SUCCESS;
+			HttpServletResponse resp = (HttpServletResponse) response;
+			status = resp.getStatus();
 		} catch (Exception e) {
+			chainEx = e;
 			log.error("chain.doFilter ext=" + e.getLocalizedMessage(), e);
-		} 
-		
+		}
+
 		try {
 			// 状态
 			reqLog.setStatus(status);
@@ -89,10 +95,21 @@ public class LogFilter implements Filter {
 			reqLog.setReqEndTime(new Date());
 			reqLog.setServerId(EnvironmentContext.getServerId());
 			this.getRequestLogService().save(reqLog);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error("save RequestLog ext=" + e.getLocalizedMessage(), e);
 		} finally {
 			LogUtils.clearMDC();
+		}
+		
+		// 如果执行chain的过程中发生异常那么直接抛出
+		if (chainEx != null) {
+			if (chainEx instanceof IOException) {
+				throw (IOException) chainEx;
+			} else if (chainEx instanceof ServletException) {
+				throw (ServletException) chainEx;
+			} else {
+				throw ExceptionUtils.unchecked(chainEx);
+			}
 		}
 	}
 

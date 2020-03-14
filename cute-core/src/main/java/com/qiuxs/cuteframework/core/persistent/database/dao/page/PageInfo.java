@@ -28,10 +28,12 @@ public class PageInfo extends RowBounds {
 
 	/** 总行数 */
 	private Integer total;
+	/** 总页数 */
+	private Integer totalPage;
 
 	/** 默认分页 */
 	public static final PageInfo DEFAULT_PAGE_INFO = new PageInfo(1, DEFAULT_PAGESIZE);
-	
+
 	/** 适用于获取一行数据的分页对象 */
 	public static final PageInfo SINGLE_PAGE_INFO = new PageInfo(1, 1);
 
@@ -58,7 +60,7 @@ public class PageInfo extends RowBounds {
 	public static PageInfo makeNoPageInfo() {
 		return new PageInfo(1, RowBounds.NO_ROW_LIMIT);
 	}
-	
+
 	/**
 	 * 默认分页对象
 	 * @return
@@ -66,7 +68,7 @@ public class PageInfo extends RowBounds {
 	public static PageInfo makeDefaultPageInfo() {
 		return new PageInfo(1, DEFAULT_PAGESIZE);
 	}
-	
+
 	/**
 	 * 构造分页对象
 	 * @author qiuxs
@@ -89,6 +91,10 @@ public class PageInfo extends RowBounds {
 		pageInfo.setPageNo(pageNo);
 		pageInfo.setPageSize(pageSize);
 		return pageInfo;
+	}
+
+	public static PageInfo makeSinglePageInfo() {
+		return new PageInfo(1, 1);
 	}
 
 	public int getPageNo() {
@@ -116,6 +122,11 @@ public class PageInfo extends RowBounds {
 
 	public void setTotal(Integer total) {
 		this.total = total;
+		this.totalPage = (int) Math.ceil((total / pageSize));
+	}
+
+	public Integer getTotalPage() {
+		return totalPage;
 	}
 
 	public int getOffset() {
@@ -136,6 +147,20 @@ public class PageInfo extends RowBounds {
 
 	public Map<String, ? extends Number> getSumrow() {
 		return null;
+	}
+
+	public int moveToNextPage() {
+		if (pageNo < totalPage) {
+			pageNo++;
+		}
+		return pageNo;
+	}
+
+	public int moveToPrePage() {
+		if (pageNo > 1) {
+			pageNo--;
+		}
+		return pageNo;
 	}
 
 }

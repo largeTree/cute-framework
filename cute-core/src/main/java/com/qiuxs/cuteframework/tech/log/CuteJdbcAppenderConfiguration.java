@@ -18,10 +18,9 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.springframework.stereotype.Component;
 
-import com.qiuxs.cuteframework.core.basic.Constants.DsType;
 import com.qiuxs.cuteframework.core.basic.i18n.I18nUtils;
 import com.qiuxs.cuteframework.core.log.Console;
-import com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource;
+import com.qiuxs.cuteframework.core.persistent.database.lookup.DataSourceContext;
 
 @Component
 public class CuteJdbcAppenderConfiguration {
@@ -30,14 +29,18 @@ public class CuteJdbcAppenderConfiguration {
 	private static final String ERROR_REF = "ErrorFile";
 
 	@Resource
-	private DynamicDataSource dynDataSource;
+	private DataSource dataSource;
 
 	// inner class
 	class Connect implements ConnectionSource {
 		@Override
 		public Connection getConnection() throws SQLException {
-			DataSource dataSource = (DataSource) dynDataSource.getTargetDataSources().get(dynDataSource.getLogDb());
-			return dataSource.getConnection();
+			String oldDsId = DataSourceContext.setLogDb();
+			try {
+				return dataSource.getConnection();
+			} finally {
+				DataSourceContext.setUpDs(oldDsId);
+			}
 		}
 
 		/**
@@ -63,7 +66,7 @@ public class CuteJdbcAppenderConfiguration {
 	 * @return
 	 */
 	private boolean hasLogdb() {
-		return dynDataSource.getDsId(DsType.LOG.value()) != null;
+		return DataSourceContext.getLogDb() != null;
 	}
 
 	/**

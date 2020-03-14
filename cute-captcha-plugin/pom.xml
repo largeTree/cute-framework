@@ -23,5 +23,15 @@
 			<artifactId>cute-tester</artifactId>
 		</dependency>
 	</dependencies>
+	
+	<build>
+		<finalName>ec-captcha-plugin</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>

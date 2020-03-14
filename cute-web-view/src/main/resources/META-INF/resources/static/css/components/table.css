@@ -40,7 +40,9 @@
 	text-align: center;
 	background-color: #E3ECFF;
 	font-weight: 600;
+	letter-spacing: 1px;
 	padding: 5px 3px;
+	white-space: nowrap;
 }
 
 .my-table>tbody>tr:hover {

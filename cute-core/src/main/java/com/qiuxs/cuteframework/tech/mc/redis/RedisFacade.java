@@ -688,7 +688,7 @@ public class RedisFacade {
 	private Object run(String cmd, Object... args) {
 		for (int i = 0; i < args.length; i++) {
 			if (args[i] == null) {
-				throw new IllegalArgumentException("RedisDAO.run(),input args cann't be null");
+				throw new IllegalArgumentException("RedisFacade.run(),input args cann't be null");
 			}
 		}
 

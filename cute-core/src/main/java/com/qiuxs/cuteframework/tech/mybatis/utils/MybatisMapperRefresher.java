@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +22,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
 
-import com.qiuxs.cuteframework.core.basic.utils.ArrayUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ClassPathResourceUtil;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
@@ -47,12 +47,12 @@ public class MybatisMapperRefresher implements java.lang.Runnable {
 	private static String[] DEFAULT_MAPPER_PATHS = { "classpath*:/com/qiuxs/**/mapper/",
 			"classpath*:/mybatis/**/*.xml" };
 
-	public static void startRefresher(String[] mapperPaths) {
+	public static void startRefresher(Collection<String> paths) {
 		SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) ApplicationContextHolder.getBean("sqlSessionFactory");
 		Configuration configuration = sqlSessionFactory.getConfiguration();
-		List<Resource> mapperLocations = new ArrayList<>();
-		if (!ArrayUtils.isNullOrEmpty(mapperPaths)) {
-			mapperLocations.addAll(ClassPathResourceUtil.getResourceList(mapperPaths));
+		List<Resource> mapperLocations = new ArrayList<Resource>();
+		for (String path : paths) {
+			mapperLocations.add(ClassPathResourceUtil.getSingleResource(path));
 		}
 		// 额外加上默认的
 		mapperLocations.addAll(ClassPathResourceUtil.getResourceList(DEFAULT_MAPPER_PATHS));

@@ -1,12 +1,12 @@
 package com.qiuxs.cuteframework.web.syscontroller;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource;
 import com.qiuxs.cuteframework.web.WebConstants;
 
 @RestController
@@ -14,15 +14,15 @@ import com.qiuxs.cuteframework.web.WebConstants;
 public class ServerController {
 
 	@Resource
-	private DynamicDataSource dynamicDataSource;
+	private DataSource dataSource;
 
 	@GetMapping(value = "/check.do", produces = "text/plain")
 	public String checkServer() {
-		if (dynamicDataSource == null) {
+		if (dataSource == null) {
 			return "failed dataBase is null";
 		}
 		try {
-			dynamicDataSource.getConnection().close();
+			dataSource.getConnection().close();
 		} catch (Exception e) {
 			return "failed ext = " + e.getLocalizedMessage();
 		}

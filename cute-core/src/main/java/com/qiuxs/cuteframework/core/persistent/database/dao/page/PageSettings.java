@@ -25,7 +25,7 @@ public class PageSettings {
 				pageInfo.setLimit(pageSize);
 			} 
 		}
-		// 默认使用不分页
+		// 使用默认分页
 		if (pageInfo == null) {
 			pageInfo = PageInfo.makeDefaultPageInfo();
 		}

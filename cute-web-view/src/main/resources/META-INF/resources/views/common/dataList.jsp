@@ -1,3 +1,5 @@
+<%@page import="com.qiuxs.cuteframework.core.basic.utils.StringUtils"%>
+<%@page import="com.qiuxs.cuteframework.view.pagemodel.ListButton"%>
 <%@page import="com.qiuxs.cuteframework.core.basic.utils.CollectionUtils"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.HashSet"%>
@@ -14,7 +16,6 @@
 <%@page import="java.util.List"%>
 <%@page import="com.qiuxs.cuteframework.view.pagemodel.Table"%>
 <%@page import="com.qiuxs.cuteframework.view.pagemodel.Page"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -30,9 +31,24 @@
 	Table table = dataList.getTable();
 	List<Td> tds = table.getTds();
 %>
+
+<style type="text/css">
+	.list-buttons {
+		border-bottom: 1px #A1B7E5 solid;
+		padding: 5px 10px 10px 10px;
+		margin-bottom: 5px;
+		letter-spacing: 2px;
+	}
+</style>
+
 <script type="text/javascript">
 	var apiKey = '${pageModel.dataList.apiKey }';
 	var ctxPath = top.frm.getCtxPath();
+	
+	var listButtons = <%
+		out.print(JsonUtils.toJSONString(dataList.getButtons()));
+	%>;
+	
 	var tdBtns = <%
 			String btnConfig = "[]";
 			for (Td td : tds) {
@@ -42,6 +58,8 @@
 			}
 			out.print(btnConfig);
 	%>;
+	
+	var __dataList = [];
 	
 	/** 触发搜索 */
 	function doSearch(pageNo, pageSize) {
@@ -63,35 +81,36 @@
 	
 	/** 加载数据 */
 	function loadData(param, pageNo, pageSize) {
-		frm.showLoading();
+		top.frm.showLoading();
 		param = param || {};
 		param.pageNo = pageNo || 1;
 		param.pageSize = pageSize || 20;
-		$.post(ctxPath + '/api.do?apiKey=' + apiKey, param, function(data, status) {
-			if ('success' === status && data.code === 0) {
-				applyData(data.data.rows, data.data.total, param.pageNo, param.pageSize);
-			} else {
-				$.messager.alert('Error', data.msg, 'error');
-			}
-			frm.finishLoading();
+		frm.postApi(apiKey, param, param.jsonParam).then(function(data) {
+			data = data.data;
+			applyData(data.rows, data.total, param.pageNo, param.pageSize);
+			top.frm.finishLoading();
+		}, function(data) {
+			$.messager.alert('Error', data.data.msg, 'error');
+			top.frm.finishLoading();
 		});
 	}
 	
 	/** 将数据刷到页面上 */
 	function applyData(dataList, total, pageNo, pageSize) {
 		setPagination(total, pageNo, pageSize);
+		__dataList = dataList;
 		// 填充数据
 		var $dataTable = $('#data-list');
 		var theads = $dataTable.find('thead td');
 		var $tbody = $dataTable.children('tbody');
 		$tbody.empty();
-		var rowIdx = ((pageNo - 1) * pageSize) + 1;
+		var rowNum = ((pageNo - 1) * pageSize) + 1;
 		for (var i = 0;i < dataList.length; i++) {
-			appendRow($tbody, dataList[i], theads, rowIdx++);
+			appendRow($tbody, dataList[i], theads, rowNum++, i);
 		}
 	}
 	
-	// 设置分页栏
+	/** 设置分页栏 */
 	function setPagination(total, pageNo, pageSize) {
 		// 创建分页工具栏				
 		$('#pp').pagination({
@@ -108,22 +127,27 @@
 	}
 	
 	/** 追加一行 */
-	function appendRow($tbody, row, theads, rowIdx, formatter) {
+	function appendRow($tbody, row, theads, rowNum, rowIdx, formatter) {
 		var $tr = $(document.createElement('tr'));
 		for (var i = 0;i < theads.length; i++) {
 			var $td = $(document.createElement('td'));
 			var $thead = $(theads[i]);
 			var tType = $thead.attr('t-type');
 			if($thead[0].hasAttribute('seq')) {
-				$td.html(rowIdx);
+				$td.css('width', '4em');
+				$td.html(rowNum);
 			} else if (tType === '<%=Td.TD_TYPE_BTN %>') {
-				for (var btn of tdBtns) {
+				for (var j = 0; j < tdBtns.length; j++) {
+					var btn = tdBtns[j];
 					// [{"href":"from?pid=mylog&fromId=mylog&action=view","name":"查看详情","pk":"id"}]
 					var $btn = $(document.createElement('a'));
 					var pk = btn.pk ? row[btn.pk] : null;
-					$btn.attr('onclick', "doProcess(event, '" + btn.name + "'," + (pk ? "'" + pk + "'" : null) + ", " + (btn.href ? "'" + btn.href + "'" : null) + ", " + (btn.apiKey ? "'" + btn.apiKey + "'" : null) + ", " + (btn.js ? "'" + btn.js + "'" : null) + ")");
+					$btn.attr('onclick', "doProcess(event, '" + rowIdx + "', '" + j + "')");
 					$btn.attr('href', 'javascript:void(0)');
 					$btn.html(btn.name);
+					if ($td.children().length > 0) {
+						$td.append(' ');
+					}
 					$td.append($btn);
 				}
 			} else {
@@ -156,18 +180,68 @@
 	}
 	
 	/** 单击行按钮时触发 */
-	function doProcess(event, name, pk, href, apiKey, js) {
+	function doProcess(event, rowIdx, btnIdx) {
+		var _target = $(event.currentTarget);
+		var btn = tdBtns[btnIdx];
+		var row = __dataList[rowIdx];
+		var pk = row[btn.pk];
+		var href = btn.href;
+		var apiKey = btn.apiKey;
+		var name = btn.name;
+		var js = btn.js;
+		
+		var paramCfg = btn.params;
+		var params = {};
+		if (paramCfg) {
+			var k_v = paramCfg.split('&');
+			for (var i = 0; i < k_v.length; i++) {
+				var pair = k_v[i].split('=');
+				var key = pair[0];
+				var val = pair[1];
+				if (val.startWith('{')) {
+					val = val.substring(1, val.length - 1);
+					params[key] = row[val];
+				} else {
+					params[key] = val;
+				}
+			}
+		}
+		
 		if (href) {
 			var id = new Date().getTime();
 			top.frm.opWin(id, name, href, pk, null, function() {
-				var pageOptions = $('#pp').pagination('options');
-				doSearch(pageOptions.pageNumber, pageOptions.pageSize);
-			});
-		} else if (apiKey) {
-			
-		} else if (js) {
-			
+				refreshPage();				
+			}, true);
+		} else {
+			if (confirm('确定操作吗？')) {			
+				if (apiKey) {
+					callApiKey(pk, apiKey, row, params);
+				} else if (js) {
+					window[js](pk, row);
+				}			
+			}
 		}
+	}
+
+	/** 调用接口 */
+	function callApiKey(pk, apiKey, row, params) {
+		top.frm.showLoading();
+		if (params && !params.pk) {
+			params.id = pk;
+		}
+		frm.postApi(apiKey, params, {}).then(function(data) {
+			alert(data.msg);
+			top.frm.finishLoading();
+			refreshPage();
+		}, function(data) {
+			alert(data.msg);
+			top.frm.finishLoading();
+		});
+	}
+	
+	function refreshPage() {
+		var pageOptions = $('#pp').pagination('options');
+		doSearch(pageOptions.pageNumber, pageOptions.pageSize);
 	}
 	
 	/** 默认翻译列格式化方法 */
@@ -180,12 +254,59 @@
 		}
 	}
 	
+	/** 列表上方按钮点击事件 */
+	function buttonClick(event, btnIdx) {
+		var btn = listButtons[btnIdx];
+		var text = btn.text;
+		var href = btn.href;
+		var apiKey = btn.apiKey;
+		var js = btn.js;
+		
+		if (href) {
+			var id = new Date().getTime();
+			top.frm.opWin(id, text, href, null, null, function() {
+				var pageOptions = $('#pp').pagination('options');
+				doSearch(pageOptions.pageNumber, pageOptions.pageSize);
+			});
+		} else if (apiKey) {
+			callApiKey(null, apiKey, null, null);
+		} else if (js) {
+			window[js](null, null);
+		}
+		
+	}
+	
 	$(() => {
 		doSearch();
+		$('.my-input').bind('keypress', function(event) {
+			if (event.keyCode === 13) {
+				if ($(event.currentTarget).val()) {
+					doSearch();			
+				}
+			}
+		});
 	});
 </script>
 </head>
 <body>
+	<%
+		List<ListButton> buttons = dataList.getButtons();
+		if (CollectionUtils.isNotEmpty(buttons)) {
+	%>
+		<div class="list-buttons">
+			<%
+				for (int i = 0; i < buttons.size(); i++) {
+					ListButton lb = buttons.get(i);
+			%>
+				<a href="javascript:void(0)" class="easyui-linkbutton" <% if (StringUtils.isNotBlank(lb.getIcon())) {out.print("data-options=\"iconCls:'" + lb.getIcon() + "'\"");} %> onclick="buttonClick(event, '<%=i %>')" ><%=lb.getText() %></a>
+			<%
+				}
+			%>
+		</div>
+	<%
+		}
+	%>
+	
 	<div style="padding: 5px; margin: 0px auto; width:99%; overflow: hidden;">
 		<%
 			List<Field> searchFields =  search.getFields();

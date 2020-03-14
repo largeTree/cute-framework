@@ -7,80 +7,107 @@ import javax.annotation.PostConstruct;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 
+import com.qiuxs.cuteframework.core.basic.config.IConfiguration;
+import com.qiuxs.cuteframework.core.basic.config.UConfigUtils;
 import com.qiuxs.cuteframework.core.basic.constants.SymbolConstants;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
-import com.qiuxs.cuteframework.core.persistent.redis.config.JedisConfig;
 
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
 
+// TODO: Auto-generated Javadoc
+/**
+ * 
+ * 功能描述: Redis配置工厂<br/>  
+ * 新增原因: TODO<br/>  
+ * 新增日期: 2020年1月30日 下午5:22:59 <br/>  
+ *  
+ * @author qiuxs   
+ * @version 1.0.0
+ */
+@Component
 public class RedisConfiguration {
 
+	/** The log. */
 	private static Logger log = LogManager.getLogger(RedisConfiguration.class);
 
-	protected static final String PREFIX = "spring.redis";
-
+	/**  配置域. */
+	protected static final String CONFIG_DOMAIN = "rds";
+	
+	/**  默认连接池. */
 	public static final String DEFAUL_POOL = "redisDefaultPool";
 
-	/** 地址 */
+	/**  地址. */
 	private String host;
 
-	/** 端口 */
+	/**  端口. */
 	private int port = Protocol.DEFAULT_PORT;
 
-	/** 超时时间 */
+	/**  超时时间. */
 	private int timeout = Protocol.DEFAULT_TIMEOUT;
 
-	/** jedis配置 */
-	private JedisConfig jedis;
-
-	/** 密码 */
+	/**  密码. */
 	private String password;
 
-	/** 默认数据索引 */
+	/**  默认数据索引. */
 	private int defaultIndex = Protocol.DEFAULT_DATABASE;
 
-	/** 配置持有对象 */
+	/**  最大空闲. */
+	private int maxIdle;
+	
+	/**  最小空闲. */
+	private int minIdle;
+	
+	/**  最大连接. */
+	private int maxTotal;
+	
+	/**  最大等待时常. */
+	private long maxWaitMillis;
+
+	/**  配置持有对象. */
 	private static RedisConfiguration redisConfiguration;
 
-	/** 已创建的连接池缓存 */
+	/**  已创建的连接池缓存. */
 	private static Map<String, JedisPool> jedisPoolMap = new ConcurrentHashMap<>();
 
 	/**
 	 * 获取jedis连接池
 	 * 
-	 * 2019年6月15日 下午10:23:53
-	 * 
+	 * 2019年6月15日 下午10:23:53.
+	 *
+	 * @return the jedis pool
 	 * @auther qiuxs
-	 * @return
 	 */
 	public static JedisPool getJedisPool() {
-		return getJedisPool(DEFAUL_POOL, redisConfiguration.defaultIndex);
+		return getJedisPool(DEFAUL_POOL, redisConfiguration.getDefaultIndex());
 	}
 
 	/**
 	 * 获取jedis连接池
 	 * 
-	 * 2019年6月15日 下午10:23:53
-	 * 
+	 * 2019年6月15日 下午10:23:53.
+	 *
+	 * @param poolName the pool name
+	 * @return the jedis pool
 	 * @auther qiuxs
-	 * @return
 	 */
 	public static JedisPool getJedisPool(String poolName) {
-		return getJedisPool(poolName, redisConfiguration.defaultIndex);
+		return getJedisPool(poolName, redisConfiguration.getDefaultIndex());
 	}
 
 	/**
 	 * 获取指定的链接池
 	 * 
-	 * 2019年6月15日 下午10:29:04
-	 * 
+	 * 2019年6月15日 下午10:29:04.
+	 *
+	 * @param poolName the pool name
+	 * @param dbIdx the db idx
+	 * @return the jedis pool
 	 * @auther qiuxs
-	 * @param poolName
-	 * @return
 	 */
 	public static JedisPool getJedisPool(String poolName, int dbIdx) {
 		if (jedisPoolMap.size() == 0) {
@@ -103,20 +130,37 @@ public class RedisConfiguration {
 	/**
 	 * 初始化默认连接池
 	 * 
-	 * 2019年6月15日 下午11:08:19
-	 * 
+	 * 2019年6月15日 下午11:08:19.
+	 *
 	 * @auther qiuxs
 	 */
 	@PostConstruct
 	public void initDefaultPoll() {
+		
+		IConfiguration configuration = UConfigUtils.getDomain(CONFIG_DOMAIN);
+		if (configuration == null ) {
+			log.info("NoRedis Config...");
+			return;
+		}
+		this.timeout = configuration.getInt("timeout", Protocol.DEFAULT_TIMEOUT);
+		this.maxIdle = configuration.getInt("max-idle", 8);
+		this.minIdle = configuration.getInt("min-idle", 0);
+		this.maxWaitMillis = configuration.getInt("max-wait-millis", -1);
+		this.maxTotal = configuration.getInt("max-total", 20);
+		
+		this.host = configuration.getString("host");
+		this.port = configuration.getInt("port", Protocol.DEFAULT_PORT);
+		this.password = configuration.getString("password");
+		this.defaultIndex = configuration.getInt("database", Protocol.DEFAULT_DATABASE);
+		
 		if (StringUtils.isBlank(this.getHost())) {
 			return;
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("JedisPoolConfig[host=" + this.getHost() + ",port=" + this.getPort() + ",password="
-					+ this.getPassword() + ",timeout=" + this.getTimeout() + ",max-idle=" + this.getJedis().getPool().getMaxIdle()
-					+ ",max-wait=" + this.getJedis().getPool().getMaxWaitMillis() + "]");
+			log.debug("JedisPoolConfig[host = " + this.getHost() + ", port = " + this.getPort() + ", password = "+ this.getPassword() 
+					+ ", timeout = " + this.getTimeout() + ", max-idle = " + this.getMaxIdle() + ", defaultIndex = " + this.getDefaultIndex()
+					+ ", min-idle = " + this.getMinIdle() + ", max-total = " + this.getMaxTotal() + ", max-wait = " + this.getMaxWaitMillis() + "]");
 		}
 
 		JedisPool jedisPool = this.initPool(this.getDefaultIndex());
@@ -130,68 +174,110 @@ public class RedisConfiguration {
 	/**
 	 * 初始化一个连接池
 	 * 
-	 * 2019年6月15日 下午11:13:23
-	 * 
+	 * 2019年6月15日 下午11:13:23.
+	 *
+	 * @param dbIdx the db idx
+	 * @return the jedis pool
 	 * @auther qiuxs
-	 * @param dbIdx
-	 * @return
 	 */
 	private JedisPool initPool(int dbIdx) {
 		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-		jedisPoolConfig.setMaxIdle(this.getJedis().getPool().getMaxIdle());
-		jedisPoolConfig.setMaxWaitMillis(this.getJedis().getPool().getMaxWaitMillis());
-		jedisPoolConfig.setMaxTotal(this.getJedis().getPool().getMaxTotal());
+		jedisPoolConfig.setMaxIdle(this.getMaxIdle());
+		jedisPoolConfig.setMaxWaitMillis(this.getMaxWaitMillis());
+		jedisPoolConfig.setMaxTotal(this.getMaxTotal());
 		JedisPool jedisPool = new JedisPool(jedisPoolConfig, this.getHost(), this.getPort(), this.getTimeout(),
 				this.getPassword(), dbIdx);
 		return jedisPool;
 	}
 
-	private String getHost() {
+	/**
+	 * Gets the 地址.
+	 *
+	 * @return the 地址
+	 */
+	public String getHost() {
 		return host;
 	}
 
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	private int getPort() {
+	/**
+	 * Gets the 端口.
+	 *
+	 * @return the 端口
+	 */
+	public int getPort() {
 		return port;
 	}
 
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	private int getTimeout() {
+	/**
+	 * Gets the 超时时间.
+	 *
+	 * @return the 超时时间
+	 */
+	public int getTimeout() {
 		return timeout;
 	}
 
-	public void setTimeout(int timeout) {
-		this.timeout = timeout;
-	}
-
+	/**
+	 * Gets the 密码.
+	 *
+	 * @return the 密码
+	 */
 	private String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	private int getDefaultIndex() {
+	/**
+	 * Gets the 默认数据索引.
+	 *
+	 * @return the 默认数据索引
+	 */
+	public int getDefaultIndex() {
 		return defaultIndex;
 	}
 
-	public void setDefaultIndex(int defaultIndex) {
-		this.defaultIndex = defaultIndex;
+	/**
+	 * Gets the 最大空闲.
+	 *
+	 * @return the 最大空闲
+	 */
+	public int getMaxIdle() {
+		return maxIdle;
 	}
 
-	private JedisConfig getJedis() {
-		return jedis;
+	/**
+	 * Gets the 最小空闲.
+	 *
+	 * @return the 最小空闲
+	 */
+	public int getMinIdle() {
+		return minIdle;
 	}
 
-	public void setJedis(JedisConfig jedis) {
-		this.jedis = jedis;
+	/**
+	 * Gets the 最大连接.
+	 *
+	 * @return the 最大连接
+	 */
+	public int getMaxTotal() {
+		return maxTotal;
 	}
 
+	/**
+	 * Gets the 最大等待时常.
+	 *
+	 * @return the 最大等待时常
+	 */
+	public long getMaxWaitMillis() {
+		return maxWaitMillis;
+	}
+
+	/**
+	 * Gets the 默认数据索引.
+	 *
+	 * @return the 默认数据索引
+	 */
+	public static int getDefaultDbIndex() {
+		return redisConfiguration.getDefaultIndex();
+	}
+	
 }

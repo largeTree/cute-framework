@@ -2,6 +2,7 @@ package com.qiuxs.cuteframework.view.pagemodel.config;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import com.qiuxs.cuteframework.view.pagemodel.DataList;
 import com.qiuxs.cuteframework.view.pagemodel.Field;
 import com.qiuxs.cuteframework.view.pagemodel.FormModel;
 import com.qiuxs.cuteframework.view.pagemodel.FormSection;
+import com.qiuxs.cuteframework.view.pagemodel.ListButton;
 import com.qiuxs.cuteframework.view.pagemodel.Page;
 import com.qiuxs.cuteframework.view.pagemodel.Search;
 import com.qiuxs.cuteframework.view.pagemodel.Table;
@@ -93,7 +95,7 @@ public class PageModeConfiguration {
 	 */
 	@SuppressWarnings("unchecked")
 	private static void parseForms(Page page, Element root) throws Exception {
-		List<Element> formElements = root.elements("from");
+		List<Element> formElements = root.elements("form");
 		Map<String, FormModel> forms = new HashMap<>();
 		for (Element formE : formElements) {
 			FormModel formModel = new FormModel();
@@ -147,10 +149,17 @@ public class PageModeConfiguration {
 			throw new RuntimeException("Element[DataList] must set apiKey");
 		}
 		dl.setApiKey(apiKey);
+		
+		// 上方按钮配置
+		Element buttonsE = dataList.element("buttons");
+		List<ListButton> buttons = new ArrayList<ListButton>();
+		parseListButtons(buttons, buttonsE);
+		dl.setButtons(buttons);
+		
+		// 查询条件配置
 		Element search = dataList.element("search");
 		@SuppressWarnings("unchecked")
 		List<Element> searchFields = search.elements("field");
-		// 查询条件配置
 		Search searchModel = new Search();
 		dl.setSearch(searchModel);
 		List<Field> fields = parseFields(searchFields);
@@ -174,6 +183,27 @@ public class PageModeConfiguration {
 		table.setTds(tds);
 		dl.setTable(table);
 		page.setDataList(dl);
+	}
+
+	/**
+	 * 解析列表上方按钮
+	 *  
+	 * @author qiuxs  
+	 * @param buttons
+	 * @param buttonsE
+	 */
+	private static void parseListButtons(List<ListButton> buttons, Element buttonsE) {
+		if (buttonsE == null) {
+			return;
+		}
+		@SuppressWarnings("unchecked")
+		Iterator<Element> buttonsIter = buttonsE.elementIterator("button");
+		while (buttonsIter.hasNext()) {
+			Element buttonE = buttonsIter.next();
+			ListButton button = new ListButton();
+			XmlUtil.setBeanByElement(button, buttonE);
+			buttons.add(button);
+		}
 	}
 
 	/**

@@ -30,6 +30,7 @@ import org.apache.http.util.EntityUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.Constants;
+import com.qiuxs.cuteframework.core.basic.utils.CollectionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
@@ -65,15 +66,47 @@ public class HttpClientUtil {
 	 * Http Get请求获取JSONObject结果
 	 * 
 	 * @param url
+	 * @return
+	 */
+	public static JSONObject doGetJSONObject(String url) {
+		return doGetJSONObject(url, null);
+	}
+
+	/**
+	 * Http Get请求获取JSONObject结果
+	 * 
+	 * @param url
 	 * @param params
 	 * @return
 	 */
 	public static JSONObject doGetJSONObject(String url, Map<String, String> params) {
-		return JsonUtils.parseJSONObject(doGetString(url, params, false));
+		return doGetJSONObject(url, params, null);
+	}
+	
+	/**
+	 * Http Get请求获取JSONObject结果
+	 * 
+	 * @param url
+	 * @param params
+	 * @return
+	 */
+	public static JSONObject doGetJSONObject(String url, Map<String, String> params, boolean sslFlag) {
+		return doGetJSONObject(url, params, null, sslFlag);
+	}
+	
+	/**
+	 * Http Get请求获取JSONObject结果
+	 * 
+	 * @param url
+	 * @param params
+	 * @return
+	 */
+	public static JSONObject doGetJSONObject(String url, Map<String, String> params, Map<String, String> headers) {
+		return doGetJSONObject(url, params, headers, false);
 	}
 
 	/**
-	 * Https Get请求获取JSONObject结果
+	 * Http Get请求获取JSONObject结果
 	 * 
 	 * @param url
 	 * 		地址
@@ -83,19 +116,42 @@ public class HttpClientUtil {
 	 * 		是否需要使用https
 	 * @return
 	 */
-	public static JSONObject doGetJSONObject(String url, Map<String, String> params, boolean sslFlag) {
-		return JsonUtils.parseJSONObject(doGetString(url, params, sslFlag));
+	public static JSONObject doGetJSONObject(String url, Map<String, String> params, Map<String, String> headers, boolean sslFlag) {
+		return JsonUtils.parseJSONObject(doGetString(url, params, headers, sslFlag));
 	}
 
 	/**
-	 * Https Get请求获取String结果
+	 * Http Get请求获取String结果
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public static String doGetString(String url) {
+		return doGetString(url, null);
+	}
+	
+	/**
+	 * Http Get请求获取String结果
 	 * 
 	 * @param url
 	 * @param params
 	 * @return
 	 */
 	public static String doGetString(String url, Map<String, String> params) {
-		return doGetString(url, params, false);
+		return doGetString(url, params, null, false);
+	}
+	
+	/**
+	 * Http Get请求获取String结果
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param params
+	 * @param headers
+	 * @return
+	 */
+	public static String doGetString(String url, Map<String, String> params, Map<String, String> headers) {
+		return doGetString(url, params, headers, false);
 	}
 
 	/**
@@ -105,8 +161,8 @@ public class HttpClientUtil {
 	 * @param params
 	 * @return
 	 */
-	public static String doGetString(String url, Map<String, String> params, boolean sslFlag) {
-		return doGetString(builderFinalGetUrl(url, params), sslFlag ? httpsClient : httpClient);
+	public static String doGetString(String url, Map<String, String> params, Map<String, String> headers, boolean sslFlag) {
+		return doGetString(builderFinalGetUrl(url, params), headers, sslFlag ? httpsClient : httpClient);
 	}
 
 	/**
@@ -116,9 +172,16 @@ public class HttpClientUtil {
 	 * @param client
 	 * @return
 	 */
-	private static String doGetString(String finalUrl, HttpClient client) {
+	private static String doGetString(String finalUrl, Map<String, String> headers, HttpClient client) {
 		HttpGet get = new HttpGet(finalUrl);
 		try {
+			// 拼接请求头
+			if (CollectionUtils.isNotEmpty(headers)) {
+				for (Map.Entry<String, String> entry : headers.entrySet()) {
+					get.addHeader(entry.getKey(), entry.getValue());
+				}
+			}
+			
 			HttpResponse resp = client.execute(get);
 			int statusCode = resp.getStatusLine().getStatusCode();
 			String respStr = EntityUtils.toString(resp.getEntity());

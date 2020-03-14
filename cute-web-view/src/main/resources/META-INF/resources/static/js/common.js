@@ -1,4 +1,14 @@
 var MAIN_TAB = "mainTabs";
+
+String.prototype.startWith = function(str) {
+	var reg = new RegExp("^" + str);
+	return reg.test(this);
+}
+String.prototype.endWith = function(str) {
+	var reg=new RegExp(str + "$");
+	return reg.test(this);
+}
+
 var frm = {
 	getCtxPath : function() {
 		var pathName = document.location.pathname;
@@ -22,17 +32,14 @@ var frm = {
 			content : content
 		});
 	},
-	opWin : function (id, title, href, pk, onOpen, onClose) {
+	opWin : function (id, title, href, pk, onOpen, onClose, autoClose) {
 		var $div = $(document.createElement('div'));
 		$div.attr('id', id);
-		if (href && pk) {
-			if (href.indexOf('?') > 0) {
-				href = href + '&';
-			} else {
-				href = href + '?';
-			}
-			href = href + 'pk=' + pk;
-		}
+		
+		href = this.appendQueryString(href, 'id', pk);
+		href = this.appendQueryString(href, 'dlgId', id);
+		href = this.appendQueryString(href, 'autoClose', autoClose);
+		
 		var content = constants.tabsContent.replace('${href}', this.getCtxPath() + href);
 		var height = window.innerHeight * 0.85;
 		var width = window.innerWidth * 0.85;
@@ -54,6 +61,20 @@ var frm = {
 				}
 			}
 		});
+	},
+	closeWin: function(id) {
+		$('#' + id).window('close');
+	},
+	appendQueryString:function(href, key, val) {
+		if (href && val) {
+			if (href.indexOf('?') > 0) {
+				href = href + '&';
+			} else {
+				href = href + '?';
+			}
+			href = href + key + '=' + val;
+		}
+		return href;
 	},
 	showLoading : function() {
 		$("#my-mask").show();
@@ -103,8 +124,8 @@ var frm = {
 		return fromData;
 	},
 	setList: function(id, codeName, defval) {
-		frm.postApi(this.getCtxPath() + '/api.do', 'qd-codes', {codeDomain: codeName}).then(function(data) {
-			var rows = data.rows;
+		frm.postApi('qd-codes', {codeDomain: codeName}).then(function(data) {
+			var rows = data.data.rows;
 			var $sec = $('#' + id);
 			for (var item of rows) {
 				if (defval && defval == item.code) {
@@ -124,12 +145,33 @@ var frm = {
 	get: function(url) {
 		return this._ajax(url, {}, 'get', null, false);
 	},
-	postApi: function(url, apiKey, params, jsonParam) {
+	login: function(apiKey, params, jsonParam) {
 		params = params || {};
-		if (jsonParam) {
+		if (jsonParam && (typeof jsonParam) != 'string') {
 			params.jsonParam = JSON.stringify(jsonParam);
 		}
-		return this._ajax(this._appendApiKey(url, apiKey), params, 'post', null, true);
+		return this._ajax(this._appendApiKey(this.getCtxPath() + '/api.do', apiKey), params, 'post', null, true);
+	},
+	postApi: function(apiKey, params, jsonParam) {
+		params = params || {};
+		if (jsonParam && (typeof jsonParam) != 'string') {
+			params.jsonParam = JSON.stringify(jsonParam);
+		}
+		return this._ajax(this._appendApiKey(this.getCtxPath() + '/api.do', apiKey), params, 'post', null, true).then(function(data){return Promise.resolve(data);}, this._sessionTimeHandler);
+	},
+	getApi: function(apiKey) {
+		return this._ajax(this._appendApiKey(this.getCtxPath() + '/api.do', apiKey), {}, 'get', null, true).then(function(data){return Promise.resolve(data);}, this._sessionTimeHandler);
+	},
+	_sessionTimeHandler(err) {
+		// 会话已过期或没有登陆
+		if (err.status === 401) {
+			var loginPath = xhr.getResponseHeader('loginPath');
+			if (loginPath) {
+				top.location.href = top.frm.getCtxPath() + loginPath;
+				return;
+			}
+		}
+		return Promise.reject(err);
 	},
 	_appendApiKey(url, apiKey) {
 		if (url.indexOf('?') > 0) {
@@ -139,14 +181,17 @@ var frm = {
 		}
 		return url + 'apiKey=' + apiKey;
 	},
-	getApi: function(url, apiKey) {
-		return this._ajax(this.__appendApiKey(url, apiKey), {}, 'get', null, true);
-	},
 	_ajax: function (url, params, method, timeout, isApi) {
 		if (!timeout) {
 			timeout = 15000;
 		}
 		var sid = $.cookie('sid');
+		if (!sid) {
+			var userLite = localStorage.getItem('userLite');
+			if (userLite) {
+				sid = userLite.sessionId;
+			}
+		}
 		if (sid && sid.length > 0) {
 			params.sessionId = sid;
 		}
@@ -159,25 +204,24 @@ var frm = {
 				success: function(data, status) {
 					if (isApi) {
 						if (data.code === 0) {
-							resolve(data.data);
+							resolve(data);
 						} else {
 							reject(data, status);
 						}
+					} else {
+						resolve(data);
 					}
 				},
 				error: function(xhr, errorMsg, e) {
+					var status = xhr.status;
 					reject({
 						xhr: xhr,
 						data: JSON.parse(xhr.responseText),
 						msg: errorMsg,
-						status: xhr.status
+						status: status
 					});
 				}
 			});
 		});
 	}
 };
-
-var httpUtil = {
-		
-}

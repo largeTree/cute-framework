@@ -107,7 +107,9 @@ public class ReflectUtils {
 	public static <T> Class<T> getSuperClassGenricType(final Class<?> clazz, int... index) {
 		Type genType = clazz.getGenericSuperclass();
 		if (!(genType instanceof ParameterizedType)) {
-			log.debug("is not ParameterizedType");
+			if (log.isDebugEnabled()) {
+				log.debug("is not ParameterizedType");
+			}
 			return (Class<T>) Object.class;
 		}
 		int factIndex = 0;

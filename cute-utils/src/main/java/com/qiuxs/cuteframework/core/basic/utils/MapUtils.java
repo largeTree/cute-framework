@@ -1,7 +1,19 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.qiuxs.cuteframework.core.basic.utils.reflect.FieldUtils;
 
 /**
  * Map封装工具类
@@ -10,7 +22,61 @@ import java.util.Map;
  *
  */
 public class MapUtils {
+	
+	private static Logger log = LogManager.getLogger(MapUtils.class);
 
+	/**
+	 * 收集指定字段组成新列表
+	 *  
+	 * @author qiuxs  
+	 * @param list
+	 * @param fields
+	 * @return
+	 */
+	public static List<Map<String, Object>> collectList(List<? extends Object> list, String fields) {
+		return collectList(list, CollectionUtils.stringToSet(fields));
+	}
+	
+	/**
+	 * 收集指定字段组成新列表
+	 *  
+	 * @author qiuxs  
+	 * @param list
+	 * @param fields
+	 * @return
+	 */
+	public static List<Map<String, Object>> collectList(List<? extends Object> list, Set<String> fieldNames) {
+		if (ListUtils.isNullOrEmpty(list)) {
+			return Collections.emptyList();
+		}
+		if (CollectionUtils.isEmpty(fieldNames)) {
+			throw new RuntimeException("请指定需要收集的字段列表");
+		}
+		List<Map<String, Object>> newList = new ArrayList<Map<String, Object>>(list.size());
+		Class<? extends Object> clz = list.get(0).getClass();
+		List<Field> allFields = FieldUtils.getDeclaredFieldsNoDup(clz);
+		List<Field> neededFields = new ArrayList<Field>(fieldNames.size());
+		for (Field f : allFields) {
+			if (fieldNames.contains(f.getName())) {
+				FieldUtils.makeAccessible(f);
+				neededFields.add(f);
+			}
+		}
+		for (Object item : list) {
+			Map<String, Object> mapItem = new HashMap<String, Object>(neededFields.size());
+			for (Field f : neededFields) {
+				try {
+					Object val = f.get(item);
+					mapItem.put(f.getName(), val);
+				} catch (Exception e) {
+					log.warn("getValue failed, name = " + f.getName(), e);
+				}
+			}
+			newList.add(mapItem);
+		}
+		return newList;
+	}
+	
 	/**
 	 * 快速生成Map
 	 * 
@@ -69,6 +135,23 @@ public class MapUtils {
 	}
 
 	/**
+	 * 获取String值，不存在时返回默认值
+	 *  
+	 * @author qiuxs  
+	 * @param map
+	 * @param key
+	 * @param defVal
+	 * @return
+	 */
+	public static String getString(Map<String, ?> map, String key, String defVal) {
+		String string = getString(map, key);
+		if (string == null) {
+			string = defVal;
+		}
+		return string;
+	}
+
+	/**
 	 * 获取String值 不存在或值为Null时 抛出异常
 	 * 
 	 * @param map
@@ -92,6 +175,23 @@ public class MapUtils {
 	 */
 	public static Integer getInteger(Map<String, ?> map, String key) throws NumberFormatException {
 		return TypeAdapter.toInteger(map.get(key));
+	}
+	
+	/**
+	 * 获取int值、不存在返回默认值
+	 *  
+	 * @author qiuxs  
+	 * @param map
+	 * @param key
+	 * @param defVal
+	 * @return
+	 */
+	public static int getIntValue(Map<String, ?> map, String key, int defVal) {
+		Integer integer = getInteger(map, key);
+		if (integer == null) {
+			integer = defVal;
+		}
+		return integer;
 	}
 
 	/**
@@ -117,7 +217,11 @@ public class MapUtils {
 	 * @throws NumberFormatException
 	 */
 	public static Long getLong(Map<String, ?> map, String key) throws NumberFormatException {
-		return TypeAdapter.toLong(map.get(key));
+		String val = getString(map, key);
+		if (StringUtils.isNotBlank(val)) {
+			return TypeAdapter.toLong(val);
+		}
+		return null; 
 	}
 	
 	/**
@@ -177,6 +281,23 @@ public class MapUtils {
 		checkNull(val, key);
 		return val;
 	}
+
+	/**
+	 * 获取BigDecimal值
+	 *  
+	 * @author qiuxs  
+	 * @param map
+	 * @param string
+	 * @return 
+	 */
+	public static BigDecimal getBigDecimal(Map<String, ?> map, String key) {
+		String val = getString(map, key);
+		if (StringUtils.isBlank(val)) {
+			return null;
+		}
+		return new BigDecimal(val);
+		
+	}
 	
 	/**
 	 * 获取boolean值，不存在时返回默认值
@@ -194,10 +315,47 @@ public class MapUtils {
 		return val == null ? defaultVal : val;
 	}
 	
+	/**
+	 * 检查是否为空
+	 *  
+	 * @author qiuxs  
+	 * @param val
+	 * @param key
+	 */
 	private static void checkNull(Object val, String key) {
 		if (val == null) {
 			ExceptionUtils.throwLogicalException("param_required", key);
 		}
+	}
+
+	/**
+	 * javaBean转map
+	 *  
+	 * @author qiuxs  
+	 * @param request
+	 * @return
+	 */
+	public static Map<String, String> bean2Map(Object request) {
+		if (request == null) {
+			return Collections.emptyMap();
+		}
+		List<Field> fields = FieldUtils.getDeclaredFieldsNoDup(request.getClass());
+		Map<String, String> map = new HashMap<String, String>();
+		for (Field field : fields) {
+			if (Modifier.isStatic(field.getModifiers())) {
+				continue;
+			}
+			field.setAccessible(true);
+			try {
+				Object val = field.get(request);
+				if (val != null) {
+					map.put(field.getName(), String.valueOf(val));
+				}
+			} catch (ReflectiveOperationException e) {
+				log.warn("get field value failed, ext = " + e.getLocalizedMessage());
+			}
+		}
+		return map;
 	}
 
 }

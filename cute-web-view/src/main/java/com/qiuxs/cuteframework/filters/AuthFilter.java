@@ -9,7 +9,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,24 +16,21 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
-import com.qiuxs.cuteframework.core.context.EnvironmentContext;
+import com.qiuxs.cuteframework.view.config.ViewConfig;
+import com.qiuxs.cuteframework.web.auth.ApiAuthService;
 import com.qiuxs.cuteframework.web.utils.RequestUtils;
 
-@WebFilter(filterName = "authFilter", urlPatterns = {
-        "/",
-        "/sys/*",
-        "/view/*"
-})
 public class AuthFilter implements Filter {
 
 	private static Logger log = LogManager.getLogger(AuthFilter.class);
 
-	private static final String LOGIN_PATH_KEY = "login-path";
-	private static final String DEFAULT_LOGIN_PATH = "/login";
+	private static final String AUTHC_KEY = "Authc";
+	private static final String COOKIE_SESSIONID = "sid";
 
+	private ApiAuthService apiAuthService; 
+	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-
 	}
 
 	@Override
@@ -42,42 +38,46 @@ public class AuthFilter implements Filter {
 		boolean authFlag = false;
 		HttpServletRequest req = (HttpServletRequest) request;
 		try {
-			Map<String, String> cookiesMap = RequestUtils.getCookies(req);
-			String auth = cookiesMap.get("sid");
-			if (StringUtils.isNotBlank(auth) && this.checkAuth(auth)) {
+			// 先取请求头
+			String sessionId = req.getHeader(AUTHC_KEY);
+			if (StringUtils.isBlank(sessionId)) {
+				// 请求头没有的情况下，取cookie
+				Map<String, String> cookiesMap = RequestUtils.getCookies(req);
+				sessionId = cookiesMap.get(COOKIE_SESSIONID);
+			}
+			if (StringUtils.isNotBlank(sessionId) && this.getApiAuthService().checkAndSetSession(sessionId)) {
 				authFlag = true;
 			}
 		} catch (Exception e) {
 			log.error("Auth Request Failed ext = " + e.getLocalizedMessage(), e);
-			this.goLogin(req, response);
 		}
 
 		if (!authFlag) {
 			this.goLogin(req, response);
-			return;
 		} else {
 			chain.doFilter(request, response);
 		}
 
 	}
 
+	/**
+	 * 重定向到登录页
+	 *  
+	 * @author qiuxs  
+	 * @param req
+	 * @param resp
+	 * @throws IOException
+	 */
 	private void goLogin(HttpServletRequest req, ServletResponse resp) throws IOException {
-		((HttpServletResponse) resp).sendRedirect(req.getContextPath() + this.getLoginPath());
+		String redirectPath = req.getContextPath() + ViewConfig.getLoginPath();
+		((HttpServletResponse) resp).sendRedirect(redirectPath);
 	}
 
-	private String getLoginPath() {
-		String loginPath = EnvironmentContext.getEnvValue(LOGIN_PATH_KEY);
-		if (StringUtils.isBlank(loginPath)) {
-			loginPath = DEFAULT_LOGIN_PATH;
+	private ApiAuthService getApiAuthService() {
+		if (this.apiAuthService == null) {
+			this.apiAuthService = ApiAuthService.getApiAuthService();
 		}
-		if (!loginPath.startsWith("/")) {
-			loginPath = "/" + loginPath;
-		}
-		return loginPath;
-	}
-
-	private boolean checkAuth(String auth) {
-		return StringUtils.isNotBlank(auth);
+		return this.apiAuthService;
 	}
 
 	@Override

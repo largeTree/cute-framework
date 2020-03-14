@@ -12,6 +12,7 @@ import org.springframework.core.io.Resource;
 
 import com.qiuxs.cuteframework.core.basic.utils.ClassPathResourceUtil;
 import com.qiuxs.cuteframework.core.basic.utils.ClassUtils;
+import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.converter.XmlUtil;
 import com.qiuxs.cuteframework.core.log.Console;
 
@@ -45,7 +46,12 @@ public class WebLifecycleContainer {
 					if (clzName == null) {
 						throw new IllegalClassFormatException("className not allow Empty in " + res);
 					}
-					Class<IWebLifecycle> clz = ClassUtils.forName(clzName);
+					Class<IWebLifecycle> clz = null;
+					try {
+						clz = ClassUtils.forName(clzName);
+					} catch (Exception ex) {
+						throw new RuntimeException("init WebLifecycle Failed, ext = " + ex.getLocalizedMessage(), ex);
+					}
 					IWebLifecycle webLifecycle = clz.newInstance();
 					lifecycles.add(webLifecycle);
 					Console.log.info("Add WebLifecycle[" + clzName + "], order = " + webLifecycle.order());
@@ -62,6 +68,7 @@ public class WebLifecycleContainer {
 			WebLifecycleContainer.lifecycles = lifecycles;
 		} catch (Throwable e) {
 			Console.log.error("init Lifecycle.xml Failed ext = " + e.getLocalizedMessage(), e);
+			throw ExceptionUtils.unchecked(e);
 		}
 	}
 

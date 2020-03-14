@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
+import com.qiuxs.cuteframework.core.basic.constants.SymbolConstants;
 import com.qiuxs.cuteframework.core.basic.utils.reflect.FieldUtils;
 
 /**
@@ -19,6 +21,88 @@ import com.qiuxs.cuteframework.core.basic.utils.reflect.FieldUtils;
  *
  */
 public class ListUtils extends CollectionUtils {
+	
+	/**
+	 * 字符串转为Long列表,使用逗号分隔
+	 *  
+	 * @author qiuxs  
+	 * @param token
+	 * @return
+	 */
+	public static List<Long> stringToLongList(String token) {
+		return stringToLongList(token, SymbolConstants.SEPARATOR_COMMA);
+	}
+	
+	/**
+	 * 字符串转为Long列表
+	 *  
+	 * @author qiuxs  
+	 * @param token
+	 * @param separator
+	 * @return
+	 */
+	public static List<Long> stringToLongList(String token, String separator) {
+		return stringToList(token, separator, Long::parseLong);
+	}
+	
+	/**
+	 * 字符串转为Integer列表,使用逗号分隔
+	 *  
+	 * @author qiuxs  
+	 * @param token
+	 * @return
+	 */
+	public static List<Integer> stringToIntegerLis(String token) {
+		return stringToIntegerList(token, SymbolConstants.SEPARATOR_COMMA);
+	}
+	
+	/**
+	 * 字符串转为Integer列表
+	 *  
+	 * @author qiuxs  
+	 * @param token
+	 * @param separator
+	 * @return
+	 */
+	public static List<Integer> stringToIntegerList(String token, String separator) {
+		return stringToList(token, separator, Integer::parseInt);
+	}
+
+	/**
+	 * 字符串转为列表
+	 *  
+	 * @author qiuxs  
+	 * @param token
+	 * @return
+	 */
+	public static <T> List<T> stringToList(String token, String separator, Function<String, T> parser) {
+		if (StringUtils.isBlank(token)) {
+			return emptyList();
+		}
+		// 仅当为null时置为默认逗号，否则都是用次分隔符
+		if (separator == null) {
+			separator = SymbolConstants.SEPARATOR_COMMA;
+		}
+		String[] split = token.split(separator);
+		return asList(split, parser);
+	}
+
+	/**
+	 * 字符串数组转为对应类型的列表
+	 *  
+	 * @author qiuxs  
+	 * @param <T>
+	 * @param split
+	 * @param parser
+	 * @return
+	 */
+	public static <T> List<T> asList(String[] arr, Function<String, T> parser) {
+		List<T> list = new ArrayList<>();
+		for (String item : arr) {
+			list.add(parser.apply(item));
+		}
+		return list;
+	}
 
 	/**
 	 * 空列表
@@ -32,7 +116,7 @@ public class ListUtils extends CollectionUtils {
 	 * 将List中的元素以元素中某个字段为Key转为Map
 	 * 
 	 * 2019年6月15日 下午9:40:54
-	 * @auther qiuxs
+	 * @author qiuxs
 	 * @param list
 	 * @param fieldName
 	 * @return

@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +29,47 @@ import org.springframework.beans.BeanUtils;
 public class BeanUtil extends BeanUtils {
 
 	private static Logger log = LogManager.getLogger(BeanUtil.class);
-
+	
+	/**
+	 * 根据类名实例化一个对象
+	 * @param className
+	 * @return
+	 */
+	public static <T> T instantiateByName(String className) {
+		@SuppressWarnings("unchecked")
+		Class<T> clz = (Class<T>) ClassUtils.forName(className);
+		return instantiateClass(clz);
+	}
+	
+	/**
+	 * 复制列表所有的对象
+	 *  
+	 * @author qiuxs  
+	 * @param <R>
+	 * @param sourceList
+	 * @param targetClass
+	 * @param exclude
+	 * @return
+	 */
+	public static <R> List<R> assignmentPropertyBatch(List<?> sourceList, Class<R> targetClass, String exclude) {
+		List<R> newList = new ArrayList<R>();
+		if (CollectionUtils.isEmpty(sourceList)) {
+			return Collections.emptyList();
+		}
+		
+		if (targetClass == null) {
+			throw new RuntimeException("targetClass is null");
+		}
+		
+		for (Object source : sourceList) {
+			R newItem = BeanUtil.instantiate(targetClass);
+			assignmentProperty(source, newItem, exclude);
+			newList.add(newItem);
+		}
+		
+		return newList;
+	}
+	
 	/**
 	 * 复制对象属性，忽略为Null的值
 	 * @author qiuxs

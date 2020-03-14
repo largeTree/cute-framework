@@ -14,7 +14,6 @@
 		<dependency>
 			<groupId>com.qiuxs</groupId>
 			<artifactId>cute-web</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
@@ -26,6 +25,10 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

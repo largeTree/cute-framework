@@ -2,6 +2,7 @@ package com.qiuxs.cuteframework.core.context;
 
 import com.qiuxs.cuteframework.core.basic.config.IConfiguration;
 import com.qiuxs.cuteframework.core.basic.config.UConfigUtils;
+import com.qiuxs.cuteframework.tech.mc.McFactory.McServerType;
 
 /**
  * 环境参数上下文
@@ -52,6 +53,11 @@ public class EnvironmentContext {
 
 	public static boolean isTimerTaskOpen() {
 		return getDoamin().getBool("timer-task-open", false);
+	}
+
+	public static McServerType getMcServerType() {
+		String mcServerType = getDoamin().getString("mc-server-type", McServerType.local.name());
+		return McServerType.valueOf(mcServerType);
 	}
 
 	public static String getEnvValue(String key) {

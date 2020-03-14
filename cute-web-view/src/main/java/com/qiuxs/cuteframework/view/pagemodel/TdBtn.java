@@ -1,11 +1,15 @@
 package com.qiuxs.cuteframework.view.pagemodel;
 
+import java.io.Serializable;
+
 /**
  * 列表行按钮
  * @author qiuxs
  *
  */
-public class TdBtn {
+public class TdBtn implements Serializable {
+	
+	private static final long serialVersionUID = -1875555474981592215L;
 	
 	/** 按钮名 */
 	private String name;
@@ -17,6 +21,8 @@ public class TdBtn {
 	private String href;
 	/** 接口号 */
 	private String apiKey;
+	/** 参数定义 */
+	private String params;
 
 	public String getName() {
 		return name;
@@ -56,6 +62,14 @@ public class TdBtn {
 
 	public void setApiKey(String apiKey) {
 		this.apiKey = apiKey;
+	}
+
+	public String getParams() {
+		return params;
+	}
+
+	public void setParams(String params) {
+		this.params = params;
 	}
 
 }

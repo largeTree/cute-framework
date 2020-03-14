@@ -1,11 +1,12 @@
 package com.qiuxs.cuteframework.core.context;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
+import com.qiuxs.cuteframework.core.basic.utils.NumberUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
+import com.qiuxs.cuteframework.tech.mc.McFactory;
 
 /**
  * 
@@ -20,15 +21,20 @@ public class UserContext {
 
 	private static final String TL_USER_LITE = "tl_user_lite";
 
-	/** 会话缓存 */
-	private static final Map<String, UserLite> SESSION_HOLDER = new ConcurrentHashMap<>();
-	/** 用户ID和sessionId对应关系 */
-	private static final Map<Long, String> USER_ID_SESSION_ID_HOLDER = new ConcurrentHashMap<>();
+	private static class Holder {
+		/** 会话缓存 */
+		private static Map<String, UserLite> SESSION_HOLDER = McFactory.getFactory().createMap(String.class, UserLite.class, 10, "uc_session_map");
+		/** 用户ID和sessionId对应关系 */
+		private static Map<Long, String> USER_ID_SESSION_ID_HOLDER = McFactory.getFactory().createMap(Long.class, String.class, 10, "uc_user_id_session_id_map");
+	}
 	
 	/** 用户类型：管理员 */
 	public static final int USER_TYPE_ADMIN = 0;
 	/** 用户类型：普通用户 */
 	public static final int USER_TYPE_USER = 1;
+	
+	/** 默认会话过期时间 */
+	private static final int DEFAULT_SESSION_TIME_MS = 10 * 60 * 1000;
 
 	/**
 	 * 添加一个会话信息
@@ -36,15 +42,24 @@ public class UserContext {
 	 * @param userLite
 	 */
 	public static void addUserLite(UserLite userLite) {
+		// 等于0的设置一下
+		if (userLite.getLastTrigger() == 0) {
+			userLite.setLastTrigger(System.currentTimeMillis());
+		}
 		getSessionMap().put(userLite.getSessionId(), userLite);
 		// 放入线程变量缓存
 		setUserLite(userLite);
 		Map<Long, String> idSessionIdMap = getIdSessionIdMap();
-		// 放入新的对应关系
-		String oldSessionId = idSessionIdMap.put(userLite.getUserId(), userLite.getSessionId());
-		if (StringUtils.isNotBlank(oldSessionId)) {
-			// 存在旧会话时，移除旧会话
-			getSessionMap().remove(oldSessionId);
+		Long userId = userLite.getUserId();
+		if (!NumberUtils.isEmpty(userId)) {
+    		// 放入新的对应关系
+    		String oldSessionId = idSessionIdMap.get(userId);
+    		if (StringUtils.isNotBlank(oldSessionId)) {
+    			// 存在旧会话时，移除旧会话
+    			getSessionMap().remove(oldSessionId);
+    		}
+    		// 缓存userId和sessionId对应关系
+			idSessionIdMap.put(userId, userLite.getSessionId());
 		}
 	}
 	
@@ -127,7 +142,7 @@ public class UserContext {
 	 * @return
 	 */
 	private static Map<String, UserLite> getSessionMap() {
-		return SESSION_HOLDER;
+		return Holder.SESSION_HOLDER;
 	}
 
 	/**
@@ -136,7 +151,7 @@ public class UserContext {
 	 * @return
 	 */
 	private static Map<Long, String> getIdSessionIdMap() {
-		return USER_ID_SESSION_ID_HOLDER;
+		return Holder.USER_ID_SESSION_ID_HOLDER;
 	}
 
 	/**
@@ -158,5 +173,35 @@ public class UserContext {
 	public static Long getUserIdOpt() {
 		UserLite userLite = getUserLiteOpt();
 		return userLite == null ? null : userLite.getUserId();
+	}
+
+	/**
+	 * sessionId是否有效
+	 *  
+	 * @author qiuxs  
+	 * @param sessionId
+	 * @return
+	 */
+	public static boolean isValid(String sessionId) {
+		Map<String, UserLite> sessionMap = getSessionMap();
+		UserLite userLite = sessionMap.get(sessionId);
+		if (userLite == null) {
+			return false;
+		}
+		long lastTrigger = userLite.getLastTrigger();
+		// 支持设置为负数意为，永不过期
+		if (lastTrigger >= 0) {
+			// 验证是否过期，默认
+			int session_timeout_ms = EnvironmentContext.getIntValue("session_timeout_ms", DEFAULT_SESSION_TIME_MS);
+			if ((System.currentTimeMillis() - lastTrigger) > session_timeout_ms) {
+				getIdSessionIdMap().remove(userLite.getUserId());
+				getSessionMap().remove(sessionId);
+				return false;
+			}
+			// 更新一下最后触发时间
+			userLite.setLastTrigger(System.currentTimeMillis());
+			sessionMap.put(sessionId, userLite);
+		}
+		return true;
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.view.pagemodel.config.PageModeConfiguration;
 
@@ -34,6 +35,10 @@ public class ViewController {
 		String pageId = request.getParameter("pid");
 		String formId = request.getParameter("formId");
 		String action = request.getParameter("action");
+		// 默认为新增
+		if (StringUtils.isBlank(action)) {
+			action = "add";
+		}
 		modelMap.put("pageModel", PageModeConfiguration.getPage(pageId));
 		modelMap.put("formId", formId);
 		if (FORM_ACTION_VIEW.equals(action)) {

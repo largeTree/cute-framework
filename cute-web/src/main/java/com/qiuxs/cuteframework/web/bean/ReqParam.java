@@ -19,6 +19,10 @@ public class ReqParam extends HashMap<String, String> {
 	public ReqParam(Map<String, String> initVal) {
 		super(initVal);
 	}
+	
+	public Boolean getBoolean(String key) {
+		return MapUtils.getBoolean(this, key);
+	}
 
 	public Long getLong(String key) {
 		return MapUtils.getLong(this, key);
@@ -38,6 +42,18 @@ public class ReqParam extends HashMap<String, String> {
 
 	public Integer getInteger(String key) {
 		return MapUtils.getInteger(this, key);
+	}
+	
+	public long getLong(String key, long defVal) {
+		return MapUtils.getLongValue(this, key, defVal);
+	}
+
+	public String getString(String key, String defVal) {
+		return MapUtils.getString(this, key, defVal);
+	}
+
+	public int getInteger(String key, int defVal) {
+		return MapUtils.getIntValue(this, key, defVal);
 	}
 
 	/**
@@ -96,6 +112,17 @@ public class ReqParam extends HashMap<String, String> {
 	 */
 	public boolean getWrapper() {
 		return MapUtils.getBooleanValue(this, ActionConstants.PARAM_WRAPPER, false);
+	}
+	
+	/**
+	 * 转为map
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public Map<String, Object> toMap(){
+		Map<String, Object> map = new HashMap<String, Object>(this);
+		return map;
 	}
 
 }

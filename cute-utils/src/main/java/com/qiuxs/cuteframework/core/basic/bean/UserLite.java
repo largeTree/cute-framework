@@ -50,6 +50,9 @@ public class UserLite implements Serializable {
 
 	/**  用户类型. */
 	private int userType;
+	
+	/**  最后触发时间戳. */
+	private long lastTrigger;
 
 	/**
 	 * Gets the 当前用户ID.
@@ -230,5 +233,24 @@ public class UserLite implements Serializable {
 	public void setUserType(int userType) {
 		this.userType = userType;
 	}
+
+	/**
+	 * Gets the 最后触发时间戳.
+	 *
+	 * @return the 最后触发时间戳
+	 */
+	public long getLastTrigger() {
+		return lastTrigger;
+	}
+
+	/**
+	 * Sets the 最后触发时间戳.
+	 *
+	 * @param lastTrigger the new 最后触发时间戳
+	 */
+	public void setLastTrigger(long lastTrigger) {
+		this.lastTrigger = lastTrigger;
+	}
+	
 
 }

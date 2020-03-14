@@ -43,7 +43,11 @@ public class FuncInitHelper {
 	@javax.annotation.Resource
 	private IFuncService funcService;
 
-	private ThreadLocal<AtomicInteger> tlShowOrder = new ThreadLocal<>();
+	private ThreadLocal<AtomicInteger> tlShowOrder = new ThreadLocal<AtomicInteger>() {
+		protected AtomicInteger initialValue() {
+			return new AtomicInteger();
+		};
+	};
 
 	/**
 	 * 初始化所有功能菜单
@@ -56,9 +60,7 @@ public class FuncInitHelper {
 		List<Document> docs = new ArrayList<>();
 		for (Resource res : resList) {
 			Document funcXml = XmlUtil.readAsDocument(res);
-			Element rootE = funcXml.getRootElement();
-			List<Func> allFunc = this.parseChildren("", rootE);
-			this.saveFuncs(allFunc);
+			docs.add(funcXml);
 		}
 		
 		docs.sort(new Comparator<Document>() {
