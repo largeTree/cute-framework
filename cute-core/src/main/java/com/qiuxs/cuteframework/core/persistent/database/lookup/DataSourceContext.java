@@ -68,6 +68,10 @@ public class DataSourceContext {
 	public static void initSeqDb(String seqDsId) {
 		DataSourceContext.seqDsId = seqDsId;
 	}
+	
+	public static void initLogDb(String logDsId) {
+		DataSourceContext.logDsId = logDsId;
+	}
 
 	public static String getDsId() {
 		String currentDsId = TLVariableHolder.getVariable(TL_DS_ID);

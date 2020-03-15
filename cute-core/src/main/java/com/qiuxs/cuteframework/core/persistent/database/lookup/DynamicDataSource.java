@@ -163,6 +163,9 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		if (DsType.SEQ.value().equals(type)) {
 			dataSource.setDefaultAutoCommit(true);
 			DataSourceContext.initSeqDb(dsId);
+		} else if (DsType.LOG.value().equals(type)) {
+			dataSource.setDefaultAutoCommit(true);
+			DataSourceContext.initLogDb(dsId);
 		} else {
 			dataSource.setDefaultAutoCommit(this.defaultTargetDataSource.getDefaultAutoCommit());
 		}
