@@ -1,5 +1,7 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
+import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -7,6 +9,9 @@ import java.util.Set;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.DefaultJSONParser;
+import com.alibaba.fastjson.parser.ParserConfig;
+import com.alibaba.fastjson.serializer.DateCodec;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
 /**
@@ -16,6 +21,21 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
  *
  */
 public class JsonUtils {
+	
+	private static ParserConfig myParserConfig = new ParserConfig();
+	static {
+		myParserConfig.putDeserializer(Date.class, new DateCodec() {
+
+			@Override
+			protected <T> T cast(DefaultJSONParser parser, Type clazz, Object fieldName, Object value) {
+				if ("--".equals(String.valueOf(value))) {
+					return null;
+				}
+				return super.cast(parser, clazz, fieldName, value);
+			}
+			
+		});
+	}
 	
 	/**
 	 * 准换数组元素key的格式，
@@ -133,7 +153,7 @@ public class JsonUtils {
 	 * 创建时间：2018年7月26日 下午10:14:05
 	 */
 	public static <T> T parseObject(String str, Class<T> clz) {
-		return JSON.parseObject(str, clz);
+		return JSON.parseObject(str, clz, myParserConfig);
 	}
 	
 	/**
@@ -147,7 +167,7 @@ public class JsonUtils {
 	 * 创建时间：2018年7月26日 下午10:14:05
 	 */
 	public static <T> T parseObject(JSONObject json, Class<T> clz) {
-		return JSONObject.toJavaObject(json, clz);
+		return JSON.parseObject(json.toJSONString(), clz, myParserConfig);
 	}
 
 	/**

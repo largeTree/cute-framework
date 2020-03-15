@@ -47,30 +47,98 @@ public class DataSourceContext {
 	private static String seqDsId;
 	/** 日志库id */
 	private static String logDsId;
+	/** 入口库id */
+	private static String entryDsId;
 
 
+	/***
+	 * 变更当前数据库为日志库
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
 	public static String setLogDb() {
 		return setUpDs(logDsId);
 	}
 	
+	/**
+	 * 获取日志库id
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
 	public static String getLogDb() {
 		return logDsId;
 	}
 	
+	/**
+	 * 变更当前数据库为序列库
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
 	public static String setSeqDb() {
 		return setUpDs(seqDsId);
 	}
 	
+	/**
+	 * 获取序列库id
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
 	public static String getSeqDb() {
 		return seqDsId;
 	}
 	
+	/**
+	 * 变更当前数据库为入口库
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public static String setEntryDb() {
+		return setUpDs(entryDsId);
+	}
+	
+	/**
+	 * 获取入口库id
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public static String getEntryDb() {
+		return entryDsId;
+	}
+	
+	/**
+	 * 初始化序列库id
+	 *  
+	 * @author qiuxs  
+	 * @param seqDsId
+	 */
 	public static void initSeqDb(String seqDsId) {
 		DataSourceContext.seqDsId = seqDsId;
 	}
 	
+	/**
+	 * 初始化日志库id
+	 *  
+	 * @author qiuxs  
+	 * @param logDsId
+	 */
 	public static void initLogDb(String logDsId) {
 		DataSourceContext.logDsId = logDsId;
+	}
+	
+	/**
+	 * 初始化入口库id
+	 *  
+	 * @author qiuxs  
+	 * @param entryDsId
+	 */
+	public static void initEntryDb(String entryDsId) {
+		DataSourceContext.entryDsId = entryDsId;
 	}
 
 	public static String getDsId() {

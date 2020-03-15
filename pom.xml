@@ -77,6 +77,11 @@
 				<artifactId>cute-basebiz</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>cute-gconfig-plugin</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 </project>

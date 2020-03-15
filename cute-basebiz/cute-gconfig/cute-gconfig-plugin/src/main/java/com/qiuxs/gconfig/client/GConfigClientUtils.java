@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.utils.BeanUtil;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
-import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.tech.mc.McFactory;
 import com.qiuxs.gconfig.client.dto.GConfigDTO;
 import com.qiuxs.gconfig.client.dto.GConfigOptions;
@@ -48,6 +47,23 @@ public class GConfigClientUtils {
 	}
 	
 	/**
+	 * 获取int型系统配置
+	 *  
+	 * @author qiuxs  
+	 * @param code
+	 * @param defVal
+	 * @return
+	 */
+	public static int getSystemConfigInt(String code, int defVal) {
+		String val = getSystemConfig(code);
+		if (val == null) {
+			return defVal;
+		} else {
+			return Integer.parseInt(val);
+		}
+	}
+	
+	/**
 	 * 获取系统配置
 	 *  
 	 * @author qiuxs  
@@ -57,9 +73,6 @@ public class GConfigClientUtils {
 	 * @return
 	 */
 	public static String getSystemConfig(UserLite userLite, String code) {
-		if (userLite == null) {
-			userLite = UserContext.getUserLiteOpt();
-		}
 		Long userId = userLite == null ? 0L : userLite.getUserId();
 		
 		// 获取当前用户的缓存
