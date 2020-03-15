@@ -108,6 +108,7 @@ public class DefaultXMLConfiguration extends AbstractConfiguration {
 				return;
 			}
 			this.addDocument(document);
+			log.info(path + ", config loaded...");
 		} catch (Exception e) {
 			log.warn(path + ", config load failed...");
 		}
