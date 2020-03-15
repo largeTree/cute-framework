@@ -17,6 +17,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import com.qiuxs.cuteframework.core.basic.Constants.DsType;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.basic.utils.TypeAdapter;
 import com.qiuxs.cuteframework.core.basic.utils.reflect.FieldUtils;
 import com.qiuxs.cuteframework.core.log.Console;
@@ -139,11 +140,20 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		String dsId = dsInfo.getId();
 		boolean isValid = true;
 		String type = dsInfo.getType();
+		defaultTargetDataSource.getUsername();
 		
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setUrl(dsInfo.getUrl());
-		dataSource.setUsername(dsInfo.getUserName());
-		dataSource.setPassword(dsInfo.getPassword());
+		String userName = dsInfo.getUserName();
+		if (StringUtils.isBlank(userName)) {
+			userName = defaultTargetDataSource.getUsername();
+		}
+		String password = dsInfo.getPassword();
+		if (StringUtils.isBlank(password)) {
+			password = defaultTargetDataSource.getPassword();
+		}
+		dataSource.setUsername(userName);
+		dataSource.setPassword(password);
 		dataSource.setDriverClassName(dsInfo.getDriverClass());
 		dataSource.setInitialSize(this.defaultTargetDataSource.getInitialSize());
 		dataSource.setMaxActive(this.defaultTargetDataSource.getMaxActive());
