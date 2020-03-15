@@ -8,7 +8,6 @@ import java.util.Properties;
 import java.util.Set;
 
 import com.qiuxs.cuteframework.core.basic.utils.ClassPathResourceUtil;
-import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 
 /**
  * 默认Properties配置
@@ -71,6 +70,7 @@ public class DefaultPropertiesConfiguration extends AbstractConfiguration {
 				return;
 			}
 			this.addProperties(prop);
+			log.info(path + ", config loaded...");
 		} catch (Exception e) {
 			log.warn(path + ", config load failed...");
 		}
