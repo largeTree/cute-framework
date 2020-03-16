@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.mock.GConfigClientUtilsMock;
+import com.qiuxs.cuteframework.mock.IDGenerateUtilMock;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:test/applicationContext*.xml"
@@ -20,6 +21,7 @@ public class BaseSpringTest implements ApplicationContextAware {
 	@Before
 	public void aaaaaaaaaSetUp() {
 		GConfigClientUtilsMock.mock();
+		IDGenerateUtilMock.mock();
 	}
 
 	@After

@@ -14,7 +14,7 @@ public class IDGenerateUtil {
 	
 	private static String seqType;
 
-	public static Long getNextId(String tableName) {
+	public static Long getNextLongId(String tableName) {
 		String seq_type = getSeqType();
 		IDGeneraterable idGenerater = null;
 		switch (seq_type) {

@@ -161,11 +161,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		dataSource.setMaxWait(this.defaultTargetDataSource.getMaxWait());
 		dataSource.setValidationQuery(this.defaultTargetDataSource.getValidationQuery());
 		if (DsType.SEQ.value().equals(type)) {
-			dataSource.setDefaultAutoCommit(true);
-			DataSourceContext.initSeqDb(dsId);
 		} else if (DsType.LOG.value().equals(type)) {
-			dataSource.setDefaultAutoCommit(true);
-			DataSourceContext.initLogDb(dsId);
 		} else {
 			dataSource.setDefaultAutoCommit(this.defaultTargetDataSource.getDefaultAutoCommit());
 		}
@@ -189,10 +185,15 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		if (isValid) {
 			this.targetDataSources.put(dsId, dataSource);
 			if (DsType.ENTRY.value().equals(type)) {
+				DataSourceContext.initEntryDb(dsId);
 				this.mapDsTypeId.put(DsType.ENTRY.value(), dsId);
 			} else if (DsType.LOG.value().equals(type)) {
+				dataSource.setDefaultAutoCommit(true);
+				DataSourceContext.initLogDb(dsId);
 				this.mapDsTypeId.put(DsType.LOG.value(), dsId);
 			} else if (DsType.SEQ.value().equals(type)) {
+				dataSource.setDefaultAutoCommit(true);
+				DataSourceContext.initSeqDb(dsId);
 				this.mapDsTypeId.put(DsType.SEQ.value(), dsId);
 			} else if (DsType.BIZ.value().equals(type)) {
 				@SuppressWarnings("unchecked")

@@ -54,7 +54,7 @@ public class IdGenerateFilter<PK extends Serializable, T extends IEntity<PK>> im
 	
 	@SuppressWarnings("unchecked")
 	private PK getPK(Class<?> type) {
-		 Object pk = IDGenerateUtil.getNextId(tableName);
+		 Object pk = IDGenerateUtil.getNextLongId(tableName);
 		return (PK) TypeAdapter.adapter(pk, type);
 	}
 

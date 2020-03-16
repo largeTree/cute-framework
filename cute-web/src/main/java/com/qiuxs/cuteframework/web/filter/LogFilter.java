@@ -69,7 +69,7 @@ public class LogFilter implements Filter {
 			}
 			LogUtils.putMDC("ip", ip);
 			// 全局日志识别号
-			Long globalId = IDGenerateUtil.getNextId(LogConstant.GLOBAL_ID_SEQ);
+			Long globalId = IDGenerateUtil.getNextLongId(LogConstant.GLOBAL_ID_SEQ);
 			reqLog.setGlobalId(globalId);
 			LogUtils.putMDC(LogConstant.COLUMN_GLOBALID, String.valueOf(globalId));
 		} catch (Throwable e) {
