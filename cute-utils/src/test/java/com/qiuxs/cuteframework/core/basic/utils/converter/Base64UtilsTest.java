@@ -7,7 +7,7 @@ public class Base64UtilsTest {
 
 	@Test
 	public void testEnDecode() {
-		String str = "我是字符串";
+		String str = "from=wx";
 		System.out.println("原始：" + str);
 		String base64Str = Base64Utils.encodeString(str);
 		System.out.println("加密后：" + base64Str);

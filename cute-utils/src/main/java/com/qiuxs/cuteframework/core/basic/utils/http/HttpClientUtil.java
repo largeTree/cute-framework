@@ -71,6 +71,16 @@ public class HttpClientUtil {
 	public static JSONObject doGetJSONObject(String url) {
 		return doGetJSONObject(url, null);
 	}
+	
+	/**
+	 * Http Get请求获取JSONObject结果
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public static JSONObject doGetJSONObject(String url, boolean sslFlag) {
+		return doGetJSONObject(url, null, sslFlag);
+	}
 
 	/**
 	 * Http Get请求获取JSONObject结果
