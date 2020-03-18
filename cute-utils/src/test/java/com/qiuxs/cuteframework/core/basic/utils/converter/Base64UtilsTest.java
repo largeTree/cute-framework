@@ -1,5 +1,7 @@
 package com.qiuxs.cuteframework.core.basic.utils.converter;
 
+import java.net.URLEncoder;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,6 +16,8 @@ public class Base64UtilsTest {
 		String decodedStr = Base64Utils.decodeString(base64Str);
 		System.out.println("解密后：" + decodedStr);
 		Assert.assertEquals("Assert str :", str, decodedStr);
+		
+		System.out.println(URLEncoder.encode("ZnJvbT13eA=="));
 	}
 	
 }
