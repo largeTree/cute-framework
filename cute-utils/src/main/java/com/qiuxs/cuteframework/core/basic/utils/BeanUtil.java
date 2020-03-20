@@ -195,7 +195,7 @@ public class BeanUtil extends BeanUtils {
 	public static void copyPropertiesInclude(Object src, Object target, String... include) {
 		Set<String> set_include = new HashSet<String>();
 		for (String name : include) {
-			set_include.add(name);
+			set_include.add(name.trim());
 		}
 		//		copyProperties(target, src , set_include, null);
 		copyPropertiesInclude(src, target, set_include);
@@ -286,7 +286,7 @@ public class BeanUtil extends BeanUtils {
 				if (!targetPropNames.contains(key)) {
 					continue;
 				}
-				if (include != null && !include.contains(key) || exclude != null && exclude.contains(key)) {
+				if ((include != null && !include.contains(key)) || (exclude != null && exclude.contains(key))) {
 					continue;
 				}
 				Object val = PropertyUtils.getProperty(src, key);
