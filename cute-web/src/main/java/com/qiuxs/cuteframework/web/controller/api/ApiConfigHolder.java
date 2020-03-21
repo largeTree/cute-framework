@@ -42,6 +42,11 @@ public class ApiConfigHolder {
 	 * @return
 	 */
 	public static ApiConfig getApiConfig(String apiKey) {
+		// debug模式每次都自动刷新apiConfig
+		if (EnvironmentContext.isDebug()) {
+			ApiConfigHolder.init();
+		}
+		
 		ApiConfig apiConfig = apiMap.get(apiKey);
 		// 填充action对象和方法对象
 		if (apiConfig.getAction() == null || apiConfig.getMethodObj() == null) {
@@ -123,10 +128,6 @@ public class ApiConfigHolder {
 		private static final long serialVersionUID = -7054632393156510860L;
 
 		public ApiConfig get(Object key) {
-			// debug模式每次都自动刷新apiConfig
-			if (EnvironmentContext.isDebug()) {
-				ApiConfigHolder.init();
-			}
 			ApiConfig val = super.get(key);
 			if (val == null) {
 				ExceptionUtils.throwLogicalException(WebConstants.ErrorCode.API_KEY_NOT_EXISTS, "api_key_not_exists", key);

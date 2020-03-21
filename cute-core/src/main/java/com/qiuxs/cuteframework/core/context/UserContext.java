@@ -35,22 +35,38 @@ public class UserContext {
 	
 	/** 默认会话过期时间 */
 	private static final int DEFAULT_SESSION_TIME_MS = 10 * 60 * 1000;
+	
+	/**
+	 * 根据用户Id获取会话
+	 *  
+	 * @author qiuxs  
+	 * @param id
+	 * @return
+	 */
+	public static UserLite getUserLiteByUserIdOpt(Long id) {
+		String sessionId = getIdSessionIdMap().get(id);
+		if (StringUtils.isNotBlank(sessionId)) {
+			UserLite userLite = getUserLite(sessionId, true);
+			return userLite;
+		}
+		return null;
+	}
 
 	/**
 	 * 添加一个会话信息
 	 * 
 	 * @param userLite
 	 */
-	public static void addUserLite(UserLite userLite) {
+	public static void addUserSession(UserLite userSession) {
 		// 等于0的设置一下
-		if (userLite.getLastTrigger() == 0) {
-			userLite.setLastTrigger(System.currentTimeMillis());
+		if (userSession.getLastTrigger() == 0) {
+			userSession.setLastTrigger(System.currentTimeMillis());
 		}
-		getSessionMap().put(userLite.getSessionId(), userLite);
+		getSessionMap().put(userSession.getSessionId(), userSession);
 		// 放入线程变量缓存
-		setUserLite(userLite);
+		setUserLite(userSession);
 		Map<Long, String> idSessionIdMap = getIdSessionIdMap();
-		Long userId = userLite.getUserId();
+		Long userId = userSession.getUserId();
 		if (!NumberUtils.isEmpty(userId)) {
     		// 放入新的对应关系
     		String oldSessionId = idSessionIdMap.get(userId);
@@ -59,8 +75,18 @@ public class UserContext {
     			getSessionMap().remove(oldSessionId);
     		}
     		// 缓存userId和sessionId对应关系
-			idSessionIdMap.put(userId, userLite.getSessionId());
+			idSessionIdMap.put(userId, userSession.getSessionId());
 		}
+	}
+	
+	/**
+	 * 更新会话信息
+	 *  
+	 * @author qiuxs  
+	 * @param userSession
+	 */
+	public static void setUserSession(UserLite userSession) {
+		getSessionMap().put(userSession.getSessionId(), userSession);
 	}
 	
 	/**
@@ -71,8 +97,8 @@ public class UserContext {
 	 *
 	 * 创建时间：2018年9月2日 下午10:13:23
 	 */
-	public static void removeSession(String sesionId) {
-		UserLite userLite = getSessionMap().get(sesionId);
+	public static void removeSession(String sessionId) {
+		UserLite userLite = getSessionMap().remove(sessionId);
 		if (userLite != null) {
 			getIdSessionIdMap().remove(userLite.getUserId());
 		}

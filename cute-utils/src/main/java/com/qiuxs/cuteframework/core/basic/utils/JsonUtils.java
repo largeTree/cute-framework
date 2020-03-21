@@ -126,7 +126,7 @@ public class JsonUtils {
 	 * 创建时间：2018年7月26日 下午10:13:34
 	 */
 	public static JSONObject parseJSONObject(String str) {
-		return JSON.parseObject(str);
+		return JSONObject.parseObject(str);
 	}
 
 	/**

@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.context.TLVariableHolder;
 import com.qiuxs.cuteframework.web.context.dto.RequestContext;
 
@@ -104,6 +105,14 @@ public class RequestContextHolder {
 
 	public static String getRequestUrl() {
 		return getContext().getRequestUrl();
+	}
+
+	public static String getReferer() {
+		String referer = getHeader("Referer");
+		if (StringUtils.isBlank(referer)) {
+			referer = getHeader("referer");
+		}
+		return referer;
 	}
 
 }

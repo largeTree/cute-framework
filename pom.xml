@@ -24,6 +24,7 @@
 		<module>cute-code-generate</module>
 		<module>cute-jetty</module>
 		<module>cute-basebiz</module>
+		<module>upyun-wrapper</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -80,6 +81,11 @@
 			<dependency>
 				<groupId>com.qiuxs</groupId>
 				<artifactId>cute-gconfig-plugin</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>upyun-wrapper</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>

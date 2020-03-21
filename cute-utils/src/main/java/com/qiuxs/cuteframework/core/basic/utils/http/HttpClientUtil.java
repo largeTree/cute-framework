@@ -141,6 +141,19 @@ public class HttpClientUtil {
 	}
 	
 	/**
+	 * 获取字符串
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param params
+	 * @return
+	 */
+	public static String doGetString(String url, boolean sslFlag) {
+		return doGetString(url, null, null, false);
+	}
+	
+	
+	/**
 	 * Http Get请求获取String结果
 	 * 
 	 * @param url

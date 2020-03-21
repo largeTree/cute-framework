@@ -135,8 +135,12 @@ public class RedisMap<K, V> implements IRedisMap<K, V> {
 	@Override
 	public V put(K key, V val) {
 		byte[] keyFieldBytes = SerializeUtil.serialize(key);
+		byte[] oldData = getRedisFacade().hget(namekeyBytes, keyFieldBytes);
 		byte[] valBytes = SerializeUtil.serialize(val);
 		getRedisFacade().hset(namekeyBytes, keyFieldBytes, valBytes);
+		if (oldData != null) {
+			return SerializeUtil.unserial(oldData);
+		}
 		return null;
 	}
 
@@ -146,7 +150,11 @@ public class RedisMap<K, V> implements IRedisMap<K, V> {
 	@Override
 	public V remove(Object key) {
 		byte[] keyFieldBytes = SerializeUtil.serialize(key);
+		byte[] oldData = getRedisFacade().hget(namekeyBytes, keyFieldBytes);
 		getRedisFacade().hdel(namekeyBytes, keyFieldBytes);
+		if (oldData != null) {
+			return SerializeUtil.unserial(oldData);
+		}
 		return null;
 	}
 

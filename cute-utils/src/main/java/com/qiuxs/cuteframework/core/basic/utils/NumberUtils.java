@@ -269,6 +269,17 @@ public class NumberUtils {
 	public static boolean isEmpty(Number num) {
 		return num == null || num.longValue() == 0;
 	}
+	
+	/**
+	 * 判断数字是否非空
+	 *  
+	 * @author qiuxs  
+	 * @param num
+	 * @return
+	 */
+	public static boolean isNotEmpty(Number num) {
+		return !isEmpty(num);
+	}
 
 	/**
 	 * 如果参数为null则返回0
