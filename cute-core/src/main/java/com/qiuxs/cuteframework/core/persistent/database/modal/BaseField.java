@@ -12,6 +12,7 @@ import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.FLOAT_TYPE_NA
 import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.FLOAT_VALUE_TYPE_NAME_SIMPLE;
 import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.INTEGER_TYPE_NAME_SIMPLE;
 import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.INTEGER_VALUE_TYPE_NAME_SIMPLE;
+import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.JSON_ARR_TYPE_NAME;
 import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.JSON_TYPE_NAME;
 import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.LONG_TYPE_NAME_SIMPLE;
 import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.LONG_VALUE_TYPE_NAME_SIMPLE;
@@ -21,7 +22,6 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 
 import com.alibaba.fastjson.JSONObject;
-import com.qiuxs.cuteframework.core.basic.utils.TypeAdapter;
 
 /**
  * 基础字段配置
@@ -57,7 +57,9 @@ public class BaseField {
 		this.defaultValue = defaultValue;
 		if (typeName == null && typeClass != null) {
 			if (JSONObject.class.isAssignableFrom(typeClass)) {
-				this.type = TypeAdapter.JSON_TYPE_NAME;
+				this.type = JSON_TYPE_NAME;
+			} else if (JSONObject.class.isAssignableFrom(typeClass)) {
+				this.type = JSON_ARR_TYPE_NAME;
 			} else {
 				this.type = typeClass.getSimpleName();
 			}
@@ -118,7 +120,7 @@ public class BaseField {
 			return Calendar.getInstance().getTime();
 		} else if (STRING_TYPE_NAME.equals(this.type)) {
 			return "";
-		} else if (JSON_TYPE_NAME.equals(this.type)) {
+		} else if (JSON_TYPE_NAME.equals(this.type) || JSON_ARR_TYPE_NAME.equals(type)) {
 			return null;
 		}
 		return defaultValue;
