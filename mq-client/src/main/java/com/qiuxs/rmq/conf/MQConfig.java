@@ -13,10 +13,14 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.springframework.core.io.Resource;
 
+import com.qiuxs.cuteframework.core.basic.bean.Pair;
+import com.qiuxs.cuteframework.core.basic.config.IConfiguration;
+import com.qiuxs.cuteframework.core.basic.config.UConfigUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ClassPathResourceUtil;
 import com.qiuxs.cuteframework.core.basic.utils.CollectionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.converter.XmlUtil;
 import com.qiuxs.cuteframework.core.basic.utils.io.IOUtils;
+import com.qiuxs.rmq.MqClientContants;
 
 public class MQConfig {
 
@@ -27,8 +31,15 @@ public class MQConfig {
 
 	/** 普通消费者 */
 	private static Map<String, ListenerProp> consumerMap;
+
 	/** 广播消费者 */
 	private static Map<String, ListenerProp> consumerBMap;
+
+	/** 顺序消费者 */
+	private static Map<String, ListenerProp> consumerOMap;
+
+	/** Map<String=消费组最终名称, Pair<消费组属性, Map<String=主题, String=同一主题下，合并后的以||分隔的标签列表>> */
+	private static Map<String, Pair<ListenerProp, Map<String, String>>> listenTopicTagsMap = new HashMap<>();
 
 	static {
 		init();
@@ -41,24 +52,29 @@ public class MQConfig {
 				log.info("没有配置classpath*:/config/mq.xml 不启用RocketMq...");
 				return;
 			}
-			
-			// 第一个是普通消费者，第二个是广播消费者
+
+			// 第一个是普通消费者，第二个是广播消费者，第三个是顺序消费者
 			@SuppressWarnings("unchecked")
-			Map<String, ListenerProp>[] tempConsumerMap = new HashMap[] {new HashMap<>(), new HashMap<>()};
-			
+			Map<String, ListenerProp>[] tempConsumerMap = new HashMap[] { new HashMap<>(), new HashMap<>(), new HashMap<>() };
+
 			for (Resource res : resList) {
 				InputStream is = res.getInputStream();
 				if (is != null) {
-					try{
+					try {
 						initOne(is, res.getURL(), tempConsumerMap);
 					} finally {
 						IOUtils.closeQuietly(is);
 					}
 				}
 			}
-			
+
 			consumerMap = tempConsumerMap[0];
 			consumerBMap = tempConsumerMap[1];
+			// 设置为广播消费者
+			consumerBMap.values().forEach(listenerProp -> listenerProp.setBroadcast(true));
+			// 顺序消费者
+			consumerOMap = tempConsumerMap[2];
+			consumerOMap.values().forEach(listenerProp -> listenerProp.setOrder(true));
 		} catch (Throwable e) {
 			log.error("初始化Mq失败... ext = " + e.getLocalizedMessage(), e);
 		}
@@ -67,11 +83,13 @@ public class MQConfig {
 	private static void initOne(InputStream inputStream, URL resUrl, Map<String, ListenerProp>[] tempConsumerMap) {
 		Document doc = XmlUtil.readAsDocument(inputStream);
 		Element rooElement = doc.getRootElement();
-		
+
 		// 普通消费者
 		initConsumers(tempConsumerMap[0], rooElement.element("consumer"));
 		// 广播消费者
 		initConsumers(tempConsumerMap[1], rooElement.element("consumerB"));
+		// 广播消费者
+		initConsumers(tempConsumerMap[2], rooElement.element("consumerO"));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -92,9 +110,35 @@ public class MQConfig {
 				for (String tag : tagList) {
 					ListenerProp listenerProp = new ListenerProp(topic, tag, bean, method);
 					listenerMap.put(topic + "." + tag, listenerProp);
+					addTopicTagsToMap(topic, tag, listenerProp);
 				}
 			}
 		}
+	}
+
+	private static void addTopicTagsToMap(String topic, String tag, ListenerProp listenerProp) {
+		IConfiguration config = UConfigUtils.getDomain(MqClientContants.CONFIG_DOMAIN);
+		String defaultConsumerGroup = null;
+		if (config != null) {
+			defaultConsumerGroup = config.getString(MqClientContants.CONSUMER_GROUP_NAME);
+		}
+		Pair<ListenerProp, Map<String, String>> groupTopicTags = listenTopicTagsMap.get(defaultConsumerGroup);
+		if (groupTopicTags == null) {
+			groupTopicTags = new Pair<ListenerProp, Map<String, String>>(listenerProp, new HashMap<>());
+			listenTopicTagsMap.put(defaultConsumerGroup, groupTopicTags);
+		}
+		Map<String, String> topicTagMap = groupTopicTags.getV2();
+		String tags = topicTagMap.get(topic);
+		if (tags == null) {
+			tags = tag;
+		} else if (!"*".equals(tags)) {
+			if ("*".equals(tag)) {
+				tags = "*";
+			} else {
+				tags = tags + "||" + tag;
+			}
+		}
+		topicTagMap.put(topic, tags);
 	}
 
 	public static Map<String, ListenerProp> getConsumerMap() {
@@ -103,6 +147,10 @@ public class MQConfig {
 
 	public static Map<String, ListenerProp> getConsumerBMap() {
 		return consumerBMap;
+	}
+
+	public static Map<String, Pair<ListenerProp, Map<String, String>>> getListenTopicTagsMap() {
+		return listenTopicTagsMap;
 	}
 
 }

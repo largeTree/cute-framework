@@ -18,4 +18,11 @@ public class MqClientContants {
 	/** 最小消费线程 */
 	public static final String RMQ_MIN_CONSUMER_THREAD = "rmq_min_consumer_thread";
 	
+	/** 普通消费者 */
+	public static final int LISTENER_TYPE_NORMAL = 1;
+	/** 广播消费者 */
+	public static final int LISTENER_TYPE_B = 2;
+	/** 顺序消息 */
+	public static final int LISTENER_TYPE_O = 3;
+	
 }

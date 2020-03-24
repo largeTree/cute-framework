@@ -2,6 +2,7 @@ package com.qiuxs.rmq.conf;
 
 import java.io.Serializable;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ListenerProp.
  */
@@ -21,6 +22,12 @@ public class ListenerProp implements Serializable {
 	
 	/**  消费方法名. */
 	private String method;
+	
+	/** 是否是广播消息. */
+	private boolean broadcast;
+	
+	/**  是否是顺序消费. */
+	private boolean order;
 
 	public ListenerProp() {}
 	
@@ -102,6 +109,42 @@ public class ListenerProp implements Serializable {
 	 */
 	public void setMethod(String method) {
 		this.method = method;
+	}
+
+	/**
+	 * Checks if is 是否是广播消息.
+	 *
+	 * @return the 是否是广播消息
+	 */
+	public boolean isBroadcast() {
+		return broadcast;
+	}
+
+	/**
+	 * Sets the 是否是广播消息.
+	 *
+	 * @param broadcast the new 是否是广播消息
+	 */
+	public void setBroadcast(boolean broadcast) {
+		this.broadcast = broadcast;
+	}
+
+	/**
+	 * Checks if is 是否是顺序消费.
+	 *
+	 * @return the 是否是顺序消费
+	 */
+	public boolean isOrder() {
+		return order;
+	}
+
+	/**
+	 * Sets the 是否是顺序消费.
+	 *
+	 * @param order the new 是否是顺序消费
+	 */
+	public void setOrder(boolean order) {
+		this.order = order;
 	}
 
 }
