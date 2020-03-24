@@ -23,6 +23,9 @@ public class LogConstant {
 	
 	/** globalId序列名 */
 	public static final String GLOBAL_ID_SEQ = "log_global_id";
+	
+	/**  appName客户端 */
+	public static final String APP_CLI = "cli";
 
 	/**
 	 * jdbc日志appender缓存大小

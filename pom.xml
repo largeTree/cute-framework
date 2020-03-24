@@ -25,6 +25,7 @@
 		<module>cute-jetty</module>
 		<module>cute-basebiz</module>
 		<module>upyun-wrapper</module>
+		<module>mq-client</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -86,6 +87,11 @@
 			<dependency>
 				<groupId>com.qiuxs</groupId>
 				<artifactId>upyun-wrapper</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>mq-client</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>

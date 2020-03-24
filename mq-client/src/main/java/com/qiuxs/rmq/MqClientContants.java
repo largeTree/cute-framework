@@ -1,0 +1,21 @@
+package com.qiuxs.rmq;
+
+public class MqClientContants {
+	
+	/** rmq配置域 */
+	public static final String CONFIG_DOMAIN = "rmq";
+	
+	/** 生产者组名配置 */
+	public static final String PRODUCER_GROUP_NAME = "mq_producer_group";
+	/** 消费者组名 */
+	public static final String CONSUMER_GROUP_NAME = "mq_consumer_group";
+	/** rocketmq nameserver地址 */
+	public static final String RMQ_NAME_SRV = "rmq_name_srv";
+	/** 发送超时时间 */
+	public static final String RMQ_SEND_TIMEOUT = "rmq_send_time";
+	/** 最大消费线程 */
+	public static final String RMQ_MAX_CONSUMER_THREAD = "rmq_max_consumer_thread";
+	/** 最小消费线程 */
+	public static final String RMQ_MIN_CONSUMER_THREAD = "rmq_min_consumer_thread";
+	
+}

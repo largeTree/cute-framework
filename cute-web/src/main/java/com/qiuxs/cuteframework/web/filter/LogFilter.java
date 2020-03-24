@@ -22,6 +22,7 @@ import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.core.persistent.util.IDGenerateUtil;
 import com.qiuxs.cuteframework.tech.log.LogConstant;
 import com.qiuxs.cuteframework.tech.log.LogUtils;
+import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogUtils;
 import com.qiuxs.cuteframework.web.WebConstants;
 import com.qiuxs.cuteframework.web.log.entity.RequestLog;
 import com.qiuxs.cuteframework.web.log.service.IRequestLogService;
@@ -67,17 +68,18 @@ public class LogFilter implements Filter {
 			if (apiKey != null) {
 				LogUtils.putMDC(LogConstant.MDC_KEY_APIKEY, apiKey);
 			}
-			LogUtils.putMDC("ip", ip);
 			// 全局日志识别号
 			Long globalId = IDGenerateUtil.getNextLongId(LogConstant.GLOBAL_ID_SEQ);
 			reqLog.setGlobalId(globalId);
-			LogUtils.putMDC(LogConstant.COLUMN_GLOBALID, String.valueOf(globalId));
+			
+			// 初始化apiLog
+			ApiLogUtils.initApiLog("gateway" + apiKey, LogConstant.APP_CLI, EnvironmentContext.getAppName(), globalId, ip, "");
 		} catch (Throwable e) {
 			log.error("put logMDC ext=" + e.getLocalizedMessage(), e);
 		}
 
 		Throwable chainEx = null;
-		
+
 		int status = RequestLog.FAILED;
 		try {
 			chain.doFilter(request, response);
@@ -100,7 +102,7 @@ public class LogFilter implements Filter {
 		} finally {
 			LogUtils.clearMDC();
 		}
-		
+
 		// 如果执行chain的过程中发生异常那么直接抛出
 		if (chainEx != null) {
 			if (chainEx instanceof IOException) {

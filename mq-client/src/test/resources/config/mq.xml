@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mq>
+    <consumer>
+    	<topic id="testTopic">
+    		<listener tags="" bean="" method="" />
+    	</topic>
+    </consumer>
+    <consumerB>
+    	<topic id="testTopicB" >
+    		<listener tags="" bean="" method="" />
+    	</topic>
+    </consumerB>
+</mq>
