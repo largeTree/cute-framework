@@ -445,4 +445,8 @@ public class MethodUtils {
 		}
 		return new RuntimeException("Unexpected Checked Exception.", e);
 	}
+
+	public static Object invokeMethod(Object bean, String method, Object...args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		return org.apache.commons.lang3.reflect.MethodUtils.invokeExactMethod(bean, method, args);
+	}
 }
