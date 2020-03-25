@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rmq>
+	<mq_producer_group>testProducerGroup</mq_producer_group>
+	<mq_consumer_group>testConsumerGroup</mq_consumer_group>
+	<rmq_name_srv>192.168.1.203:9876</rmq_name_srv>
+	<rmq_max_consumer_thread>3</rmq_max_consumer_thread>
+</rmq>

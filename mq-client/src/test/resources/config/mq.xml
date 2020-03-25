@@ -2,12 +2,12 @@
 <mq>
     <consumer>
     	<topic id="testTopic">
-    		<listener tags="" bean="" method="" />
+    		<listener tags="testTag" bean="testConsumer" method="consumer" />
     	</topic>
     </consumer>
     <consumerB>
     	<topic id="testTopicB" >
-    		<listener tags="" bean="" method="" />
+    		<listener tags="testTagB" bean="testConsumer" method="consumerB" />
     	</topic>
     </consumerB>
 </mq>

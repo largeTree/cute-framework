@@ -70,11 +70,7 @@ public class MQConfig {
 
 			consumerMap = tempConsumerMap[0];
 			consumerBMap = tempConsumerMap[1];
-			// 设置为广播消费者
-			consumerBMap.values().forEach(listenerProp -> listenerProp.setBroadcast(true));
-			// 顺序消费者
 			consumerOMap = tempConsumerMap[2];
-			consumerOMap.values().forEach(listenerProp -> listenerProp.setOrder(true));
 		} catch (Throwable e) {
 			log.error("初始化Mq失败... ext = " + e.getLocalizedMessage(), e);
 		}
@@ -85,15 +81,15 @@ public class MQConfig {
 		Element rooElement = doc.getRootElement();
 
 		// 普通消费者
-		initConsumers(tempConsumerMap[0], rooElement.element("consumer"));
+		initConsumers(tempConsumerMap[0], rooElement.element("consumer"), MqClientContants.LISTENER_TYPE_NORMAL);
 		// 广播消费者
-		initConsumers(tempConsumerMap[1], rooElement.element("consumerB"));
+		initConsumers(tempConsumerMap[1], rooElement.element("consumerB"), MqClientContants.LISTENER_TYPE_B);
 		// 广播消费者
-		initConsumers(tempConsumerMap[2], rooElement.element("consumerO"));
+		initConsumers(tempConsumerMap[2], rooElement.element("consumerO"), MqClientContants.LISTENER_TYPE_O);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static void initConsumers(Map<String, ListenerProp> listenerMap, Element consumerE) {
+	private static void initConsumers(Map<String, ListenerProp> listenerMap, Element consumerE, int listenerType) {
 		Iterator<Element> topicIter = consumerE.elementIterator("topic");
 		while (topicIter.hasNext()) {
 			Element topicElement = topicIter.next();
@@ -108,7 +104,7 @@ public class MQConfig {
 				String method = listenerE.attributeValue("method");
 				String[] tagList = tags.split("\\|\\|");
 				for (String tag : tagList) {
-					ListenerProp listenerProp = new ListenerProp(topic, tag, bean, method);
+					ListenerProp listenerProp = new ListenerProp(topic, tag, bean, method, listenerType);
 					listenerMap.put(topic + "." + tag, listenerProp);
 					addTopicTagsToMap(topic, tag, listenerProp);
 				}
@@ -141,12 +137,23 @@ public class MQConfig {
 		topicTagMap.put(topic, tags);
 	}
 
-	public static Map<String, ListenerProp> getConsumerMap() {
-		return consumerMap;
-	}
-
-	public static Map<String, ListenerProp> getConsumerBMap() {
-		return consumerBMap;
+	public static Map<String, ListenerProp> getListener(int listenerType) {
+		Map<String, ListenerProp> listenerMap;
+		switch (listenerType) {
+		case MqClientContants.LISTENER_TYPE_NORMAL:
+			listenerMap = consumerMap;
+			break;
+		case MqClientContants.LISTENER_TYPE_B:
+			listenerMap = consumerBMap;
+			break;
+		case MqClientContants.LISTENER_TYPE_O:
+			listenerMap = consumerOMap;
+			break;
+		default:
+			listenerMap = null;
+			break;
+		}
+		return listenerMap;
 	}
 
 	public static Map<String, Pair<ListenerProp, Map<String, String>>> getListenTopicTagsMap() {

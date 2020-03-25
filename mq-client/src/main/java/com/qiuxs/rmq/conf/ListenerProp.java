@@ -2,7 +2,8 @@ package com.qiuxs.rmq.conf;
 
 import java.io.Serializable;
 
-// TODO: Auto-generated Javadoc
+import com.qiuxs.rmq.MqClientContants;
+
 /**
  * The Class ListenerProp.
  */
@@ -28,15 +29,25 @@ public class ListenerProp implements Serializable {
 	
 	/**  是否是顺序消费. */
 	private boolean order;
+	
+	/**  消费者类型. */
+	private int listenerType;
 
 	public ListenerProp() {}
 	
-	public ListenerProp(String topic, String tags, String bean, String method) {
+	public ListenerProp(String topic, String tags, String bean, String method, int listenerType) {
 		super();
 		this.topic = topic;
 		this.tags = tags;
 		this.bean = bean;
 		this.method = method;
+		this.listenerType = listenerType;
+		if (listenerType == MqClientContants.LISTENER_TYPE_B) {
+			setBroadcast(true);
+		}
+		if (listenerType == MqClientContants.LISTENER_TYPE_O) {
+			setOrder(true);
+		}
 	}
 
 	/**
@@ -145,6 +156,24 @@ public class ListenerProp implements Serializable {
 	 */
 	public void setOrder(boolean order) {
 		this.order = order;
+	}
+
+	/**
+	 * Gets the 消费者类型.
+	 *
+	 * @return the 消费者类型
+	 */
+	public int getListenerType() {
+		return listenerType;
+	}
+
+	/**
+	 * Sets the 消费者类型.
+	 *
+	 * @param listenerType the new 消费者类型
+	 */
+	public void setListenerType(int listenerType) {
+		this.listenerType = listenerType;
 	}
 
 }

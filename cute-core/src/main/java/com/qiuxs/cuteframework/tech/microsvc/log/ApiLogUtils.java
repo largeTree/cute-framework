@@ -24,7 +24,7 @@ public class ApiLogUtils {
 	}
 
 	public static ApiLogProp genSendToInvokedLogProp() {
-		return null;
+		return new ApiLogProp();
 	}
 
 	public static void writeReqLog(ApiLogProp logProp, String topic, String substringBefore, Object body, String typeRequestMq) {

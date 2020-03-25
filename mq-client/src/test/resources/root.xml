@@ -1,0 +1,8 @@
+<domanins>
+	<domain id="env" merge="replace" type="xml">
+		<default path="classpath:/env.xml" />
+	</domain>
+	<domain id="rmq" merge="replace" type="xml">
+		<default path="classpath*:/config/rmq.xml" />
+	</domain>
+</domanins>

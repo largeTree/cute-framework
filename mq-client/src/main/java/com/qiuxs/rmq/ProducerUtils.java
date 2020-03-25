@@ -55,6 +55,131 @@ public class ProducerUtils {
 	private static long sendMsgTimeout = 3000;
 	/** 默认消息队列选择器。用于发送顺序消息 */
 	private static MessageQueueSelector defaultQueueSelector;
+	
+	/**
+	 * 
+	 * 使用默认生产者发送简单消息。
+	 * 发送成功时返回消息ID。发送失败时将抛出异常。注意发送消息成功只是指发送消息到消息服务器的Master成功，就算没有成功刷盘、复制到从服务器也算成功。
+	 * @param topic	主题
+	 * @param tags 消息tag。用于标识一种消息。
+	 * @param bizKeys 业务主键。根据tags和keys必须能唯一确定一条消息。
+	 * @param body 需要发送的数据对象。注意该对象类型在消费端必须存在。
+	 * @return 消息服务器生成的消息ID
+	 */
+	public static String send(String topic, String tags, String bizKeys, Object body) {
+		return send(null, topic, tags, bizKeys, body, null, sendMsgTimeout, null).getMsgId();
+	}
+
+	/**
+	 * 使用默认生产者发送消息。
+	 * 发送成功时返回消息ID。发送失败时将抛出异常。注意发送消息成功只是指发送消息到消息服务器的Master成功，就算没有成功刷盘、复制到从服务器也算成功。
+	 * @param topic	主题
+	 * @param tags 消息tag。用于标识一种消息。
+	 * @param bizKeys 业务主键。根据tags和keys必须能唯一确定一条消息。
+	 * @param body 需要发送的数据对象。注意该对象类型在消费端必须存在。
+	 * @param extProp 需要发送的附加属性，为null时不添加附加属性
+	 * @return 消息服务器生成的消息ID
+	 */
+	public static String send(String topic, String tags, String bizKeys, Object body, Map<String, String> extProp) {
+		return send(null, topic, tags, bizKeys, body, null, sendMsgTimeout, extProp).getMsgId();
+	}
+
+	/**
+	 * 发送顺序消息。顺序消息是指消费时必须按发送时的顺序消费的消息。
+	 * @param topic	主题
+	 * @param tags 消息tag。用于标识一种消息。
+	 * @param bizKeys 业务主键。根据tags和keys必须能唯一确定一条消息。
+	 * @param body 需要发送的数据对象。注意该对象类型在消费端必须存在。
+	 * @param orderId 消息顺序号。相同顺序ID的消息将是有序的。
+	 * @return 消息服务器生成的消息ID
+	 */
+	public static String send(String topic, String tags, String bizKeys, Object body, Integer orderId) {
+		return send(null, topic, tags, bizKeys, body, orderId, sendMsgTimeout, null).getMsgId();
+	}
+
+	/**
+	 * 使用默认生产者发送延迟消息。
+	 * 发送成功时返回消息ID。发送失败时将抛出异常。注意发送消息成功只是指发送消息到消息服务器的Master成功，就算没有成功刷盘、复制到从服务器也算成功。
+	 * @param topic	主题
+	 * @param tags 消息tag。用于标识一种消息。
+	 * @param bizKeys 业务主键。根据tags和keys必须能唯一确定一条消息。
+	 * @param body 需要发送的数据对象。注意该对象类型在消费端必须存在。
+	 * @param extProp 需要发送的附加属性，为null时不添加附加属性
+	 * @param delayLevel 延迟发送级别。从0级开始，对应的延迟时间=0s 1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h
+	 * @return 消息服务器生成的消息ID
+	 */
+	public static String send(String topic, String tags, String bizKeys, Object body, Map<String, String> extProp, int delayLevel) {
+		return send(null, topic, tags, bizKeys, body, true, null, sendMsgTimeout, extProp, true, delayLevel).getMsgId();
+	}
+
+	/**
+	 *	发送字节数组消息体。发送时，将不序列化消息体。
+	 *	可以通过参数serialBody指定消费者收到消息时，是否需要序列化消息体。
+	 * @param topic	主题
+	 * @param tags 消息tag。用于标识一种消息。
+	 * @param bizKeys 业务主键。根据tags和keys必须能唯一确定一条消息。
+	 * @param body 需要发送的数据。
+	 * @param orderId 消息顺序号。为null时发送无序消息。不为null时，发送有序消息，相同顺序ID的消息将是有序的。
+	 * @param bodyIsSerialed 消息体是否为序列化对象。true 消息体为序列化对象。消费者收到消息后，将执行反序列化操作。
+	 * 			false 消息体不是序列化后的字节数组。消费者收到消息后，不执行反序列化操作。
+	 * @param extProp 需要发送的附加属性，为null时不添加附加属性
+	 * @return 消息服务器生成的消息ID
+	 */
+	public static String send(String topic, String tags, String bizKeys, byte[] body, Integer orderId,
+			boolean bodyIsSerialed, Map<String, String> extProp) {
+		return send(null, topic, tags, bizKeys, body, false, orderId, sendMsgTimeout, extProp, bodyIsSerialed, 0).getMsgId();
+	}
+
+	/**
+	 * 相对完整的发送同步消息方法。
+	 * @param groupName 生产者组名
+	 * @param topic	主题
+	 * @param tags 消息tag。用于标识一种消息。
+	 * @param bizKeys 业务主键。根据tags和keys必须能唯一确定一条消息。
+	 * @param body 需要发送的数据对象。注意该对象类型在消费端必须存在。
+	 * @param orderId 消息顺序号。为null时发送无序消息。不为null时，发送有序消息，相同顺序ID的消息将是有序的。
+	 * @param timeout 超时时间。为-1时，使用默认值
+	 * @param extProp 需要发送的附加属性，为null时不添加附加属性
+	 * @return RocketMQ消息发送结果对象
+	 * @throws InterruptedException 
+	 * @throws MQBrokerException 
+	 * @throws RemotingException 
+	 * @throws MQClientException 
+	 */
+	public static SendResult send(String groupName, String topic, String tags, String bizKeys, Object body, 
+			Integer orderId, long timeout, Map<String, String> extProp) {
+		return send(groupName, topic, tags, bizKeys, body, true, orderId, timeout, extProp, true, 0);
+	}
+	
+	/**
+	 * 发送同步消息方法。
+	 * @param groupName 生产者组名。为null时，使用默认生产者
+	 * @param topic	主题
+	 * @param tags 消息tag。用于标识一种消息。
+	 * @param bizKeys 业务主键。根据tags和keys必须能唯一确定一条消息。
+	 * @param body 需要发送的数据对象。注意该对象类型在消费端必须存在。
+	 * @param serialBody 是否需要序列化body。不序列化时，消息体body必须是字节数组。
+	 * @param orderId 消息顺序号。为null时发送无序消息。不为null时，发送有序消息，相同顺序ID的消息将是有序的。
+	 * @param timeout 超时时间。为-1时，使用默认值
+	 * @param extProp 需要发送的附加属性，为null时不添加附加属性
+	 * @param bodyIsSerialed 消息体是否为序列化对象，用于通知消费者是否需要执行反序列化操作。true 消息体为序列化对象，消费者收到消息后，将执行反序列化操作。
+	 * 			false 消息体不是序列化后的字节数组，消费者收到消息后，不执行反序列化操作。
+	 * @param delayLevel 延迟发送级别。从0级开始，对应的延迟时间=0s 1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h
+	 * @return RocketMQ消息发送结果对象
+	 * @throws InterruptedException 
+	 * @throws MQBrokerException 
+	 * @throws RemotingException 
+	 * @throws MQClientException 
+	 */
+	public static SendResult send(String groupName, String topic, String tags, String bizKeys, Object body,
+			boolean serialBody, Integer orderId, long timeout, Map<String, String> extProp,
+			boolean bodyIsSerialed, int delayLevel) {
+		try {
+			return sendThrowException(groupName, topic, tags, bizKeys, body, serialBody, orderId, timeout, extProp, bodyIsSerialed, delayLevel);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	public static SendResult sendThrowException(String groupName, String topic, String tags, String bizKeys, Object body,
 			boolean serialBody, Integer orderId, long timeout, Map<String, String> extProp,
