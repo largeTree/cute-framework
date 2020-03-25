@@ -17,8 +17,6 @@
 		<module>cute-tester</module>
 		<module>cute-web</module>
 		<module>cute-web-view</module>
-		<module>cute-captcha-plugin</module>
-		<module>cute-sms-plugin</module>
 		<module>cute-utils</module>
 		<module>webservice-injector</module>
 		<module>cute-code-generate</module>

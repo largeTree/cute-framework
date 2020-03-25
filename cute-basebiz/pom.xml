@@ -11,5 +11,7 @@
 	<description>业务型基础库</description>
 	<modules>
 		<module>cute-gconfig</module>
+		<module>cute-captcha-plugin</module>
+		<module>cute-sms-plugin</module>
 	</modules>
 </project>

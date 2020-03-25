@@ -3,29 +3,26 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.qiuxs</groupId>
-		<artifactId>cute-framework-parent</artifactId>
+		<artifactId>cute-basebiz</artifactId>
 		<version>2.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>cute-captcha-plugin</artifactId>
-	<name>验证码插件</name>
+	<artifactId>cute-sms-plugin</artifactId>
+	<name>短信插件</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>cute-web</artifactId>
+			<groupId>com.qiuxs</groupId>
+			<artifactId>cute-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>cute-sms-plugin</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>cute-tester</artifactId>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-core</artifactId>
+			<version>4.0.3</version>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
-		<finalName>ec-captcha-plugin</finalName>
+		<finalName>cute-sms-plugin</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -33,5 +30,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
