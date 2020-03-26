@@ -90,6 +90,9 @@ public class MQConfig {
 
 	@SuppressWarnings("unchecked")
 	private static void initConsumers(Map<String, ListenerProp> listenerMap, Element consumerE, int listenerType) {
+		if (consumerE == null) {
+			return;
+		}
 		Iterator<Element> topicIter = consumerE.elementIterator("topic");
 		while (topicIter.hasNext()) {
 			Element topicElement = topicIter.next();
@@ -114,14 +117,17 @@ public class MQConfig {
 
 	private static void addTopicTagsToMap(String topic, String tag, ListenerProp listenerProp) {
 		IConfiguration config = UConfigUtils.getDomain(MqClientContants.CONFIG_DOMAIN);
-		String defaultConsumerGroup = null;
+		String consumerGroup = null;
 		if (config != null) {
-			defaultConsumerGroup = config.getString(MqClientContants.CONSUMER_GROUP_NAME);
+			consumerGroup = config.getString(MqClientContants.CONSUMER_GROUP_NAME);
 		}
-		Pair<ListenerProp, Map<String, String>> groupTopicTags = listenTopicTagsMap.get(defaultConsumerGroup);
+		if (listenerProp.isBroadcast()) {
+			consumerGroup = consumerGroup + "B";
+		}
+		Pair<ListenerProp, Map<String, String>> groupTopicTags = listenTopicTagsMap.get(consumerGroup);
 		if (groupTopicTags == null) {
 			groupTopicTags = new Pair<ListenerProp, Map<String, String>>(listenerProp, new HashMap<>());
-			listenTopicTagsMap.put(defaultConsumerGroup, groupTopicTags);
+			listenTopicTagsMap.put(consumerGroup, groupTopicTags);
 		}
 		Map<String, String> topicTagMap = groupTopicTags.getV2();
 		String tags = topicTagMap.get(topic);

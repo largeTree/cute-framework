@@ -24,7 +24,12 @@ public class MqClientContants {
 	public static final int LISTENER_TYPE_B = 2;
 	/** 顺序消息 */
 	public static final int LISTENER_TYPE_O = 3;
+	
 	/** 消息体json类型 */
 	public static final String MSG_PROP_BODY_JSON_TO_CLASS = "mqBodyJsonToClassProp";
+	/** 消息消费重试次数 */
+	public static final String MSG_PROP_RECONSUME_TIMES = "mqReconsumeTimes";
+	/** 消息产生时间 */
+	public static final String MSG_PROP_BORN_TIMEstamp = "mqMessageBornTimestamp";
 	
 }

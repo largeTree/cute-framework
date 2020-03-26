@@ -2,6 +2,8 @@ package com.qiuxs.cuteframework.tech.microsvc.log;
 
 import java.io.Serializable;
 
+import com.qiuxs.cuteframework.core.basic.utils.BeanUtil;
+
 public class ApiLogProp implements Serializable {
 
 	private static final long serialVersionUID = 3394454229211021474L;
@@ -87,4 +89,9 @@ public class ApiLogProp implements Serializable {
 		this.requestId = requestId;
 	}
 
+	public ApiLogProp cloneTo() {
+		ApiLogProp toApiProp = BeanUtil.deepCopyBean(this);
+		return toApiProp;
+	}
+	
 }

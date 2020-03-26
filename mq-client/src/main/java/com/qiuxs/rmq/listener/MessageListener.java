@@ -5,21 +5,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.rocketmq.common.message.MessageExt;
 
+import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
+import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.basic.utils.io.SerializeUtil;
 import com.qiuxs.cuteframework.core.basic.utils.reflect.MethodUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.context.TLVariableHolder;
+import com.qiuxs.cuteframework.tech.microsvc.MicroSvcContext;
 import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogConstants;
 import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogProp;
 import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogUtils;
+import com.qiuxs.rmq.MqClientContants;
 import com.qiuxs.rmq.conf.ListenerProp;
 import com.qiuxs.rmq.conf.MQConfig;
 import com.qiuxs.rmq.microsvc.MqMicroSvcContext;
 
 public abstract class MessageListener {
 
+	private static final Logger log = LogManager.getLogger(MessageListener.class);
+	
 	private int listenerType;
 
 	public MessageListener(int listenerType) {
@@ -36,7 +45,7 @@ public abstract class MessageListener {
 				String tags = msg.getTags();
 
 				// 缓存上下文
-				MqMicroSvcContext microSvcContext = new MqMicroSvcContext(msg);
+				MicroSvcContext microSvcContext = new MqMicroSvcContext(msg);
 				microSvcContext.cacheContextFromSource();
 
 				Map<String, String> extProp = new HashMap<>(msg.getProperties());
@@ -99,7 +108,7 @@ public abstract class MessageListener {
 		Map<String, ListenerProp> listeners = MQConfig.getListener(listenerType);
 		ListenerProp listenerProp = listeners.get(topic + "." + tags);
 		Object listener = ApplicationContextHolder.getBean(listenerProp.getBean());
-		MethodUtils.invokeMethod(listener, listenerProp.getMethod(), topic, tags, bizKey, body, extProp);
+		MethodUtils.invokeMethod(listener, listenerProp.getMethod(), new Class[] { String.class, String.class, String.class, Object.class, Map.class }, new Object[] { topic, tags, bizKey, body, extProp });
 	}
 
 	/**
@@ -112,6 +121,13 @@ public abstract class MessageListener {
 	 * @return 
 	 */
 	private ApiLogProp writeReqApiLog(MessageExt msg, Object body, Map<String, String> extProp) {
+		log.info("消费消息：" + msg.getMsgId() + ", topic = " + msg.getTopic() + ", tags = " + msg.getTags());
+		String strApiLogProp = MapUtils.getString(extProp, ApiLogConstants.ATTACH_KEY_REQ_PROP);
+		if (StringUtils.isNotBlank(strApiLogProp)) {
+			ApiLogProp apiLogProp = JsonUtils.parseObject(strApiLogProp, ApiLogProp.class);
+			ApiLogUtils.initApiLog(apiLogProp);
+			return apiLogProp;
+		}
 		return null;
 	}
 
@@ -123,7 +139,8 @@ public abstract class MessageListener {
 	 * @param msg
 	 */
 	private void putExtProps(Map<String, String> extProp, MessageExt msg) {
-
+		extProp.put(MqClientContants.MSG_PROP_RECONSUME_TIMES, String.valueOf(msg.getReconsumeTimes()));
+		extProp.put(MqClientContants.MSG_PROP_BORN_TIMEstamp, String.valueOf(msg.getBornTimestamp()));
 	}
 
 }
