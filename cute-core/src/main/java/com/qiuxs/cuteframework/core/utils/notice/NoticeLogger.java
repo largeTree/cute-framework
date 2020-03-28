@@ -39,10 +39,10 @@ public class NoticeLogger {
 		sb.append(" >>>>>>>>>>>>>>>>\t").append(prefix).append("\t<<<<<<<<<<<<<<<<< \n")
 				.append("时间 : ").append(time).append("\n");
 				if (env != null) {
-					sb.append("AppName：").append(env.getString("app-name"))
-					.append("ServerId：").append(env.getString("server-id"));
+					sb.append("AppName：").append(env.getString("app-name")).append("\n")
+					.append("ServerId：").append(env.getString("server-id")).append("\n");
 				}
-				sb.append("globalId：").append(ApiLogUtils.getGlobalId());
+				sb.append("globalId：").append(ApiLogUtils.getGlobalId()).append("\n");
 				sb.append("消息 : ").append(msg);
 		if (stackTrace != null) {
 			sb.append("\n堆栈: ").append(stackTrace);
