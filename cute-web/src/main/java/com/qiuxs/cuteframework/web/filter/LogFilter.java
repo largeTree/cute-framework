@@ -19,9 +19,9 @@ import org.apache.logging.log4j.Logger;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
-import com.qiuxs.cuteframework.core.persistent.util.IDGenerateUtil;
 import com.qiuxs.cuteframework.tech.log.LogConstant;
 import com.qiuxs.cuteframework.tech.log.LogUtils;
+import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogConstants;
 import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogUtils;
 import com.qiuxs.cuteframework.web.WebConstants;
 import com.qiuxs.cuteframework.web.log.entity.RequestLog;
@@ -69,11 +69,11 @@ public class LogFilter implements Filter {
 				LogUtils.putMDC(LogConstant.MDC_KEY_APIKEY, apiKey);
 			}
 			// 全局日志识别号
-			Long globalId = IDGenerateUtil.getNextLongId(LogConstant.GLOBAL_ID_SEQ);
+			Long globalId = ApiLogUtils.genGlobalId();
 			reqLog.setGlobalId(globalId);
 			
 			// 初始化apiLog
-			ApiLogUtils.initApiLog("gateway" + apiKey, LogConstant.APP_CLI, EnvironmentContext.getAppName(), globalId, ip, "");
+			ApiLogUtils.initApiLog("gateway" + apiKey, LogConstant.APP_CLI, EnvironmentContext.getAppName(), globalId, ip, kvMap.get(ApiLogConstants.TL_APILOG_REQUEST_ID));
 		} catch (Throwable e) {
 			log.error("put logMDC ext=" + e.getLocalizedMessage(), e);
 		}

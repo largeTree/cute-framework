@@ -1,9 +1,13 @@
-package com.qiuxs.cuteframework.core.basic.utils.dingtalk;
+package com.qiuxs.cuteframework.core.utils.notice;
 
 import java.util.Date;
 
+import com.qiuxs.cuteframework.core.basic.config.IConfiguration;
+import com.qiuxs.cuteframework.core.basic.config.UConfigUtils;
 import com.qiuxs.cuteframework.core.basic.utils.DateFormatUtils;
+import com.qiuxs.cuteframework.core.basic.utils.dingtalk.DingTalkUtils;
 import com.qiuxs.cuteframework.core.basic.utils.dingtalk.DingTalkUtils.HookKey;
+import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogUtils;
 
 /**
  * 
@@ -31,9 +35,15 @@ public class NoticeLogger {
 	private static void sendLog(String prefix, String msg, String stackTrace) {
 		String time = DateFormatUtils.formatTime(new Date());
 		StringBuilder sb = new StringBuilder();
+		IConfiguration env = UConfigUtils.getDomain("env");
 		sb.append(" >>>>>>>>>>>>>>>>\t").append(prefix).append("\t<<<<<<<<<<<<<<<<< \n")
-				.append("时间 : ").append(time).append("\n")
-				.append("消息 : ").append(msg);
+				.append("时间 : ").append(time).append("\n");
+				if (env != null) {
+					sb.append("AppName：").append(env.getString("app-name"))
+					.append("ServerId：").append(env.getString("server-id"));
+				}
+				sb.append("globalId：").append(ApiLogUtils.getGlobalId());
+				sb.append("消息 : ").append(msg);
 		if (stackTrace != null) {
 			sb.append("\n堆栈: ").append(stackTrace);
 		}

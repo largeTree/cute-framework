@@ -7,7 +7,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
-import com.qiuxs.cuteframework.core.basic.utils.dingtalk.NoticeLogger;
+import com.qiuxs.cuteframework.core.context.EnvironmentContext;
+import com.qiuxs.cuteframework.core.utils.notice.NoticeLogger;
+import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogUtils;
 
 /**
  * 
@@ -35,6 +37,7 @@ public class MyTaskTaskWrapper extends TimerTask {
 	@Override
 	public void run() {
 		try {
+			ApiLogUtils.initApiLog(task.getName(), EnvironmentContext.getAppName(), null, null, null, "");
 			long startTime = System.currentTimeMillis();
 			this.task.run();
 			long consumedTime = (System.currentTimeMillis() - startTime);

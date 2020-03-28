@@ -37,4 +37,14 @@ public interface MyTimerTask extends Runnable {
 	 */
 	public long getPeriod();
 
+	/**
+	 * 获取定时任务名称
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public default String getName() {
+		return this.getClass().getSimpleName();
+	}
+
 }
