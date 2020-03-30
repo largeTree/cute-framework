@@ -52,5 +52,7 @@ public interface IDataPropertyService<PK extends Serializable, T extends IEntity
 
 	public void enable(PK pk);
 
+	int deleteDirect(PK id);
+
 
 }

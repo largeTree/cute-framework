@@ -122,6 +122,11 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 			return this.getDao().deleteById(bean.getId());
 		}
 	}
+	
+	@Override
+	public int deleteDirect(PK id) {
+		return this.getDao().deleteById(id);
+	}
 
 	/**
 	 * 2019年3月21日 下午10:44:05
