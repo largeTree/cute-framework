@@ -23,6 +23,7 @@ import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogUtils;
 import com.qiuxs.rmq.MqClientContants;
 import com.qiuxs.rmq.conf.ListenerProp;
 import com.qiuxs.rmq.conf.MQConfig;
+import com.qiuxs.rmq.log.utils.MqLogUtils;
 import com.qiuxs.rmq.microsvc.MqMicroSvcContext;
 
 public abstract class MessageListener {
@@ -91,9 +92,9 @@ public abstract class MessageListener {
 	 * @param e
 	 */
 	private void writeMqFailed(MessageExt msg, Object body, Throwable e) {
-
+		MqLogUtils.saveMqFailed(msg, body, e);
 	}
-
+	
 	/**
 	 * 删除mq消费失败日志
 	 *  

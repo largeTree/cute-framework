@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiuxs.rmq.log.dao.MqFailedDao">
+
+	<sql id="allFields">
+		`id`,
+		`msg_id` as msgId,
+		`topic`,
+		`tags`,
+		`biz_key` as bizKey,
+		`biz_body` as bizBody,
+		`stacktrace`,
+		`ext_prop` as extProp,
+		`reconsume_times` as reconsumeTimes,
+		`born_time` as bornTime,
+		`server_id` as serverId,
+		`user_id` as userId,
+		`unit_id` as unitId,
+		`global_id` as globalId,
+		`created_date` as createdDate,
+		`updated_date` as updatedDate
+	</sql>
+
+	<sql id="insertFields">
+		`id`,
+		`msg_id`,
+		`topic`,
+		`tags`,
+		`biz_key`,
+		`biz_body`,
+		`stacktrace`,
+		`ext_prop`,
+		`reconsume_times`,
+		`born_time`,
+		`server_id`,
+		`user_id`,
+		`unit_id`,
+		`global_id`,
+		`created_date`,
+		`updated_date`
+	</sql>
+
+	<select id="list" resultType="com.qiuxs.rmq.log.entity.MqFailed" >
+		select
+			<include refid="allFields" />
+		from `mq_failed`
+		<where>
+			<include refid="comnWhere" />
+		</where>
+		<if test="orderBy != null" >
+			order by ${orderBy}
+			<if test="orderByDesc != null">
+				desc
+			</if>
+		</if>
+	</select>
+	
+	<select id="getCount" resultType="Long" >
+		select 
+			IFNULL(count(1), 0)
+		from `mq_failed`
+		<where>
+			<include refid="comnWhere" />
+		</where>
+	</select>
+	
+	<sql id="comnWhere">
+		<if test="id != null">
+			`id` = #{id}
+		</if>
+		<if test="msgId != null">
+			 and `msg_id` = #{msgId}
+		</if>
+		<if test="topic != null">
+			 and `topic` = #{topic}
+		</if>
+		<if test="tags != null">
+			 and `tags` = #{tags}
+		</if>
+		<if test="bizKey != null">
+			 and `biz_key` = #{bizKey}
+		</if>
+		<if test="bizBody != null">
+			 and `biz_body` = #{bizBody}
+		</if>
+		<if test="stacktrace != null">
+			 and `stacktrace` = #{stacktrace}
+		</if>
+		<if test="extProp != null">
+			 and `ext_prop` = #{extProp}
+		</if>
+		<if test="reconsumeTimes != null">
+			 and `reconsume_times` = #{reconsumeTimes}
+		</if>
+		<if test="bornTime != null">
+			 and `born_time` = #{bornTime}
+		</if>
+		<if test="serverId != null">
+			 and `server_id` = #{serverId}
+		</if>
+		<if test="userId != null">
+			 and `user_id` = #{userId}
+		</if>
+		<if test="unitId != null">
+			 and `unit_id` = #{unitId}
+		</if>
+		<if test="globalId != null">
+			 and `global_id` = #{globalId}
+		</if>
+		<if test="createdDate != null">
+			 and `created_date` = #{createdDate}
+		</if>
+		<if test="updatedDate != null">
+			 and `updated_date` = #{updatedDate}
+		</if>
+	</sql>
+
+	<select id="getByIds" resultType="com.qiuxs.rmq.log.entity.MqFailed" >
+		select <include refid="allFields" /> from `mq_failed` where id in
+		<foreach collection="list" item="item" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="get" resultType="com.qiuxs.rmq.log.entity.MqFailed" >
+		select <include refid="allFields" /> from `mq_failed` where id = #{id}
+	</select>
+	
+	<select id="getCountByUk" resultType="Long">
+		select 
+			IFNULL(count(1), 0)
+		from `mq_failed`
+		<where>
+			<include refid="ukWhere" />
+		</where>
+	</select>
+	
+	<select id="getByUk" resultType="com.qiuxs.rmq.log.entity.MqFailed">
+		select
+			<include refid="allFields" />
+		from `mq_failed`
+		<where>
+			<include refid="ukWhere" />
+		</where>
+	</select>
+	
+	<sql id="ukWhere">
+		<if test="idNe != null" >
+			and id &lt;&gt; #{idNe}
+		</if>
+		<if test="msgId != null">
+			and `msg_id` = #{msgId}
+		</if>
+	</sql>
+	
+	<delete id="deleteById" parameterType="Long" >
+		delete from `mq_failed` where id = #{id}
+	</delete>
+
+	<insert id="insert" parameterType="com.qiuxs.rmq.log.entity.MqFailed">
+		insert into `mq_failed`(<include refid="insertFields" />)
+		values(
+			#{id},
+			#{msgId},
+			#{topic},
+			#{tags},
+			#{bizKey},
+			#{bizBody},
+			#{stacktrace},
+			#{extProp},
+			#{reconsumeTimes},
+			#{bornTime},
+			#{serverId},
+			#{userId},
+			#{unitId},
+			#{globalId},
+			#{createdDate},
+			#{updatedDate}
+		)
+	</insert>
+
+	<insert id="insertInBatch" parameterType="java.util.List" >
+		insert into `mq_failed`(<include refid="insertFields" />)
+		values
+		<foreach collection="list" item="item" separator="," >
+			(
+				#{item.id},
+				#{item.msgId},
+				#{item.topic},
+				#{item.tags},
+				#{item.bizKey},
+				#{item.bizBody},
+				#{item.stacktrace},
+				#{item.extProp},
+				#{item.reconsumeTimes},
+				#{item.bornTime},
+				#{item.serverId},
+				#{item.userId},
+				#{item.unitId},
+				#{item.globalId},
+				#{item.createdDate},
+				#{item.updatedDate}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="com.qiuxs.rmq.log.entity.MqFailed" >
+		update `mq_failed` 
+			<set>
+				<include refid="setComn" />
+			</set>
+		where id = #{id}
+	</update>
+
+	<sql id="setComn" >
+		<if test="msgId != null" >
+			`msg_id` = #{msgId},
+		</if>
+		<if test="topic != null" >
+			`topic` = #{topic},
+		</if>
+		<if test="tags != null" >
+			`tags` = #{tags},
+		</if>
+		<if test="bizKey != null" >
+			`biz_key` = #{bizKey},
+		</if>
+		<if test="bizBody != null" >
+			`biz_body` = #{bizBody},
+		</if>
+		<if test="stacktrace != null" >
+			`stacktrace` = #{stacktrace},
+		</if>
+		<if test="extProp != null" >
+			`ext_prop` = #{extProp},
+		</if>
+		<if test="reconsumeTimes != null" >
+			`reconsume_times` = #{reconsumeTimes},
+		</if>
+		<if test="bornTime != null" >
+			`born_time` = #{bornTime},
+		</if>
+		<if test="serverId != null" >
+			`server_id` = #{serverId},
+		</if>
+		<if test="userId != null" >
+			`user_id` = #{userId},
+		</if>
+		<if test="unitId != null" >
+			`unit_id` = #{unitId},
+		</if>
+		<if test="globalId != null" >
+			`global_id` = #{globalId},
+		</if>
+		<if test="createdDate != null" >
+			`created_date` = #{createdDate},
+		</if>
+		<if test="updatedDate != null" >
+			`updated_date` = #{updatedDate}
+		</if>
+	</sql>
+</mapper>
