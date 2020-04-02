@@ -200,6 +200,10 @@ public class UserContext {
 		UserLite userLite = getUserLiteOpt();
 		return userLite == null ? null : userLite.getUserId();
 	}
+	
+	public static <T extends UserLite> T getUserSessionOpt() {
+		return (T) getUserLiteOpt();
+	}
 
 	/**
 	 * sessionId是否有效

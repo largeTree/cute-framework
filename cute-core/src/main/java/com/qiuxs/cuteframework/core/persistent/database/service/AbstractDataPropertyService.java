@@ -418,6 +418,11 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		postSave(oldBean, bean);
 	}
 	
+	@Override
+	public void updateDirect(T newBean) {
+		this.updateInner(newBean);
+	}
+	
 	protected void updateInner(T bean) {
 		this.getDao().update(bean);
 	}
