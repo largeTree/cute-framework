@@ -19,3 +19,17 @@ CREATE TABLE `mq_failed` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UQ_mq_failed_msgId` (`msg_id`)
 )COMMENT='MQ消息消费失败记录';
+
+-- 事务消息发送表
+CREATE TABLE trans_send (
+	`id` BIGINT(20) NOT NULL PRIMARY KEY,
+	`unit_id` BIGINT(20) NOT NULL DEFAULT 0 COMMENT'单元ID',
+	`created_time` DATETIME NOT NULL COMMENT'创建时间'
+);
+
+-- 事务消息接收表
+CREATE TABLE trans_revc (
+	`id` BIGINT(20) NOT NULL PRIMARY KEY,
+	`unit_id` BIGINT(20) NOT NULL DEFAULT 0 COMMENT'单元ID',
+	`created_time` DATETIME NOT NULL COMMENT'创建时间'
+);
