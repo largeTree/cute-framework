@@ -135,4 +135,15 @@ public class ConsumerUtils {
 		groupNameConsumerMap.put(consumerGroupName, consumer);
 	}
 
+	/**
+	 * 销毁mq消费者
+	 *  
+	 * @author qiuxs
+	 */
+	public static void destory() {
+		for (DefaultMQPushConsumer consumer : groupNameConsumerMap.values()) {
+			consumer.shutdown();
+		}
+	}
+
 }

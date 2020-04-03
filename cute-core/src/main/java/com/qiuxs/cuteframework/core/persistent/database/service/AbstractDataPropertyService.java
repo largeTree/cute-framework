@@ -414,7 +414,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 
 		this.updateInner(bean);
 
-		postUpdate(oldBean, bean);
+		postUpdateInner(oldBean, bean);
 		postSave(oldBean, bean);
 	}
 	
@@ -488,11 +488,15 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * @param oldBean
 	 * @param newBean
 	 */
-	protected void postUpdate(T oldBean, T newBean) {
+	private void postUpdateInner(T oldBean, T newBean) {
 		List<IUpdateFilter<PK, T>> updateFilters = this.getUpdateFilters();
 		for (IUpdateFilter<PK, T> filter : updateFilters) {
 			filter.postUpdate(oldBean, newBean);
 		}
+		this.postUpdate(oldBean, newBean);
+	}
+	
+	protected void postUpdate(T oldBean, T newBean) {
 	}
 
 	private List<IUpdateFilter<PK, T>> getUpdateFilters() {

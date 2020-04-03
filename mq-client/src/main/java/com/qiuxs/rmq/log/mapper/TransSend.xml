@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiuxs.rmq.log.dao.TransSendDao">
+
+	<sql id="allFields">
+		`id`,
+		`unit_id` as unitId,
+		`created_date` as createdDate
+	</sql>
+
+	<sql id="insertFields">
+		`id`,
+		`unit_id`,
+		`created_date`
+	</sql>
+
+	<select id="getByIds" resultType="com.qiuxs.rmq.log.entity.MqFailed" >
+		select <include refid="allFields" /> from `trans_send` where id in
+		<foreach collection="list" item="item" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="get" resultType="com.qiuxs.rmq.log.entity.MqFailed" >
+		select <include refid="allFields" /> from `trans_send` where id = #{id}
+	</select>
+	
+	<insert id="insert" parameterType="com.qiuxs.rmq.log.entity.MqFailed">
+		insert into `trans_send`(<include refid="insertFields" />)
+		values(
+			#{id},
+			#{unitId},
+			#{createdDate}
+		)
+	</insert>
+
+</mapper>

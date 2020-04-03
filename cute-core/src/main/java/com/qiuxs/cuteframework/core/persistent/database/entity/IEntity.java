@@ -1,7 +1,8 @@
 package com.qiuxs.cuteframework.core.persistent.database.entity;
 
-import java.io.Serializable;
 import java.util.Date;
+
+import com.qiuxs.cuteframework.core.basic.bean.IObject;
 
 /**
  * 创建修改信息
@@ -10,19 +11,7 @@ import java.util.Date;
  *
  * @param <PK>
  */
-public interface IEntity<PK> extends Serializable {
-
-	/**
-	 * 获取ID
-	 * @return
-	 */
-	public PK getId();
-
-	/**
-	 * 设置ID
-	 * @param id
-	 */
-	public void setId(PK id);
+public interface IEntity<PK> extends IObject<PK> {
 
 	/**
 	 * 获取创建人

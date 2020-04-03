@@ -9,14 +9,15 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.jdbc.datasource.ConnectionHolder;
+import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
-import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.context.TLVariableHolder;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DataSourceContext;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource;
+import com.qiuxs.cuteframework.core.tx.TxConfrimUtils;
 
 /**
  * Spring事务上下文
@@ -73,6 +74,12 @@ public class SpringTxContext {
 
 			@Override
 			public void afterCompletion(int status) {
+				if (status == TransactionSynchronization.STATUS_COMMITTED) {
+					TxConfrimUtils.commit();
+				} else if (status == TransactionSynchronization.STATUS_ROLLED_BACK) {
+					TxConfrimUtils.rollback();
+				}
+
 				List<AfterCompletionRunnable<?>> afterCompletionCallbacks = getAfterCompletionRunnables();
 				if (afterCompletionCallbacks.size() > 0) {
 					afterCompletionCallbacks.forEach(callback -> {
