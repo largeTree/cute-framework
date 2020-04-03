@@ -3,6 +3,7 @@ package com.qiuxs.rmq.log.service.impl;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.qiuxs.cuteframework.core.persistent.util.IDGenerateUtil;
 import com.qiuxs.rmq.log.dao.TransSendDao;
@@ -18,6 +19,7 @@ public class TransSendService implements ITransSendService {
 	private TransSendDao tranSendDao;
 
 	@Override
+	@Transactional
 	public Long appendTransSend(Long unitId) {
 		Long txId = IDGenerateUtil.getNextLongId(TABLE_NAME);
 		this.tranSendDao.insert(new TransSend(txId, unitId));
@@ -25,6 +27,7 @@ public class TransSendService implements ITransSendService {
 	}
 
 	@Override
+	@Transactional
 	public boolean existsTx(Long id) {
 		return this.tranSendDao.get(id) != null;
 	}

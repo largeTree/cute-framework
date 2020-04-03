@@ -1,7 +1,11 @@
 package com.qiuxs.cuteframework.core.basic.bean;
 
-public class Pair<V1, V2> {
+import java.io.Serializable;
 
+public class Pair<V1, V2> implements Serializable {
+
+	private static final long serialVersionUID = 5598719150299261748L;
+	
 	private V1 v1;
 	private V2 v2;
 

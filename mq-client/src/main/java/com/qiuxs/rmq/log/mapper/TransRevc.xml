@@ -5,32 +5,32 @@
 	<sql id="allFields">
 		`id`,
 		`unit_id` as unitId,
-		`created_date` as createdDate
+		`created_time` as createdTime
 	</sql>
 
 	<sql id="insertFields">
 		`id`,
 		`unit_id`,
-		`created_date`
+		`created_time`
 	</sql>
 
-	<select id="getByIds" resultType="com.qiuxs.rmq.log.entity.MqFailed" >
+	<select id="getByIds" resultType="com.qiuxs.rmq.log.entity.TransRevc" >
 		select <include refid="allFields" /> from `trans_revc` where id in
 		<foreach collection="list" item="item" open="(" separator="," close=")" >
 			#{item}
 		</foreach>
 	</select>
 
-	<select id="get" resultType="com.qiuxs.rmq.log.entity.MqFailed" >
+	<select id="get" resultType="com.qiuxs.rmq.log.entity.TransRevc" >
 		select <include refid="allFields" /> from `trans_revc` where id = #{id}
 	</select>
 	
-	<insert id="insert" parameterType="com.qiuxs.rmq.log.entity.MqFailed">
+	<insert id="insert" parameterType="com.qiuxs.rmq.log.entity.TransRevc">
 		insert into `trans_revc`(<include refid="insertFields" />)
 		values(
 			#{id},
 			#{unitId},
-			#{createdDate}
+			#{createdTime}
 		)
 	</insert>
 

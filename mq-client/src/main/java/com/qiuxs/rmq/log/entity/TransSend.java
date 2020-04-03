@@ -13,13 +13,13 @@ public class TransSend implements IObject<Long> {
 	/** 单元ID */
 	private Long unitId;
 	/** 创建时间 */
-	private Date createTime;
+	private Date createdTime;
 
 	public TransSend(Long id, Long unitId) {
 		super();
 		this.id = id;
 		this.unitId = unitId;
-		this.createTime = new Date();
+		this.createdTime = new Date();
 	}
 
 	public Long getId() {
@@ -38,12 +38,12 @@ public class TransSend implements IObject<Long> {
 		this.unitId = unitId;
 	}
 
-	public Date getCreateTime() {
-		return createTime;
+	public Date getCreatedTime() {
+		return createdTime;
 	}
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
 	}
 
 }

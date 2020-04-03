@@ -18,6 +18,7 @@ import org.apache.rocketmq.common.message.MessageQueue;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 
 import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.config.IConfiguration;
 import com.qiuxs.cuteframework.core.basic.config.UConfigUtils;
 import com.qiuxs.cuteframework.core.basic.constants.SymbolConstants;
@@ -92,7 +93,12 @@ public class ProducerUtils extends TxConfrimUtils {
 	 */
 	public static Long sendPrepare(String topic, String tags, String bizKeys, Object body, boolean serialBody, Map<String, String> extProps, int delayLevel) {
 		Message msg = prepareMessage(topic, tags, bizKeys, serialBody, body, delayLevel, extProps);
-		Long txId = getTransSendService().appendTransSend(UserContext.getUserLite().getUnitId());
+		UserLite userLite = UserContext.getUserLiteOpt();
+		Long unitId = 0L;
+		if (userLite != null) {
+			unitId = userLite.getUnitId();
+		}
+		Long txId = getTransSendService().appendTransSend(unitId);
 		getMqTxService().sendPrepare(new MqTxMessage(txId, msg));
 		return txId;
 	}

@@ -15,7 +15,7 @@ import com.qiuxs.cuteframework.core.tx.mq.TxMessage;
 import com.qiuxs.cuteframework.tech.mc.McFactory;
 import com.qiuxs.rmq.ProducerUtils;
 
-@Service
+@Service("mqTxService")
 public class MQTxService implements IMQTxService {
 	
 	private static Logger log = LogManager.getLogger(MQTxService.class);
