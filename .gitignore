@@ -11,3 +11,4 @@ target
 */.factorypath
 /cute-captcha-plugin/*.factorypath
 */logs
+/cute-code-generate/logs/mylog
