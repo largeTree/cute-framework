@@ -274,6 +274,8 @@ public class DataSourceContext {
 		String dsType = dsTypeMap.get(nameSpace);
 		if (DsType.DIRECT.value().equals(dsType)) {
 			return dsIdMap.get(nameSpace);
+		} else if (DsType.ENTRY.value().equals(dsType)) {
+			return entryDsId;
 		} else {
 			return getDsIdByDsType(dsType);
 		}
