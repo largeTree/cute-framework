@@ -50,6 +50,12 @@
 		</where>
 	</select>
 	
+	<select id="getAll" resultType="com.qiuxs.cuteframework.core.persistent.unit.entity.DsUnit">
+		select 
+			<include refid="allFields" />
+		from `ds_unit`
+	</select>
+	
 	<sql id="comnWhere">
 		<if test="id != null">
 			`id` = #{id}
