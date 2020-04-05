@@ -1,5 +1,6 @@
 package com.qiuxs.rmq;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -92,13 +93,18 @@ public class ProducerUtils extends TxConfrimUtils {
 	 * @return
 	 */
 	public static Long sendPrepare(String topic, String tags, String bizKeys, Object body, boolean serialBody, Map<String, String> extProps, int delayLevel) {
-		Message msg = prepareMessage(topic, tags, bizKeys, serialBody, body, delayLevel, extProps);
 		UserLite userLite = UserContext.getUserLiteOpt();
 		Long unitId = 0L;
 		if (userLite != null) {
 			unitId = userLite.getUnitId();
 		}
 		Long txId = getTransSendService().appendTransSend(unitId);
+		if (extProps == null) {
+			extProps = new HashMap<String, String>();
+		}
+		// 消息扩展属性中加入mq事务ID
+		extProps.put(MqClientContants.MSG_PROP_SUB_TX_ID, String.valueOf(txId));
+		Message msg = prepareMessage(topic, tags, bizKeys, serialBody, body, delayLevel, extProps);
 		getMqTxService().sendPrepare(new MqTxMessage(txId, msg));
 		return txId;
 	}

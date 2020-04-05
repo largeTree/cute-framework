@@ -74,18 +74,27 @@ public class SpringTxContext {
 
 			@Override
 			public void afterCompletion(int status) {
-				if (status == TransactionSynchronization.STATUS_COMMITTED) {
-					TxConfrimUtils.commit();
-				} else if (status == TransactionSynchronization.STATUS_ROLLED_BACK) {
-					TxConfrimUtils.rollback();
+				try {
+					if (status == TransactionSynchronization.STATUS_COMMITTED) {
+						TxConfrimUtils.commit();
+					} else if (status == TransactionSynchronization.STATUS_ROLLED_BACK) {
+						TxConfrimUtils.rollback();
+					}
+				} catch (Throwable e) {
+					log.error("TxConfrim commit or rollback failed, ext = " + e.getLocalizedMessage(), e);
 				}
-
 				List<AfterCompletionRunnable<?>> afterCompletionCallbacks = getAfterCompletionRunnables();
 				if (afterCompletionCallbacks.size() > 0) {
 					afterCompletionCallbacks.forEach(callback -> {
-						callback.call(status);
+						try {
+							callback.call(status);
+						} catch (Throwable e) {
+							log.error("call AfterCompletionCallback[" + callback.getClass().getName() 
+									+ "] failed, ext = " + e.getLocalizedMessage(), e);
+						}
 					});
 				}
+				clearTxContext();
 			}
 
 		};
@@ -227,4 +236,11 @@ public class SpringTxContext {
 		return TLVariableHolder.getVariable(TL_TX_METHOD_INVOCATION);
 	}
 
+	public static void clearTxContext() {
+		TLVariableHolder.removeVariable(TL_TX_METHOD_INVOCATION);
+		TLVariableHolder.removeVariable(TL_AFTER_COMPLETION_HANDLE);
+		TLVariableHolder.removeVariable(TL_TX_DSID);
+		TLVariableHolder.removeVariable(TL_AFTER_COMMIT_HANDLE);
+		TLVariableHolder.removeVariable(TL_INITED_KEY);
+	}
 }

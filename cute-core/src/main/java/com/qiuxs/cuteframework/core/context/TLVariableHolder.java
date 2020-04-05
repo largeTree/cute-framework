@@ -40,6 +40,19 @@ public class TLVariableHolder {
 	}
 
 	/**
+	 * 移除一个线程变量
+	 *  
+	 * @author qiuxs  
+	 * @param <T>
+	 * @param key
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T removeVariable(String key) {
+		return (T) getThreadMap().remove(key);
+	}
+	
+	/**
 	 * 清空当前线程变量
 	 *  
 	 * @author qiuxs

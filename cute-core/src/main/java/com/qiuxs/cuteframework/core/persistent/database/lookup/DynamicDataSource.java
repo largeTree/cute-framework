@@ -97,6 +97,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		if (this.mapDsTypeId.get(entryType) == null) {
 			this.targetDataSources.put(entryType, defaultTargetDataSource);
 			this.mapDsTypeId.put(entryType, entryType);
+			DataSourceContext.initEntryDb(entryType);
 		}
 		super.setTargetDataSources(new TreeMap<>(targetDataSources));
 	}

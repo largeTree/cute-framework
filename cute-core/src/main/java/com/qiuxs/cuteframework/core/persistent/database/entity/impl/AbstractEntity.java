@@ -98,4 +98,9 @@ public abstract class AbstractEntity<PK> implements IEntity<PK> {
 		this.deletedTime = deletedTime;
 	}
 
+	@Override
+	public String toString() {
+		return "AbstractEntity [getId()=" + getId() + ", getCreatedBy()=" + getCreatedBy() + ", getCreatedTime()=" + getCreatedTime() + ", getUpdatedTime()=" + getUpdatedTime()
+				+ ", getUpdatedBy()=" + getUpdatedBy() + ", getDeletedBy()=" + getDeletedBy() + ", getDeletedTime()=" + getDeletedTime() + "]";
+	}
 }

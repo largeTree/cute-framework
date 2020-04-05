@@ -31,5 +31,7 @@ public class MqClientContants {
 	public static final String MSG_PROP_RECONSUME_TIMES = "mqReconsumeTimes";
 	/** 消息产生时间 */
 	public static final String MSG_PROP_BORN_TIMEstamp = "mqMessageBornTimestamp";
+	/** mq子事务ID */
+	public static final String MSG_PROP_SUB_TX_ID = "mqSubTxId";
 	
 }
