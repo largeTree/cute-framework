@@ -1,11 +1,15 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
@@ -13,9 +17,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
+import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.utils.io.IOUtils;
 
 public class ClassPathResourceUtil {
+	
+	private static Logger log = LogManager.getLogger(ClassPathResourceUtil.class);
+	
 	/** 能查询到多个UrlResource，包含最外层项目和依赖的jar包中classpath路径下的所有xx文件 */
 	public static final String CLASSPATH_ALL_URL_PREFIX = "classpath*:";
 	/**
@@ -190,5 +198,51 @@ public class ClassPathResourceUtil {
 		} catch (IOException e) {
 			return null;
 		}
+	}
+	
+	/**
+	 * 读取文件为字符串
+	 *  
+	 * @author qiuxs  
+	 * @param path
+	 * @return
+	 */
+	public static String readAsString(String path) {
+		Resource res = getSingleResource(path);
+		if (res == null) {
+			return null;
+		}
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(res.getFile()));
+			String line = null;
+			StringBuilder sb = new StringBuilder();
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+			return sb.toString();
+		} catch (Exception e) {
+			log.error("ReadFile error, ext=  " + e.getLocalizedMessage(), e);
+			return null;
+		} finally {
+			if (reader != null) {
+				IOUtils.closeQuietly(reader);
+			}
+		}
+	}
+
+	/**
+	 * 读取json文件生成JSONObject
+	 *  
+	 * @author qiuxs  
+	 * @param path
+	 * @return
+	 */
+	public static JSONObject readJSON(String path) {
+		String string = readAsString(path);
+		if (StringUtils.isNotBlank(string)) {
+			return JsonUtils.parseJSONObject(string);
+		}
+		return null;
 	}
 }

@@ -1,6 +1,7 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang3.time.FastDateFormat;
@@ -43,6 +44,32 @@ public class DateFormatUtils {
 
 	public static String format(Date date, String pattern) {
 		return FastDateFormat.getInstance(pattern).format(date);
+	}
+	
+	/**
+	 * 获取下次指定的时间点，小时:分钟
+	 *  
+	 * @author qiuxs  
+	 * @param hour
+	 * @param min
+	 * @return
+	 */
+	public static Date getNextTime(int hour, int min) {
+		Calendar cal = Calendar.getInstance();
+		int curHour = cal.get(Calendar.HOUR_OF_DAY);
+		if (curHour > hour) {
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+		} else {
+			int curMin = cal.get(Calendar.MINUTE);
+			if (curHour == hour && curMin > min) {
+				cal.add(Calendar.DAY_OF_YEAR, 1);
+			}
+		}
+		cal.set(Calendar.HOUR_OF_DAY, hour);
+		cal.set(Calendar.MINUTE, min);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
 	}
 
 }

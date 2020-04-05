@@ -36,7 +36,7 @@ public class ApiAuthService {
 			if (userLite != null) {
 				// 子类校验
 				this.sessionCheckInner(apiConfig, params, userLite);
-
+				UserContext.trigger(sessionId);
 				UserContext.setUserLite(userLite);
 			}
 		}

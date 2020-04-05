@@ -1,6 +1,7 @@
 package com.qiuxs.cuteframework.core.basic.utils.http;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -402,7 +403,7 @@ public class HttpClientUtil {
 			StringEntity entity = new StringEntity(bodyString, Constants.DEFAULT_CHARSET);
 			post.setEntity(entity);
 			HttpResponse resp = client.execute(post);
-			String respStr = EntityUtils.toString(resp.getEntity());
+			String respStr = EntityUtils.toString(resp.getEntity(), Charset.forName(Constants.DEFAULT_CHARSET));
 			int statusCode = resp.getStatusLine().getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
 				return respStr;
