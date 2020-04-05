@@ -172,6 +172,10 @@ public class DataSourceContext {
 		}
 		return null;
 	}
+	
+	public static Class<?> getPojoClass(String nameSpace) {
+		return pojoClassMap.get(nameSpace);
+	}
 
 	public static String getDsType(String nameSpace) {
 		return dsTypeMap.get(nameSpace);

@@ -23,6 +23,7 @@ import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IFlag;
+import com.qiuxs.cuteframework.core.persistent.database.entity.IUnitId;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DsTypeRegister;
 import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
@@ -345,6 +346,15 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		if (bean instanceof IFlag) {
 			IFlag flagBean = (IFlag) bean;
 			flagBean.setFlag(IFlag.VALID);
+		}
+		
+		// 设置单元ID
+		if (bean instanceof IUnitId) {
+			IUnitId unitBean = (IUnitId) bean;
+			if (unitBean.getUnitId() == null) {
+				Long unitId = UserContext.getUnitIdOpt();
+				unitBean.setUnitId(unitId);
+			}
 		}
 
 		this.initDefault(bean);

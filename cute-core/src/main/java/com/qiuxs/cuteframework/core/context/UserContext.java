@@ -201,6 +201,20 @@ public class UserContext {
 		return userLite == null ? null : userLite.getUserId();
 	}
 	
+	public static Long getUnitId() {
+		Long unitId = getUnitIdOpt();
+		if (unitId == null) {
+			ExceptionUtils.throwLoginException();
+		}
+		return unitId;
+	}
+	
+	public static Long getUnitIdOpt() {
+		UserLite userLite = getUserLiteOpt();
+		return userLite == null ? null : userLite.getUnitId();
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static <T extends UserLite> T getUserSessionOpt() {
 		return (T) getUserLiteOpt();
 	}
