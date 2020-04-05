@@ -1,9 +1,10 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
 import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.Constants;
 import com.qiuxs.cuteframework.core.basic.utils.io.IOUtils;
 
 public class ClassPathResourceUtil {
@@ -214,7 +216,7 @@ public class ClassPathResourceUtil {
 		}
 		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new FileReader(res.getFile()));
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(res.getFile()), Constants.DEFAULT_CHARSET));
 			String line = null;
 			StringBuilder sb = new StringBuilder();
 			while ((line = reader.readLine()) != null) {
