@@ -26,7 +26,7 @@ public class MbiPageHook implements IMbiHook {
 
 	@Override
 	public int getOrder() {
-		return 0;
+		return 10;
 	}
 
 	@Override
@@ -106,8 +106,8 @@ public class MbiPageHook implements IMbiHook {
 		sql = sql.replaceAll("[\\t\\n\\r]", " ");
 		String fromSql = sql.substring(sql.indexOf("from"), sql.length());
 
-		if (fromSql.indexOf("order") != -1) {
-			fromSql = fromSql.substring(0, fromSql.indexOf("order"));
+		if (fromSql.indexOf(" order ") != -1) {
+			fromSql = fromSql.substring(0, fromSql.indexOf(" order "));
 		}
 
 		StringBuilder countSql = new StringBuilder();

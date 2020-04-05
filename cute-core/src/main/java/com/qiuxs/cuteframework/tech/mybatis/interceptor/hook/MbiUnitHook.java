@@ -22,7 +22,7 @@ public class MbiUnitHook implements IMbiHook {
 
 	@Override
 	public int getOrder() {
-		return -1;
+		return 0;
 	}
 
 	@Override
