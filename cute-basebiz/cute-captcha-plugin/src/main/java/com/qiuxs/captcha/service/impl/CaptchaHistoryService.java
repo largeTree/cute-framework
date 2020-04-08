@@ -13,6 +13,7 @@ import com.qiuxs.captcha.entity.Captcha;
 import com.qiuxs.captcha.entity.CaptchaHistory;
 import com.qiuxs.captcha.service.ICaptchaHistoryService;
 import com.qiuxs.captcha.service.ICaptchaService;
+import com.qiuxs.cuteframework.core.basic.Constants.DsType;
 import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
 import com.qiuxs.cuteframework.core.persistent.database.service.AbstractDataPropertyService;
@@ -39,6 +40,11 @@ public class CaptchaHistoryService extends AbstractDataPropertyService<Long, Cap
 	
 	@Resource
 	private CaptchaHistoryDao captchaHistoryDao;
+	
+	@Override
+	public String getDsType() {
+		return DsType.ENTRY.value();
+	}
 
 	/**
 	 * 转移到历史记录表中

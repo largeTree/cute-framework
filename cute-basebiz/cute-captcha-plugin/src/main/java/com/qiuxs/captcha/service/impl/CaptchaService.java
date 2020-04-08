@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.qiuxs.captcha.dao.CaptchaDao;
 import com.qiuxs.captcha.entity.Captcha;
 import com.qiuxs.captcha.service.ICaptchaService;
+import com.qiuxs.cuteframework.core.basic.Constants.DsType;
 import com.qiuxs.cuteframework.core.basic.utils.generator.RandomGenerator;
 import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
@@ -39,6 +40,11 @@ public class CaptchaService extends AbstractDataPropertyService<Long, Captcha, C
 	@Override
 	protected CaptchaDao getDao() {
 		return this.captchaDao;
+	}
+	
+	@Override
+	public String getDsType() {
+		return DsType.ENTRY.value();
 	}
 	
 	@Override
