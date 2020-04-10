@@ -5,6 +5,7 @@ import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -356,6 +357,18 @@ public class MapUtils {
 			}
 		}
 		return map;
+	}
+
+	public static Date getDate(Map<String, ?> params, String key) {
+		String strDate = getString(params, key);
+		if (strDate == null) {
+			return null;
+		}
+		if (strDate.length() > 10) {
+			return DateFormatUtils.parseTime(strDate);
+		} else {
+			return DateFormatUtils.parseDate(strDate);
+		}
 	}
 
 }

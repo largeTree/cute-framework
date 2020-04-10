@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.web.bean;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +55,10 @@ public class ReqParam extends HashMap<String, String> {
 
 	public int getInteger(String key, int defVal) {
 		return MapUtils.getIntValue(this, key, defVal);
+	}
+
+	public Date getDate(String key) {
+		return MapUtils.getDate(this, key);
 	}
 
 	/**

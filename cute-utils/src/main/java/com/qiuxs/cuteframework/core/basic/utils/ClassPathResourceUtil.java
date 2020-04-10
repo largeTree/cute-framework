@@ -18,7 +18,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.qiuxs.cuteframework.core.basic.Constants;
 import com.qiuxs.cuteframework.core.basic.utils.io.IOUtils;
 
@@ -240,10 +240,15 @@ public class ClassPathResourceUtil {
 	 * @param path
 	 * @return
 	 */
-	public static JSONObject readJSON(String path) {
+	@SuppressWarnings("unchecked")
+	public static <T extends JSON> T readJSON(String path) {
 		String string = readAsString(path);
 		if (StringUtils.isNotBlank(string)) {
-			return JsonUtils.parseJSONObject(string);
+			if (string.startsWith("{")) {
+				return (T)JsonUtils.parseJSONObject(string);
+			} else {
+				return (T)JsonUtils.parseJSONArray(string);
+			}
 		}
 		return null;
 	}
