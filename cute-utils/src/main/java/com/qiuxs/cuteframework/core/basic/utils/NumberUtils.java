@@ -2,6 +2,7 @@ package com.qiuxs.cuteframework.core.basic.utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 import com.qiuxs.cuteframework.core.basic.Constants;
 
@@ -13,6 +14,23 @@ import com.qiuxs.cuteframework.core.basic.Constants;
  */
 public class NumberUtils {
 
+	private static DecimalFormat df_simple = new DecimalFormat("#.##");
+	
+	/**
+	 * 格式化字符串
+	 *  
+	 * @author qiuxs  
+	 * @param num
+	 * @return
+	 */
+	public static String getSimpleShow(Number val) {
+		if(val == null) {
+			return "0";
+		}
+		val = new BigDecimal(val.toString());
+		return df_simple.format(val);
+	}
+	
 	/**
 	 * 两个数值相减。数值类型可为BigDecimal double float long int short byte
 	 * 
