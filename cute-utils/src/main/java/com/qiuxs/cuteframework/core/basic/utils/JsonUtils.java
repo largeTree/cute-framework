@@ -38,6 +38,23 @@ public class JsonUtils {
 	}
 	
 	/**
+	 * 复制json属性
+	 *  
+	 * @author qiuxs  
+	 * @param src
+	 * @param dest
+	 * @param keys
+	 */
+	public static void copyProp(JSONObject src, JSONObject dest, Set<String> keys) {
+		if(src == null || dest == null || CollectionUtils.isEmpty(keys)) {
+			return;
+		}
+		for (String key : keys) {
+			dest.put(key, src.get(key));
+		}
+	}
+	
+	/**
 	 * 准换数组元素key的格式，
 	 * 将zk_final_price 转为zkFinalPrice
 	 * 2019年5月12日 上午11:48:03

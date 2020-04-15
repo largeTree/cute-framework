@@ -1,6 +1,10 @@
 package com.qiuxs.cuteframework.core.basic.utils.http;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -35,6 +39,7 @@ import com.qiuxs.cuteframework.core.basic.utils.CollectionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
+import com.qiuxs.cuteframework.core.basic.utils.io.IOUtils;
 
 /**
  * HttpClient封装工具
@@ -63,6 +68,51 @@ public class HttpClientUtil {
 		}
 	}
 
+	/**
+	 * java原生请求
+	 *  
+	 * @author qiuxs  
+	 * @param urlStr
+	 * @param header
+	 * @param params
+	 * @return
+	 */
+	public static String doGetNative(String urlStr, Map<String, String> header, Map<String, String> params) {
+		urlStr = builderFinalGetUrl(urlStr, params);
+		HttpURLConnection conn = null;
+		BufferedReader reader = null;
+		StringBuilder resString = new StringBuilder();
+		try {
+			URL url = new URL(urlStr);
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			
+			if (CollectionUtils.isNotEmpty(header)) {
+				for (Map.Entry<String, String> entry : header.entrySet()) {
+					conn.setRequestProperty(entry.getKey(), entry.getKey());
+				}
+			}
+			
+			conn.connect();
+			
+			reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				resString.append(line);
+			}
+		} catch (Exception e) {
+			throw ExceptionUtils.unchecked(e);
+		} finally {
+			if (conn != null) {
+				conn.disconnect();
+			}
+			if (reader != null) {
+				IOUtils.closeQuietly(reader);
+			}
+		}
+		return resString.toString();
+	}
+	
 	/**
 	 * Http Get请求获取JSONObject结果
 	 * 
