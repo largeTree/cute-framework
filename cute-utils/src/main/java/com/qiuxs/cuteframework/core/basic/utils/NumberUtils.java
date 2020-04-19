@@ -17,6 +17,42 @@ public class NumberUtils {
 	private static DecimalFormat df_simple = new DecimalFormat("#.##");
 	
 	/**
+	 * BigDecimal 保留小数
+	 *  
+	 * @author qiuxs  
+	 * @param newScale  保留位数  取整传0
+	 * @param srcBd     源数据
+	 * @param roundingMode round模式，取值BigDecimal#ROUND_XX
+	 * @return
+	 */
+	public static BigDecimal round(int newScale, BigDecimal srcBd, int roundingMode){
+		return srcBd.setScale(newScale, roundingMode);
+	}
+
+	/**
+	 * BigDecimal四舍五入保留小数
+	 * 
+	 * @author qiuxs  
+	 * @param newScale
+	 * @param srcBd
+	 * @return
+	 */
+	public static BigDecimal round(int newScale, BigDecimal srcBd){
+		return round(newScale, srcBd, BigDecimal.ROUND_HALF_UP);
+	}
+
+	/**
+	 * BigDecimal四舍五入保留2位小数
+	 * 
+	 * @author qiuxs  
+	 * @param srcBd
+	 * @return
+	 */
+	public static BigDecimal round(BigDecimal srcBd){
+		return round(2, srcBd);
+	}
+	
+	/**
 	 * 格式化字符串
 	 *  
 	 * @author qiuxs  
