@@ -201,6 +201,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 				List<String> bizDsIds = (List<String>) this.mapDsTypeId.get(DsType.BIZ.value());
 				this.mapDsTypeId.put(DsType.BIZ.value(), bizDsIds);
 				bizDsIds.add(dsId);
+				DataSourceContext.addBizDb(dsId);
 			}
 		}
 	}

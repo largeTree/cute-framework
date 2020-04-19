@@ -391,7 +391,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 				}
 			}
 		}
-		return this.insertFilters;
+		return new ArrayList<IInsertFilter<PK,T>>(this.insertFilters);
 	}
 
 	/**
@@ -404,6 +404,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		for (IInsertFilter<PK, T> filter : filters) {
 			if (filter instanceof IdGenerateFilter) {
 				filter.preInsert(bean);
+				break;
 			}
 		}
 	}

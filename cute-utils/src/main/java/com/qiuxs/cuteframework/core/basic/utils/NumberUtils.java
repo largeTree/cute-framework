@@ -285,7 +285,12 @@ public class NumberUtils {
 	 * 创建时间：2018年8月20日 下午6:38:29
 	 */
 	public static boolean isEmpty(Number num) {
-		return num == null || num.longValue() == 0;
+		if (num == null) {
+			return true;
+		} else {
+			Number zeroValue = (Number) getInitValue(num.getClass());
+			return equals(num, zeroValue);
+		}
 	}
 	
 	/**
@@ -299,6 +304,29 @@ public class NumberUtils {
 		return !isEmpty(num);
 	}
 
+	/**
+	 * 获取指定类型的初始值
+	 * 
+	 * @param cls
+	 * @return
+	 */
+	public static Object getInitValue(Class<?> cls) {
+		if (Integer.class.isAssignableFrom(cls))
+			return Constants.DB_DEFAULT_INT;
+		else if (Long.class.isAssignableFrom(cls))
+			return Constants.DB_DEFAULT_LONG;
+		else if (Short.class.isAssignableFrom(cls))
+			return Constants.DB_DEFAULT_SHORT;
+		else if (Double.class.isAssignableFrom(cls))
+			return Constants.DB_DEFAULT_DOUBLE;
+		else if (Float.class.isAssignableFrom(cls))
+			return Constants.DB_DEFAULT_FLOAT;
+		else if (BigDecimal.class.isAssignableFrom(cls))
+			return Constants.DB_DEFAULT_DECIMAL;
+		else
+			return null;
+	}
+	
 	/**
 	 * 如果参数为null则返回0
 	 * @param totalResults

@@ -1,5 +1,7 @@
 package com.qiuxs.cuteframework.core.basic;
 
+import java.math.BigDecimal;
+
 public class Constants {
 
 	/** 翻译集合 */
@@ -20,6 +22,18 @@ public class Constants {
 	/** 系统默认支持精确度 */
 	public static final int DEFAULT_SCALE_INNER = 10;
 
+	public static final int DB_DEFAULT_INT = 0;
+
+	public static final long DB_DEFAULT_LONG = 0;
+
+	public static final short DB_DEFAULT_SHORT = 0;
+
+	public static final double DB_DEFAULT_DOUBLE = 0.0D;
+
+	public static final float DB_DEFAULT_FLOAT = 0.0F;
+
+	public static final BigDecimal DB_DEFAULT_DECIMAL = BigDecimal.ZERO;
+	
 	public enum DsType {
 		/**数据源类型:入口库*/
 		ENTRY,

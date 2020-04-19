@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/aop 
@@ -8,7 +9,9 @@
            http://www.springframework.org/schema/tx
      	   http://www.springframework.org/schema/tx/spring-tx.xsd
            http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context.xsd">
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/task 
+           http://www.springframework.org/schema/task/spring-task.xsd">
 
 	<!-- 采用注释的方式配置bean -->
 	<context:annotation-config />
@@ -104,6 +107,9 @@
 		<!-- <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate" /> -->
 		<property name="annotationClass" value="com.qiuxs.cuteframework.tech.mybatis.dao.MyBatisRepository" /><!-- org.apache.ibatis.annotations.Mapper -->
 	</bean>
+	
+	<task:scheduler id="myScheduler" pool-size="5"/>
+	<task:annotation-driven scheduler="myScheduler"/> 
 
 	<aop:config proxy-target-class="true" />
 	<aop:aspectj-autoproxy proxy-target-class="true" />

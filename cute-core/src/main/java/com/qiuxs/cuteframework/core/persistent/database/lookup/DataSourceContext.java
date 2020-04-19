@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.core.persistent.database.lookup;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,13 +44,14 @@ public class DataSourceContext {
 	/** 单元ID和业务库的对应关系 */
 	private static Map<Long, String> unitDsMap = new HashMap<>();
 	
-	/* 序列库id */
+	/** 序列库id */
 	private static String seqDsId;
 	/** 日志库id */
 	private static String logDsId;
 	/** 入口库id */
 	private static String entryDsId;
-
+	/** 业务库列表 */
+	private static List<String> bizDsList = new ArrayList<String>();
 
 	/***
 	 * 变更当前数据库为日志库
@@ -139,6 +141,26 @@ public class DataSourceContext {
 	 */
 	public static void initEntryDb(String entryDsId) {
 		DataSourceContext.entryDsId = entryDsId;
+	}
+	
+	/**
+	 * 添加业务库
+	 *  
+	 * @author qiuxs  
+	 * @param bizDsId
+	 */
+	public static void addBizDb(String bizDsId) {
+		DataSourceContext.bizDsList.add(bizDsId);
+	}
+	
+	/**
+	 * 获取业务库列表
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public static List<String> getBizDsList(){
+		return new ArrayList<String>(bizDsList);
 	}
 
 	public static String getDsId() {
