@@ -2,6 +2,8 @@ package com.qiuxs.cuteframework.core.timertask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
@@ -19,6 +21,32 @@ public class TimerManager {
 
 	private static List<MyTimer> timers;
 
+	private static Map<String, MyTaskTaskWrapper> taskMap = new ConcurrentHashMap<String, MyTaskTaskWrapper>();
+	
+	/**
+	 * 注册一个定时任务
+	 *  
+	 * @author qiuxs  
+	 * @param taskName
+	 * @param wrapper
+	 */
+	public static void registerTask(String taskName, MyTaskTaskWrapper wrapper) {
+		taskMap.put(taskName, wrapper);
+	}
+	
+	/**
+	 * 手动执行一个定时任务
+	 *  
+	 * @author qiuxs  
+	 * @param taskName
+	 */
+	public static void manualInvoke(String taskName) {
+		MyTaskTaskWrapper taskWrapper = taskMap.get(taskName);
+		if (taskWrapper != null) {
+			taskWrapper.run();
+		}
+	}
+	
 	/**
 	 * 销毁所有定时任务
 	 *  

@@ -28,6 +28,7 @@ public class MyTimer {
 	public MyTimer(MyTimerTask task) {
 		this.task = task;
 		this.taskWrapper = new MyTaskTaskWrapper(this.task);
+		TimerManager.registerTask(task.getName(), taskWrapper);
 	}
 
 	/**

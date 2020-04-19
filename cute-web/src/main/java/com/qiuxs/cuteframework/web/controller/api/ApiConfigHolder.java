@@ -51,6 +51,9 @@ public class ApiConfigHolder {
 		// 填充action对象和方法对象
 		if (apiConfig.getAction() == null || apiConfig.getMethodObj() == null) {
 			IAction action = ApplicationContextHolder.getBean(apiConfig.getBean());
+			if (action == null) {
+				ExceptionUtils.throwLogicalException("action_bean_not_exists", apiConfig.getBean());
+			}
 			String methodName = apiConfig.getMethod();
 			Method method = MethodUtils.getPublicMethod(action.getClass(), methodName);
 			int paramCount = 0;
