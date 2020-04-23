@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.dingtalk.chatbot.message.TextMessage;
+import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 
 public class DingTalkUtils {
 
@@ -12,7 +14,21 @@ public class DingTalkUtils {
 		MAP_CLIENT.put(HookKey.FSQH_ALL, new MyDingtalkChatbotClient(HookKey.FSQH_ALL.token()));
 		MAP_CLIENT.put(HookKey.LOG_NOTICE, new MyDingtalkChatbotClient(HookKey.LOG_NOTICE.token()));
 	}
+	
+	private static final Map<String, MyDingtalkChatbotClient> TOKEN_MAP = new HashMap<>();
 
+	public static void sendTextMsg(String token, String text) {
+		if (StringUtils.isBlank(token)) {
+			ExceptionUtils.throwLogicalException("DingDing Token is empty");
+		}
+		MyDingtalkChatbotClient chatbotClient = TOKEN_MAP.get(token);
+		if (chatbotClient == null) {
+			chatbotClient = new MyDingtalkChatbotClient(token);
+			TOKEN_MAP.put(token, chatbotClient);
+		}
+		chatbotClient.send(new TextMessage(text));
+	}
+	
 	/**
 	 * 发送文本消息
 	 * @author qiuxs
