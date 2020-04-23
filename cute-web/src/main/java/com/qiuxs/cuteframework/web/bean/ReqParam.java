@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.web.bean;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +44,18 @@ public class ReqParam extends HashMap<String, String> {
 
 	public Integer getInteger(String key) {
 		return MapUtils.getInteger(this, key);
+	}
+	
+	public Integer getIntegerMust(String key) {
+		return MapUtils.getIntegerMust(this, key);
+	}
+	
+	public BigDecimal getBigDecimal(String key) {
+		return MapUtils.getBigDecimal(this, key);
+	}
+	
+	public BigDecimal getBigDecimalMust(String key) {
+		return MapUtils.getBigDecimalMust(this, key);
 	}
 	
 	public long getLong(String key, long defVal) {

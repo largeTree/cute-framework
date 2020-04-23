@@ -50,7 +50,7 @@ public class MbiUnitHook implements IMbiHook {
 		if (log.isDebugEnabled()) {
 			log.debug("FieldName = " + key + ", ctxVal = " + ctxVal + ", ignoreVal = " + ignoreVal + ", paramMap = " + paramMap);
 		}
-		Object oldVal = paramMap.get(key);
+		Object oldVal = paramMap.containsKey(key) ? paramMap.get(key) : null;
 		if (oldVal == null) {
 			if (ctxVal != null && !ctxVal.equals(ignoreVal)) {
 				paramMap.put(key, ctxVal);

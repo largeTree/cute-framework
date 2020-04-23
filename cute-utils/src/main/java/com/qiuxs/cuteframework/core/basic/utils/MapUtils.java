@@ -297,7 +297,19 @@ public class MapUtils {
 			return null;
 		}
 		return new BigDecimal(val);
-		
+	}
+	
+	/**
+	 * 获取BigDeimal值，不存在抛出异常
+	 *  
+	 * @author qiuxs  
+	 * @param reqParam
+	 * @param key
+	 * @return
+	 */
+	public static BigDecimal getBigDecimalMust(Map<String, ?> map, String key) {
+		String str = getStringMust(map, key);
+		return new BigDecimal(str);
 	}
 	
 	/**
