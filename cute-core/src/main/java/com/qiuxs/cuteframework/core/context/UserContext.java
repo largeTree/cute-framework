@@ -31,9 +31,9 @@ public class UserContext {
 	}
 	
 	/** 用户类型：管理员 */
-	public static final int USER_TYPE_ADMIN = 0;
+	public static final int USER_TYPE_ADMIN = 1 << 0;
 	/** 用户类型：普通用户 */
-	public static final int USER_TYPE_USER = 1;
+	public static final int USER_TYPE_USER = 1 << 1;
 	
 	/** 默认会话过期时间 */
 	private static final int DEFAULT_SESSION_TIME_MS = 30 * 60 * 1000;

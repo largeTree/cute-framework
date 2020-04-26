@@ -29,6 +29,10 @@ public class ReqParam extends HashMap<String, String> {
 	public Long getLong(String key) {
 		return MapUtils.getLong(this, key);
 	}
+	
+	public Long getLongMust(String key) {
+		return MapUtils.getLongMust(this, key);
+	}
 
 	public String getString(String key) {
 		return MapUtils.getString(this, key);

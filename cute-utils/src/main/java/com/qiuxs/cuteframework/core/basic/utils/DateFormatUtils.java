@@ -9,6 +9,8 @@ import org.apache.commons.lang3.time.FastDateFormat;
 public class DateFormatUtils {
 
 	public static final String yyyy_MM_dd = "yyyy-MM-dd";
+	public static final String yyyyMMdd = "yyyyMMdd";
+	public static final String yyyyMMddHHmmss = "yyyyMMddHHmm";
 
 	public static final String yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
 	public static final String yyyy_MM_dd_HH_mm_ss_UNDERLINE = "yyyy_MM_dd_HH_mm_ss";

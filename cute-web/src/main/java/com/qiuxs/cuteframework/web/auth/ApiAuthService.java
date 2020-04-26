@@ -72,7 +72,13 @@ public class ApiAuthService {
 	 * @param params
 	 */
 	public void authCheck(ApiConfig apiConfig, ReqParam params) {
-		
+		// 接口是管理接口，会话非管理会话时报错
+		if (apiConfig.isLoginFlag() && (apiConfig.getType() & ApiConfig.API_TYPE_ADMIN) > 0) {
+    		UserLite userLite = UserContext.getUserLite();
+    		if ((userLite.getUserType() & UserContext.USER_TYPE_ADMIN) == 0) {
+    			ExceptionUtils.throwLoginException("access_denied");
+    		}
+		}
 	}
 	
 	/**
