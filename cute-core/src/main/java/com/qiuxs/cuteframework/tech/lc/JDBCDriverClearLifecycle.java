@@ -4,8 +4,17 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
 
+import javax.sql.DataSource;
+
+import org.apache.commons.dbcp.BasicDataSource;
+
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.listener.lc.IWebLifecycle;
+import com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource;
 
 public class JDBCDriverClearLifecycle implements IWebLifecycle {
 	
@@ -14,6 +23,23 @@ public class JDBCDriverClearLifecycle implements IWebLifecycle {
 		return -100;
 	}
 
+	@Override
+	public void lastDestory() {
+		DynamicDataSource dynamicDataSource = ApplicationContextHolder.getBean(DynamicDataSource.class);
+		if (dynamicDataSource != null) {
+			Map<Object, DataSource> dataSources = dynamicDataSource.getTargetDataSources();
+			for (Iterator<Object> iter = dataSources.keySet().iterator(); iter.hasNext();) {
+				try {
+					String key = (String) iter.next();
+					BasicDataSource dataSource = (BasicDataSource) dataSources.get(key);
+					dataSource.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	@Override
 	public void firstDestoryed() {
 		Enumeration<Driver> drivers = DriverManager.getDrivers();
@@ -27,6 +53,9 @@ public class JDBCDriverClearLifecycle implements IWebLifecycle {
 				e.printStackTrace();
 			}
 		}
+		
+		// MySQL driver leaves around a thread. This static method cleans it up.
+		AbandonedConnectionCleanupThread.checkedShutdown();
 	}
 
 }
