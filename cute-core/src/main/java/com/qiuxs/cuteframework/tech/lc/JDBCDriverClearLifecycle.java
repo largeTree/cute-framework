@@ -15,7 +15,7 @@ public class JDBCDriverClearLifecycle implements IWebLifecycle {
 	}
 
 	@Override
-	public void lastDestory() {
+	public void firstDestoryed() {
 		Enumeration<Driver> drivers = DriverManager.getDrivers();
 		while (drivers.hasMoreElements()) {
 			Driver driver = drivers.nextElement();
