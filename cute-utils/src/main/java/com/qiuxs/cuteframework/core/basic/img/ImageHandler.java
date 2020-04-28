@@ -32,7 +32,8 @@ public class ImageHandler {
 	 * @return BufferedImage
 	 * @throws IOException
 	 */
-	public static BufferedImage watermark(File file, File waterFile, int x, int y, float alpha, String str, int strX, int strY, int fontSize) throws IOException {
+	public static BufferedImage watermark(File file, File waterFile, int x, int y, float alpha, 
+			String str, int strX, int strY, int fontSize) throws IOException {
 		// 获取底图
 		BufferedImage buffImg = ImageIO.read(file);
 		// 获取层图
