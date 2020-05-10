@@ -64,7 +64,7 @@ public abstract class AbstractPropertyService<PK extends Serializable, T extends
 	}
 
 	@Override
-	public JSONObject translateBean(T bean, boolean wrapper) {
+	public <DT> JSONObject translateBean(DT bean, boolean wrapper) {
 		if (bean == null) {
 			return new JSONObject();
 		}
@@ -85,12 +85,12 @@ public abstract class AbstractPropertyService<PK extends Serializable, T extends
 	}
 
 	@Override
-	public JSONArray translateBeans(Collection<T> beans, boolean wrapper) {
+	public JSONArray translateBeans(Collection<?> beans, boolean wrapper) {
 		if (ListUtils.isNullOrEmpty(beans)) {
 			return new JSONArray();
 		}
 		JSONArray dataList = new JSONArray(beans.size());
-		for (Iterator<T> iter = beans.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = beans.iterator(); iter.hasNext();) {
 			dataList.add(this.translateBean(iter.next(), wrapper));
 		}
 		return dataList;
