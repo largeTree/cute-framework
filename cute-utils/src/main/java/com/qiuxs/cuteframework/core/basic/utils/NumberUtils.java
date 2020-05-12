@@ -371,6 +371,17 @@ public class NumberUtils {
 	public static Long defaultLong(Long num) {
 		return num == null ? 0L : num;
 	}
+	
+	/**
+	 * 如果参数为null则返回BigDecimal.ZERO
+	 *  
+	 * @author qiuxs  
+	 * @param nun
+	 * @return
+	 */
+	public static BigDecimal defaultBigDecimal(BigDecimal num) {
+		return num == null ? BigDecimal.ZERO : num;
+	}
 
 	/**
 	 * 字符串转BigDecimal
