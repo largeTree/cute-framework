@@ -10,6 +10,28 @@ package com.qiuxs.cuteframework.core.basic.utils;
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	
 	/**
+	 * 字符串脱敏，去头尾两字符，中间设置为***
+	 *  
+	 * @author qiuxs  
+	 * @param str
+	 * @return
+	 */
+	public static String maskString(String str) {
+		if (isBlank(str)) {
+			return "";
+		}
+		if (str.length() >= 5) {
+			return str.substring(0, 2) + "***" + str.substring(str.length() - 2, str.length());
+		} else if (str.length() >= 3) {
+			return str.substring(0, 1) + "*" + str.substring(str.length() - 1, str.length());
+		} else if (str.length() >= 2) {
+			return str.substring(0, 1) + "*";
+		} else {
+			return str;
+		}
+	}
+	
+	/**
 	 * 检测路径最前面是否有/，没有的自动加上
 	 *  
 	 * @author qiuxs  
