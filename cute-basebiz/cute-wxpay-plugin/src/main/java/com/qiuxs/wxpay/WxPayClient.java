@@ -190,16 +190,20 @@ public class WxPayClient {
 		StringEntity se = new StringEntity(xml, Constants.UTF_8);
 		post.setEntity(se);
 		CloseableHttpResponse response = null;
+		long startTime = System.nanoTime();
 		try {
 			response = this.httpClient.execute(post);
 			HttpEntity entity = response.getEntity();
 			if (entity != null) {
 				SAXReader reader = new SAXReader();
 				Document document = reader.read(entity.getContent());
+				log.info("call " + api + ", params = " + xml + " finished, costMs = " + ((System.nanoTime() - startTime) / 1000000));
 				return document;
 			}
 		} catch (Exception e) {
-			throw new WxPayClientException("call " + api + "failed, ext = " + e.getLocalizedMessage(), e);
+			String msg = "call " + api + "failed, ext = " + e.getLocalizedMessage();
+			log.error(msg, e);
+			throw new WxPayClientException(msg, e);
 		} finally {
 			IOUtils.closeQuietly(response);
 		}

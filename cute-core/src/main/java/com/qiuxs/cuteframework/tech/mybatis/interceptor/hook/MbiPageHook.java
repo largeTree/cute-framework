@@ -71,8 +71,9 @@ public class MbiPageHook implements IMbiHook {
 	private void autoTotal(String sql, PageInfo pageInfo, Invocation invocation) {
 		PreparedStatement stat = null;
 		ResultSet rs = null;
-		String countSql = getCountSql(sql);
+		String countSql = null;
 		try {
+			countSql = getCountSql(sql);
 			Connection conn = (Connection) invocation.getArgs()[0];
 			StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
 			if (log.isDebugEnabled()) {
@@ -103,7 +104,7 @@ public class MbiPageHook implements IMbiHook {
 	 * 创建时间：2018年8月17日 下午10:52:13
 	 */
 	private String getCountSql(String sql) {
-		sql = sql.replaceAll("[\\t\\n\\r]", " ");
+		sql = sql.replaceAll("[\\t\\n\\r]", " ").toLowerCase();
 		String fromSql = sql.substring(sql.indexOf("from"), sql.length());
 
 		if (fromSql.indexOf(" order ") != -1) {
