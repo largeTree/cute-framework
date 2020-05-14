@@ -71,6 +71,8 @@ public class RedisConfiguration {
 	/**  配置持有对象. */
 	private static RedisConfiguration redisConfiguration;
 
+	/** 是否已关闭 */
+	private static boolean closed = false;
 	/**  已创建的连接池缓存. */
 	private static Map<String, JedisPool> jedisPoolMap = new ConcurrentHashMap<>();
 
@@ -110,6 +112,9 @@ public class RedisConfiguration {
 	 * @auther qiuxs
 	 */
 	public static JedisPool getJedisPool(String poolName, int dbIdx) {
+		if (closed) {
+			throw new IllegalStateException("RedisConfiguration has closed");
+		}
 		if (jedisPoolMap.size() == 0) {
 			ExceptionUtils.throwRuntimeException("not inited ...");
 		}
@@ -136,7 +141,6 @@ public class RedisConfiguration {
 	 */
 	@PostConstruct
 	public void initDefaultPoll() {
-		
 		IConfiguration configuration = UConfigUtils.getDomain(CONFIG_DOMAIN);
 		if (configuration == null ) {
 			log.info("NoRedis Config...");
@@ -188,6 +192,14 @@ public class RedisConfiguration {
 		JedisPool jedisPool = new JedisPool(jedisPoolConfig, this.getHost(), this.getPort(), this.getTimeout(),
 				this.getPassword(), dbIdx);
 		return jedisPool;
+	}
+	
+	public static void shutdown() {
+		closed = true;
+		for (Map.Entry<String, JedisPool> entry : jedisPoolMap.entrySet()) {
+			entry.getValue().close();
+		}
+		jedisPoolMap.clear();
 	}
 
 	/**
