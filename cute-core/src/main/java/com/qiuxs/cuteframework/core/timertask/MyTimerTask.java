@@ -13,6 +13,9 @@ import java.util.Date;
  */
 public interface MyTimerTask extends Runnable {
 
+	static final int ONE_MIN = 60 * 1000;
+	static final int ONE_HOUR = 60 * 60 * 1000;
+	
 	/**
 	 * 是否启用
 	 *  

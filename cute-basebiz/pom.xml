@@ -13,5 +13,6 @@
 		<module>cute-gconfig</module>
 		<module>cute-captcha-plugin</module>
 		<module>cute-sms-plugin</module>
+		<module>cute-wxpay-plugin</module>
 	</modules>
 </project>

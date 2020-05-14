@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
+import com.qiuxs.cuteframework.tech.task.AsyncTaskExecutor;
+import com.qiuxs.cuteframework.tech.task.RunnableAsyncTask;
 
 /**
  * 
@@ -43,7 +45,12 @@ public class TimerManager {
 	public static void manualInvoke(String taskName) {
 		MyTaskTaskWrapper taskWrapper = taskMap.get(taskName);
 		if (taskWrapper != null) {
-			taskWrapper.run();
+			AsyncTaskExecutor.execute(new RunnableAsyncTask<Object>(null) {
+				@Override
+				public void execute(Object preparParam) {
+					taskWrapper.run();
+				}
+			}, false);
 		}
 	}
 	

@@ -1,6 +1,7 @@
 package com.qiuxs.cuteframework.core.basic.utils;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 
 /**
  * 类型适配器
@@ -53,6 +54,17 @@ public class TypeAdapter {
 			return BigDecimal.valueOf(Double.valueOf(obj.toString()));
 		} else if (type.isAssignableFrom(String.class)) {
 			return obj.toString();
+		} else if (type.isAssignableFrom(Date.class)) {
+			if (obj instanceof Date) {
+				return obj;
+			} else if (obj instanceof String) {
+				String strObj = (String) obj;
+				if (strObj.length() > 10) {
+					return DateFormatUtils.parseTime(strObj);
+				} else {
+					return DateFormatUtils.parseDate(strObj);
+				}
+			}
 		}
 		return obj;
 	}
