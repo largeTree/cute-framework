@@ -341,6 +341,12 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		if (bean.getCreatedTime() == null) {
 			bean.setCreatedTime(new Date());
 		}
+		if (bean.getUpdatedBy() == null && userLite != null) {
+			bean.setUpdatedBy(userLite.getUserId());
+		}
+		if (bean.getUpdatedTime() == null) {
+			bean.setUpdatedTime(bean.getCreatedTime());
+		}
 
 		// 默认为有效的状态
 		if (bean instanceof IFlag) {

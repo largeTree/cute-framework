@@ -19,7 +19,6 @@ import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.LONG_VALUE_TY
 import static com.qiuxs.cuteframework.core.basic.utils.TypeAdapter.STRING_TYPE_NAME;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -117,7 +116,7 @@ public class BaseField {
 		} else if (BIGDECIMAL_TYPE_NAME.equals(this.type)) {
 			return BigDecimal.ZERO;
 		} else if (DATE_TYPE_NAME.equals(this.type)) {
-			return Calendar.getInstance().getTime();
+			return null;
 		} else if (STRING_TYPE_NAME.equals(this.type)) {
 			return "";
 		} else if (JSON_TYPE_NAME.equals(this.type) || JSON_ARR_TYPE_NAME.equals(type)) {
