@@ -75,4 +75,27 @@ public class DateFormatUtils {
 		return cal.getTime();
 	}
 
+	/**
+	 * 获取昨天
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public static Date getYesterday() {
+		return getDaysAgo(1);
+	}
+	
+	/**
+	 * 获取近days天
+	 *  
+	 * @author qiuxs  
+	 * @param days
+	 * @return
+	 */
+	public static Date getDaysAgo(int days) {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, -days);
+		return cal.getTime();
+	}
+
 }
