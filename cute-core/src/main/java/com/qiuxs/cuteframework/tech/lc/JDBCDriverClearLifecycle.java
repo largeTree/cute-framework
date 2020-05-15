@@ -54,8 +54,13 @@ public class JDBCDriverClearLifecycle implements IWebLifecycle {
 			}
 		}
 		
-		// MySQL driver leaves around a thread. This static method cleans it up.
-		AbandonedConnectionCleanupThread.checkedShutdown();
+		try {
+			// MySQL driver leaves around a thread. This static method cleans it up.
+			AbandonedConnectionCleanupThread.checkedShutdown();
+		} catch (Exception e) {
+			System.err.println("shutdown the AbandonedConnectionCleanupThread failed, ext = " + e.getLocalizedMessage());
+			e.printStackTrace();
+		}
 	}
 
 }
