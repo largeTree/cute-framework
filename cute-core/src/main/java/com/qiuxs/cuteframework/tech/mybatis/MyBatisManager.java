@@ -1,6 +1,7 @@
 package com.qiuxs.cuteframework.tech.mybatis;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Component;
 
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
@@ -24,6 +26,9 @@ public class MyBatisManager {
 
 	/** Mybatis SqlSession线程缓存 */
 	private static final ThreadLocal<Map<String, SqlSession>> threadSqlSession = new MapThreadLocal<String, SqlSession>() {
+	};
+	
+	private static final ThreadLocal<Map<String, Connection>> threadConnection = new MapThreadLocal<String, Connection>() {
 	};
 
 	/**
@@ -65,9 +70,40 @@ public class MyBatisManager {
 	 * @return
 	 */
 	public static Connection getConnection() {
-		return getSqlSession().getConnection();
+		String dsId = DataSourceContext.getDsId();
+		Map<String, Connection> connectionMap = threadConnection.get();
+		return connectionMap.get(dsId);
 	}
 
+	public static void setConnection(Connection connection) {
+		Map<String, Connection> connectionMap = threadConnection.get();
+		if (connectionMap == null) {
+			connectionMap = new HashMap<String, Connection>();
+			threadConnection.set(connectionMap);
+		}
+		connectionMap.put(DataSourceContext.getDsId(), connection);
+	}
+	
+	public static void clearConnection() {
+		Map<String, Connection> connectionMap = threadConnection.get();
+		if (connectionMap != null) {
+			for (String key : connectionMap.keySet()) {
+				Connection connection = connectionMap.get(key);
+				if (connection != null) {
+					try {
+						if (!connection.getAutoCommit()) {
+							connection.commit();
+						}
+					} catch (SQLException e) {
+						log.error("close connection error: " + e.getMessage(), e);
+					}
+					DataSourceUtils.releaseConnection(connection, DataSourceContext.getDynamicDataSource());
+				}
+			}
+			connectionMap.clear();
+		}
+	}
+	
 	/**
 	 * 获取默认sqlSession
 	 * @return
@@ -127,8 +163,29 @@ public class MyBatisManager {
 		return sqlSessionFactory;
 	}
 
+	/**
+	 * 关闭本线程内的myBatis链接
+	 *  
+	 * @author qiuxs
+	 */
 	public static void closeSession() {
-
+		// 关闭mybatis session
+		Map<String, SqlSession> map_sqlsession = threadSqlSession.get();
+		if (map_sqlsession != null) {
+			try {
+				for (String key : map_sqlsession.keySet()) {
+					SqlSession s = map_sqlsession.get(key);
+					if (s != null) {
+						s.close();
+					}
+				}
+			} catch (Exception e) {
+				log.error("close mybatis error:", e);
+			} finally {
+				threadSqlSession.set(null);
+			}
+		}
+		clearConnection();
 	}
 
 }

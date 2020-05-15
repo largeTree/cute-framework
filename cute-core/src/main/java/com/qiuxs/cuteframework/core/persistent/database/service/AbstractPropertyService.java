@@ -60,7 +60,7 @@ public abstract class AbstractPropertyService<PK extends Serializable, T extends
 			this.properties = new ArrayList<>();
 			this.initProps(this.properties);
 		}
-		return this.properties;
+		return new ArrayList<PropertyWrapper<?>>(this.properties);
 	}
 
 	@Override

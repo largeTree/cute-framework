@@ -40,7 +40,12 @@ public class CuteSpringManagedTransaction implements Transaction {
 			}
 			return this.connection;
 		} else {
-			return MyBatisManager.getConnection();
+			Connection con = MyBatisManager.getConnection();
+			if ( con == null || con.isClosed()) {
+				con = dataSource.getConnection();
+				MyBatisManager.setConnection(con);
+			}
+			return con;
 		}
 	}
 

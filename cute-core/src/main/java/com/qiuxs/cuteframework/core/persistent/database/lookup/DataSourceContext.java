@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,6 +14,7 @@ import com.qiuxs.cuteframework.core.basic.Constants.DsType;
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.utils.NumberUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
+import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.context.TLVariableHolder;
 import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataSourceService;
@@ -34,6 +37,9 @@ public class DataSourceContext {
 
 	/**数据源切换的开关：用于手动切换*/
 	private static final String TLK_DS_SWITCH = "tlDsSwitch";
+	
+	/** 动态数据源 */
+	private static DynamicDataSource dynamicDataSource;
 
 	/**<namespace, dsType>*/
 	private static Map<String, String> dsTypeMap = new HashMap<String, String>();
@@ -53,6 +59,13 @@ public class DataSourceContext {
 	/** 业务库列表 */
 	private static List<String> bizDsList = new ArrayList<String>();
 
+	public static DataSource getDynamicDataSource() {
+		if (dynamicDataSource == null) {
+			dynamicDataSource = ApplicationContextHolder.getBean(DynamicDataSource.class);
+		}
+		return dynamicDataSource;
+	}
+	
 	/***
 	 * 变更当前数据库为日志库
 	 *  
