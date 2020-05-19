@@ -16,6 +16,7 @@ import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.listener.lc.IWebLifecycle;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource;
 import com.qiuxs.cuteframework.core.persistent.redis.RedisConfiguration;
+import com.qiuxs.cuteframework.tech.log.CuteJdbcAppenderConfiguration;
 
 public class SystemCleanUpLifecycle implements IWebLifecycle {
 	
@@ -66,6 +67,13 @@ public class SystemCleanUpLifecycle implements IWebLifecycle {
 			System.out.println("shutdown RedisConfiguration....");
 		} catch (Exception e) {
 			System.err.println("shutdown RedisConfiguration failed, ext = " + e.getLocalizedMessage());
+			e.printStackTrace();
+		}
+		
+		try {
+			CuteJdbcAppenderConfiguration.shutdown();
+		} catch (Exception e) {
+			System.err.println("shutdown AsyncAppender failed, ext = " + e.getLocalizedMessage());
 			e.printStackTrace();
 		}
 	}
