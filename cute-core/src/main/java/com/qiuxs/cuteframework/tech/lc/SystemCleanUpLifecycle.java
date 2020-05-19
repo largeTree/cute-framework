@@ -16,7 +16,7 @@ import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.listener.lc.IWebLifecycle;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource;
 
-public class JDBCDriverClearLifecycle implements IWebLifecycle {
+public class SystemCleanUpLifecycle implements IWebLifecycle {
 	
 	@Override
 	public int order() {

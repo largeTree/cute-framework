@@ -35,7 +35,7 @@ public class LogConstant {
 	/**
 	 * jdbc日志appender名称前缀
 	 */
-	public static final String JDBC_APPENDER_PREFIX = "MyJdbc-";
+	public static final String JDBC_APPENDER_PREFIX = "CuteJdbcAppend-";
 
 	/**
 	 * jdbc日志异步appender名称后缀

@@ -30,6 +30,8 @@ public class CuteJdbcAppenderConfiguration {
 
 	@Resource
 	private DataSource dataSource;
+	
+	private static Appender asyncAppender;
 
 	// inner class
 	class Connect implements ConnectionSource {
@@ -129,7 +131,7 @@ public class CuteJdbcAppenderConfiguration {
 //		AsyncAppender asyncAppender = AsyncAppender.newBuilder().setAppenderRefs(refs).setErrorRef(errorRef).setBlocking(false)
 //				.setShutdownTimeout(0).setBufferSize(LogConstant.JDBC_APPENDER_ASYNC_BUFFSIZE).setName(asyncAppenderName)
 //				.setIncludeLocation(true).setConfiguration(config).setIgnoreExceptions(false).build();
-
+		
 		asyncAppender.start();
 		config.addAppender(asyncAppender);
 		return asyncAppender;
@@ -194,6 +196,14 @@ public class CuteJdbcAppenderConfiguration {
 			// startMyJdbcAppender("com.hzecool.core.log.logger.Nagios", asyncAppender,
 			// config);
 			ctx.updateLoggers();
+			
+			CuteJdbcAppenderConfiguration.asyncAppender = asyncAppender;
+		}
+	}
+	
+	public static void shutdown() {
+		if (CuteJdbcAppenderConfiguration.asyncAppender != null) {
+			CuteJdbcAppenderConfiguration.asyncAppender.stop();
 		}
 	}
 }
