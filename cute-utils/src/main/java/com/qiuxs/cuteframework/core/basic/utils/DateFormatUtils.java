@@ -7,6 +7,13 @@ import java.util.Date;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 public class DateFormatUtils {
+	
+	/** 每天有多少秒 */
+	public static final int DAY_SECONDS = 24 * 60 * 60;
+	/** 每小时有多少秒 */
+	public static final int HOUR_SECONDS = 60 * 60;
+	/** 每分钟有多少秒 */
+	public static final int MINUTE_SECONDS = 60;
 
 	public static final String yyyy_MM_dd = "yyyy-MM-dd";
 	public static final String yyyyMMdd = "yyyyMMdd";
@@ -47,6 +54,35 @@ public class DateFormatUtils {
 
 	public static String format(Date date, String pattern) {
 		return FastDateFormat.getInstance(pattern).format(date);
+	}
+	
+	/**
+	 * 秒数转
+	 * xx天xx小时xx分钟xx秒
+	 *  
+	 * @author qiuxs  
+	 * @param second
+	 * @return
+	 */
+	public static String secondToChinese(long second) {
+		int day = (int) (second / DAY_SECONDS);
+		int hours = (int) (second % DAY_SECONDS / HOUR_SECONDS);
+		int minute = (int) (second % DAY_SECONDS % HOUR_SECONDS / MINUTE_SECONDS);
+		int sec = (int) (second % DAY_SECONDS % HOUR_SECONDS % MINUTE_SECONDS);
+		StringBuilder sb = new StringBuilder();
+		if (day > 0) {
+			sb.append(day).append("天");
+		}
+		if (hours > 0) {
+			sb.append(hours).append("小时");
+		}
+		if (minute > 0) {
+			sb.append(minute).append("分钟");
+		}
+		if (sec > 0) {
+			sb.append(sec).append("秒");
+		}
+		return sb.toString();
 	}
 	
 	/**

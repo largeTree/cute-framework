@@ -125,4 +125,19 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 		this.enableById(params);
 		return ActionResult.SUCCESS_INSTANCE;
 	}
+
+	/**
+	 * 指定service的查询方法
+	 *  
+	 * @author qiuxs  
+	 * @param listMethod
+	 * @param params
+	 * @param jsonData
+	 * @return
+	 */
+	protected ActionResult list(String listMethod, ReqParam params, String jsonData) {
+		return ActionHelper.list(this.getService(), listMethod, null, params, jsonData);
+	}
+	
+	
 }

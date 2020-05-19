@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.code.DirectCodeCenter;
 import com.qiuxs.cuteframework.core.basic.code.provider.ICodeTranslatable;
 import com.qiuxs.cuteframework.core.basic.code.tree.TreeItem;
@@ -63,9 +64,14 @@ public class FuncService extends AbstractDataPropertyService<String, Func, FuncD
 			treeItem.setId(id);
 			treeItem.setName(func.getName());
 			String extra = func.getExtra();
+			JSONObject jExtra = null;
 			if (extra != null) {
-				treeItem.setAttr(JsonUtils.parseJSONObject(extra));
+				jExtra = JsonUtils.parseJSONObject(extra);
+			} else {
+				jExtra = new JSONObject();
 			}
+			jExtra.put("type", func.getFuncType());
+			treeItem.setAttr(jExtra);
 			if (includeSub) {
 				treeItem.setChildren(this.funcTree(id, includeSub));
 			}
