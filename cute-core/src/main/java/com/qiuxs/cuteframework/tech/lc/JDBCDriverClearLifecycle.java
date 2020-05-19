@@ -38,10 +38,7 @@ public class JDBCDriverClearLifecycle implements IWebLifecycle {
 				}
 			}
 		}
-	}
-	
-	@Override
-	public void firstDestoryed() {
+		
 		Enumeration<Driver> drivers = DriverManager.getDrivers();
 		while (drivers.hasMoreElements()) {
 			Driver driver = drivers.nextElement();
@@ -57,6 +54,7 @@ public class JDBCDriverClearLifecycle implements IWebLifecycle {
 		try {
 			// MySQL driver leaves around a thread. This static method cleans it up.
 			AbandonedConnectionCleanupThread.checkedShutdown();
+			System.out.println("shutdown AbandonedConnection Cleanup Thread");
 		} catch (Exception e) {
 			System.err.println("shutdown the AbandonedConnectionCleanupThread failed, ext = " + e.getLocalizedMessage());
 			e.printStackTrace();

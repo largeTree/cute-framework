@@ -102,6 +102,7 @@ public class MyBatisManager {
 			}
 			connectionMap.clear();
 		}
+		threadConnection.set(null);
 	}
 	
 	/**
