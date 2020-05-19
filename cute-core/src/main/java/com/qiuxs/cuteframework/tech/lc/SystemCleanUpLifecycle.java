@@ -15,6 +15,7 @@ import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.listener.lc.IWebLifecycle;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource;
+import com.qiuxs.cuteframework.core.persistent.redis.RedisConfiguration;
 
 public class SystemCleanUpLifecycle implements IWebLifecycle {
 	
@@ -57,6 +58,14 @@ public class SystemCleanUpLifecycle implements IWebLifecycle {
 			System.out.println("shutdown AbandonedConnection Cleanup Thread");
 		} catch (Exception e) {
 			System.err.println("shutdown the AbandonedConnectionCleanupThread failed, ext = " + e.getLocalizedMessage());
+			e.printStackTrace();
+		}
+		
+		try {
+			RedisConfiguration.shutdown();
+			System.out.println("shutdown RedisConfiguration....");
+		} catch (Exception e) {
+			System.err.println("shutdown RedisConfiguration failed, ext = " + e.getLocalizedMessage());
 			e.printStackTrace();
 		}
 	}

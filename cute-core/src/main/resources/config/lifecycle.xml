@@ -4,6 +4,5 @@
 	<lc class="com.qiuxs.cuteframework.core.timertask.TimerLifcycle" />
 	<lc class="com.qiuxs.cuteframework.core.lc.DirectCodeWebLefecycle" />
 	<lc class="com.qiuxs.cuteframework.core.persistent.unit.lc.DsUnitLifecycle" />
-	<lc class="com.qiuxs.cuteframework.tech.lc.JDBCDriverClearLifecycle" />
-	<lc class="com.qiuxs.cuteframework.core.persistent.lc.RedisConfigurationLifecycle" />
+	<lc class="com.qiuxs.cuteframework.tech.lc.SystemCleanUpLifecycle" />
 </root>
