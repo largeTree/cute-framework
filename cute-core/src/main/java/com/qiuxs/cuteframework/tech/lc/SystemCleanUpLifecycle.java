@@ -17,6 +17,7 @@ import com.qiuxs.cuteframework.core.listener.lc.IWebLifecycle;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource;
 import com.qiuxs.cuteframework.core.persistent.redis.RedisConfiguration;
 import com.qiuxs.cuteframework.tech.log.CuteJdbcAppenderConfiguration;
+import com.qiuxs.cuteframework.tech.task.AsyncTaskExecutor;
 
 public class SystemCleanUpLifecycle implements IWebLifecycle {
 	
@@ -27,6 +28,14 @@ public class SystemCleanUpLifecycle implements IWebLifecycle {
 
 	@Override
 	public void lastDestory() {
+		try {
+			AsyncTaskExecutor.shutdown();
+			System.out.println("shutdown AsyncTaskExecutor ...");
+		} catch (Exception e) {
+			System.err.println("shutdown AsyncTaskExecutor failed, ext = " + e.getLocalizedMessage());
+			e.printStackTrace();
+		}
+		
 		DynamicDataSource dynamicDataSource = ApplicationContextHolder.getBean(DynamicDataSource.class);
 		if (dynamicDataSource != null) {
 			Map<Object, DataSource> dataSources = dynamicDataSource.getTargetDataSources();

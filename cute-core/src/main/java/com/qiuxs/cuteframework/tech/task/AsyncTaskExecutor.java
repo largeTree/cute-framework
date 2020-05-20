@@ -1,9 +1,11 @@
 package com.qiuxs.cuteframework.tech.task;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import com.qiuxs.cuteframework.core.tx.local.AfterCompletionRunnable;
 import com.qiuxs.cuteframework.core.tx.local.SpringTxContext;
@@ -19,7 +21,10 @@ public class AsyncTaskExecutor {
 	/**
 	 * 异步任务线程池，先写10个线程，后续支持按配置制定线程数
 	 */
-	private static ExecutorService thread_pool = Executors.newFixedThreadPool(10);
+	private static ExecutorService thread_pool;
+	static {
+		thread_pool = new ThreadPoolExecutor(10, 10, 1500, TimeUnit.MILLISECONDS, new LinkedBlockingDeque<Runnable>(1024));
+	}
 
 	/**
 	 * 简单异步任务
@@ -70,4 +75,13 @@ public class AsyncTaskExecutor {
 		}
 	}
 
+	/**
+	 * 关闭
+	 *  
+	 * @author qiuxs
+	 */
+	public static void shutdown() {
+		thread_pool.shutdown();
+	}
+	
 }
