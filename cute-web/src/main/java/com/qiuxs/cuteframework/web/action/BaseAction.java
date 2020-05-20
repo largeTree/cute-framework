@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
@@ -137,6 +138,27 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 */
 	protected ActionResult list(String listMethod, ReqParam params, String jsonData) {
 		return ActionHelper.list(this.getService(), listMethod, null, params, jsonData);
+	}
+
+	/**
+	 * 检查参数是否存在
+	 *  
+	 * @author qiuxs  
+	 * @param params
+	 * @param names
+	 */
+	public void checkParams(Map<String, ?> params, String... names) {
+		if (params == null) {
+			ExceptionUtils.throwLogicalException("params_is_null");
+		}
+		if (names == null || names.length == 0) {
+			return;
+		}
+		for (String name : names) {
+			if (!params.containsKey(name)) {
+				ExceptionUtils.throwLogicalException("param_required", name);
+			}
+		}
 	}
 	
 	

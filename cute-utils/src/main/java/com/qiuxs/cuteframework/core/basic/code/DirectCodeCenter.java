@@ -38,6 +38,13 @@ public class DirectCodeCenter {
 	public static final String ERROR = "error";
 	@Code(domain = DOMAIN_LOG_LEVEL, caption = "FATAL")
 	public static final String FATAL = "fatal";
+	
+	@CodeDomain
+	public static final String DOMAIN_YES_NO = "domain.yesNo";
+	@Code(domain = DOMAIN_YES_NO, caption = "是")
+	public static final int YES = 1;
+	@Code(domain = DOMAIN_YES_NO, caption = "否")
+	public static final int NO = 0;
 
 	private static Map<String, DirectCodeHouse<?>> codeHouses = new HashMap<>();
 
@@ -51,6 +58,9 @@ public class DirectCodeCenter {
 	/** 日志级别 */
 	public static DirectCodeHouse<Integer> LOGLEVEL = DirectCodeCenter.getDirectCodeHouse(DOMAIN_LOG_LEVEL);
 
+	/** 是否 */
+	public static DirectCodeHouse<Integer> YES_NO = DirectCodeCenter.getDirectCodeHouse(DOMAIN_YES_NO);
+	
 	/**
 	 * 创建一个直接编码集
 	 * 

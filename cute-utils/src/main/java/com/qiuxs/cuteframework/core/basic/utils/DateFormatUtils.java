@@ -134,4 +134,21 @@ public class DateFormatUtils {
 		return cal.getTime();
 	}
 
+	/**
+	 * 清理掉时间，仅保留日期
+	 *  
+	 * @author qiuxs  
+	 * @param date
+	 * @return
+	 */
+	public static Date clearNoTime(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+
 }

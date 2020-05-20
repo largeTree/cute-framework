@@ -58,6 +58,17 @@ public abstract class AbstractDataPropertyAction<PK extends Serializable, T exte
 		T bean = JsonUtils.parseObject(jsonData, this.getService().getPojoClass());
 		return bean;
 	}
+	
+	/**
+	 * 转为实体类
+	 *  
+	 * @author qiuxs  
+	 * @param jsonData
+	 * @return
+	 */
+	protected T fromJSON(String jsonData) {
+		return JsonUtils.parseObject(jsonData, this.getService().getPojoClass());
+	}
 
 	/**
 	 * 
