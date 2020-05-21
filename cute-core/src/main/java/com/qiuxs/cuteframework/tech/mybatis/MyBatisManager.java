@@ -72,6 +72,10 @@ public class MyBatisManager {
 	public static Connection getConnection() {
 		String dsId = DataSourceContext.getDsId();
 		Map<String, Connection> connectionMap = threadConnection.get();
+		if (connectionMap == null) {
+			connectionMap = new HashMap<String, Connection>();
+			threadConnection.set(connectionMap);
+		}
 		return connectionMap.get(dsId);
 	}
 
