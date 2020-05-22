@@ -1,4 +1,4 @@
-package com.qiuxs.cuteframework.web.syscontroller;
+package com.qiuxs.cuteframework.web.sys.controller;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
