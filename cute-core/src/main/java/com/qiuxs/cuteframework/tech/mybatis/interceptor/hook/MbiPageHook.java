@@ -69,6 +69,10 @@ public class MbiPageHook implements IMbiHook {
 	 * 创建时间：2018年8月17日 下午10:39:14
 	 */
 	private void autoTotal(String sql, PageInfo pageInfo, Invocation invocation) {
+		Object connObj = invocation.getArgs()[0];
+		if (!(connObj instanceof Connection)) {
+			return;
+		}
 		PreparedStatement stat = null;
 		ResultSet rs = null;
 		String countSql = null;

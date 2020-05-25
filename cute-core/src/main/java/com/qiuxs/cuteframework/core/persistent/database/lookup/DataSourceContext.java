@@ -37,6 +37,8 @@ public class DataSourceContext {
 
 	/**数据源切换的开关：用于手动切换*/
 	private static final String TLK_DS_SWITCH = "tlDsSwitch";
+	/** sql监控开关 */
+	private static final String TL_SQL_MONITOR_SWITCH = "_tl_sql_monitor_switch";
 	
 	/** 动态数据源 */
 	private static DynamicDataSource dynamicDataSource;
@@ -362,6 +364,48 @@ public class DataSourceContext {
 		tempUnitDs.putAll(unitDsMap);
 		tempUnitDs.put(dsUnit.getUnitId(), dsUnit.getDsId());
 		unitDsMap = tempUnitDs;
+	}
+
+	/**
+	 * 判断是否需要监控sql
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public static boolean monitorSql() {
+		Boolean monitorFlag = TLVariableHolder.getVariable(TL_SQL_MONITOR_SWITCH);
+		return monitorFlag != null && monitorFlag;
+	}
+	
+	/**
+	 * 开启sql监控
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public static Boolean switchSqlMonitorOn() {
+		return setMonitorSql(true);
+	}
+	
+	/**
+	 * 关闭sql监控
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public static Boolean switchSqlMonitorOff() {
+		return setMonitorSql(false);
+	}
+	
+	/**
+	 * 设置sql监控开关
+	 *  
+	 * @author qiuxs  
+	 * @param flag
+	 * @return
+	 */
+	private static Boolean setMonitorSql(boolean flag) {
+		return (Boolean) TLVariableHolder.setVariable(TL_SQL_MONITOR_SWITCH, flag);
 	}
 
 }

@@ -128,9 +128,6 @@ public class CuteJdbcAppenderConfiguration {
 		AsyncAppender asyncAppender = AsyncAppender.createAppender(refs, errorRef, false, 0,
 				AbstractAppender.parseInt(LogConstant.JDBC_APPENDER_BUFFSIZE, 0), asyncAppenderName, true, null, config,
 				false);
-//		AsyncAppender asyncAppender = AsyncAppender.newBuilder().setAppenderRefs(refs).setErrorRef(errorRef).setBlocking(false)
-//				.setShutdownTimeout(0).setBufferSize(LogConstant.JDBC_APPENDER_ASYNC_BUFFSIZE).setName(asyncAppenderName)
-//				.setIncludeLocation(true).setConfiguration(config).setIgnoreExceptions(false).build();
 		
 		asyncAppender.start();
 		config.addAppender(asyncAppender);
@@ -193,8 +190,6 @@ public class CuteJdbcAppenderConfiguration {
 		if (asyncAppender != null) {
 			startMyJdbcAppender("com.qiuxs", asyncAppender, config);// LogManager.ROOT_LOGGER_NAME
 			startMyJdbcAppender("com.qiuxs.cuteframework.core.log.Console", asyncAppender, config);
-			// startMyJdbcAppender("com.hzecool.core.log.logger.Nagios", asyncAppender,
-			// config);
 			ctx.updateLoggers();
 			
 			CuteJdbcAppenderConfiguration.asyncAppender = asyncAppender;

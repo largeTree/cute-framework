@@ -22,9 +22,10 @@ public class TLVariableHolder {
 	 * @author qiuxs  
 	 * @param key
 	 * @param value
+	 * @return 
 	 */
-	public static void setVariable(String key, Object value) {
-		getThreadMap().put(key, value);
+	public static Object setVariable(String key, Object value) {
+		return getThreadMap().put(key, value);
 	}
 
 	/**
