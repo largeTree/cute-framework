@@ -131,8 +131,11 @@ public class MapUtils {
 	 * @return
 	 */
 	public static String getString(Map<String, ?> map, String key) {
-		Object obj = map.get(key);
-		return obj == null ? null : obj.toString();
+		Object val = map.get(key);
+		if (val instanceof String) {
+			return (String) val;
+		}
+		return val == null ? null : val.toString();
 	}
 
 	/**
@@ -175,7 +178,11 @@ public class MapUtils {
 	 * @throws NumberFormatException
 	 */
 	public static Integer getInteger(Map<String, ?> map, String key) throws NumberFormatException {
-		return TypeAdapter.toInteger(map.get(key));
+		Object val = map.get(key);
+		if (val instanceof Integer) {
+			return (Integer) val;
+		}
+		return TypeAdapter.toInteger(val);
 	}
 	
 	/**
@@ -218,9 +225,13 @@ public class MapUtils {
 	 * @throws NumberFormatException
 	 */
 	public static Long getLong(Map<String, ?> map, String key) throws NumberFormatException {
-		String val = getString(map, key);
-		if (StringUtils.isNotBlank(val)) {
-			return TypeAdapter.toLong(val);
+		Object val = map.get(key);
+		if (val instanceof Long) {
+			return (Long) val;
+		}
+		String strVal = getString(map, key);
+		if (StringUtils.isNotBlank(strVal)) {
+			return TypeAdapter.toLong(strVal);
 		}
 		return null; 
 	}
@@ -264,7 +275,11 @@ public class MapUtils {
 	 * 创建时间：2018年9月20日 下午11:02:42
 	 */
 	public static Boolean getBoolean(Map<String, ?> map, String key) {
-		return TypeAdapter.toBoolean(map.get(key));
+		Object val = map.get(key);
+		if (val instanceof Boolean) {
+			return (Boolean) val;
+		}
+		return TypeAdapter.toBoolean(val);
 	}
 
 	/**
@@ -371,9 +386,21 @@ public class MapUtils {
 		return map;
 	}
 
+	/**
+	 * 获取日期
+	 *  
+	 * @author qiuxs  
+	 * @param params
+	 * @param key
+	 * @return
+	 */
 	public static Date getDate(Map<String, ?> params, String key) {
+		Object val = params.get(key);
+		if (val instanceof Date) {
+			return (Date) val;
+		}
 		String strDate = getString(params, key);
-		if (strDate == null) {
+		if (StringUtils.isBlank(strDate)) {
 			return null;
 		}
 		if (strDate.length() > 10) {

@@ -3,7 +3,9 @@ package com.qiuxs.cuteframework.tech.task;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.context.TLVariableHolder;
+import com.qiuxs.cuteframework.core.utils.notice.NoticeLogger;
 
 /**
  * 简单异步任务
@@ -30,6 +32,7 @@ public abstract class RunnableAsyncTask<P> extends AbstractAsyncTask<P> implemen
 			this.execute(super.getPreparParam());
 		} catch (Throwable e) {
 			log.error("Async Task exec ext = " + e.getLocalizedMessage(), e);
+			NoticeLogger.error(this.getClass().getSimpleName() + ", execute failed, ext = " + e.getLocalizedMessage(), ExceptionUtils.getStackTrace(e));
 		} finally {
 			TLVariableHolder.clear();
 		}

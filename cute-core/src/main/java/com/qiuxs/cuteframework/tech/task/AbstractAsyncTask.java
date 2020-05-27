@@ -6,7 +6,7 @@ import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.tech.log.LogUtils;
 
-public class AbstractAsyncTask<P> {
+public abstract class AbstractAsyncTask<P> {
 	private P preparParam;
 	private UserLite userLite;
 	private Map<String, String> logContextMap;

@@ -21,7 +21,7 @@ import com.qiuxs.cuteframework.tech.task.RunnableAsyncTask;
  */
 public class TimerManager {
 
-	private static List<MyTimer> timers;
+	private static List<MyTimer> timers = new ArrayList<>();
 
 	private static Map<String, MyTaskTaskWrapper> taskMap = new ConcurrentHashMap<String, MyTaskTaskWrapper>();
 	
@@ -78,14 +78,17 @@ public class TimerManager {
 		if (names.length == 0) {
 			return;
 		}
-		List<MyTimer> timers = new ArrayList<>();
 		for (String name : names) {
 			MyTimerTask task = ApplicationContextHolder.getBean(name, MyTimerTask.class);
-			MyTimer myTimer = new MyTimer(task);
-			myTimer.start();
-			timers.add(myTimer);
+			startTask(task);
 		}
-		TimerManager.timers = timers;
+	}
+	
+	public static MyTimer startTask(MyTimerTask task) {
+		MyTimer myTimer = new MyTimer(task);
+		myTimer.start();
+		timers.add(myTimer);
+		return myTimer;
 	}
 
 }
