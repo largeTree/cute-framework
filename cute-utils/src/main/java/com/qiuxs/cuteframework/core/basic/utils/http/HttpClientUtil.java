@@ -16,8 +16,10 @@ import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
@@ -27,6 +29,7 @@ import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -68,6 +71,219 @@ public class HttpClientUtil {
 		}
 	}
 
+	/**
+	 * 上传文件
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param fileName
+	 * @param body
+	 * @return
+	 */
+	public static String doUpload(String url, String fileName, byte[] body) {
+		return doUpload(url, fileName, body, false);
+	}
+	
+	/**
+	 * 上传文件
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param fileName
+	 * @param body
+	 * @param sslFlag
+	 * @return
+	 */
+	public static String doUpload(String url, String fileName, byte[] body, boolean sslFlag) {
+		return doUpload(url, fileName, body, null, sslFlag);
+	}
+	
+	/**
+	 * 上传文件
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param fileName
+	 * @param body
+	 * @param params
+	 * @param sslFlag
+	 * @return
+	 */
+	public static String doUpload(String url, String fileName, byte[] body, Map<String, String> params, boolean sslFlag) {
+		return doUpload(url, fileName, body, params, null, sslFlag);
+	}
+	
+	/**
+	 * 上传文件
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param fileName
+	 * @param body
+	 * @param parmas
+	 * @param header
+	 * @param sslFlag
+	 * @return
+	 */
+	public static String doUpload(String url, String fileName, byte[] body, Map<String, String> parmas, Map<String, String> header, boolean sslFlag) {
+		return doUpload(url, fileName, body, null, null, parmas, header, sslFlag);
+	}
+	
+	/**
+	 * 上传文件
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param fileName
+	 * @param body
+	 * @param contentType
+	 * @param params
+	 * @param headers
+	 * @param sslFlag
+	 * @return
+	 */
+	public static String doUpload(String url, String fileName, byte[] body, String contentType, String boundary, Map<String, String> params, Map<String, String> headers, boolean sslFlag) {
+		HttpEntity entity = doUploadEntity(url, fileName, body, contentType, boundary, params, headers, sslFlag ? httpsClient : httpClient);
+		return httpEntityToString(entity);
+	}
+	
+	private static String httpEntityToString(HttpEntity httpEntity) {
+		try {
+			return EntityUtils.toString(httpEntity);
+		} catch (Throwable e) {
+			throw ExceptionUtils.unchecked(e);
+		}
+	}
+	
+	/**
+	 * 上传文件
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param body
+	 * @param params
+	 * @param header
+	 * @param sslFlag
+	 * @return
+	 */
+	private static HttpEntity doUploadEntity(String url, String fileName, byte[] body, String contentType, String boundary, Map<String, String> params, Map<String, String> headers, HttpClient client) {
+		try {
+			HttpPost post = new HttpPost(url);
+			
+			// 传了的有的情况下设置一下
+			if (StringUtils.isNotBlank(contentType)) {
+				post.addHeader("Content-type", contentType);
+			}
+			// 请求头
+			// post.setHeader("Content-type", ContentType.create("application/x-www-form-urlencoded", Constants.DEFAULT_CHARSET).toString());
+			if (headers != null) {
+				headers.forEach((k, v) -> {
+					post.addHeader(k, v);
+				});
+			}
+			// 请求体
+			MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+			
+			builder.setBoundary(boundary);
+			
+			builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			// 文件
+			builder.addBinaryBody(fileName, body, ContentType.APPLICATION_OCTET_STREAM, "123.jpg");
+			
+			// 其他参数
+			if (params != null) {
+				params.forEach((k,v)->{
+					builder.addPart(k, new StringBody(v, ContentType.create("text/plain", Constants.DEFAULT_CHARSET)));
+				});
+			}
+			post.setEntity(builder.build());
+			HttpResponse resp = client.execute(post);
+			StatusLine statusLine = resp.getStatusLine();
+			int statusCode = statusLine.getStatusCode();
+			if (statusCode == HttpStatus.SC_OK) {
+				return resp.getEntity();
+			} else {
+				throw new HttpResponseException(statusCode, statusLine.getReasonPhrase());
+			}
+		} catch (IOException e) {
+			throw ExceptionUtils.unchecked(e);
+		}
+	}
+	
+	/**
+	 * 下载文件
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @return
+	 */
+	public static byte[] download(String url) {
+		return download(url, false);
+	}
+	
+	/**
+	 * 下载文件
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param sslFlag
+	 * @return
+	 */
+	public static byte[] download(String url, boolean sslFlag) {
+		return download(url, null, sslFlag);
+	}
+	
+	/**
+	 * 下载文件
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param params
+	 * @param sslFlag
+	 * @return
+	 */
+	public static byte[] download(String url, Map<String, String> params, boolean sslFlag) {
+		return download(url, params, null, sslFlag);
+	}
+	
+	/**
+	 * 下载文件
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param params
+	 * @param headers
+	 * @param sslFlag
+	 * @return
+	 */
+	public static byte[] download(String url, Map<String, String> params, Map<String, String> headers, boolean sslFlag) {
+		return download(url, params, headers, sslFlag ? httpsClient : httpClient);
+	}
+	
+	/**
+	 * 下载文件
+	 *  
+	 * @author qiuxs  
+	 * @param url
+	 * @param params
+	 * @param headers
+	 * @param client
+	 * @return
+	 */
+	private static byte[] download(String url, Map<String, String> params, Map<String, String> headers, HttpClient client) {
+		String finalUrl = builderFinalGetUrl(url, params);
+		HttpEntity entity = doGetEntity(finalUrl, headers, client);
+		return httpEntityToByteArray(entity);
+	}
+	
+	private static byte[] httpEntityToByteArray(HttpEntity entity) {
+		try {
+			return EntityUtils.toByteArray(entity);
+		} catch (Exception e) {
+			throw ExceptionUtils.unchecked(e);
+		}
+	}
+	
 	/**
 	 * java原生请求
 	 *  
@@ -247,6 +463,23 @@ public class HttpClientUtil {
 	 * @return
 	 */
 	private static String doGetString(String finalUrl, Map<String, String> headers, HttpClient client) {
+		try {
+			return EntityUtils.toString(doGetEntity(finalUrl, headers, client));
+		} catch (Exception e) {
+			throw ExceptionUtils.unchecked(e);
+		}
+	}
+	
+	/**
+	 * 获取请求实体
+	 *  
+	 * @author qiuxs  
+	 * @param finalUrl
+	 * @param headers
+	 * @param client
+	 * @return
+	 */
+	private static HttpEntity doGetEntity(String finalUrl, Map<String, String> headers, HttpClient client) {
 		HttpGet get = new HttpGet(finalUrl);
 		try {
 			// 拼接请求头
@@ -257,12 +490,12 @@ public class HttpClientUtil {
 			}
 			
 			HttpResponse resp = client.execute(get);
-			int statusCode = resp.getStatusLine().getStatusCode();
-			String respStr = EntityUtils.toString(resp.getEntity());
+			StatusLine statusLine = resp.getStatusLine();
+			int statusCode = statusLine.getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
-				return respStr;
+				return resp.getEntity();
 			} else {
-				throw new HttpResponseException(statusCode, respStr);
+				throw new HttpResponseException(statusCode, statusLine.getReasonPhrase());
 			}
 		} catch (IOException e) {
 			throw ExceptionUtils.unchecked(e);

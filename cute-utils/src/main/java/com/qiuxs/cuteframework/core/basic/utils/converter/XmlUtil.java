@@ -545,6 +545,9 @@ public class XmlUtil {
 				}
 				Element childElement = element.addElement(fieldName);
 				Object val = field.get(obj);
+				if (val == null) {
+					continue;
+				}
 				if (ReflectUtils.isSimpleType(fieldType)) {
 					childElement.setText(val == null ? "" : val.toString());
 				} else if (fieldType.isAssignableFrom(List.class)) {
