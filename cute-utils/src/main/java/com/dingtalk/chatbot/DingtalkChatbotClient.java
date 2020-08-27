@@ -36,7 +36,9 @@ public class DingtalkChatbotClient {
             Integer errcode = obj.getInteger("errcode");
             sendResult.setErrorCode(errcode);
             sendResult.setErrorMsg(obj.getString("errmsg"));
-            sendResult.setIsSuccess(errcode.equals(0));
+            if (errcode != null) {
+            	sendResult.setIsSuccess(errcode.equals(0));
+            }
         }
 
         return sendResult;
