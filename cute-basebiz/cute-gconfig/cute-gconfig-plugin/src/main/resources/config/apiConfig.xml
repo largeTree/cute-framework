@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<module id="gconfig">
+		<api key="wb-gconfig-findGConfigs" bean="scGconfigAction" method="findGConfigs" type="1" login="1" auth="0" desc="全局配置列表" />
+		<api key="wb-gconfig-getGConfig" bean="scGconfigAction" method="getGConfig" type="1" login="1" auth="0" desc="获取配置详情" />
+	</module>
+</root>

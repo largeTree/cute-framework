@@ -7,10 +7,10 @@
 			<field label="客户端IP" type="text" name="reqIp" />
 			<field label="全局流水号" type="text" name="globalId" />
 			<field label="请求地址" type="text" name="reqUrlLike" />
-			<field label="开始时间起" type="datetime" name="reqStartTimeGte" />
-			<field label="开始时间止" type="datetime" name="reqStartTimeLte" />
-			<field label="结束时间起" type="datetime" name="reqEndTimeGte" />
-			<field label="结束时间止" type="datetime" name="reqEndTimeLte" />
+			<field label="开始时间起" type="datetime" newrow="1" name="reqStartTimeGte" defval="today - 10m" />
+			<field label="开始时间止" type="datetime" name="reqStartTimeLte" defval="today" />
+			<field label="结束时间起" type="datetime" name="reqEndTimeGte" defval="today - 10m" />
+			<field label="结束时间止" type="datetime" name="reqEndTimeLte" defval="today" />
 		</search>
 		<table>
 			<td name="id" field="id" type="hidden"  />

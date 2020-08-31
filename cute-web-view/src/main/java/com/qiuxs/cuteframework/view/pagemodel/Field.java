@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.view.pagemodel;
 
+// TODO: Auto-generated Javadoc
 /**
  * 表单字段.
  *
@@ -7,14 +8,31 @@ package com.qiuxs.cuteframework.view.pagemodel;
  */
 public class Field {
 
+	/** The Constant TYPE_HIDDEN. */
 	public static final String TYPE_HIDDEN = "hidden";
+	
+	/** The Constant TYPE_SEARCH_BTN. */
 	public static final String TYPE_SEARCH_BTN = "searchBtn";
+	
+	/** The Constant TYPE_TEXT. */
 	public static final String TYPE_TEXT = "text";
+	
+	/** The Constant TYPE_TEXTAREA. */
 	public static final String TYPE_TEXTAREA = "textarea";
+	
+	/** The Constant TYPE_DATE. */
 	public static final String TYPE_DATE = "date";
+	
+	/** The Constant TYPE_DATETIME. */
 	public static final String TYPE_DATETIME = "datetime";
+	
+	/** The Constant TYPE_LIST. */
 	public static final String TYPE_LIST = "list";
+	
+	/** The Constant TYPE_ACLIST. */
 	public static final String TYPE_ACLIST = "aclist";
+	
+	/** The Constant SEARCH_BTN. */
 	public static final Field SEARCH_BTN = new Field() {
 		@Override
 		public String getType() {
@@ -43,13 +61,16 @@ public class Field {
 	/**  行数. */
 	private int rows = 3;
 	
+	/**  是否强制换行. */
+	private int newrow;
+	
 	/**  是否独占一行. */
 	private int singleRow;
 	
 	/**  是否必填. */
 	private int required;
 	
-	/** 提示语 */
+	/**  提示语. */
 	private String placeholder = "";
 
 	/**
@@ -176,6 +197,24 @@ public class Field {
 	 */
 	public void setRows(int rows) {
 		this.rows = rows;
+	}
+
+	/**
+	 * Gets the 是否强制换行.
+	 *
+	 * @return the 是否强制换行
+	 */
+	public int getNewrow() {
+		return newrow;
+	}
+
+	/**
+	 * Sets the 是否强制换行.
+	 *
+	 * @param newrow the new 是否强制换行
+	 */
+	public void setNewrow(int newrow) {
+		this.newrow = newrow;
 	}
 
 	/**

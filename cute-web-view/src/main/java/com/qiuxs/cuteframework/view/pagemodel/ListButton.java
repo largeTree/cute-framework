@@ -17,10 +17,13 @@ public class ListButton implements Serializable {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -472771926097353199L;
 
+	/**  按钮ID，用作权限控制. */
+	private String id;
+	
 	/**  按钮上的文字. */
 	private String text;
 	
-	/**  图标，easyui支持的图标类名. */
+	/**  图标，element-ui支持的图标类名. */
 	private String icon;
 	
 	/**  跳转连接. */
@@ -31,6 +34,36 @@ public class ListButton implements Serializable {
 	
 	/**  指定的js方法. */
 	private String js;
+	
+	/**  对应前端的颜色类型. */
+	private String type;
+	
+	/**  是否批量操作按鈕. */
+	private String batch;
+	
+	/**  操作类型. */
+	private String optype;
+	
+	/**  表单ID. */
+	private String formid;
+
+	/**
+	 * Gets the 按钮ID，用作权限控制.
+	 *
+	 * @return the 按钮ID，用作权限控制
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * Sets the 按钮ID，用作权限控制.
+	 *
+	 * @param id the new 按钮ID，用作权限控制
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	/**
 	 * Gets the 按钮上的文字.
@@ -120,6 +153,78 @@ public class ListButton implements Serializable {
 	 */
 	public void setJs(String js) {
 		this.js = js;
+	}
+
+	/**
+	 * Gets the 对应前端的颜色类型.
+	 *
+	 * @return the 对应前端的颜色类型
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * Sets the 对应前端的颜色类型.
+	 *
+	 * @param type the new 对应前端的颜色类型
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	/**
+	 * Gets the 是否批量操作按鈕.
+	 *
+	 * @return the 是否批量操作按鈕
+	 */
+	public String getBatch() {
+		return batch;
+	}
+
+	/**
+	 * Sets the 是否批量操作按鈕.
+	 *
+	 * @param batch the new 是否批量操作按鈕
+	 */
+	public void setBatch(String batch) {
+		this.batch = batch;
+	}
+
+	/**
+	 * Gets the 操作类型.
+	 *
+	 * @return the 操作类型
+	 */
+	public String getOptype() {
+		return optype;
+	}
+
+	/**
+	 * Sets the 操作类型.
+	 *
+	 * @param optype the new 操作类型
+	 */
+	public void setOptype(String optype) {
+		this.optype = optype;
+	}
+
+	/**
+	 * Gets the 表单ID.
+	 *
+	 * @return the 表单ID
+	 */
+	public String getFormid() {
+		return formid;
+	}
+
+	/**
+	 * Sets the 表单ID.
+	 *
+	 * @param formid the new 表单ID
+	 */
+	public void setFormid(String formid) {
+		this.formid = formid;
 	}
 
 }

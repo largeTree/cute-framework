@@ -120,4 +120,8 @@ public class ActionResult {
 		this.data = data;
 	}
 
+	public static ActionResult of(Object data) {
+		return new ActionResult(data);
+	}
+
 }

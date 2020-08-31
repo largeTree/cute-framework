@@ -45,6 +45,17 @@ public class ScGconfigAction extends BaseAction<Long, ScGconfig, ScGconfigDao, I
 		List<ScGconfig> gconfigs = this.scGconfigCombService.findGconfigs(JsonUtils.parseJSONObject(jsonData), pageInfo);
 		return super.responseList(params.getWrapper(), gconfigs, pageInfo.getTotal(), pageInfo.getSumrow());
 	}
+	
+	/**
+	 * 获取单个全局配置详情
+	 *  
+	 * @author qiuxs  
+	 * @param params
+	 * @return
+	 */
+	public ActionResult getGConfig(ReqParam params) {
+		return super.get(params);
+	}
 
 	@Override
 	protected IScGconfigService getService() {

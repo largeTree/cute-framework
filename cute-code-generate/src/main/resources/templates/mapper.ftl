@@ -23,7 +23,7 @@
 		</where>
 		<if test="orderBy != null" >
 			order by ${r'${orderBy}'}
-			<if test="orderByDesc != null">
+			<if test="orderByDesc != null and orderByDesc == true">
 				desc
 			</if>
 		</if>

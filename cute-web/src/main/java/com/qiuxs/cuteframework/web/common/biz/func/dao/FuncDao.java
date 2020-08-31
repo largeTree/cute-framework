@@ -1,6 +1,7 @@
 package com.qiuxs.cuteframework.web.common.biz.func.dao;
 
 import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
+import com.qiuxs.cuteframework.core.persistent.database.dao.ICodeOptionsDaoProvider;
 import com.qiuxs.cuteframework.tech.mybatis.dao.MyBatisRepository;
 import com.qiuxs.cuteframework.web.common.biz.func.entity.Func;
 
@@ -12,6 +13,6 @@ import com.qiuxs.cuteframework.web.common.biz.func.entity.Func;
  *
  */
 @MyBatisRepository
-public interface FuncDao extends IBaseDao<String, Func> {
+public interface FuncDao extends IBaseDao<String, Func>, ICodeOptionsDaoProvider<String> {
 
 }

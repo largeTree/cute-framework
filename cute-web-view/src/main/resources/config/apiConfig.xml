@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<module id="web-view">
+		<api key="cute-pageMode-get" bean="pageModeAction" method="getPageMode" type="1" login="1" desc="获取页面配置" />
+	</module>
+</root>

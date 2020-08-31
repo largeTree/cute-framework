@@ -45,7 +45,7 @@
 		</where>
 		<if test="orderBy != null" >
 			order by ${orderBy}
-			<if test="orderByDesc != null">
+			<if test="orderByDesc != null and orderByDesc == true">
 				desc
 			</if>
 		</if>

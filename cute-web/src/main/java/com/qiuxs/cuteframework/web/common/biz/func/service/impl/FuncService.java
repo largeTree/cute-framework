@@ -1,6 +1,7 @@
 package com.qiuxs.cuteframework.web.common.biz.func.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -10,16 +11,18 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.code.DirectCodeCenter;
-import com.qiuxs.cuteframework.core.basic.code.provider.ICodeTranslatable;
+import com.qiuxs.cuteframework.core.basic.code.provider.CodeOption;
 import com.qiuxs.cuteframework.core.basic.code.tree.TreeItem;
 import com.qiuxs.cuteframework.core.basic.code.utils.CodeUtils;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
 import com.qiuxs.cuteframework.core.persistent.database.service.AbstractDataPropertyService;
 import com.qiuxs.cuteframework.core.persistent.database.service.filter.IServiceFilter;
 import com.qiuxs.cuteframework.core.persistent.database.service.filter.impl.IdGenerateFilter;
+import com.qiuxs.cuteframework.core.persistent.database.service.ifc.ICodeOptionServiceProvider;
 import com.qiuxs.cuteframework.web.common.biz.func.constants.FuncConstants;
 import com.qiuxs.cuteframework.web.common.biz.func.dao.FuncDao;
 import com.qiuxs.cuteframework.web.common.biz.func.entity.Func;
@@ -31,7 +34,7 @@ import com.qiuxs.cuteframework.web.common.biz.func.service.IFuncService;
  *
  */
 @Service
-public class FuncService extends AbstractDataPropertyService<String, Func, FuncDao> implements IFuncService, ICodeTranslatable<String> {
+public class FuncService extends AbstractDataPropertyService<String, Func, FuncDao> implements IFuncService, ICodeOptionServiceProvider<String> {
 
 	private static final String TABLE_NAME = "ct_func";
 	private static final String PK_FIELD = "id";
@@ -47,6 +50,14 @@ public class FuncService extends AbstractDataPropertyService<String, Func, FuncD
 	@Override
 	protected FuncDao getDao() {
 		return this.funcDao;
+	}
+	
+	@Override
+	public List<CodeOption<String>> searchOptions(String searchToken) {
+		if (StringUtils.isBlank(searchToken)) {
+			return Collections.emptyList();
+		}
+		return this.getDao().searchOptions(searchToken);
 	}
 	
 	@Override

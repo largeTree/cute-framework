@@ -4,7 +4,7 @@ public class LogicException extends RuntimeException {
 
 	private static final long serialVersionUID = -6661447236163045954L;
 
-	private int errorCode;
+	private int errorCode = -10;
 
 	public LogicException() {
 	}

@@ -14,6 +14,7 @@ import org.springframework.core.io.Resource;
 
 import com.qiuxs.cuteframework.core.basic.utils.ClassPathResourceUtil;
 import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.basic.utils.converter.XmlUtil;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.view.pagemodel.DataList;
@@ -74,11 +75,16 @@ public class PageModeConfiguration {
 			Document doc = XmlUtil.readAsDocument(res);
 			Element root = doc.getRootElement();
 			Page page = new Page();
+			page.setId(res.getFilename().split("\\.")[0]);
+			String pageName = root.attributeValue("name");
+			if (StringUtils.isBlank(pageName)) {
+				pageName = page.getId(); 
+			}
+			page.setName(pageName);
 			// 查询列表
 			parseDataList(page, root);
 			// 表单
 			parseForms(page, root);
-			page.setId(res.getFilename().split("\\.")[0]);
 			log.info("inited PageConfig[" + res.getDescription() + "]");
 			return page;
 		} catch (Exception e) {
@@ -180,7 +186,22 @@ public class PageModeConfiguration {
 				initTdBtns(td, e);
 			}
 		}
+		
+		List<Td> expandTds = new ArrayList<Td>();
+		Element expandsE = tableE.element("expands");
+		if (expandsE != null) {
+			@SuppressWarnings("unchecked")
+			Iterator<Element> expandTdsE = expandsE.elementIterator("td");
+			while (expandTdsE.hasNext()) {
+				Element tdE = expandTdsE.next();
+				Td td = new Td();
+				XmlUtil.setBeanByElement(td, tdE);
+				expandTds.add(td);
+			}
+		}
+		
 		table.setTds(tds);
+		table.setExpands(expandTds);
 		dl.setTable(table);
 		page.setDataList(dl);
 	}
@@ -246,8 +267,10 @@ public class PageModeConfiguration {
 	 */
 	private static void initById(String pageId) {
 		Resource res = ClassPathResourceUtil.getSingleResource(PAGE_CONFIG_PATH_PREFIX + pageId + PAGE_CONFIG_PATH_SUFFIX);
-		Page page = initByRes(res);
-		PageModeConfiguration.pageModels.put(pageId, page);
+		if (res != null) {
+    		Page page = initByRes(res);
+    		PageModeConfiguration.pageModels.put(pageId, page);
+		}
 	}
 
 }
