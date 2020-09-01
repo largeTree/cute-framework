@@ -119,9 +119,13 @@ public class ActionResult {
 	public void setData(Object data) {
 		this.data = data;
 	}
-
+	
 	public static ActionResult of(Object data) {
 		return new ActionResult(data);
+	}
+
+	public static ActionResult of(Integer total, List<?> menuList) {
+		return new ActionResult(menuList, total);
 	}
 
 }

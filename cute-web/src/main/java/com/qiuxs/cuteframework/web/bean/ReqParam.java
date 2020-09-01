@@ -26,6 +26,10 @@ public class ReqParam extends HashMap<String, String> {
 		return MapUtils.getBoolean(this, key);
 	}
 
+	public Boolean getBoolean(String key, boolean defVal) {
+		return MapUtils.getBooleanValue(this, key, defVal);
+	}
+
 	public Long getLong(String key) {
 		return MapUtils.getLong(this, key);
 	}

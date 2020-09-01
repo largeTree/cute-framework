@@ -21,6 +21,8 @@ public class TreeItem implements Serializable {
 	private String name;
 	/** 扩展属性 */
 	private JSONObject attr;
+	/** 是否还有子节点 */
+	private boolean hasChildren = true;
 	/** 子节点 */
 	private List<TreeItem> children = new ArrayList<>();
 
@@ -46,6 +48,14 @@ public class TreeItem implements Serializable {
 
 	public void setAttr(JSONObject attr) {
 		this.attr = attr;
+	}
+
+	public boolean isHasChildren() {
+		return hasChildren;
+	}
+
+	public void setHasChildren(boolean hasChildren) {
+		this.hasChildren = hasChildren;
 	}
 
 	public List<TreeItem> getChildren() {

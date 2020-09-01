@@ -54,7 +54,9 @@ public interface IDataPropertyService<PK extends Serializable, T extends IEntity
 
 	public void enable(PK pk);
 
-	int deleteDirect(PK id);
+	public int deleteDirect(PK id);
+
+	public Long getCountByMap(Map<String, Object> params);
 
 
 }

@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -136,14 +137,23 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 */
 	@Override
 	public void enable(PK pk) {
-		T bean = this.getMust(pk);
+		T bean = BeanUtils.instantiateClass(this.getPojoClass());
 		if (bean instanceof IFlag) {
+			bean.setId(pk);
+			this.setUpdate(bean);
 			IFlag flagBean = (IFlag) bean;
 			flagBean.setFlag(IFlag.VALID);
 			this.getDao().update(bean);
+			bean = this.get(pk);
+			if (bean != null) {
+				this.postEnable(bean);
+			}
 		} else {
 
 		}
+	}
+	
+	protected void postEnable(T bean) {
 	}
 
 	/**
@@ -154,14 +164,23 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 */
 	@Override
 	public void disable(PK pk) {
-		T bean = this.getMust(pk);
+		T bean = BeanUtils.instantiateClass(this.getPojoClass());
 		if (bean instanceof IFlag) {
+			bean.setId(pk);
+			this.setUpdate(bean);
 			IFlag flagBean = (IFlag) bean;
 			flagBean.setFlag(IFlag.INVALID);
 			this.getDao().update(bean);
+			bean = this.get(pk);
+			if (bean != null) {
+				this.postDisable(bean);
+			}
 		} else {
 
 		}
+	}
+	
+	protected void postDisable(T bean) {
 	}
 
 	/**
@@ -252,6 +271,19 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		} else {
 			return list.get(0);
 		}
+	}
+	
+	/**
+	 * 按条件获取行数
+	 *  
+	 * @author qiuxs  
+	 * @param params
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS)
+	@Override
+	public Long getCountByMap(Map<String, Object> params) {
+		return this.getDao().getCount(params);
 	}
 
 	/**
@@ -491,6 +523,10 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 		for (IUpdateFilter<PK, T> filter : updateFilters) {
 			filter.preUpdate(oldBean, newBean);
 		}
+		this.setUpdate(newBean);
+	}
+	
+	private void setUpdate(T newBean) {
 		UserLite userLite = UserContext.getUserLiteOpt();
 		if (userLite != null) {
 			newBean.setUpdatedBy(userLite.getUserId());
