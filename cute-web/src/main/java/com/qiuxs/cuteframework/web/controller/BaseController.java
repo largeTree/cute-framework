@@ -15,6 +15,7 @@ import com.qiuxs.cuteframework.core.basic.ex.LoginException;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
+import com.qiuxs.cuteframework.core.utils.notice.NoticeLogger;
 import com.qiuxs.cuteframework.tech.log.LogConstant;
 import com.qiuxs.cuteframework.tech.log.LogUtils;
 import com.qiuxs.cuteframework.web.WebConstants.HttpHeader;
@@ -47,6 +48,7 @@ public abstract class BaseController {
 		}
 		JSONObject error = ExceptionUtils.logError(log, e);
 		error.put("globalId", LogUtils.getContextMap().get(LogConstant.COLUMN_GLOBALID));
+		NoticeLogger.error(error.getString("msg"), ExceptionUtils.getStackTrace(e));
 		return error.toJSONString();
 	}
 	
