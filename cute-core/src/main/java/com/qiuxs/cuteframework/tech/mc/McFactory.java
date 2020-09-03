@@ -15,7 +15,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.core.log.Console;
 import com.qiuxs.cuteframework.core.persistent.redis.RedisConfiguration;
+import com.qiuxs.cuteframework.core.utils.FunctionUtils;
 import com.qiuxs.cuteframework.tech.lock.distlock.redis.RedisLock;
+import com.qiuxs.cuteframework.tech.mc.redis.RedisFacade;
 import com.qiuxs.cuteframework.tech.mc.redis.utils.RedisList;
 import com.qiuxs.cuteframework.tech.mc.redis.utils.RedisMap;
 import com.qiuxs.cuteframework.tech.mc.redis.utils.RedisQueue;
@@ -36,6 +38,8 @@ public class McFactory {
 
 	/**  缓存对象名set,防止单服务器内部重名. */
 	private Set<String> mcName = new HashSet<String>();
+	
+	private RedisFacade redisFacade;
 
 	/**
 	 * 分布式集合类型枚举<br>
@@ -75,6 +79,16 @@ public class McFactory {
 	
 	static {
 		McFactory.init();
+	}
+	
+	/**
+	 * 获取redis外观
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public RedisFacade getRedisFacade() {
+		return FunctionUtils.doubleLockCheckGet("redis_facade_get_lock", val -> val != null, () -> this.redisFacade, () -> new RedisFacade());
 	}
 	
 	/**
