@@ -1,6 +1,7 @@
 package com.qiuxs.cuteframework.core.persistent.database.service;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -410,9 +411,12 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 			BaseField field = prop.getField();
 			String fileName = field.getName();
 			try {
-				Object value = FieldUtils.getFieldValue(bean, fileName);
-				if (value == null) {
-					FieldUtils.setFieldValue(bean, fileName, field.getDefaultValue());
+				Field accessibleField = FieldUtils.getAccessibleField(bean, fileName);
+				if (accessibleField != null) {
+					Object value = accessibleField.get(bean);
+					if (value == null) {
+						FieldUtils.setFieldValue(bean, fileName, field.getDefaultValue());
+					}
 				}
 			} catch (ReflectiveOperationException e) {
 				log.warn(this.getPojoClass().getName() + " has no Field [name=" + fileName + "]");
