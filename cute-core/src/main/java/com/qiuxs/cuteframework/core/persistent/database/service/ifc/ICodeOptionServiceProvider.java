@@ -3,7 +3,7 @@ package com.qiuxs.cuteframework.core.persistent.database.service.ifc;
 import java.util.List;
 
 import com.qiuxs.cuteframework.core.basic.code.provider.CodeOption;
-import com.qiuxs.cuteframework.core.basic.code.provider.ICodeTranslatable;
+import com.qiuxs.cuteframework.core.basic.code.provider.IMultipleCodeTranslatable;
 
 /**
  * 服务编码接口
@@ -14,7 +14,7 @@ import com.qiuxs.cuteframework.core.basic.code.provider.ICodeTranslatable;
  * @author qiuxs   
  * @version 1.0.0
  */
-public interface ICodeOptionServiceProvider<C> extends ICodeTranslatable<C>{
+public interface ICodeOptionServiceProvider<C> extends IMultipleCodeTranslatable<C> {
 
 	/**
 	 * 根据searchToken查询编码集

@@ -48,7 +48,9 @@ public abstract class BaseController {
 		}
 		JSONObject error = ExceptionUtils.logError(log, e);
 		error.put("globalId", LogUtils.getContextMap().get(LogConstant.COLUMN_GLOBALID));
-		NoticeLogger.error(error.getString("msg"), ExceptionUtils.getStackTrace(e));
+		if (!EnvironmentContext.isDebug()) {
+			NoticeLogger.error(error.getString("msg"), ExceptionUtils.getStackTrace(e));
+		}
 		return error.toJSONString();
 	}
 	

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -149,7 +150,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 				this.postEnable(bean);
 			}
 		} else {
-
+			ExceptionUtils.throwLogicalException("启用失败");
 		}
 	}
 	
@@ -176,7 +177,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 				this.postDisable(bean);
 			}
 		} else {
-
+			ExceptionUtils.throwLogicalException("停用失败:001");
 		}
 	}
 	
@@ -225,7 +226,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 
 	@Transactional(propagation = Propagation.SUPPORTS)
 	public List<T> getAll() {
-		return this.getDao().getAll();
+		return this.findByMap(new HashMap<String, Object>());
 	}
 
 	/**

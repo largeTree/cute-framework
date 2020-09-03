@@ -108,11 +108,17 @@ public class MbiPageHook implements IMbiHook {
 	 * 创建时间：2018年8月17日 下午10:52:13
 	 */
 	private String getCountSql(String sql) {
-		sql = sql.replaceAll("[\\t\\n\\r]", " ").toLowerCase();
-		String fromSql = sql.substring(sql.indexOf("from"), sql.length());
+		sql = sql.replaceAll("[\\t\\n\\r]", " ").replaceAll("\\s+", " ").toLowerCase();
+		int fromIndex = sql.indexOf("from");
+		
+		String fromSql = sql.substring(fromIndex, sql.length());
 
 		if (fromSql.indexOf(" order ") != -1) {
 			fromSql = fromSql.substring(0, fromSql.indexOf(" order "));
+		}
+		
+		if (fromSql.indexOf(" group ") != -1) {
+			fromSql = "from (" + sql + ") T";
 		}
 
 		StringBuilder countSql = new StringBuilder();

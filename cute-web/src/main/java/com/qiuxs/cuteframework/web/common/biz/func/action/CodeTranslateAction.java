@@ -30,9 +30,11 @@ public class CodeTranslateAction implements IAction {
 	public ActionResult serviceCodeOptions(ReqParam params) {
 		String codeDomain = params.getStringMust("codeDomain");
 		String searchToken = params.getString("searchToken");
+		String code = params.getString("code");
+		Boolean multiple = params.getBoolean("multiple", false);
 		List<CodeOption<?>> codeOptions = Collections.emptyList();
-		if (StringUtils.isNotBlank(searchToken)) {
-			codeOptions = this.codeTranslateService.queryServiceCodes(codeDomain, searchToken);
+		if (StringUtils.isNotBlank(searchToken) || StringUtils.isNotBlank(code)) {
+			codeOptions = this.codeTranslateService.queryServiceCodes(codeDomain, searchToken, code, multiple);
 		}
 		return new ActionResult(codeOptions);
 	}

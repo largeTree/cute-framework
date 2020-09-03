@@ -1,6 +1,13 @@
 package com.qiuxs.cuteframework.core.persistent.database.modal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.qiuxs.cuteframework.core.basic.code.provider.ICodeTranslatable;
+import com.qiuxs.cuteframework.core.basic.code.provider.IMultipleCodeTranslatable;
+import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
+import com.qiuxs.cuteframework.core.basic.utils.TypeAdapter;
+import com.qiuxs.cuteframework.core.persistent.util.CodeTranslateUtils;
 
 /**
  * 属性
@@ -14,12 +21,18 @@ public class PropertyWrapper<C> {
 	private BaseField field;
 
 	private ICodeTranslatable<C> codeTranslate;
+	private boolean mutiple;
 
 	public PropertyWrapper(BaseField field, ICodeTranslatable<C> codeTranslate) {
+		this(field, codeTranslate, false);
+	}
+	
+	public PropertyWrapper(BaseField field, ICodeTranslatable<C> codeTranslate, boolean mutiple) {
 		this.field = field;
 		this.codeTranslate = codeTranslate;
+		this.mutiple = mutiple;
 	}
-
+	
 	/**
 	 * 获取字段描述
 	 * @return
@@ -50,25 +63,43 @@ public class PropertyWrapper<C> {
 	
 	/**
 	 * 获取翻译
-	 * @param object
+	 * @param code
 	 * @return
 	 */
-	public String getCaption(Object object) {
-		if (object == null) {
+	public String getCaption(Object code) {
+		if (code == null) {
 			return null;
 		}
 		if (this.codeTranslate != null) {
-			return this.codeTranslate.getCaption(getNewValue(object));
+			if (this.mutiple) {
+				IMultipleCodeTranslatable<C> mcodeTranslatable = (IMultipleCodeTranslatable<C>) this.codeTranslate;
+				
+				Class<?> codeType = CodeTranslateUtils.getCodeType(this.codeTranslate);
+				
+				String[] codeArray = ((String)code).split(",");
+				List<C> codes = new ArrayList<>(codeArray.length);
+				for (String codeStr : codeArray) {
+					codes.add(this.getNewValue(codeStr, codeType));
+				}
+				
+				return ListUtils.listToString(mcodeTranslatable.getCaptions(codes));
+			} else {
+				return this.codeTranslate.getCaption(getNewValue(code, null));
+			}
 		}
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
-	private C getNewValue(Object code) {
+	private C getNewValue(Object code, Class<?> paramType) {
 		if (code == null) {
 			return null;
 		} else {
-			return (C) code;
+			if (paramType != null) {
+				return (C) TypeAdapter.adapter(code, paramType);
+			} else {
+				return (C) code;
+			}
 		}
 	}
 }

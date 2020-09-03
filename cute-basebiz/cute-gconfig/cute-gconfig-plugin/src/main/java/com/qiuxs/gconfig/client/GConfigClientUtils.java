@@ -1,5 +1,6 @@
 package com.qiuxs.gconfig.client;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,23 @@ public class GConfigClientUtils {
 			return defVal;
 		} else {
 			return Integer.parseInt(val);
+		}
+	}
+	
+	/**
+	 * 
+	 *  获取BigDecimal类型的系统配置
+	 * @author qiuxs  
+	 * @param code
+	 * @param defVal
+	 * @return
+	 */
+	public static BigDecimal getSystemConfigBigDecimal(String code, BigDecimal defVal) {
+		String val = getSystemConfig(code);
+		if (val == null) {
+			return defVal;
+		} else {
+			return new BigDecimal(val);
 		}
 	}
 	

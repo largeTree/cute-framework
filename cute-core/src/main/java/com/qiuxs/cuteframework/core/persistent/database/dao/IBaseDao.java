@@ -14,7 +14,7 @@ public interface IBaseDao<PK extends Serializable, T extends IEntity<PK>> extend
 
 	public T get(PK id);
 	
-	public List<T> getAll();
+	// public List<T> getAll();
 
 	public List<T> getByIds(Collection<PK> ids);
 

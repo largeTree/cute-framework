@@ -128,4 +128,8 @@ public class ActionResult {
 		return new ActionResult(menuList, total);
 	}
 
+	public static ActionResult success() {
+		return new ActionResult(CODE_SUCCESS, MSG_SUCCESS);
+	}
+
 }

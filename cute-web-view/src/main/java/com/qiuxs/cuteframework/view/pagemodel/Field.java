@@ -72,6 +72,9 @@ public class Field {
 	
 	/**  提示语. */
 	private String placeholder = "";
+	
+	/**  设置默认之后是否允许改变. */
+	private int fixed;
 
 	/**
 	 * Gets the 标签.
@@ -269,6 +272,24 @@ public class Field {
 	 */
 	public void setPlaceholder(String placeholder) {
 		this.placeholder = placeholder;
+	}
+
+	/**
+	 * Gets the 设置默认之后是否允许改变.
+	 *
+	 * @return the 设置默认之后是否允许改变
+	 */
+	public int getFixed() {
+		return fixed;
+	}
+
+	/**
+	 * Sets the 设置默认之后是否允许改变.
+	 *
+	 * @param fixed the new 设置默认之后是否允许改变
+	 */
+	public void setFixed(int fixed) {
+		this.fixed = fixed;
 	}
 	
 

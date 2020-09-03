@@ -15,6 +15,7 @@ import com.qiuxs.cuteframework.core.basic.code.provider.CodeOption;
 import com.qiuxs.cuteframework.core.basic.code.tree.TreeItem;
 import com.qiuxs.cuteframework.core.basic.code.utils.CodeUtils;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
+import com.qiuxs.cuteframework.core.basic.utils.ListUtils;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
@@ -58,6 +59,18 @@ public class FuncService extends AbstractDataPropertyService<String, Func, FuncD
 			return Collections.emptyList();
 		}
 		return this.getDao().searchOptions(searchToken);
+	}
+	
+	@Override
+	public List<String> getCaptions(List<String> codes) {
+		List<Func> roles = this.getByIds(codes);
+		Map<String, Func> listToMap = ListUtils.listToMap(roles, "id");
+		List<String> captions = new ArrayList<>(codes.size());
+		for (String id : codes) {
+			Func func = listToMap.get(id);
+			captions.add(func == null ? "" : func.getName());
+		}
+		return captions;
 	}
 	
 	@Override
