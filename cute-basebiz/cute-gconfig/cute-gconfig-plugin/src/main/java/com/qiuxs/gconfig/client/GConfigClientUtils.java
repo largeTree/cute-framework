@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.utils.BeanUtil;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
+import com.qiuxs.cuteframework.core.persistent.database.lookup.DataSourceContext;
 import com.qiuxs.cuteframework.tech.mc.McFactory;
 import com.qiuxs.gconfig.client.dto.GConfigDTO;
 import com.qiuxs.gconfig.entity.ScGconfig;
@@ -21,13 +22,9 @@ import com.qiuxs.gconfig.service.IScGconfigService;
 @Component
 public class GConfigClientUtils {
 
-	private static final String OWNER_DOMAIN_USER = "user";
-	private static final String OWNER_DOMAIN_ROLE = "role";
-	private static final String OWNER_DOMAIN_SYSTEM = "system";
-	
 	private static class Holder {
 		@SuppressWarnings("rawtypes")
-		private static Map<String, Map> mapGconfigDto = McFactory.getFactory().createMap(String.class, Map.class, 10, "gconfig_dto_holder");
+		private static Map<Integer, Map> mapGconfigDto = McFactory.getFactory().createMap(Integer.class, Map.class, 10, "gconfig_dto_holder");
 	}
 
 	private static IScGconfigService scGconfigService;
@@ -104,49 +101,59 @@ public class GConfigClientUtils {
 	 * @return
 	 */
 	private static String getConfig(UserLite userLite, String domain, String code) {
-		Long userId = userLite == null ? 0L : userLite.getUserId();
-		Long roleId = userLite == null ? 0L : userLite.getRoleId();
-		
-		// 获取当前用户的缓存
-		Map<String, GConfigDTO> userConfigMap = getUserCache(userId);
-		
-		String configKey = configKey(domain, code);
-		
-		// 从用户缓存中获取配置对象
-		GConfigDTO configDTO = userConfigMap.get(configKey);
-		
-		if (configDTO == null) {
-			ScGconfig scGconfig = scGconfigService.getByUk(domain, code);
-			if (scGconfig == null) {
-				ExceptionUtils.throwLogicalException("gconfig_not_exists", domain, code);
-			}
-			// 配置对象
-			configDTO = new GConfigDTO();
-			BeanUtil.assignmentProperty(scGconfig, configDTO, "id,createdTime,createdBy,updatedTime,updatedBy");
-			
-//			// 可选值 不需要缓存
-//			List<ScGconfigOptions> options = scGconfigOptionsService.getByCode(domain, code);
-//			List<GConfigOptions> simpleOptions = BeanUtil.assignmentPropertyBatch(options, GConfigOptions.class, "createdTime,createdBy,updatedTime,updatedBy");
-//			configDTO.setOpts(simpleOptions);
-			
-			// 设置用户自己的值
-			ScGconfigOwnerVal ownerVal = scGconfigOwnerValService.getOwnerVal(domain, ScGconfigOwnerVal.OWNER_TYPE_USER, userId, code);
-			if (ownerVal == null) {
-				// 设置角色的值
-				ownerVal = scGconfigOwnerValService.getOwnerVal(domain, ScGconfigOwnerVal.OWNER_TYPE_ROLE, roleId, code);
-			}
-			
-			if (ownerVal != null) {
-				configDTO.setVal(ownerVal.getVal());
-			} else {
-				configDTO.setVal(scGconfig.getVal());
-			}
-			
-			// 保存用户配置缓存
-			userConfigMap.put(configKey, configDTO);
-			putUserCache(userId, userConfigMap);
+		String oldDsId = null;
+		if (!DataSourceContext.isDsSwitchAuto()) {
+			oldDsId = DataSourceContext.setEntryDb();
 		}
-		return configDTO.getVal();
+		
+		try {
+			Long userId = userLite == null ? 0L : userLite.getUserId();
+			Long roleId = userLite == null ? 0L : userLite.getRoleId();
+			// 获取当前用户的缓存
+			Map<String, GConfigDTO> userConfigMap = getUserCache(userId);
+			
+			String configKey = configKey(domain, code);
+			
+			// 从用户缓存中获取配置对象
+			GConfigDTO configDTO = userConfigMap.get(configKey);
+			
+			if (configDTO == null) {
+				ScGconfig scGconfig = scGconfigService.getByUk(domain, code);
+				if (scGconfig == null) {
+					ExceptionUtils.throwLogicalException("gconfig_not_exists", domain, code);
+				}
+				// 配置对象
+				configDTO = new GConfigDTO();
+				BeanUtil.assignmentProperty(scGconfig, configDTO, "id,createdTime,createdBy,updatedTime,updatedBy");
+				
+//				// 可选值 不需要缓存
+//				List<ScGconfigOptions> options = scGconfigOptionsService.getByCode(domain, code);
+//				List<GConfigOptions> simpleOptions = BeanUtil.assignmentPropertyBatch(options, GConfigOptions.class, "createdTime,createdBy,updatedTime,updatedBy");
+//				configDTO.setOpts(simpleOptions);
+				
+				// 设置用户自己的值
+				ScGconfigOwnerVal ownerVal = scGconfigOwnerValService.getOwnerVal(domain, ScGconfigOwnerVal.OWNER_TYPE_USER, userId, code);
+				if (ownerVal == null) {
+					// 设置角色的值
+					ownerVal = scGconfigOwnerValService.getOwnerVal(domain, ScGconfigOwnerVal.OWNER_TYPE_ROLE, roleId, code);
+				}
+				
+				if (ownerVal != null) {
+					configDTO.setVal(ownerVal.getVal());
+				} else {
+					configDTO.setVal(scGconfig.getVal());
+				}
+				
+				// 保存用户配置缓存
+				userConfigMap.put(configKey, configDTO);
+				putUserCache(userId, userConfigMap);
+			}
+			return configDTO.getVal();
+		} finally {
+			if (oldDsId != null) {
+				DataSourceContext.setUpDs(oldDsId);
+			}
+		}
 	}
 
 	/**
@@ -158,40 +165,40 @@ public class GConfigClientUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	private static Map<String, GConfigDTO> getUserCache(Long userId) {
-		Map<String, GConfigDTO> userCache = getCache(OWNER_DOMAIN_USER).get(userId);
+		Map<String, GConfigDTO> userCache = getCache(ScGconfigOwnerVal.OWNER_TYPE_USER).get(userId);
 		if (userCache == null) {
 			userCache = new HashMap<String, GConfigDTO>();
-			getCache(OWNER_DOMAIN_USER).put(userId, userCache);
+			getCache(ScGconfigOwnerVal.OWNER_TYPE_USER).put(userId, userCache);
 		}
 		return userCache;
 	}
 	
-	/**
-	 * 获取角色级别缓存
-	 *  
-	 * @author qiuxs  
-	 * @param roleId
-	 * @return
-	 */
-	private static Map<String, GConfigDTO> getRoleCache(Long roleId) {
-		@SuppressWarnings("unchecked")
-		Map<String, GConfigDTO> roleCache = getCache(OWNER_DOMAIN_ROLE).get(roleId);
-		if (roleCache == null) {
-			roleCache = new HashMap<String, GConfigDTO>();
-			getCache(OWNER_DOMAIN_ROLE).put(roleId, roleCache);
-		}
-		return roleCache;
-	}
-	
-	private static Map<String, GConfigDTO> getSystemCache() {
-		@SuppressWarnings("unchecked")
-		Map<String, GConfigDTO> systemCache = getCache(OWNER_DOMAIN_SYSTEM).get(0L);
-		if (systemCache == null) {
-			systemCache = new HashMap<String, GConfigDTO>();
-			getCache(OWNER_DOMAIN_SYSTEM).put(0L, systemCache);
-		}
-		return systemCache;
-	}
+//	/**
+//	 * 获取角色级别缓存
+//	 *  
+//	 * @author qiuxs  
+//	 * @param roleId
+//	 * @return
+//	 */
+//	private static Map<String, GConfigDTO> getRoleCache(Long roleId) {
+//		@SuppressWarnings("unchecked")
+//		Map<String, GConfigDTO> roleCache = getCache(OWNER_DOMAIN_ROLE).get(roleId);
+//		if (roleCache == null) {
+//			roleCache = new HashMap<String, GConfigDTO>();
+//			getCache(OWNER_DOMAIN_ROLE).put(roleId, roleCache);
+//		}
+//		return roleCache;
+//	}
+//	
+//	private static Map<String, GConfigDTO> getSystemCache() {
+//		@SuppressWarnings("unchecked")
+//		Map<String, GConfigDTO> systemCache = getCache(OWNER_DOMAIN_SYSTEM).get(0L);
+//		if (systemCache == null) {
+//			systemCache = new HashMap<String, GConfigDTO>();
+//			getCache(OWNER_DOMAIN_SYSTEM).put(0L, systemCache);
+//		}
+//		return systemCache;
+//	}
 	
 	/**
 	 * 设置用户的配置缓存
@@ -200,30 +207,30 @@ public class GConfigClientUtils {
 	 * @param userId
 	 * @param cacheMap
 	 */
-	public static void putUserCache(Long userId, Map<String, GConfigDTO> cacheMap) {
-		getCache(OWNER_DOMAIN_USER).put(userId, cacheMap);
+	private static void putUserCache(Long userId, Map<String, GConfigDTO> cacheMap) {
+		getCache(ScGconfigOwnerVal.OWNER_TYPE_USER).put(userId, cacheMap);
 	}
 	
-	/**
-	 * 设置角色缓存
-	 *  
-	 * @author qiuxs  
-	 * @param roleId
-	 * @param cacheMap
-	 */
-	public static void putRoleCache(Long roleId, Map<String, GConfigDTO> cacheMap) {
-		getCache(OWNER_DOMAIN_ROLE).put(roleId, cacheMap);
-	}
-	
-	/***
-	 * 设置系统级缓存
-	 *  
-	 * @author qiuxs  
-	 * @param cacheMap
-	 */
-	public static void putSystemCache(Map<String, GConfigDTO> cacheMap) {
-		getCache(OWNER_DOMAIN_SYSTEM).put(0L, cacheMap);
-	}
+//	/**
+//	 * 设置角色缓存
+//	 *  
+//	 * @author qiuxs  
+//	 * @param roleId
+//	 * @param cacheMap
+//	 */
+//	private static void putRoleCache(Long roleId, Map<String, GConfigDTO> cacheMap) {
+//		getCache(OWNER_DOMAIN_ROLE).put(roleId, cacheMap);
+//	}
+//	
+//	/***
+//	 * 设置系统级缓存
+//	 *  
+//	 * @author qiuxs  
+//	 * @param cacheMap
+//	 */
+//	private static void putSystemCache(Map<String, GConfigDTO> cacheMap) {
+//		getCache(OWNER_DOMAIN_SYSTEM).put(0L, cacheMap);
+//	}
 	
 	private static String configKey(String domain, String code) {
 		return domain + "." + code;
@@ -236,13 +243,37 @@ public class GConfigClientUtils {
 	 * @return
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static Map<Long, Map> getCache(String ownerDomain) {
+	private static Map<Long, Map> getCache(Integer ownerDomain) {
 		Map map = Holder.mapGconfigDto.get(ownerDomain);
 		if (map == null) {
 			map = new HashMap<>();
 			Holder.mapGconfigDto.put(ownerDomain, map);
 		}
 		return map;
+	}
+	
+	/**
+	 * 失效缓存
+	 *  
+	 * @author qiuxs  
+	 * @param domain
+	 * @param ownerType
+	 * @param ownerId
+	 * @param code
+	 */
+	public static void invalidCache(String domain, Integer ownerType, Long ownerId, String code) {
+		Holder.mapGconfigDto.clear();
+//		@SuppressWarnings("rawtypes")
+//		Map<Long, Map> ownerDomainCache = getCache(ownerType);
+//		if (ownerDomainCache == null) {
+//			return;
+//		}
+//		@SuppressWarnings("unchecked")
+//		Map<String, GConfigDTO> ownerCache = ownerDomainCache.get(ownerId);
+//		if (ownerCache == null) {
+//			return;
+//		}
+//		ownerCache.remove(configKey(domain, code));
 	}
 
 	@Resource

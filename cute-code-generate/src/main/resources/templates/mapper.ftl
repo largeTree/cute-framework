@@ -38,12 +38,6 @@
 		</where>
 	</select>
 	
-	<select id="getAll"  resultType="${packageName}.entity.${className}" >
-		select 
-			<include refid="allFields" />
-		from `${tableName}`
-	</select>
-	
 	<sql id="comnWhere">
 		<#list fields as field>
 		<if test="${field.name} != null">

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
 import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
 import com.qiuxs.cuteframework.core.persistent.database.service.AbstractDataPropertyUKService;
+import com.qiuxs.cuteframework.core.basic.Constants.DsType;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.core.persistent.database.service.filter.IServiceFilter;
@@ -45,6 +46,11 @@ public class ScGconfigOptionsService extends AbstractDataPropertyUKService<Long,
 	@Override
 	protected ScGconfigOptionsDao getDao() {
 		return this.scGconfigOptionsDao;
+	}
+	
+	@Override
+	public String getDsType() {
+		return DsType.ENTRY.value();
 	}
 	
 	public ScGconfigOptions getByUk(String domian, String code, String optVal) {

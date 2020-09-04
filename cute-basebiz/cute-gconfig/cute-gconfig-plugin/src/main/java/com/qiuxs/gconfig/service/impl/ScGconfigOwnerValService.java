@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
 import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
 import com.qiuxs.cuteframework.core.persistent.database.service.AbstractDataPropertyUKService;
+import com.qiuxs.cuteframework.core.basic.Constants.DsType;
 import com.qiuxs.cuteframework.core.basic.code.DirectCodeCenter;
 import com.qiuxs.cuteframework.core.basic.code.utils.CodeUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
@@ -73,6 +74,11 @@ public class ScGconfigOwnerValService extends AbstractDataPropertyUKService<Long
 	@Override
 	protected ScGconfigOwnerValDao getDao() {
 		return this.scGconfigOwnerValDao;
+	}
+	
+	@Override
+	public String getDsType() {
+		return DsType.ENTRY.value();
 	}
 
 	public ScGconfigOwnerVal getByUk(String code, Integer ownerType, Long ownerId) {

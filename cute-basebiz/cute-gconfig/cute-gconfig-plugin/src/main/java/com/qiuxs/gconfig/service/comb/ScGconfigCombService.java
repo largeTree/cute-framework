@@ -17,6 +17,9 @@ import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.core.basic.utils.NumberUtils;
 import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
+import com.qiuxs.cuteframework.tech.task.AsyncTaskExecutor;
+import com.qiuxs.cuteframework.tech.task.RunnableAsyncTask;
+import com.qiuxs.gconfig.client.GConfigClientUtils;
 import com.qiuxs.gconfig.client.dto.GConfigDTO;
 import com.qiuxs.gconfig.client.dto.GConfigOptions;
 import com.qiuxs.gconfig.entity.ScGconfig;
@@ -136,6 +139,15 @@ public class ScGconfigCombService {
 			if (scGconfig == null) {
 				ExceptionUtils.throwLogicalException("gconfig_not_exists", domain, code);
 			}
+			
+			AsyncTaskExecutor.execute(new RunnableAsyncTask<Object>(null) {
+				@Override
+				public void execute(Object preparParam) {
+					// 失效缓存
+					GConfigClientUtils.invalidCache(domain, ownerType, ownerId, code);
+				}
+				
+			}, true);
 			
 			if ((ownerType & ScGconfigOwnerVal.OWNER_TYPE_SYSTEM) > 0) {
 				// 系统级别
