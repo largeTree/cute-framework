@@ -24,6 +24,8 @@ public class ScGconfigOwnerVal extends AbstractEntity<Long> {
 	public static final int OWNER_TYPE_SYSTEM = 1 << 0;
 	@Code(caption = "用户", domain = DOMAIN_OWNER_TYPE)
 	public static final int OWNER_TYPE_USER = 1 << 1;
+	@Code(caption = "角色", domain = DOMAIN_OWNER_TYPE)
+	public static final int OWNER_TYPE_ROLE = 1 << 2;
 	
 	/** 配置代码 */
 	private String code;

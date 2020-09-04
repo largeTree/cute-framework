@@ -23,6 +23,9 @@ public class UserLite implements Serializable {
 
 	/**  当前用户ID. */
 	private Long userId;
+	
+	/**  角色ID. */
+	private Long roleId;
 
 	/**  单元ID. */
 	private Long unitId;
@@ -67,6 +70,24 @@ public class UserLite implements Serializable {
 	 */
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	/**
+	 * Gets the 角色ID.
+	 *
+	 * @return the 角色ID
+	 */
+	public Long getRoleId() {
+		return roleId;
+	}
+
+	/**
+	 * Sets the 角色ID.
+	 *
+	 * @param roleId the new 角色ID
+	 */
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
 	}
 
 	/**

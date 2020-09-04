@@ -40,6 +40,9 @@ public class TdBtn implements Serializable {
 	/**  操作类型. */
 	private String optype;
 	
+	/**  点击后弹出某个组件. */
+	private String component;
+	
 	/**
 	 * Gets the 按钮名.
 	 *
@@ -200,6 +203,24 @@ public class TdBtn implements Serializable {
 	 */
 	public void setOptype(String optype) {
 		this.optype = optype;
+	}
+
+	/**
+	 * Gets the 点击后弹出某个组件.
+	 *
+	 * @return the 点击后弹出某个组件
+	 */
+	public String getComponent() {
+		return component;
+	}
+
+	/**
+	 * Sets the 点击后弹出某个组件.
+	 *
+	 * @param component the new 点击后弹出某个组件
+	 */
+	public void setComponent(String component) {
+		this.component = component;
 	}
 
 }

@@ -4,6 +4,7 @@
 
 	<sql id="allFields">
 		`id`,
+		`domain`,
 		`code`,
 		`val`,
 		`owner_type` as ownerType,
@@ -16,6 +17,7 @@
 
 	<sql id="insertFields">
 		`id`,
+		`domain`,
 		`code`,
 		`val`,
 		`owner_type`,
@@ -53,6 +55,9 @@
 	<sql id="comnWhere">
 		<if test="id != null">
 			`id` = #{id}
+		</if>
+		<if test="domain != null">
+			and `domain` = #{domain}
 		</if>
 		<if test="code != null">
 			 and `code` = #{code}
@@ -113,6 +118,9 @@
 		<if test="idNe != null" >
 			and id &lt;&gt; #{idNe}
 		</if>
+		<if test="domain != null">
+			and `domain` = #{domain}
+		</if>
 		<if test="code != null">
 			and `code` = #{code}
 		</if>
@@ -132,6 +140,7 @@
 		insert into `sc_gconfig_owner_val`(<include refid="insertFields" />)
 		values(
 			#{id},
+			#{domain},
 			#{code},
 			#{val},
 			#{ownerType},
@@ -149,6 +158,7 @@
 		<foreach collection="list" item="item" separator="," >
 			(
 				#{item.id},
+				#{item.domain},
 				#{item.code},
 				#{item.val},
 				#{item.ownerType},
@@ -170,6 +180,9 @@
 	</update>
 
 	<sql id="setComn" >
+		<if test="domain != null">
+			`domain` = #{domain},
+		</if>
 		<if test="code != null" >
 			`code` = #{code},
 		</if>

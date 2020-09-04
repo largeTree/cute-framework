@@ -43,25 +43,25 @@ public class ScGconfigService extends AbstractDataPropertyUKService<Long, ScGcon
 		return this.scGconfigDao;
 	}
 	
-	public ScGconfig getByUk(String code) {
-		return super.getByUkInner("code", code);
+	public ScGconfig getByUk(String domain, String code) {
+		return super.getByUkInner("domain", domain, "code", code);
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public int deleteByUk(String code) {
-		return super.deleteByUkInner("code", code);
+	public int deleteByUk(String domain, String code) {
+		return super.deleteByUkInner("domain", domain, "code", code);
 	}
 	
-	public boolean isExistByUk(String code) {
-		return super.isExistByUkInner("code", code);
+	public boolean isExistByUk(String domain, String code) {
+		return super.isExistByUkInner("domain", domain, "code", code);
 	}
 	
-	public boolean isExistOtherByUk(Long pk, String code) {
-		return super.isExistOtherByUkInner(pk, "code", code);
+	public boolean isExistOtherByUk(Long pk, String domain, String code) {
+		return super.isExistOtherByUkInner(pk, "domain", domain, "code", code);
 	}
 	
 	protected void createInner(ScGconfig bean) {
-		if (!this.isExistByUk(bean.getCode())) {
+		if (!this.isExistByUk(bean.getDomain(), bean.getCode())) {
 			this.getDao().insert(bean);
 		} else {
 			ExceptionUtils.throwLoginException("dup_records");

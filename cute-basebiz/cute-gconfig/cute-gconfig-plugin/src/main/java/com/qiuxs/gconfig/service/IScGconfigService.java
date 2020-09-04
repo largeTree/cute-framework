@@ -17,8 +17,9 @@ public interface IScGconfigService extends IDataPropertyService<Long, ScGconfig,
 	 * 根据唯一约束获取一行
 	 *  
 	 * @author qiuxs  
+	 * @param domain
 	 * @param code
 	 * @return
 	 */
-	public ScGconfig getByUk(String code);
+	public ScGconfig getByUk(String domain, String code);
 }

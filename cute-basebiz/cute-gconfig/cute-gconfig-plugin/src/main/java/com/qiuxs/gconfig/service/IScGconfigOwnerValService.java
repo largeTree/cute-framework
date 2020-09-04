@@ -22,6 +22,6 @@ public interface IScGconfigOwnerValService extends IDataPropertyService<Long, Sc
 	 * @param code
 	 * @return
 	 */
-	public ScGconfigOwnerVal getOwnerVal(int ownerType, Long userId, String code);
+	public ScGconfigOwnerVal getOwnerVal(String domain, int ownerType, Long userId, String code);
 
 }

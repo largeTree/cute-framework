@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,6 +41,7 @@ public abstract class AbstractPropertyService<PK extends Serializable, T extends
 	private Class<PK> pkClass;
 
 	private List<PropertyWrapper<?>> properties;
+	private Map<String, PropertyWrapper<?>> mapProperties;
 
 	public AbstractPropertyService(Class<PK> pkClass, Class<T> pojoClass) {
 		this.pkClass = pkClass;
@@ -57,10 +60,27 @@ public abstract class AbstractPropertyService<PK extends Serializable, T extends
 
 	protected List<PropertyWrapper<?>> getProperties() {
 		if (this.properties == null || EnvironmentContext.isDebug()) {
-			this.properties = new ArrayList<>();
-			this.initProps(this.properties);
+			this.initProperties();
 		}
 		return new ArrayList<PropertyWrapper<?>>(this.properties);
+	}
+	
+	protected Map<String, PropertyWrapper<?>> getMapProperties() {
+		if (this.mapProperties == null || EnvironmentContext.isDebug()) {
+			this.initProperties();
+		}
+		return this.mapProperties;
+	}
+	
+	private synchronized void initProperties() {
+		if (this.properties == null || EnvironmentContext.isDebug()) {
+    		this.properties = new ArrayList<>();
+    		this.initProps(this.properties);
+    		this.mapProperties = new HashMap<>();
+    		this.properties.forEach(item -> {
+    			this.mapProperties.put(item.getField().getName(), item);
+    		});
+		}
 	}
 
 	@Override
@@ -70,13 +90,15 @@ public abstract class AbstractPropertyService<PK extends Serializable, T extends
 		}
 		JSONObject jbean = JsonUtils.toJSONObject(bean);
 		if (wrapper) {
-			List<PropertyWrapper<?>> props = this.getProperties();
+			Map<String, PropertyWrapper<?>> properties = this.getMapProperties();
 			JSONObject captions = new JSONObject();
-			for (PropertyWrapper<?> prop : props) {
-				if (prop.hasTranslater()) {
-					String fileName = prop.getField().getName();
-					String caption = prop.getCaption(jbean.get(fileName));
-					captions.put(fileName, caption);
+
+			for (Iterator<String> iter = jbean.keySet().iterator(); iter.hasNext();) {
+				String fieldName = iter.next();
+				PropertyWrapper<?> prop = properties.get(fieldName);
+				if (prop != null && prop.hasTranslater()) {
+					String caption = prop.getCaption(jbean.get(fieldName));
+					captions.put(fieldName, caption);
 				}
 			}
 			jbean.put(Constants.CAPTION_KEY, captions);

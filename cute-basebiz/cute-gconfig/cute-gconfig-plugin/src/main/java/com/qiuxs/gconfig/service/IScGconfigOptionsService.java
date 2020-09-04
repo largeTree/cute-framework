@@ -23,6 +23,6 @@ public interface IScGconfigOptionsService extends IDataPropertyService<Long, ScG
 	 * @param code
 	 * @return
 	 */
-	public List<ScGconfigOptions> getByCode(String code);
+	public List<ScGconfigOptions> getByCode(String domain, String code);
 
 }

@@ -38,8 +38,8 @@ public class ScGconfigOptionsService extends AbstractDataPropertyUKService<Long,
 	
 	
 	@Override
-	public List<ScGconfigOptions> getByCode(String code) {
-		return this.findByMap(MapUtils.genMap("code", code));
+	public List<ScGconfigOptions> getByCode(String domian, String code) {
+		return this.findByMap(MapUtils.genMap("domian", domian, "code", code));
 	}
 
 	@Override
@@ -47,25 +47,25 @@ public class ScGconfigOptionsService extends AbstractDataPropertyUKService<Long,
 		return this.scGconfigOptionsDao;
 	}
 	
-	public ScGconfigOptions getByUk(String code, String optVal) {
-		return super.getByUkInner("code", code, "optVal", optVal);
+	public ScGconfigOptions getByUk(String domian, String code, String optVal) {
+		return super.getByUkInner("domian", domian, "code", code, "optVal", optVal);
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public int deleteByUk(String code, String optVal) {
-		return super.deleteByUkInner("code", code, "optVal", optVal);
+	public int deleteByUk(String domian, String code, String optVal) {
+		return super.deleteByUkInner("domian", domian, "code", code, "optVal", optVal);
 	}
 	
-	public boolean isExistByUk(String code, String optVal) {
-		return super.isExistByUkInner("code", code, "optVal", optVal);
+	public boolean isExistByUk(String domian, String code, String optVal) {
+		return super.isExistByUkInner("domian", domian, "code", code, "optVal", optVal);
 	}
 	
-	public boolean isExistOtherByUk(Long pk, String code, String optVal) {
-		return super.isExistOtherByUkInner(pk, "code", code, "optVal", optVal);
+	public boolean isExistOtherByUk(Long pk, String domian, String code, String optVal) {
+		return super.isExistOtherByUkInner(pk, "domian", domian, "code", code, "optVal", optVal);
 	}
 	
 	protected void createInner(ScGconfigOptions bean) {
-		if (!this.isExistByUk(bean.getCode(), bean.getOptVal())) {
+		if (!this.isExistByUk(bean.getDomain(), bean.getCode(), bean.getOptVal())) {
 			this.getDao().insert(bean);
 		} else {
 			ExceptionUtils.throwLoginException("dup_records");
@@ -82,6 +82,9 @@ public class ScGconfigOptionsService extends AbstractDataPropertyUKService<Long,
 		super.initProps(props);
 		
 		PropertyWrapper<?> prop = null;
+		
+		prop = new PropertyWrapper<String>(new BaseField("domain", "业务域", String.class), null);
+		props.add(prop);
 		
 		prop = new PropertyWrapper<String>(new BaseField("code", "配置代码", String.class), null);
 		props.add(prop);

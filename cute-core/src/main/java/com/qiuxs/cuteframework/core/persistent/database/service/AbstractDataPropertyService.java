@@ -28,7 +28,6 @@ import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IFlag;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IUnitId;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DsTypeRegister;
-import com.qiuxs.cuteframework.core.persistent.database.modal.BaseField;
 import com.qiuxs.cuteframework.core.persistent.database.modal.PropertyWrapper;
 import com.qiuxs.cuteframework.core.persistent.database.service.filter.IInsertFilter;
 import com.qiuxs.cuteframework.core.persistent.database.service.filter.IServiceFilter;
@@ -406,22 +405,29 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * @param bean
 	 */
 	protected void initDefault(T bean) {
-		List<PropertyWrapper<?>> props = this.getProperties();
-		for (PropertyWrapper<?> prop : props) {
-			BaseField field = prop.getField();
-			String fileName = field.getName();
+		Map<String, PropertyWrapper<?>> properties = this.getMapProperties();
+		List<Field> declaredFields = FieldUtils.getDeclaredFieldsNoDup(bean.getClass());
+		
+		for (Field field : declaredFields) {
+			String fieldName = field.getName();
+			PropertyWrapper<?> propertyWrapper = properties.get(fieldName);
+			if (propertyWrapper == null) {
+				continue;
+			}
 			try {
-				Field accessibleField = FieldUtils.getAccessibleField(bean, fileName);
+				Field accessibleField = FieldUtils.getAccessibleField(bean, fieldName);
 				if (accessibleField != null) {
 					Object value = accessibleField.get(bean);
+					
 					if (value == null) {
-						FieldUtils.setFieldValue(bean, fileName, field.getDefaultValue());
+						FieldUtils.setFieldValue(bean, fieldName, propertyWrapper.getField().getDefaultValue());
 					}
 				}
 			} catch (ReflectiveOperationException e) {
-				log.warn(this.getPojoClass().getName() + " has no Field [name=" + fileName + "]");
+				log.warn(this.getPojoClass().getName() + " has no Field [name=" + fieldName + "]");
 			}
 		}
+		
 	}
 
 	private List<IInsertFilter<PK, T>> getInsertFilters() {

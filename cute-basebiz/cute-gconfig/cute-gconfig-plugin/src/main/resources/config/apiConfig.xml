@@ -3,5 +3,7 @@
 	<module id="gconfig">
 		<api key="wb-gconfig-findGConfigs" bean="scGconfigAction" method="findGConfigs" type="1" login="1" auth="0" desc="全局配置列表" />
 		<api key="wb-gconfig-getGConfig" bean="scGconfigAction" method="getGConfig" type="1" login="1" auth="0" desc="获取配置详情" />
+		<api key="wb-gconfig-getGConfigByCode" bean="scGconfigAction" method="getGConfigByCode" type="1" login="1" auth="0" desc="根据code获取详情" />
+		<api key="wb-gconfig-saveConfigOwnerValue" bean="scGconfigAction" method="saveConfigOwnerValue" type="3" login="1" auth="0" desc="保存配置" />
 	</module>
 </root>

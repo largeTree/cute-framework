@@ -44,7 +44,7 @@ public class ScGconfigOwnerValService extends AbstractDataPropertyUKService<Long
 	private ScGconfigService scGconfigService;
 
 	@Override
-	public ScGconfigOwnerVal getOwnerVal(int ownerType, Long userId, String code) {
+	public ScGconfigOwnerVal getOwnerVal(String domain, int ownerType, Long userId, String code) {
 		ScGconfigOwnerVal ownerVal = this.getByUk(code, ownerType, userId);
 		// 没有取到该用户的值，则继续取上级
 		if (ownerVal == null) {
@@ -52,7 +52,7 @@ public class ScGconfigOwnerValService extends AbstractDataPropertyUKService<Long
 			ownerVal = this.getByUk(code, ScGconfigOwnerVal.OWNER_TYPE_SYSTEM, 0L);
 			// 还是为空，取参数默认值
 			if (ownerVal == null) {
-				ScGconfig scGconfig = scGconfigService.getByUk(code);
+				ScGconfig scGconfig = scGconfigService.getByUk(domain, code);
 				if (scGconfig == null) {
 					ExceptionUtils.throwLogicalException("gconfig_not_exists", code);
 				}

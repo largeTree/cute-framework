@@ -259,4 +259,29 @@ public class UserContext {
 	public static void trigger(String sessionId) {
 		Holder.SESSION_LAST_TRIGGER.put(sessionId, System.currentTimeMillis());
 	}
+
+	/**
+	 * 获取角色ID
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public static Long getRoleId() {
+		Long roleId = getRoleIdOpt();
+		if (roleId == null) {
+			ExceptionUtils.throwLoginException();
+		}
+		return roleId;
+	}
+
+	/**
+	 * 获取角色ID，失败不报错
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public static Long getRoleIdOpt() {
+		UserLite userLite = getUserLiteOpt();
+		return userLite == null ? null : userLite.getRoleId();
+	}
 }

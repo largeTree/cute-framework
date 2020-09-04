@@ -16,6 +16,7 @@ public class GConfigOptions implements Serializable {
 	private static final long serialVersionUID = -3077057160638242912L;
 	
 	private String code;
+	private String name;
 	private String val;
 
 	public String getCode() {
@@ -24,6 +25,14 @@ public class GConfigOptions implements Serializable {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getVal() {

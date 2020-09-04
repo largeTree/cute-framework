@@ -21,6 +21,9 @@ public class GConfigDTO implements Serializable {
 	/**  参数值. */
 	private String val;
 	
+	/**  参数值中文描述. */
+	private String valCaption;
+	
 	/**  输入类型. */
 	private int inputType;
 
@@ -79,6 +82,24 @@ public class GConfigDTO implements Serializable {
 	 */
 	public void setVal(String val) {
 		this.val = val;
+	}
+
+	/**
+	 * Gets the 参数值中文描述.
+	 *
+	 * @return the 参数值中文描述
+	 */
+	public String getValCaption() {
+		return valCaption;
+	}
+
+	/**
+	 * Sets the 参数值中文描述.
+	 *
+	 * @param valCaption the new 参数值中文描述
+	 */
+	public void setValCaption(String valCaption) {
+		this.valCaption = valCaption;
 	}
 
 	/**
