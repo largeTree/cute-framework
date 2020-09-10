@@ -153,7 +153,7 @@ public class ListUtils extends CollectionUtils {
 	 * @param vals
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SafeVarargs
 	public static <T> List<T> genList(T... vals) {
 		List<T> list = new ArrayList<>();
 		if (vals != null) {

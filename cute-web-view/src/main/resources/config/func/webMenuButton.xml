@@ -2,7 +2,7 @@
 <root order="-99999">
 	<menu id="10" name="系统管理" funcType="1">
 		<menu id="10" name="系统监控" funcType="2">
-			<menu id="10" name="数据库状态" page="/sys/status" code="sys-status" funcType="3" />
+			<menu id="10" name="数据库状态" page="/sys/status" code="ds-status" funcType="3" />
 			<menu id="30" name="日志查询" page="/view/datalist?pid=mylog" code="mylog" funcType="3" />
 			<menu id="40" name="请求日志" page="/view/datalist?pid=reqlog" code="reqlog" funcType="3" />
 		</menu>

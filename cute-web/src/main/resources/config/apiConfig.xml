@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<module id="func">
-		<api key="func-list" bean="funcAction" method="list" login="0" auth="0" desc="" />
-		<api key="func-initFunc" bean="funcAction" method="initFunc" login="0" auth="0" desc="" />
-		<api key="func-tree" bean="funcAction" method="funcTree" login="0" auth="0" desc="" />
+		<api key="func-list" bean="funcAction" method="list" login="1" auth="0" desc="" />
+		<api key="func-initFunc" bean="funcAction" method="initFunc" login="1" auth="0" desc="" />
+		<api key="func-tree" bean="funcAction" method="funcTree" login="1" auth="0" desc="" />
 	</module>
 	<module id="log">
-		<api key="mylog-list" bean="mylogAction" method="list" login="0" auth="0" desc="" />
-		<api key="mylog-get" bean="mylogAction" method="get" login="0" auth="0" desc="" />
-		<api key="requestLog-list" bean="requestLogAction" method="list" login="0" auth="0" desc="" />
+		<api key="mylog-list" bean="mylogAction" method="list" login="1" auth="0" desc="" />
+		<api key="mylog-get" bean="mylogAction" method="get" login="1" auth="0" desc="" />
+		<api key="requestLog-list" bean="requestLogAction" method="list" login="1" auth="0" desc="" />
+	</module>
+	<module id="sys">
+		<api key="sysmonitor-dsinfos" bean="systemMonitorAction" method="dsStatus" login="1" auth="0" desc="" />
 	</module>
 	<module id="common">
-		<api key="qd-codes" bean="codeTranslateAction" method="codeOptions" login="0" auth="0" desc="查询编码" />
-		<api key="qd-service-codes" bean="codeTranslateAction" method="serviceCodeOptions" login="0" auth="0" desc="查询编码" />
-		<api key="sa-system-manualInvoke-timerTask" bean="systemAction" method="manualInvoke" login="0" auth="0" desc="手动执行一个定时任务" />
+		<api key="qd-codes" bean="codeTranslateAction" method="codeOptions" login="1" auth="0" desc="查询编码" />
+		<api key="qd-service-codes" bean="codeTranslateAction" method="serviceCodeOptions" login="1" auth="0" desc="查询编码" />
+		<api key="sa-system-manualInvoke-timerTask" bean="systemAction" method="manualInvoke" login="1" auth="0" desc="手动执行一个定时任务" />
 	</module>
 </root>

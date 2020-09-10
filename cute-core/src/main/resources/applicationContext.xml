@@ -50,6 +50,7 @@
 		<property name="logAbandoned" value="true" />
 		<property name="removeAbandoned" value="true" />
 		<property name="removeAbandonedTimeout" value="60" />
+		<property name="minEvictableIdleTimeMillis" value="180000" />
 		<property name="maxWait">
 			<value>3000</value>
 		</property>

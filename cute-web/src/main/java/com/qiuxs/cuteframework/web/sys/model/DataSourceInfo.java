@@ -1,7 +1,7 @@
 /*
  * 
  */
-package com.qiuxs.cuteframework.view.datamodel;
+package com.qiuxs.cuteframework.web.sys.model;
 
 import java.io.Serializable;
 

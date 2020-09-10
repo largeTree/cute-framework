@@ -143,6 +143,28 @@ public class McFactory {
 		static final McFactory FACTORY = new McFactory();
 	}
 
+	public <K, V> Map<K, V> createMap(String mapId) {
+		return createMap(mapId, true);
+	}
+	
+	public <K, V> Map<K, V> createMap(String mapId, boolean checkName) {
+		if (checkName) {
+			checkNameExist(McType.map, mapId);
+		}
+		Map<K, V> map = null;
+		switch (serverType) {
+		case redis:
+			map = new RedisMap<K, V>(mapId, RedisConfiguration.getDefaultDbIndex());
+			break;
+		case local:
+			map = new HashMap<K, V>();
+			break;
+		default:
+			Console.log.info("未支持的serverType=" + serverType);
+		}
+		return map;
+	}
+	
 	/**
 	 * 创建一个map,采用指定的名字.
 	 *
@@ -153,6 +175,8 @@ public class McFactory {
 	 * @param initSize the init size
 	 * @param mapId            指定的名字
 	 * @return the map< k, v>
+	 * @deprecated 
+	 * 	嵌套泛型时难以处理
 	 */
 	public <K, V> Map<K, V> createMap(Class<K> keyClass, Class<V> valueClass,
 	        int initSize, String mapId) {
@@ -170,6 +194,8 @@ public class McFactory {
 	 * @param mapId the map id
 	 * @param checkName the check name
 	 * @return the map< k, v>
+	 * @deprecated 
+	 * 	嵌套泛型时难以处理
 	 */
 	public <K, V> Map<K, V> createMap(Class<K> keyClass, Class<V> valueClass,
 	        int initSize, String mapId, boolean checkName) {
