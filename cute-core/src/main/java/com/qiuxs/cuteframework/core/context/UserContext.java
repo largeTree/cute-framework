@@ -23,11 +23,11 @@ public class UserContext {
 
 	private static class Holder {
 		/** 会话缓存 */
-		private static Map<String, UserLite> SESSION_HOLDER = McFactory.getFactory().createMap(String.class, UserLite.class, 10, "uc_session_map");
+		private static Map<String, UserLite> SESSION_HOLDER = McFactory.getFactory().createMap("uc_session_map");
 		/** 用户ID和sessionId对应关系 */
-		private static Map<Long, String> USER_ID_SESSION_ID_HOLDER = McFactory.getFactory().createMap(Long.class, String.class, 10, "uc_user_id_session_id_map");
+		private static Map<Long, String> USER_ID_SESSION_ID_HOLDER = McFactory.getFactory().createMap("uc_user_id_session_id_map");
 		/** sessionId最后触发时间记录 */
-		private static Map<String, Long> SESSION_LAST_TRIGGER = McFactory.getFactory().createMap(String.class, Long.class, 10, "uc_session_id_last_trigger");
+		private static Map<String, Long> SESSION_LAST_TRIGGER = McFactory.getFactory().createMap("uc_session_id_last_trigger");
 	}
 	
 	/** 用户类型：管理员 */
@@ -283,5 +283,11 @@ public class UserContext {
 	public static Long getRoleIdOpt() {
 		UserLite userLite = getUserLiteOpt();
 		return userLite == null ? null : userLite.getRoleId();
+	}
+
+	public static void mockUser(Long parentId) {
+		UserLite userLite = new UserLite();
+		userLite.setUnitId(parentId);
+		setUserLite(userLite);
 	}
 }

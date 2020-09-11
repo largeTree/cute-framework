@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.utils.BeanUtil;
-import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DataSourceContext;
 import com.qiuxs.cuteframework.tech.mc.McFactory;
 import com.qiuxs.gconfig.client.dto.GConfigDTO;
@@ -24,7 +23,7 @@ public class GConfigClientUtils {
 
 	private static class Holder {
 		@SuppressWarnings("rawtypes")
-		private static Map<Integer, Map> mapGconfigDto = McFactory.getFactory().createMap(Integer.class, Map.class, 10, "gconfig_dto_holder");
+		private static Map<Integer, Map> mapGconfigDto = McFactory.getFactory().createMap("gconfig_dto_holder");
 	}
 
 	private static IScGconfigService scGconfigService;
@@ -120,7 +119,9 @@ public class GConfigClientUtils {
 			if (configDTO == null) {
 				ScGconfig scGconfig = scGconfigService.getByUk(domain, code);
 				if (scGconfig == null) {
-					ExceptionUtils.throwLogicalException("gconfig_not_exists", domain, code);
+					// ExceptionUtils.throwLogicalException("gconfig_not_exists", domain, code);
+					// 没有查到配置时返回null、外层处理
+					return null;
 				}
 				// 配置对象
 				configDTO = new GConfigDTO();
