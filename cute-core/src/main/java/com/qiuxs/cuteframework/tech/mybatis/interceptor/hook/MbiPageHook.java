@@ -53,7 +53,7 @@ public class MbiPageHook implements IMbiHook {
 			metaStatementHandler.setValue("delegate.rowBounds.limit", RowBounds.NO_ROW_LIMIT);
 
 			// 自动合计总数
-			this.autoTotal(sql, (PageInfo) rowBounds, invocation);
+			this.autoTotal(sql, pageInfo, invocation);
 		}
 	}
 
