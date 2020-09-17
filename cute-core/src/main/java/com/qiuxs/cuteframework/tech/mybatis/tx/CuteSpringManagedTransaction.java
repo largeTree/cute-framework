@@ -12,6 +12,7 @@ import org.springframework.jdbc.datasource.ConnectionHolder;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import com.qiuxs.cuteframework.core.persistent.database.lookup.DataSourceContext;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DynamicDataSource;
 import com.qiuxs.cuteframework.core.tx.local.SpringTxContext;
 import com.qiuxs.cuteframework.tech.mybatis.MyBatisManager;
@@ -91,6 +92,9 @@ public class CuteSpringManagedTransaction implements Transaction {
 		DataSource ds = DynamicDataSource.getDynamicDataSource();
 		if (!ds.equals(this.dataSource)) {
 			log.error("DataSource Not Consistency!!! DynamicDataSource = " + ds + ", EcSpringManagedTransaction.dataSource=" + this.dataSource);
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("CurrentDsName = {}", DataSourceContext.getDsId());
 		}
 		this.connection = DataSourceUtils.getConnection(this.dataSource);
 		this.autoCommit = this.connection.getAutoCommit();
