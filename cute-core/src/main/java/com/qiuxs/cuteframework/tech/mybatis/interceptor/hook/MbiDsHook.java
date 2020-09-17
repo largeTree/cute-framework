@@ -21,13 +21,17 @@ public class MbiDsHook implements IMbiHook {
 
 	@Override
 	public void beforeExecutor(Invocation invocation) {
-		if (DataSourceContext.isDsSwitchAuto()) {
+		boolean dsSwitchAuto = DataSourceContext.isDsSwitchAuto();
+		Object[] args = invocation.getArgs();
+		MappedStatement ms = (MappedStatement) args[0];
+		String nameSpace = MbiUtils.getNameSpace(ms);
+		if (log.isDebugEnabled()) {
+			log.debug("nameSpace = {}, dsSwitchAuto = {}", nameSpace, dsSwitchAuto);
+		}
+		if (dsSwitchAuto) {
 			String dsType = null;
 			String dsId = null;
 
-			Object[] args = invocation.getArgs();
-			MappedStatement ms = (MappedStatement) args[0];
-			String nameSpace = MbiUtils.getNameSpace(ms);
 			dsType = DataSourceContext.getDsType(nameSpace);
 			if (dsType != null) {
 				dsId = DataSourceContext.getDsIdByNameSpace(nameSpace);
