@@ -52,9 +52,9 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * @param sumrow
 	 * @return
 	 */
-	protected ActionResult responseList(boolean wrapper, List<?> list, int total, Map<String, ? extends Number> sumrow) {
+	protected ActionResult responseList(boolean wrapper, List<?> list, Integer total, Map<String, ? extends Number> sumrow) {
 		JSONArray jList = this.getService().translateBeans(list, wrapper);
-		return new ActionResult(jList, total, sumrow);
+		return new ActionResult(jList, total == null ? list.size() : total, sumrow);
 	}
 
 	/**
