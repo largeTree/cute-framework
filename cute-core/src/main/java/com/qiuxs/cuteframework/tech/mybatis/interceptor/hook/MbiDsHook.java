@@ -21,6 +21,7 @@ public class MbiDsHook implements IMbiHook {
 
 	@Override
 	public void beforeExecutor(Invocation invocation) {
+		log.info("MbiDsHook");
 		boolean dsSwitchAuto = DataSourceContext.isDsSwitchAuto();
 		Object[] args = invocation.getArgs();
 		MappedStatement ms = (MappedStatement) args[0];
