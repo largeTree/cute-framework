@@ -184,6 +184,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 			}
 		}
 		if (isValid) {
+			Console.log.info("inited DataSource id = {} {}", dsId, dataSource);
 			this.targetDataSources.put(dsId, dataSource);
 			if (DsType.ENTRY.value().equals(type)) {
 				DataSourceContext.initEntryDb(dsId);
