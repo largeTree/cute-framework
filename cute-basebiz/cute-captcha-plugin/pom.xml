@@ -21,6 +21,7 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>cute-tester</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	
