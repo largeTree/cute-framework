@@ -64,6 +64,9 @@ public class SpringTxContext {
 		TransactionSynchronizationAdapter synchronization = new TransactionSynchronizationAdapter() {
 			@Override
 			public void afterCommit() {
+				if (log.isDebugEnabled()) {
+					log.debug("Spring tx afterCommit");
+				}
 				List<AfterCommitRunnable<?>> afterCommitCallbackList = getAfterCommitRunnables();
 				if (afterCommitCallbackList.size() > 0) {
 					afterCommitCallbackList.forEach(callback -> {
@@ -74,6 +77,9 @@ public class SpringTxContext {
 
 			@Override
 			public void afterCompletion(int status) {
+				if (log.isDebugEnabled()) {
+					log.debug("Spring tx afterCompletion");
+				}
 				try {
 					if (status == TransactionSynchronization.STATUS_COMMITTED) {
 						TxConfrimUtils.commit();
