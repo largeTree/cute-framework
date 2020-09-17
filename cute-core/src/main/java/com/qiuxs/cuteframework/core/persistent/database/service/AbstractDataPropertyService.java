@@ -45,7 +45,7 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropert
  * @version 1.0.0
  */
 public abstract class AbstractDataPropertyService<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>>
-        extends AbstractPropertyService<PK, T> implements IDataPropertyService<PK, T, D> {
+        extends AbstractPropertyService<PK, T> implements IDataPropertyService<PK, T> {
 
 	/** 批量操作一次多少条 */
 	protected static final int BATCH_ONCE = 200;

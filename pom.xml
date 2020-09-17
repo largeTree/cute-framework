@@ -24,6 +24,8 @@
 		<module>cute-basebiz</module>
 		<module>upyun-wrapper</module>
 		<module>mq-client</module>
+		<module>cute-support</module>
+		<module>cute-web-support</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -34,7 +36,17 @@
 			</dependency>
 			<dependency>
 				<groupId>com.qiuxs</groupId>
+				<artifactId>cute-support</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
 				<artifactId>cute-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>cute-web-support</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

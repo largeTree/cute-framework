@@ -285,9 +285,9 @@ public class UserContext {
 		return userLite == null ? null : userLite.getRoleId();
 	}
 
-	public static void mockUser(Long parentId) {
+	public static void mockUser(Long unitId) {
 		UserLite userLite = new UserLite();
-		userLite.setUnitId(parentId);
+		userLite.setUnitId(unitId);
 		setUserLite(userLite);
 	}
 }

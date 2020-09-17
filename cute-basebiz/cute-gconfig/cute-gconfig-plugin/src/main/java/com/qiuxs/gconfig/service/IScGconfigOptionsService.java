@@ -1,11 +1,9 @@
 package com.qiuxs.gconfig.service;
 
-import com.qiuxs.gconfig.dao.ScGconfigOptionsDao;
-import com.qiuxs.gconfig.entity.ScGconfigOptions;
-
 import java.util.List;
 
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService;
+import com.qiuxs.gconfig.entity.ScGconfigOptions;
 
 
 /**
@@ -14,7 +12,7 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropert
  * 创建时间 ：2020-03-04 10:23:40
  * @author qiuxs
  */
-public interface IScGconfigOptionsService extends IDataPropertyService<Long, ScGconfigOptions, ScGconfigOptionsDao> {
+public interface IScGconfigOptionsService extends IDataPropertyService<Long, ScGconfigOptions> {
 
 	/**
 	 * 根据code查询所有的选项

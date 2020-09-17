@@ -81,6 +81,19 @@ public class ProducerUtils extends TxConfrimUtils {
 	public static Long sendPrepare(String topic, String tags, String bizKeys, Object body) {
 		return sendPrepare(topic, tags, bizKeys, body, true, null, 0);
 	}
+	
+	/**
+	 * 事务消息预发送
+	 * @param topic
+	 * @param tags
+	 * @param bizKeys
+	 * @param body
+	 * @param extProps
+	 * @return
+	 */
+	public static Long sendPrepare(String topic, String tags, String bizKeys, Object body, Map<String, String> extProps) {
+		return sendPrepare(topic, tags, bizKeys, body, true, extProps, 0);
+	}
 
 	/**
 	 * 事务消息预发送

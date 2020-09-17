@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.core.basic.utils.converter;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.junit.Assert;
@@ -17,7 +18,12 @@ public class Base64UtilsTest {
 		System.out.println("解密后：" + decodedStr);
 		Assert.assertEquals("Assert str :", str, decodedStr);
 		
-		System.out.println(URLEncoder.encode("ZnJvbT13eA=="));
+		try {
+			System.out.println(URLEncoder.encode("ZnJvbT13eA==", "utf-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

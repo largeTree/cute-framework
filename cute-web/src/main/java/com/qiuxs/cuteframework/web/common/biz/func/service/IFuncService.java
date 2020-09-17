@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.qiuxs.cuteframework.core.basic.code.tree.TreeItem;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService;
-import com.qiuxs.cuteframework.web.common.biz.func.dao.FuncDao;
 import com.qiuxs.cuteframework.web.common.biz.func.entity.Func;
 
 
@@ -14,7 +13,7 @@ import com.qiuxs.cuteframework.web.common.biz.func.entity.Func;
  * 创建时间 ：2019-07-11 22:36:23
  * @author qiuxs
  */
-public interface IFuncService extends IDataPropertyService<String, Func, FuncDao> {
+public interface IFuncService extends IDataPropertyService<String, Func> {
 
 	/**
 	 * 获取属性菜单结构

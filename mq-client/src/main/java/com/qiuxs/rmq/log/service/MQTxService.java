@@ -30,7 +30,7 @@ public class MQTxService implements IMQTxService {
 	 * @version 1.0.0
 	 */
 	private static final class TxMessageHolder {
-		private static final Map<Long, TxMessage> txMessageMap = McFactory.getFactory().createMap(Long.class, TxMessage.class, 10, "rmq_tx_message_map");
+		private static final Map<Long, TxMessage> txMessageMap = McFactory.getFactory().createMap("rmq_tx_message_map");
 
 		private static void putMessage(Long txId, TxMessage txMessage) {
 			txMessageMap.put(txId, txMessage);

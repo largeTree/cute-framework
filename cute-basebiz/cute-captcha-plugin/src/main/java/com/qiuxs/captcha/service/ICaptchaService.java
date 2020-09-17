@@ -1,6 +1,5 @@
 package com.qiuxs.captcha.service;
 
-import com.qiuxs.captcha.dao.CaptchaDao;
 import com.qiuxs.captcha.entity.Captcha;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService;
 
@@ -11,7 +10,7 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropert
  * 创建时间 ：2019-03-28 22:55:09
  * @author qiuxs
  */
-public interface ICaptchaService extends IDataPropertyService<Long, Captcha, CaptchaDao> {
+public interface ICaptchaService extends IDataPropertyService<Long, Captcha> {
 
 	/**
 	 * 生成一个验证码记录

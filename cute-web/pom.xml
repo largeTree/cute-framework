@@ -19,6 +19,10 @@
 			<artifactId>cute-core</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.qiuxs</groupId>
+			<artifactId>cute-web-support</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 		</dependency>

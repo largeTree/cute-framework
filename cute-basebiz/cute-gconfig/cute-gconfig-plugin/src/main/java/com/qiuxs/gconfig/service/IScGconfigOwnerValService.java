@@ -1,8 +1,7 @@
 package com.qiuxs.gconfig.service;
 
-import com.qiuxs.gconfig.dao.ScGconfigOwnerValDao;
-import com.qiuxs.gconfig.entity.ScGconfigOwnerVal;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService;
+import com.qiuxs.gconfig.entity.ScGconfigOwnerVal;
 
 
 /**
@@ -11,7 +10,7 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropert
  * 创建时间 ：2020-03-04 10:23:40
  * @author qiuxs
  */
-public interface IScGconfigOwnerValService extends IDataPropertyService<Long, ScGconfigOwnerVal, ScGconfigOwnerValDao> {
+public interface IScGconfigOwnerValService extends IDataPropertyService<Long, ScGconfigOwnerVal> {
 
 	/**
 	 * 获取指定所有者的参数配置

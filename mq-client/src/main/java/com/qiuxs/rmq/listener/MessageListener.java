@@ -30,6 +30,8 @@ public abstract class MessageListener {
 
 	private static final Logger log = LogManager.getLogger(MessageListener.class);
 	
+	private static final int MAX_FAILED_COUNT = 3;
+	
 	private int listenerType;
 
 	public MessageListener(int listenerType) {
@@ -37,6 +39,7 @@ public abstract class MessageListener {
 	}
 
 	protected boolean invokeListeners(List<MessageExt> msgs, boolean isOrder) {
+		boolean res = false;
 		for (MessageExt msg : msgs) {
 			ApiLogProp logProp = null;
 			Object body = null;
@@ -70,17 +73,21 @@ public abstract class MessageListener {
 
 				// 删除调用失败的日志
 				deleteMqFailed(msg);
+				res = true;
 			} catch (Throwable e) {
+				log.error("消费失败：" + msg.getMsgId() + ", topic = " + msg.getTopic() + ", tags = " + msg.getTags() + ", ext = " + e.getLocalizedMessage(), e);
 				// 记录失败日志
 				ApiLogUtils.writeResLog(logProp, answerId, null, e, ApiLogConstants.TYPE_ANSWER_MQ);
-				// 记录mq消费失败详情
-				writeMqFailed(msg, body, e);
-				return false;
+				// 允许失败后重试几次后再记录消费失败
+				if (msg.getReconsumeTimes() >= MAX_FAILED_COUNT) {
+					// 记录mq消费失败详情
+					writeMqFailed(msg, body, e);
+				}
 			} finally {
 				TLVariableHolder.clear();
 			}
 		}
-		return true;
+		return res;
 	}
 
 	/**
@@ -102,7 +109,7 @@ public abstract class MessageListener {
 	 * @param msg
 	 */
 	private void deleteMqFailed(MessageExt msg) {
-
+		MqLogUtils.deleteMqFailed(msg);
 	}
 
 	private void invokeListener(String topic, String tags, String bizKey, Object body, Map<String, String> extProp, ApiLogProp logProp) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {

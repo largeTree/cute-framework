@@ -114,10 +114,19 @@ public class McFactory {
 	 * @param srvType            使用的服务类型
 	 */
 	public static void init() {
-		McServerType serverType = EnvironmentContext.getMcServerType();
+		McServerType serverType = getMcServerType();
 		McFactory.serverType = serverType;
 	}
 
+	/**
+	 * 获取缓存类型
+	 * @return
+	 */
+	public static McServerType getMcServerType() {
+		String mcServerType = EnvironmentContext.getString("mc-server-type", McServerType.local.name());
+		return McServerType.valueOf(mcServerType);
+	}
+	
 	/**
 	 * 单例模式，获取map工厂。初始化配置.
 	 *

@@ -19,7 +19,7 @@ import com.qiuxs.cuteframework.web.bean.ReqParam;
  * @param <D>
  * @param <S>
  */
-public interface IDataPropertyAction<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>, S extends IDataPropertyService<PK, T, D>> {
+public interface IDataPropertyAction<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>, S extends IDataPropertyService<PK, T>> {
 
 	/**
 	 * 保存

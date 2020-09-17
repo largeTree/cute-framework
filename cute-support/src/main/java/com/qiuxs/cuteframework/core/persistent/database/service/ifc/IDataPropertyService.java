@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
 
@@ -18,7 +17,7 @@ import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
  * @param <T>
  * @param <D>
  */
-public interface IDataPropertyService<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>> extends IPropertyService<PK, T>, IDataSourceService {
+public interface IDataPropertyService<PK extends Serializable, T extends IEntity<PK>> extends IPropertyService<PK, T>, IDataSourceService {
 
 	public void setId(T bean);
 

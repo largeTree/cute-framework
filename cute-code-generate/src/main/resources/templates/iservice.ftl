@@ -1,6 +1,5 @@
 package ${packageName}.service;
 
-import ${packageName}.dao.${className}Dao;
 import ${packageName}.entity.${className};
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService;
 
@@ -11,6 +10,6 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropert
  * 创建时间 ：${.now?string("yyyy-MM-dd HH:mm:ss")}
  * @author ${author!}
  */
-public interface I${className}Service extends IDataPropertyService<${pkClass}, ${className}, ${className}Dao> {
+public interface I${className}Service extends IDataPropertyService<${pkClass}, ${className}> {
 
 }

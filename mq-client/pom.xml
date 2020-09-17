@@ -18,13 +18,6 @@
 			<groupId>org.apache.rocketmq</groupId>
 			<artifactId>rocketmq-client</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>com.qiuxs</groupId>
 			<artifactId>cute-tester</artifactId>

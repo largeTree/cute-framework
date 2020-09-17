@@ -19,7 +19,7 @@ import com.qiuxs.cuteframework.web.bean.ReqParam;
 public class ActionHelper {
 
 	@SuppressWarnings("unchecked")
-	public static ActionResult list(IDataPropertyService<?, ?, ?> service, String listMethod, String statisMethod, ReqParam params, String jsonData) {
+	public static ActionResult list(IDataPropertyService<?, ?> service, String listMethod, String statisMethod, ReqParam params, String jsonData) {
 		if (listMethod == null) {
 			listMethod = "findByMap";
 		}
@@ -45,7 +45,7 @@ public class ActionHelper {
 		return responseList(service, list, params.getWrapper(), total, sumrow);
 	}
 
-	private static ActionResult responseList(IDataPropertyService<?, ?, ?> service, List<?> list, boolean wrapper, int total, Map<String, ? extends Number> sumrow) {
+	private static ActionResult responseList(IDataPropertyService<?, ?> service, List<?> list, boolean wrapper, int total, Map<String, ? extends Number> sumrow) {
 		JSONArray finalList = service.translateBeans(list, wrapper);
 		return new ActionResult(finalList, total, sumrow);
 	}

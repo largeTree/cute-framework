@@ -26,7 +26,7 @@ import com.qiuxs.cuteframework.web.bean.ReqParam;
  * @param <D>
  * @param <S>
  */
-public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>, S extends IDataPropertyService<PK, T, D>>
+public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>, D extends IBaseDao<PK, T>, S extends IDataPropertyService<PK, T>>
         extends AbstractDataPropertyAction<PK, T, D, S> implements IBaseAction {
 
 	/**

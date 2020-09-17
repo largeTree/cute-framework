@@ -21,13 +21,13 @@ public class McFactoryTester {
 	@Test
 	public void testRedisMap() {
 		McFactory.init();
-		Map<String, String> map = McFactory.getFactory().createMap(String.class, String.class, 10, "test_string_map");
+		Map<String, String> map = McFactory.getFactory().createMap("test_string_map");
 		String val = RandomGenerator.getRandomStringByLength(10);
 		map.put("key", val);
 
 		McFactory.getFactory().clearMcName();
 
-		Map<String, String> map2 = McFactory.getFactory().createMap(String.class, String.class, 10, "test_string_map");
+		Map<String, String> map2 = McFactory.getFactory().createMap("test_string_map");
 		String val2 = map2.get("key");
 		Assert.assertEquals("Assert redis Val", val, val2);
 	}
