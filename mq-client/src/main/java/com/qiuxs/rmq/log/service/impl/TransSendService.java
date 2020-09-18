@@ -22,6 +22,9 @@ public class TransSendService implements ITransSendService {
 	@Transactional
 	public Long appendTransSend(Long unitId) {
 		Long txId = IDGenerateUtil.getNextLongId(TABLE_NAME);
+		if (unitId == null) {
+			unitId = 0L;
+		}
 		this.tranSendDao.insert(new TransSend(txId, unitId));
 		return txId;
 	}
