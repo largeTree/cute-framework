@@ -26,7 +26,7 @@
 	<bean id="propertyConfigurer" class="com.qiuxs.cuteframework.tech.spring.config.CutePropertyPlaceholderConfigurer">
 	</bean>
 
-	<bean id="entryDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<bean id="entryDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 		<property name="url">
 			<value>${db.url}</value>
 		</property>
@@ -39,19 +39,18 @@
 		<property name="driverClassName">
 			<value>${db.driver}</value>
 		</property>
-		<property name="maxActive">
-			<value>${db.maxActive:20}</value>
+		<property name="maxTotal">
+			<value>${db."maxTotal":20}</value>
 		</property>
 		<property name="initialSize">
 			<value>${db.initialSize:5}</value>
 		</property>
 		<property name="maxIdle" value="${db.maxIdle:10}" />
-		<property name="minIdle" value="${db.minIdle:5}" />
-		<property name="logAbandoned" value="true" />
-		<property name="removeAbandoned" value="true" />
+		<property name="minIdle" value="${db.minIdle:1}" />
+		<property name="removeAbandonedOnMaintenance" value="true" />
 		<property name="removeAbandonedTimeout" value="60" />
-		<property name="minEvictableIdleTimeMillis" value="180000" />
-		<property name="maxWait">
+		<property name="softMinEvictableIdleTimeMillis" value="180000" />
+		<property name="maxWaitMillis">
 			<value>3000</value>
 		</property>
 		<property name="testOnBorrow">

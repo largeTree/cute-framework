@@ -9,7 +9,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;

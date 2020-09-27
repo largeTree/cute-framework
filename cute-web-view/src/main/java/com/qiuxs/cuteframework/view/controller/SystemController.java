@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,8 +40,8 @@ public class SystemController {
 
 				BasicDataSource ds = (BasicDataSource) entry.getValue();
 				int maxIdle = ds.getMaxIdle();
-				int maxActive = ds.getMaxActive();
-				long maxWait = ds.getMaxWait();
+				int maxActive = ds.getMaxTotal();
+				long maxWait = ds.getMaxWaitMillis();
 				Boolean defaultAutoCommit = ds.getDefaultAutoCommit();
 				int numActive = ds.getNumActive();
 				int numIdle = ds.getNumIdle();

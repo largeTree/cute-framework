@@ -13,7 +13,7 @@ import java.util.TreeMap;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import com.qiuxs.cuteframework.core.basic.Constants.DsType;
@@ -157,9 +157,9 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		dataSource.setPassword(password);
 		dataSource.setDriverClassName(dsInfo.getDriverClass());
 		dataSource.setInitialSize(this.defaultTargetDataSource.getInitialSize());
-		dataSource.setMaxActive(this.defaultTargetDataSource.getMaxActive());
+		dataSource.setMaxTotal(this.defaultTargetDataSource.getMaxTotal());
 		dataSource.setMinIdle(this.defaultTargetDataSource.getMinIdle());
-		dataSource.setMaxWait(this.defaultTargetDataSource.getMaxWait());
+		dataSource.setMaxWaitMillis(this.defaultTargetDataSource.getMaxWaitMillis());
 		dataSource.setValidationQuery(this.defaultTargetDataSource.getValidationQuery());
 		if (DsType.SEQ.value().equals(type)) {
 		} else if (DsType.LOG.value().equals(type)) {
