@@ -24,6 +24,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
@@ -67,6 +68,39 @@ public class HttpClientUtil {
 			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(ctx);
 			httpsClient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
 		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+			throw ExceptionUtils.unchecked(e);
+		}
+	}
+	
+	/**
+     * 处理Http请求
+     */
+	public static String executeAsString(HttpRequestBase request) {
+		String result = "";
+		try {
+			HttpResponse response = execute(request, true);
+			HttpEntity entity = response.getEntity();
+			if (entity != null) {
+				result = EntityUtils.toString(entity);
+			}
+		} catch (IOException e) {
+			throw ExceptionUtils.unchecked(e);
+		}
+		return result;
+	}
+	
+	/**
+	 * 直接执行一个构造好的request
+	 *  
+	 * @author qiuxs  
+	 * @param request
+	 * @param sslFlag
+	 * @return
+	 */
+	public static HttpResponse execute(HttpRequestBase request, boolean sslFlag) {
+		try {
+			return (sslFlag ? httpsClient : httpClient).execute(request);
+		} catch (IOException e) {
 			throw ExceptionUtils.unchecked(e);
 		}
 	}

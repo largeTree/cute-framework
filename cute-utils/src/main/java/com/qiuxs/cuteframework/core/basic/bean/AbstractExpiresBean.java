@@ -1,9 +1,12 @@
 package com.qiuxs.cuteframework.core.basic.bean;
 
-public abstract class AbstractExpiresBean {
+import java.io.Serializable;
+
+public abstract class AbstractExpiresBean implements Serializable {
+	
+	private static final long serialVersionUID = 6470453140793929866L;
 
 	public abstract long getBornTime();
-
 
 	public abstract long getExpiresIn();
 	

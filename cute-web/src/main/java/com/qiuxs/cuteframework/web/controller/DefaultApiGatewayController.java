@@ -8,14 +8,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
+import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.tech.log.LogConstant;
 import com.qiuxs.cuteframework.tech.log.LogUtils;
+import com.qiuxs.cuteframework.tech.spring.aop.StopWatchContext;
 import com.qiuxs.cuteframework.web.WebConstants;
 import com.qiuxs.cuteframework.web.action.ActionConstants;
 import com.qiuxs.cuteframework.web.action.IAction;
@@ -38,7 +41,7 @@ public class DefaultApiGatewayController extends BaseController {
 	        @RequestHeader(name = WebConstants.REQ_H_COMPRESS_TYPE, required = false) String compressType,
 	        HttpServletRequest request, HttpServletResponse response) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
-		long start = System.currentTimeMillis();
+		StopWatch sw = StopWatchContext.init();
 		
 		// 获取apiConfig
 		ApiConfig apiConfig = ApiConfigHolder.getApiConfig(apiKey);
@@ -58,7 +61,7 @@ public class DefaultApiGatewayController extends BaseController {
 
 		// 调用Action
 		String actionResult = this.doAction(apiConfig, params);
-
+		
 		// 根据压缩类型返回结果
 		String compressedResult = this.compressResult(actionResult, compressType);
 		
@@ -67,8 +70,13 @@ public class DefaultApiGatewayController extends BaseController {
 			logRes = logRes.substring(0, 10000);
 		}
 		
-		log.info("response -> costMs = " + (System.currentTimeMillis() - start) + ", res = " + logRes);
+		if (log.isDebugEnabled()) {
+			log.debug(sw.prettyPrint());
+		} else if (EnvironmentContext.isDebug()) {
+			log.info(sw.prettyPrint());
+		}
 		
+		log.info("response -> costMs = " + sw.getTotalTimeMillis() + ", res = " + logRes);
 		return compressedResult;
 	}
 

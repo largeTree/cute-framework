@@ -8,6 +8,7 @@ import java.util.Map;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
+import com.qiuxs.cuteframework.web.WebConstants;
 import com.qiuxs.cuteframework.web.action.ActionConstants;
 
 /**
@@ -138,6 +139,16 @@ public class ReqParam extends HashMap<String, String> {
 	 */
 	public boolean getWrapper() {
 		return MapUtils.getBooleanValue(this, ActionConstants.PARAM_WRAPPER, false);
+	}
+	
+	/**
+	 * 获取ApiKey
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public String getApiKey() {
+		return MapUtils.getStringMust(this, WebConstants.REQ_P_API_KEY);
 	}
 	
 	/**

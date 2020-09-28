@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.web.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,8 +8,10 @@ import java.util.Map;
 
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 
-public class ActionResult {
-
+public class ActionResult implements Serializable {
+	
+	private static final long serialVersionUID = -6706471004713521476L;
+	
 	public static final String RES_KEY_CODE = "code";
 	public static final String RES_KEY_MSG = "msg";
 	public static final String RES_KEY_ROWS = "rows";
