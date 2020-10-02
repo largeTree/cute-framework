@@ -139,6 +139,20 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	protected ActionResult list(String listMethod, ReqParam params, String jsonData) {
 		return ActionHelper.list(this.getService(), listMethod, null, params, jsonData);
 	}
+	
+	/**
+	 * 支持自定义统计方法
+	 *  
+	 * @author qiuxs  
+	 * @param listMethod
+	 * @param statisMethod
+	 * @param params
+	 * @param jsonData
+	 * @return
+	 */
+	protected ActionResult list(String listMethod, String statisMethod, ReqParam params, String jsonData) {
+		return ActionHelper.list(this.getService(), listMethod, statisMethod, params, jsonData);
+	}
 
 	/**
 	 * 检查参数是否存在
