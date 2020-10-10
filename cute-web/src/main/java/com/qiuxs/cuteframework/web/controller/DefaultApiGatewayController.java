@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
+import com.qiuxs.cuteframework.core.context.StopWatchContext;
 import com.qiuxs.cuteframework.tech.log.LogConstant;
 import com.qiuxs.cuteframework.tech.log.LogUtils;
-import com.qiuxs.cuteframework.tech.spring.aop.StopWatchContext;
 import com.qiuxs.cuteframework.web.WebConstants;
 import com.qiuxs.cuteframework.web.action.ActionConstants;
 import com.qiuxs.cuteframework.web.action.IAction;
@@ -40,8 +40,12 @@ public class DefaultApiGatewayController extends BaseController {
 	public String dispatcher(@RequestParam(name = WebConstants.REQ_P_API_KEY, required = true) String apiKey,
 	        @RequestHeader(name = WebConstants.REQ_H_COMPRESS_TYPE, required = false) String compressType,
 	        HttpServletRequest request, HttpServletResponse response) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		// 总耗时
+		StopWatch sw = new StopWatch();
+		sw.start();
 		
-		StopWatch sw = StopWatchContext.init();
+		// 子任务耗时情况统计
+		StopWatchContext.init();
 		
 		// 获取apiConfig
 		ApiConfig apiConfig = ApiConfigHolder.getApiConfig(apiKey);
@@ -71,10 +75,18 @@ public class DefaultApiGatewayController extends BaseController {
 		}
 		
 		if (log.isDebugEnabled()) {
-			log.debug(sw.prettyPrint());
+			StopWatch csw = StopWatchContext.get(false);
+			if (csw != null) {
+				log.debug(csw.prettyPrint());
+			}
 		} else if (EnvironmentContext.isDebug()) {
-			log.info(sw.prettyPrint());
+			StopWatch csw = StopWatchContext.get(false);
+			if (csw != null) {
+				log.info(StopWatchContext.get(false).prettyPrint());
+			}
 		}
+		
+		sw.stop();
 		
 		log.info("response -> costMs = " + sw.getTotalTimeMillis() + ", res = " + logRes);
 		return compressedResult;

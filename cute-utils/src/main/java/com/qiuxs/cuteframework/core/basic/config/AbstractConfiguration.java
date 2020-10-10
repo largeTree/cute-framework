@@ -27,6 +27,11 @@ public abstract class AbstractConfiguration implements IConfiguration {
 	}
 	
 	@Override
+	public String getStringMust(String key) {
+		return MapUtils.getStringMust(this.values, key);
+	}
+	
+	@Override
 	public String getString(String key, String defVal) {
 		String val = MapUtils.getString(this.values, key);
 		return val == null ? defVal : val;

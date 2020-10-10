@@ -92,6 +92,7 @@ public class MbiPageHook implements IMbiHook {
 		} catch (Exception e) {
 			FrmLogger.log.info("自动合计总数SQL = " + countSql);
 			FrmLogger.log.warn("自动合计总数异常，请自行实现合计总数方法 ext = " + e.getLocalizedMessage(), e);
+			pageInfo.setTotal(0);
 		} finally {
 			close(stat, rs);
 		}

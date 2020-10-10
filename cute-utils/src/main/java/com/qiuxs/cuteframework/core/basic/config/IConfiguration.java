@@ -18,6 +18,8 @@ public interface IConfiguration {
 	public boolean getBool(String key, boolean defaultVal);
 	
 	public String getString(String key);
+	
+	public String getStringMust(String key);
 
 	public String getString(String key, String defVal);
 
