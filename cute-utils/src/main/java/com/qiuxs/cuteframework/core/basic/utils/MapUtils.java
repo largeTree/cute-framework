@@ -181,6 +181,8 @@ public class MapUtils {
 		Object val = map.get(key);
 		if (val instanceof Integer) {
 			return (Integer) val;
+		} else if (val instanceof String && ((String)val).isEmpty()) {
+			return null;
 		}
 		return TypeAdapter.toInteger(val);
 	}
