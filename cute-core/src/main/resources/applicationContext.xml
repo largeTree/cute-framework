@@ -40,7 +40,7 @@
 			<value>${db.driver}</value>
 		</property>
 		<property name="maxTotal">
-			<value>${db."maxTotal":20}</value>
+			<value>${db.maxTotal:20}</value>
 		</property>
 		<property name="initialSize">
 			<value>${db.initialSize:5}</value>
