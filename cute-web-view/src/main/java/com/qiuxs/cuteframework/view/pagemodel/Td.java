@@ -18,6 +18,8 @@ public class Td {
 	public static final String TD_TYPE_DATETIME = "datetime";
 	/** 翻译类型 */
 	public static final String TD_TYPE_CAPTION = "caption";
+	/** 图片地址 */
+	public static final String TD_TYPE_IMAGE = "imageurl";
 
 	/** 列名 */
 	private String name;

@@ -5,6 +5,7 @@ import java.util.Date;
 import com.qiuxs.cuteframework.core.basic.config.IConfiguration;
 import com.qiuxs.cuteframework.core.basic.config.UConfigUtils;
 import com.qiuxs.cuteframework.core.basic.utils.DateFormatUtils;
+import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.dingtalk.DingTalkUtils;
 import com.qiuxs.cuteframework.core.basic.utils.dingtalk.DingTalkUtils.HookKey;
 import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogUtils;
@@ -20,6 +21,10 @@ import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogUtils;
  */
 public class NoticeLogger {
 
+	public static void error(String msg, Throwable e) {
+		error(msg, ExceptionUtils.getStackTrace(e));
+	}
+	
 	public static void error(String msg, String stackTrace) {
 		sendLog("ERROR", msg, stackTrace);
 	}
