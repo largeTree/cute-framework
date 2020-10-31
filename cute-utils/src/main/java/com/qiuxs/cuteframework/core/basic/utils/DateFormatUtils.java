@@ -94,6 +94,33 @@ public class DateFormatUtils {
 	 * @return
 	 */
 	public static Date getNextTime(int hour, int min) {
+		return getNextTime(hour, min, 0);
+	}
+	
+	/**
+	 * 获取下次指定的时间点，小时:分钟:秒
+	 *  
+	 * @author qiuxs  
+	 * @param hour
+	 * @param min
+	 * @param s
+	 * @return
+	 */
+	public static Date getNextTime(int hour, int min, int s) {
+		return getNextTime(hour, min, s, 0);
+	}
+	
+	/**
+	 * 获取下次指定的时间点，小时:分钟:秒:毫秒
+	 *  
+	 * @author qiuxs  
+	 * @param hour
+	 * @param min
+	 * @param s
+	 * @param ms
+	 * @return
+	 */
+	public static Date getNextTime(int hour, int min, int s, int ms) {
 		Calendar cal = Calendar.getInstance();
 		int curHour = cal.get(Calendar.HOUR_OF_DAY);
 		if (curHour > hour) {
@@ -106,8 +133,8 @@ public class DateFormatUtils {
 		}
 		cal.set(Calendar.HOUR_OF_DAY, hour);
 		cal.set(Calendar.MINUTE, min);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
+		cal.set(Calendar.SECOND, s);
+		cal.set(Calendar.MILLISECOND, ms);
 		return cal.getTime();
 	}
 

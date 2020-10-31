@@ -36,20 +36,14 @@ public class SecurityUtil {
 		return result;
 	}
 
-	public static String encodeSHA(String orginal) {
-		// 注意这里参数名必须全部小写，且必须有序
-		String signature = "";
-		try {
-			MessageDigest crypt = MessageDigest.getInstance("SHA-1");
-			crypt.reset();
-			crypt.update(orginal.getBytes(Constants.UTF_8));
-			signature = byteToHex(crypt.digest());
-		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-			log.error("加密出错：" + e.getMessage());
-		}
-		return signature;
+	public static String encodeSHA1(String orginal) {
+		return encodeSHAByType(orginal, "SHA-1");
 	}
-
+	
+	public static String encodeSHA(String orginal, String charset) {
+		return encodeSHAByType(orginal, "SHA", charset);
+	}
+	
 	/**
 	 * 商陆花原有加密算法 from DlKeyHandler#getEncryptedPass(pass)
 	 * 
@@ -78,7 +72,7 @@ public class SecurityUtil {
 	 * @return
 	 */
 	public static String encodeSHA256(String src) {
-		return encodeSHA(src, "SHA-256");
+		return encodeSHAByType(src, "SHA-256");
 	}
 
 	/**
@@ -104,17 +98,25 @@ public class SecurityUtil {
 		return hexBytes;
 	}
 
-	private static String encodeSHA(String src, String type) {
-		String signature = "";
+	private static String encodeSHAByType(String src, String type) {
+		return encodeSHAByType(src, type, Constants.UTF_8);
+	}
+	
+	private static String encodeSHAByType(String src, String type, String charset) {
+		String signature = byteToHex(encodeSHAByte(src, type, charset));
+		return signature;
+	}
+	
+	public static byte[] encodeSHAByte(String orginal, String type, String charset) {
 		try {
 			MessageDigest crypt = MessageDigest.getInstance(type);
 			crypt.reset();
-			crypt.update(src.getBytes(Constants.UTF_8));
-			signature = byteToHex(crypt.digest());
+			crypt.update(orginal.getBytes(charset));
+			return crypt.digest();
 		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
 			log.error("加密出错：" + e.getMessage());
 		}
-		return signature;
+		return null;
 	}
 
 	/**
