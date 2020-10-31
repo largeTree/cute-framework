@@ -36,6 +36,7 @@ public abstract class AbstractDataPropertyUKService<PK extends Serializable, T e
 	}
 
 	protected T getByUkInner(Map<String, Object> params) {
+		log.info(this.getTableName() + ", uk = " + params);
 		return this.getDao().getByUk(params);
 	}
 
