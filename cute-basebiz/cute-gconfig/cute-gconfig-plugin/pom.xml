@@ -15,6 +15,10 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>cute-web</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>mq-client</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

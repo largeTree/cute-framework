@@ -8,6 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 
+import com.qiuxs.cuteframework.core.basic.utils.ClassUtils;
+
 /**
  * 
  * 功能描述: SpringContext<br/>  

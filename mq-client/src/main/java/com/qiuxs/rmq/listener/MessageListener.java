@@ -116,6 +116,9 @@ public abstract class MessageListener {
 		Map<String, ListenerProp> listeners = MQConfig.getListener(listenerType);
 		ListenerProp listenerProp = listeners.get(topic + "." + tags);
 		Object listener = ApplicationContextHolder.getBean(listenerProp.getBean());
+		if (listener == null) {
+			throw new RuntimeException("消费者配置的bean不存在[" + listenerProp.getBean() + "]");
+		}
 		MethodUtils.invokeMethod(listener, listenerProp.getMethod(), new Class[] { String.class, String.class, String.class, Object.class, Map.class }, new Object[] { topic, tags, bizKey, body, extProp });
 	}
 

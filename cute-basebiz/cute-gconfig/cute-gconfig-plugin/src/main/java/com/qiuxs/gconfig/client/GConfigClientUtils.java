@@ -1,17 +1,18 @@
 package com.qiuxs.gconfig.client;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.utils.BeanUtil;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DataSourceContext;
-import com.qiuxs.cuteframework.tech.mc.McFactory;
 import com.qiuxs.gconfig.client.dto.GConfigDTO;
 import com.qiuxs.gconfig.entity.ScGconfig;
 import com.qiuxs.gconfig.entity.ScGconfigOwnerVal;
@@ -20,16 +21,13 @@ import com.qiuxs.gconfig.service.IScGconfigService;
 
 @Component
 public class GConfigClientUtils {
-
-	private static class Holder {
-		@SuppressWarnings("rawtypes")
-		private static Map<Integer, Map> mapGconfigDto = McFactory.getFactory().createMap("gconfig_dto_holder");
-	}
-
+	
+	private static Logger log = LoggerFactory.getLogger(GConfigClientUtils.class);
+	
+	private static final Map<Integer, Map<Long, Map<String, GConfigDTO>>> cacheMap = new ConcurrentHashMap<>();  
+	
 	private static IScGconfigService scGconfigService;
 
-	// private static IScGconfigOptionsService scGconfigOptionsService;
-	
 	private static IScGconfigOwnerValService scGconfigOwnerValService;
 
 	/**
@@ -101,9 +99,6 @@ public class GConfigClientUtils {
 	 */
 	private static String getConfig(UserLite userLite, String domain, String code) {
 		String oldDsId = null;
-		if (!DataSourceContext.isDsSwitchAuto()) {
-			oldDsId = DataSourceContext.setEntryDb();
-		}
 		
 		try {
 			Long userId = userLite == null ? 0L : userLite.getUserId();
@@ -117,6 +112,9 @@ public class GConfigClientUtils {
 			GConfigDTO configDTO = userConfigMap.get(configKey);
 			
 			if (configDTO == null) {
+				if (!DataSourceContext.isDsSwitchAuto()) {
+					oldDsId = DataSourceContext.setEntryDb();
+				}
 				ScGconfig scGconfig = scGconfigService.getByUk(domain, code);
 				if (scGconfig == null) {
 					// ExceptionUtils.throwLogicalException("gconfig_not_exists", domain, code);
@@ -126,11 +124,6 @@ public class GConfigClientUtils {
 				// 配置对象
 				configDTO = new GConfigDTO();
 				BeanUtil.assignmentProperty(scGconfig, configDTO, "id,createdTime,createdBy,updatedTime,updatedBy");
-				
-//				// 可选值 不需要缓存
-//				List<ScGconfigOptions> options = scGconfigOptionsService.getByCode(domain, code);
-//				List<GConfigOptions> simpleOptions = BeanUtil.assignmentPropertyBatch(options, GConfigOptions.class, "createdTime,createdBy,updatedTime,updatedBy");
-//				configDTO.setOpts(simpleOptions);
 				
 				// 设置用户自己的值
 				ScGconfigOwnerVal ownerVal = scGconfigOwnerValService.getOwnerVal(domain, ScGconfigOwnerVal.OWNER_TYPE_USER, userId, code);
@@ -147,7 +140,6 @@ public class GConfigClientUtils {
 				
 				// 保存用户配置缓存
 				userConfigMap.put(configKey, configDTO);
-				putUserCache(userId, userConfigMap);
 			}
 			return configDTO.getVal();
 		} finally {
@@ -164,11 +156,10 @@ public class GConfigClientUtils {
 	 * @param userId
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	private static Map<String, GConfigDTO> getUserCache(Long userId) {
 		Map<String, GConfigDTO> userCache = getCache(ScGconfigOwnerVal.OWNER_TYPE_USER).get(userId);
 		if (userCache == null) {
-			userCache = new HashMap<String, GConfigDTO>();
+			userCache = new ConcurrentHashMap<String, GConfigDTO>();
 			getCache(ScGconfigOwnerVal.OWNER_TYPE_USER).put(userId, userCache);
 		}
 		return userCache;
@@ -208,9 +199,11 @@ public class GConfigClientUtils {
 	 * @param userId
 	 * @param cacheMap
 	 */
-	private static void putUserCache(Long userId, Map<String, GConfigDTO> cacheMap) {
-		getCache(ScGconfigOwnerVal.OWNER_TYPE_USER).put(userId, cacheMap);
-	}
+//	@SuppressWarnings("rawtypes")
+//	private static void putUserCache(Long userId, Map<String, GConfigDTO> cacheMap) {
+//		Map<Long, Map> userCache = getCache(ScGconfigOwnerVal.OWNER_TYPE_USER);
+//		userCache.put(userId, cacheMap);
+//	}
 	
 //	/**
 //	 * 设置角色缓存
@@ -243,15 +236,15 @@ public class GConfigClientUtils {
 	 * @author qiuxs  
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static Map<Long, Map> getCache(Integer ownerDomain) {
-		Map map = Holder.mapGconfigDto.get(ownerDomain);
+	private static Map<Long, Map<String, GConfigDTO>> getCache(Integer ownerDomain) {
+		Map<Long, Map<String, GConfigDTO>> map = cacheMap.get(ownerDomain);
 		if (map == null) {
-			map = new HashMap<>();
-			Holder.mapGconfigDto.put(ownerDomain, map);
+			map = new ConcurrentHashMap<>();
+			cacheMap.put(ownerDomain, map);
 		}
 		return map;
 	}
+	
 	
 	/**
 	 * 失效缓存
@@ -263,18 +256,34 @@ public class GConfigClientUtils {
 	 * @param code
 	 */
 	public static void invalidCache(String domain, Integer ownerType, Long ownerId, String code) {
-		Holder.mapGconfigDto.clear();
-//		@SuppressWarnings("rawtypes")
-//		Map<Long, Map> ownerDomainCache = getCache(ownerType);
-//		if (ownerDomainCache == null) {
+		log.info("invalidCache domain = {}, ownerType = {}, ownerId = {}, code = {}");
+		cacheMap.clear();
+		// ownerType为空直接清理所有缓存
+//		if (ownerType == null) {
+//			cacheMap.clear();
 //			return;
 //		}
-//		@SuppressWarnings("unchecked")
-//		Map<String, GConfigDTO> ownerCache = ownerDomainCache.get(ownerId);
-//		if (ownerCache == null) {
+//		Map<Long, Map<String, GConfigDTO>> ownerMap = cacheMap.get(ownerType);
+//		// ownerType对应的map为空，直接返回
+//		if (ownerMap == null) {
 //			return;
 //		}
-//		ownerCache.remove(configKey(domain, code));
+//		// ownerId为空，清理当前ownerType的所有缓存
+//		if (ownerId == null) {
+//			ownerMap.clear();
+//			return;
+//		}
+//		Map<String, GConfigDTO> ownerIdMap = ownerMap.get(ownerId);
+//		// ownerIdMap为空，直接返回
+//		if (ownerIdMap == null) {
+//			return;
+//		}
+//		// code的domain任意为空，直接清理当前ownerId的所有缓存
+//		if (StringUtils.isBlank(code) || StringUtils.isBlank(domain)) {
+//			ownerIdMap.clear();
+//			return;
+//		}
+//		ownerIdMap.remove(configKey(domain, code));
 	}
 
 	@Resource

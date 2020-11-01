@@ -17,17 +17,17 @@ import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.core.basic.utils.NumberUtils;
 import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
-import com.qiuxs.cuteframework.tech.task.AsyncTaskExecutor;
-import com.qiuxs.cuteframework.tech.task.RunnableAsyncTask;
-import com.qiuxs.gconfig.client.GConfigClientUtils;
 import com.qiuxs.gconfig.client.dto.GConfigDTO;
 import com.qiuxs.gconfig.client.dto.GConfigOptions;
 import com.qiuxs.gconfig.entity.ScGconfig;
 import com.qiuxs.gconfig.entity.ScGconfigOptions;
 import com.qiuxs.gconfig.entity.ScGconfigOwnerVal;
+import com.qiuxs.gconfig.mq.GConfigMqConstants;
+import com.qiuxs.gconfig.mq.GConfigUpdateDTO;
 import com.qiuxs.gconfig.service.impl.ScGconfigOptionsService;
 import com.qiuxs.gconfig.service.impl.ScGconfigOwnerValService;
 import com.qiuxs.gconfig.service.impl.ScGconfigService;
+import com.qiuxs.rmq.ProducerUtils;
 
 @Service
 public class ScGconfigCombService {
@@ -140,14 +140,17 @@ public class ScGconfigCombService {
 				ExceptionUtils.throwLogicalException("gconfig_not_exists", domain, code);
 			}
 			
-			AsyncTaskExecutor.execute(new RunnableAsyncTask<Object>(null) {
-				@Override
-				public void execute(Object preparParam) {
-					// 失效缓存
-					GConfigClientUtils.invalidCache(domain, ownerType, ownerId, code);
-				}
-				
-			}, true);
+//			AsyncTaskExecutor.execute(new RunnableAsyncTask<Object>(null) {
+//				@Override
+//				public void execute(Object preparParam) {
+//					// 失效缓存
+//					GConfigClientUtils.invalidCache(domain, ownerType, ownerId, code);
+//				}
+//				
+//			}, true);
+			
+			GConfigUpdateDTO configUpdateDTO = new GConfigUpdateDTO(domain, ownerType, ownerId, code);
+			ProducerUtils.sendPrepare(GConfigMqConstants.MQ_TOPIC, GConfigMqConstants.TAG_GCONFIG_VALUE_CHANGED, domain + "." + code, configUpdateDTO);
 			
 			if ((ownerType & ScGconfigOwnerVal.OWNER_TYPE_SYSTEM) > 0) {
 				// 系统级别
@@ -156,15 +159,14 @@ public class ScGconfigCombService {
 				updateBean.setId(scGconfig.getId());
 				updateBean.setVal(val);
 				this.scGconfigService.updateDirect(updateBean);
-				continue;
+			} else {
+    			ScGconfigOwnerVal ownerValue = new ScGconfigOwnerVal();
+    			ownerValue.setCode(code);
+    			ownerValue.setOwnerType(ownerType);
+    			ownerValue.setOwnerId(ownerId);
+    			ownerValue.setVal(val);
+    			this.scGconfigOwnerValService.save(ownerValue);
 			}
-			
-			ScGconfigOwnerVal ownerValue = new ScGconfigOwnerVal();
-			ownerValue.setCode(code);
-			ownerValue.setOwnerType(ownerType);
-			ownerValue.setOwnerId(ownerId);
-			ownerValue.setVal(val);
-			this.scGconfigOwnerValService.save(ownerValue);
 		}
 	}
 	
