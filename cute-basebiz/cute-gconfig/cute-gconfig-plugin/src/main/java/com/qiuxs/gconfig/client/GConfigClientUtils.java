@@ -256,7 +256,7 @@ public class GConfigClientUtils {
 	 * @param code
 	 */
 	public static void invalidCache(String domain, Integer ownerType, Long ownerId, String code) {
-		log.info("invalidCache domain = {}, ownerType = {}, ownerId = {}, code = {}");
+		log.info("invalidCache domain = {}, ownerType = {}, ownerId = {}, code = {}", domain, ownerType, ownerId, code);
 		cacheMap.clear();
 		// ownerType为空直接清理所有缓存
 //		if (ownerType == null) {
