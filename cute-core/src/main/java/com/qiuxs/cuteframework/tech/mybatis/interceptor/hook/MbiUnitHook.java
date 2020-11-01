@@ -38,7 +38,7 @@ public class MbiUnitHook implements IMbiHook {
 			UserLite userLite = UserContext.getUserLiteOpt();
 			if (userLite != null) { 
 				// 是否是继承自IUnitId的，是的话设置一下unitId
-				if (IUnitId.class.isAssignableFrom(pojoClass)) {
+				if (pojoClass != null && IUnitId.class.isAssignableFrom(pojoClass)) {
 					Long unitId = userLite.getUnitId();
 					putIfNeed(paramMap, "unitId", unitId, -3L);
 				}
