@@ -22,6 +22,7 @@ import com.qiuxs.cuteframework.tech.mc.redis.utils.RedisList;
 import com.qiuxs.cuteframework.tech.mc.redis.utils.RedisMap;
 import com.qiuxs.cuteframework.tech.mc.redis.utils.RedisQueue;
 import com.qiuxs.cuteframework.tech.mc.redis.utils.RedisSet;
+import com.qiuxs.cuteframework.tech.mc.redis.utils.RedisStringSet;
 
 /**
  * 根据配置创建需要的集合，可能是本地的或远程的。.
@@ -228,6 +229,34 @@ public class McFactory {
 		return map;
 	}
 
+	/**
+	 * 创建一个字符串型Set
+	 *  
+	 * @author qiuxs  
+	 * @param name
+	 * @return
+	 */
+	public Set<String> createStringSet(String name) {
+		return createStringSet(name, true);
+	}
+	
+	public Set<String> createStringSet(String name, boolean checkName) {
+		if (checkName) {
+			checkNameExist(McType.set, name);
+		}
+		Set<String> ret = null;
+		switch (serverType) {
+		case redis:
+			ret = new RedisStringSet(name);
+			break;
+		case local:
+			ret = new HashSet<>();
+		default:
+			Console.log.info("未支持的serverType=" + serverType);
+		}
+		return ret;
+	}
+	
 	/**
 	 * Creates a new Mc object.
 	 *
