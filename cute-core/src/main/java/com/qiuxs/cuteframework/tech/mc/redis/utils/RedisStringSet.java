@@ -64,7 +64,7 @@ public class RedisStringSet implements Set<String> {
 	 */
 	@Override
 	public Iterator<String> iterator() {
-		throw new UnsupportedOperationException("成本高，未实现");
+		return getSet().iterator();
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class RedisStringSet implements Set<String> {
 	 */
 	@Override
 	public <T> T[] toArray(T[] a) {
-		throw new UnsupportedOperationException("成本高，未实现");
+		return getSet().toArray(a);
 	}
 
 	@Override
@@ -145,7 +145,10 @@ public class RedisStringSet implements Set<String> {
 	 * 移除 set 中那些包含在指定 collection 中的元素（可选操作）,未实现
 	 */
 	public boolean removeAll(Collection<?> c) {
-		throw new UnsupportedOperationException("成本高，未实现");
+		c.forEach(item -> {
+			remove(item);
+		});
+		return true;
 	}
 
 	@Override
