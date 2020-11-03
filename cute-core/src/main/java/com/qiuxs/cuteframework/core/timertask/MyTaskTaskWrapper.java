@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
+import com.qiuxs.cuteframework.core.context.TLVariableHolder;
 import com.qiuxs.cuteframework.core.utils.notice.NoticeLogger;
 import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogUtils;
 
@@ -48,6 +49,8 @@ public class MyTaskTaskWrapper extends TimerTask {
 			String msg = this.task.getClass().getName() + ", execute Failed ext = " + e.getLocalizedMessage();
 			log.error(msg, e);
 			NoticeLogger.error(msg, ExceptionUtils.getStackTrace(e));
+		} finally {
+			TLVariableHolder.clear();
 		}
 	}
 
