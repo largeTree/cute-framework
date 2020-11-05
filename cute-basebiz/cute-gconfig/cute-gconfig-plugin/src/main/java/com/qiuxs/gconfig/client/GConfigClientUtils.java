@@ -38,7 +38,20 @@ public class GConfigClientUtils {
 	 * @return
 	 */
 	public static String getSystemConfig(String code) {
-		return getSystemConfig(null, code);
+		return getSystemConfig((String)null, code);
+	}
+	
+	/**
+	 * 获取字符串系统配置，不存在返回默认值
+	 *  
+	 * @author qiuxs  
+	 * @param code
+	 * @param defVal
+	 * @return
+	 */
+	public static String getSystemConfig(String code, String defVal) {
+		String val = getSystemConfig((UserLite)null, code);
+		return val == null ? defVal : val;
 	}
 	
 	/**

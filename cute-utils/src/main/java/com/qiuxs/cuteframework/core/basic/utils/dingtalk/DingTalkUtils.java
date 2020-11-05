@@ -57,7 +57,7 @@ public class DingTalkUtils {
 
 	private static void logResult(SendResult sendResult) {
 		if (sendResult != null && !sendResult.isSuccess()) {
-			log.warn("顶顶消息发送失败：" + sendResult.getErrorMsg());
+			log.warn("钉钉消息发送失败：" + sendResult.getErrorMsg());
 		}
 	}
 
