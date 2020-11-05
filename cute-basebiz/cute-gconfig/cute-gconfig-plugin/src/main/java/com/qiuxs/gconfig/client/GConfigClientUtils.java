@@ -38,7 +38,7 @@ public class GConfigClientUtils {
 	 * @return
 	 */
 	public static String getSystemConfig(String code) {
-		return getSystemConfig((String)null, code);
+		return getSystemConfig(code, null);
 	}
 	
 	/**
