@@ -49,7 +49,7 @@ public class DirectCodeHouse<C> implements ICodeTranslator<C> {
 	}
 
 	@Override
-	public List<CodeOption<?>> getOptions() {
+	public List<CodeOption<C>> getOptions() {
 		return new ArrayList<>(codeHouse.values());
 	}
 

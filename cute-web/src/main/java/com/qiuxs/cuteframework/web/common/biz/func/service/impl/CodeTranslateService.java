@@ -26,15 +26,16 @@ public class CodeTranslateService {
 	 * @param codeDomain
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<CodeOption<?>> getCodeOptions(String codeDomain) {
 		DirectCodeHouse<?> directCodeHouse = DirectCodeCenter.getDirectCodeHouse(codeDomain);
-		List<CodeOption<?>> options;
+		List<?> options;
 		if (directCodeHouse != null) {
 			options = directCodeHouse.getOptions();
 		} else {
 			options = Collections.emptyList();
 		}
-		return options;
+		return (List<CodeOption<?>>) options;
 	}
 
 	/**

@@ -14,6 +14,6 @@ public interface ICodeTranslator<C> extends ICodeTranslatable<C> {
 	 * 获取支持的翻译集合
 	 * @return
 	 */
-	public List<CodeOption<?>> getOptions();
+	public List<CodeOption<C>> getOptions();
 	
 }
