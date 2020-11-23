@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.utils.BeanUtil;
+import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.core.persistent.database.lookup.DataSourceContext;
 import com.qiuxs.gconfig.client.dto.GConfigDTO;
 import com.qiuxs.gconfig.entity.ScGconfig;
@@ -124,7 +125,7 @@ public class GConfigClientUtils {
 			// 从用户缓存中获取配置对象
 			GConfigDTO configDTO = userConfigMap.get(configKey);
 			
-			if (configDTO == null) {
+			if (configDTO == null || EnvironmentContext.isDebug()) {
 				if (!DataSourceContext.isDsSwitchAuto()) {
 					oldDsId = DataSourceContext.setEntryDb();
 				}
