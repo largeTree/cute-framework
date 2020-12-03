@@ -15,7 +15,6 @@ import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
  *
  * @param <PK>
  * @param <T>
- * @param <D>
  */
 public interface IDataPropertyService<PK extends Serializable, T extends IEntity<PK>> extends IPropertyService<PK, T>, IDataSourceService {
 
