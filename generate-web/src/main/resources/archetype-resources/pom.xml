@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+
+    <groupId>${groupId}</groupId>
+	<artifactId>${artifactId}</artifactId>
+    <version>${version}</version>
+	<packaging>pom</packaging>
+	<name>web-${artifactId}</name>
+
+    <modules>
+        <module>${rootArtifactId}-api</module>
+        <module>${rootArtifactId}-main</module>
+    </modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
+                <artifactId>qiuxs-mvn-parent</artifactId>
+                <version>1.0-SNAPSHOT</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>${groupId}</groupId>
+				<artifactId>${rootArtifactId}-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<configuration>
+						<encoding>UTF-8</encoding>
+					</configuration>
+					<version>3.0.1</version>
+					<executions>
+						<execution>
+							<id>copy-resources</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<encoding>UTF-8</encoding>
+								<outputDirectory>${project.build.directory}/classes/META-INF/resources
+								</outputDirectory>
+								<resources>
+									<resource>
+										<directory>webapp</directory>
+										<excludes>
+											<exclude>config/*</exclude>
+											<exclude>WEB-INF/*</exclude>
+											<exclude>.svn</exclude>
+										</excludes>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.5.1</version>
+					<configuration>
+						<encoding>UTF-8</encoding>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.4</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<phase>compile</phase><!-- 要绑定到的生命周期的阶段 在verify之后，install之前执行下面指定的goal -->
+							<goals>
+								<goal>jar</goal><!-- 类似执行mvn source:jar -->
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.2</version>
+					<configuration>
+						<skip>false</skip>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<argLine>-javaagent:${settings.localRepository}/org/jmockit/jmockit/1.47/jmockit-1.47.jar</argLine>
+						<useSystemClassLoader>true</useSystemClassLoader>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	
+</project>

@@ -26,6 +26,7 @@
 		<module>mq-client</module>
 		<module>cute-support</module>
 		<module>cute-web-support</module>
+		<module>generate-web</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

@@ -1,0 +1,7 @@
+<domanins>
+	<domain id="env" merge="replace" type="xml">
+		<default path="classpath:/env.xml" />
+		<extend path="file://${user.home}/${rootArtifactId}/env.xml" />
+		<extend path="file:///web/etc/${rootArtifactId}/env.xml" />
+	</domain>
+</domanins>

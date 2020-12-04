@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_0.dtd">
+
+<Configure id="Server" class="org.eclipse.jetty.server.Server">
+	<!-- =========================================================== -->
+	<!-- Add MyJettyConfiguration Configuring classes to all webapps for this Server -->
+	<!-- =========================================================== -->
+	<Call class="org.eclipse.jetty.webapp.Configuration$ClassList" name="setServerDefault">
+		<Arg>
+			<Ref refid="Server" />
+		</Arg>
+		<Call name="addBefore">
+			<Arg name="beforeClass">org.eclipse.jetty.webapp.MetaInfConfiguration</Arg>
+			<Arg>
+				<Array type="String">
+					<Item>com.qiuxs.external.jetty.MyJettyConfiguration</Item>
+				</Array>
+			</Arg>
+		</Call>
+	</Call>
+	
+	<Call name="setAttribute">
+		<Arg>org.eclipse.jetty.server.Request.maxFormContentSize</Arg>
+		<Arg>-1</Arg>
+	</Call>
+
+</Configure>
