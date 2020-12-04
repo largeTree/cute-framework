@@ -6,7 +6,12 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import com.qiuxs.cuteframework.core.basic.utils.ClassUtils;
 
@@ -35,6 +40,29 @@ public class ApplicationContextHolder {
 	 */
 	public static ApplicationContext getApplicationContext() {
 		return ApplicationContextHolder.applicationContext;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T registerBean(String name, Class<T> clazz, Object... args) {
+		if (this.applicationContext.containsBean(name)) {
+			Object bean = this.applicationContext.getBean(name);
+			if (bean.getClass().isAssignableFrom(clazz)) {
+				return (T) bean;
+			} else {
+				throw new RuntimeException("重复的Bean[" + name + "] type[" + clazz.getCanonicalName() + "]");
+			}
+		}
+		BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
+		if (args != null && args.length > 0) {
+			for (Object arg : args) {
+				builder.addConstructorArgValue(arg);
+			}
+		}
+		AbstractBeanDefinition beanDefinition = builder.getRawBeanDefinition();
+		BeanDefinitionRegistry beanDefinitionRegistry = (BeanDefinitionRegistry) this.applicationContext
+				.getBeanFactory();
+		beanDefinitionRegistry.registerBeanDefinition(name, beanDefinition);
+		return applicationContext.getBean(name, clazz);
 	}
 
 	/**
