@@ -48,7 +48,9 @@ public class MyTaskTaskWrapper extends TimerTask {
 			failedCount++;
 			String msg = this.task.getClass().getName() + ", execute Failed ext = " + e.getLocalizedMessage();
 			log.error(msg, e);
-			NoticeLogger.error(msg, ExceptionUtils.getStackTrace(e));
+			if (!EnvironmentContext.isDebug()) {
+				NoticeLogger.error(msg, ExceptionUtils.getStackTrace(e));
+			}
 		} finally {
 			TLVariableHolder.clear();
 		}

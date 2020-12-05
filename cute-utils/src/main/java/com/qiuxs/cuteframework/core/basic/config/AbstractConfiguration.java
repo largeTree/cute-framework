@@ -55,6 +55,11 @@ public abstract class AbstractConfiguration implements IConfiguration {
 	public Long getLong(String key) {
 		return MapUtils.getLong(this.values, key);
 	}
+	
+	@Override
+	public Long getLongMust(String key) {
+		return MapUtils.getLongMust(this.values, key);
+	}
 
 	@Override
 	public long getLongValue(String key, long defaultVal) {

@@ -28,6 +28,8 @@ public interface IConfiguration {
 	public int getInt(String key, int defaultVal);
 
 	public Long getLong(String key);
+	
+	public Long getLongMust(String key);
 
 	public long getLongValue(String key, long defaultVal);
 

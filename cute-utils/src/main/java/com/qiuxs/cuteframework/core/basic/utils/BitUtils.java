@@ -103,4 +103,30 @@ public class BitUtils {
 	public static boolean contains(int v1, int v2) {
 		return (v1 & v2) == v2;
 	}
+
+	/**
+	 * 00000000000000000000000000000001 = 1
+	 * 00000000000000000000000000000111 = 7
+	 * 00000000000000000000000100000111 = 263
+	 * 
+	 * @author qiuxs  
+	 * @param unionTag
+	 * @return
+	 */
+	public static Long stringBitToLong(String unionTag) {
+		Long bit = null;
+		if (unionTag == null) {
+			return bit;
+		}
+		bit = 0L;
+		int bitNum = 0;
+		for (int i = unionTag.length() - 1; i >= 0; i--) {
+			char c = unionTag.charAt(i);
+			bit |= (Long.parseLong(String.valueOf(c)) << bitNum);
+			bitNum++;
+		}
+		return bit;
+	}
+	
+	
 }

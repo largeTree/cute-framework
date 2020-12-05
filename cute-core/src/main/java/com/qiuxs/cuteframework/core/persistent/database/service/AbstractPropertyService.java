@@ -121,6 +121,9 @@ public abstract class AbstractPropertyService<PK extends Serializable, T extends
 	protected void initProps(List<PropertyWrapper<?>> props) {
 		PropertyWrapper<?> prop = null;
 		
+		prop = new PropertyWrapper<Date>(new BaseField("unitId", "单元ID", Long.class), null);
+		props.add(prop);
+		
 		prop = new PropertyWrapper<Date>(new BaseField("createdBy", "创建人", Long.class), null);
 		props.add(prop);
 		

@@ -19,6 +19,11 @@ public class Constants {
 	public static final String TRUE_STR = "1";
 	public static final String FALSE_STR = "0";
 	
+	/** 默认链接超时时间 */
+	public static final int DEFAULT_CONNECT_TIMEOUT = 3000;
+	/** 默认请求超时时间 */
+	public static final int DEFAULT_READ_TIMEOUT = 5000;
+	
 	/** 系统默认支持精确度 */
 	public static final int DEFAULT_SCALE_INNER = 10;
 

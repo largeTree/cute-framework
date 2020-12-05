@@ -16,6 +16,9 @@ public class NumberUtils {
 
 	private static DecimalFormat df_simple = new DecimalFormat("#.##");
 	
+	/** 一百 */
+	public static final BigDecimal ONE_HUNDRED = new BigDecimal("100");
+	
 	/**
 	 * BigDecimal 保留小数
 	 *  

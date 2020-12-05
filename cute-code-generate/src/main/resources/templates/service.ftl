@@ -52,23 +52,28 @@ public class ${className}Service extends <#if (ukFields?size == 0)>AbstractDataP
 	}
 	
 	<#if (ukFields?size == 0)><#else>
+	@Override
 	public ${className} getByUk(<#list ukFields as field>${field.javaType} ${field.name}<#if field_index &lt; ukFields?size - 1>, </#if></#list>) {
 		return super.getByUkInner(<#list ukFields as field>"${field.name}", ${field.name}<#if field_index &lt; ukFields?size - 1>, </#if></#list>);
 	}
 	
+	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public int deleteByUk(<#list ukFields as field>${field.javaType} ${field.name}<#if field_index &lt; ukFields?size - 1>, </#if></#list>) {
 		return super.deleteByUkInner(<#list ukFields as field>"${field.name}", ${field.name}<#if field_index &lt; ukFields?size - 1>, </#if></#list>);
 	}
 	
+	@Override
 	public boolean isExistByUk(<#list ukFields as field>${field.javaType} ${field.name}<#if field_index &lt; ukFields?size - 1>, </#if></#list>) {
 		return super.isExistByUkInner(<#list ukFields as field>"${field.name}", ${field.name}<#if field_index &lt; ukFields?size - 1>, </#if></#list>);
 	}
 	
+	@Override
 	public boolean isExistOtherByUk(${pkClass} pk, <#list ukFields as field>${field.javaType} ${field.name}<#if field_index &lt; ukFields?size - 1>, </#if></#list>) {
 		return super.isExistOtherByUkInner(pk, <#list ukFields as field>"${field.name}", ${field.name}<#if field_index &lt; ukFields?size - 1>, </#if></#list>);
 	}
 	
+	@Override
 	protected void createInner(${className} bean) {
 		if (!this.isExistByUk(<#list ukFields as field>bean.get${field.name?cap_first}()<#if field_index &lt; ukFields?size - 1>, </#if></#list>)) {
 			this.getDao().insert(bean);

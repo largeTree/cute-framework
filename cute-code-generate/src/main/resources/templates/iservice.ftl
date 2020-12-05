@@ -12,4 +12,14 @@ import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropert
  */
 public interface I${className}Service extends IDataPropertyService<${pkClass}, ${className}> {
 
+	<#if (ukFields?size == 0)><#else>
+	public ${className} getByUk(<#list ukFields as field>${field.javaType} ${field.name}<#if field_index &lt; ukFields?size - 1>, </#if></#list>);
+
+	public int deleteByUk(<#list ukFields as field>${field.javaType} ${field.name}<#if field_index &lt; ukFields?size - 1>, </#if></#list>);
+	
+	public boolean isExistByUk(<#list ukFields as field>${field.javaType} ${field.name}<#if field_index &lt; ukFields?size - 1>, </#if></#list>);
+	
+	public boolean isExistOtherByUk(${pkClass} pk, <#list ukFields as field>${field.javaType} ${field.name}<#if field_index &lt; ukFields?size - 1>, </#if></#list>);
+	</#if>
+
 }
