@@ -24,13 +24,13 @@
 			<td name="日志级别" field="level" type="text" />
 			<td name="类名" field="className" length="20" />
 			<td name="方法名" field="method" type="text" />
-			<td name="内容" field="msg" type="text" length="20" />
 			<td name="线程ID" field="threadId" type="text" />
 			<td name="错误代码" field="errorCode" type="num" />
 			<td name="时间" field="logTime" type="date" length="11" />
 			<expands>
-				<td name="Throwable" field="throwable" type="code" length="30" />
-				<td name="StackTrace" field="stacktrace" type="code" length="30" />
+			<td name="内容" field="msg" type="text" />
+				<td name="Throwable" field="throwable" type="code" />
+				<td name="StackTrace" field="stacktrace" type="code" />
 			</expands>
 			<!-- <td name="操作" type="btn">
 				<btn name="查看详情" pk="id" href="/views/sys/viewlog.jsp" />
