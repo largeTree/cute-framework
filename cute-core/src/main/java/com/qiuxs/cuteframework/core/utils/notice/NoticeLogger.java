@@ -2,12 +2,14 @@ package com.qiuxs.cuteframework.core.utils.notice;
 
 import java.util.Date;
 
+import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.config.IConfiguration;
 import com.qiuxs.cuteframework.core.basic.config.UConfigUtils;
 import com.qiuxs.cuteframework.core.basic.utils.DateFormatUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.dingtalk.DingTalkUtils;
 import com.qiuxs.cuteframework.core.basic.utils.dingtalk.DingTalkUtils.HookKey;
+import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogUtils;
 
 /**
@@ -42,12 +44,16 @@ public class NoticeLogger {
 		StringBuilder sb = new StringBuilder();
 		IConfiguration env = UConfigUtils.getDomain("env");
 		sb.append(" >>>>>>>>>>>>>>>>\t").append(prefix).append("\t<<<<<<<<<<<<<<<<< \n")
-				.append("时间 : ").append(time).append("\n");
+				.append("时间 : ").append(time).append("\n")
+        		.append("globalId：").append(ApiLogUtils.getGlobalId()).append("\n");
 				if (env != null) {
 					sb.append("AppName：").append(env.getString("app-name")).append("\n")
 					.append("ServerId：").append(env.getString("server-id")).append("\n");
 				}
-				sb.append("globalId：").append(ApiLogUtils.getGlobalId()).append("\n");
+				UserLite userLite = UserContext.getUserLiteOpt();
+				if (userLite != null) {
+					sb.append("操作用户：").append(userLite.getName()).append("\n");
+				}
 				sb.append("消息 : ").append(msg);
 		if (stackTrace != null) {
 			sb.append("\n堆栈: ").append(stackTrace);
