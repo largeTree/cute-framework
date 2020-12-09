@@ -34,13 +34,12 @@ public class MyTaskTaskWrapper extends TimerTask {
 	public MyTaskTaskWrapper(MyTimerTask task) {
 		this.task = task;
 	}
-
-	@Override
-	public void run() {
+	
+	public void runWithArg(String arg) {
 		try {
 			ApiLogUtils.initApiLog(task.getName(), EnvironmentContext.getAppName(), null, null, null, "");
 			long startTime = System.currentTimeMillis();
-			this.task.run();
+			this.task.run(arg);
 			long consumedTime = (System.currentTimeMillis() - startTime);
 			this.consumerTime += consumedTime;
 			successCount++;
@@ -54,6 +53,15 @@ public class MyTaskTaskWrapper extends TimerTask {
 		} finally {
 			TLVariableHolder.clear();
 		}
+	}
+
+	@Override
+	public void run() {
+		this.runWithArg(null);
+	}
+	
+	MyTimerTask getTask() {
+		return task;
 	}
 
 	/**

@@ -12,6 +12,7 @@
 	</module>
 	<module id="sys">
 		<api key="sysmonitor-dsinfos" bean="systemMonitorAction" method="dsStatus" login="1" auth="0" desc="" />
+		<api key="sysmonitor-timer-list" bean="systemMonitorAction" method="timerTaskList" login="1" auth="0" desc="" />
 	</module>
 	<module id="common">
 		<api key="qd-codes" bean="codeTranslateAction" method="codeOptions" login="1" auth="0" desc="查询编码" />

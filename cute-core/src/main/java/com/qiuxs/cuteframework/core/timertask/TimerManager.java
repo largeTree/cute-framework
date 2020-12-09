@@ -41,14 +41,15 @@ public class TimerManager {
 	 *  
 	 * @author qiuxs  
 	 * @param taskName
+	 * @param arg 
 	 */
-	public static void manualInvoke(String taskName) {
+	public static void manualInvoke(String taskName, String arg) {
 		MyTaskTaskWrapper taskWrapper = taskMap.get(taskName);
 		if (taskWrapper != null) {
-			AsyncTaskExecutor.execute(new RunnableAsyncTask<Object>(null) {
+			AsyncTaskExecutor.execute(new RunnableAsyncTask<String>(arg) {
 				@Override
-				public void execute(Object preparParam) {
-					taskWrapper.run();
+				public void execute(String preparParam) {
+					taskWrapper.runWithArg(preparParam);
 				}
 			}, false);
 		}
@@ -89,6 +90,20 @@ public class TimerManager {
 		myTimer.start();
 		timers.add(myTimer);
 		return myTimer;
+	}
+	
+	/**
+	 * 获取所有定时任务
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public static List<MyTimerTask> getAllTimers() {
+		List<MyTimerTask> tasks = new ArrayList<>(taskMap.size());
+		for (Map.Entry<String, MyTaskTaskWrapper> entry : taskMap.entrySet()) {
+			tasks.add(entry.getValue().getTask());
+		}
+		return tasks;
 	}
 
 }

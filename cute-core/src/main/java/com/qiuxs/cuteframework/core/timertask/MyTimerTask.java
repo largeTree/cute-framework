@@ -11,7 +11,7 @@ import java.util.Date;
  * @author qiuxs   
  * @version 1.0.0
  */
-public interface MyTimerTask extends Runnable {
+public interface MyTimerTask {
 
 	static final int ONE_MIN = 60 * 1000;
 	static final int ONE_HOUR = 60 * 60 * 1000;
@@ -31,6 +31,14 @@ public interface MyTimerTask extends Runnable {
 	 * @return
 	 */
 	public Date getFirstTime();
+	
+	/***
+	 * 具体执行
+	 *  
+	 * @author qiuxs  
+	 * @param arg
+	 */
+	public void run(String arg);
 
 	/**
 	 * 执行周期

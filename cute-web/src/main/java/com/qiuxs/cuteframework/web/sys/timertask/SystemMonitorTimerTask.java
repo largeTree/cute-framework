@@ -26,7 +26,7 @@ public class SystemMonitorTimerTask implements MyTimerTask {
 	private DataSource dataSource;
 
 	@Override
-	public void run() {
+	public void run(String arg) {
 		List<DataSourceInfo> dsInfos = new ArrayList<>();
 		if (this.dataSource instanceof DynamicDataSource) {
 			Map<Object, DataSource> dataSources = ((DynamicDataSource) this.dataSource).getTargetDataSources();

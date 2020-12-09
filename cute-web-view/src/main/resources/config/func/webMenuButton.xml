@@ -8,6 +8,7 @@
 		</menu>
 		<menu id="20" name="系统维护" funcType="2">
 			<menu id="10" name="数据维护" page="/sys/dataMaintain" code="data-maintain" funcType="3" />
+			<menu id="20" name="定时任务" page="/sys/dataMaintain" code="timer-list" funcType="3" />
 		</menu>
 	</menu>
 </root>

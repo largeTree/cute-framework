@@ -19,7 +19,7 @@ public class SystemAction implements IAction {
 	 */
 	public ActionResult manualInvoke(ReqParam params) {
 		String taskName = params.getStringMust("taskName");
-		TimerManager.manualInvoke(taskName);
+		TimerManager.manualInvoke(taskName, params.getString("arg"));
 		return ActionResult.SUCCESS_INSTANCE;
 	}
 	
