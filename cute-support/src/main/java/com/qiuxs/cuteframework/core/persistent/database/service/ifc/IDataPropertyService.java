@@ -26,9 +26,9 @@ public interface IDataPropertyService<PK extends Serializable, T extends IEntity
 
 	public void save(T bean);
 
-	public void update(T newBean);
+	public int update(T newBean);
 	
-	public void updateDirect(T newBean);
+	public int updateDirect(T newBean);
 
 	public T get(PK pk);
 	

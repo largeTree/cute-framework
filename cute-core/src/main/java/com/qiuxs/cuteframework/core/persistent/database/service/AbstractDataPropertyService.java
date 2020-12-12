@@ -466,25 +466,27 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void update(T bean) {
+	public int update(T bean) {
 		// 默认为Null，需要时自行实现
 		T oldBean = this.getOld(bean.getId());
 		this.initUpdate(oldBean, bean);
 		preSave(oldBean, bean);
 
-		this.updateInner(bean);
-
-		postUpdateInner(oldBean, bean);
-		postSave(oldBean, bean);
+		int res = this.updateInner(bean);
+		if(res > 0) {
+    		postUpdateInner(oldBean, bean);
+    		postSave(oldBean, bean);
+		}
+		return res;
 	}
 	
 	@Override
-	public void updateDirect(T newBean) {
-		this.updateInner(newBean);
+	public int updateDirect(T newBean) {
+		return this.updateInner(newBean);
 	}
 	
-	protected void updateInner(T bean) {
-		this.getDao().update(bean);
+	protected int updateInner(T bean) {
+		return this.getDao().update(bean);
 	}
 	
 	/**
