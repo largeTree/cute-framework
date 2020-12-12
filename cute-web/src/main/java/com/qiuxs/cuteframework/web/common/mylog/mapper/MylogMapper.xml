@@ -85,8 +85,14 @@
 		<if test="className != null">
 			 and `class_name` = #{className}
 		</if>
+		<if test="classNameLike != null" >
+			`class_name` like CONCAT('%', #{classNameLike}, '%')
+		</if>
 		<if test="method != null">
 			 and `method` = #{method}
+		</if>
+		<if test="methodLike != null" >
+			`method` like CONCAT('%', #{methodLike}, '%')
 		</if>
 		<if test="msg != null">
 			 and `msg` = #{msg}
