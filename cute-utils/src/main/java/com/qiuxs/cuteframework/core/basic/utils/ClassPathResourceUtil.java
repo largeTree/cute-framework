@@ -211,7 +211,7 @@ public class ClassPathResourceUtil {
 	 */
 	public static String readAsString(String path) {
 		Resource res = getSingleResource(path);
-		if (res == null || !res.exists()) {
+		if (res == null) {
 			return null;
 		}
 		BufferedReader reader = null;
