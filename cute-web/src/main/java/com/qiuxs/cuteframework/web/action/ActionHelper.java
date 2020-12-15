@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.basic.utils.reflect.MethodUtils;
@@ -19,16 +18,15 @@ import com.qiuxs.cuteframework.web.bean.ReqParam;
 public class ActionHelper {
 
 	@SuppressWarnings("unchecked")
-	public static ActionResult list(IDataPropertyService<?, ?> service, String listMethod, String statisMethod, ReqParam params, String jsonData) {
+	public static ActionResult list(IDataPropertyService<?, ?> service, String listMethod, String statisMethod, ReqParam params, JSONObject searchParams) {
 		if (listMethod == null) {
 			listMethod = "findByMap";
 		}
-		JSONObject searchParams = null;
-		if (StringUtils.isNotBlank(jsonData)) {
-			searchParams = JsonUtils.parseJSONObject(jsonData);
-		} else {
+		
+		if (searchParams == null) {
 			searchParams = new JSONObject();
 		}
+		
 		PageInfo pageInfo = PageSettings.preparePageInfo(params);
 		// 传了统计方法的，设置为不自动汇总
 		if (StringUtils.isNotBlank(statisMethod)) {

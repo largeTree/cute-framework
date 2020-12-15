@@ -9,9 +9,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.persistent.database.dao.IBaseDao;
-import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
-import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageSettings;
 import com.qiuxs.cuteframework.core.persistent.database.entity.IEntity;
 import com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService;
 import com.qiuxs.cuteframework.web.bean.ActionResult;
@@ -36,9 +35,8 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 */
 	@Override
 	public ActionResult list(ReqParam params, String jsonData) {
-		PageInfo pageInfo = PageSettings.preparePageInfo(params);
-		List<T> list = this.list(JsonUtils.parseJSONObject(jsonData), pageInfo);
-		return this.responseList(MapUtils.getBooleanValue(params, ActionConstants.PARAM_WRAPPER, false), list, pageInfo.getTotal(), pageInfo.getSumrow());
+		return this.list(null, params, jsonData);
+		// return this.responseList(MapUtils.getBooleanValue(params, ActionConstants.PARAM_WRAPPER, false), list, pageInfo.getTotal(), pageInfo.getSumrow());
 	}
 
 	/**
@@ -137,7 +135,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * @return
 	 */
 	protected ActionResult list(String listMethod, ReqParam params, String jsonData) {
-		return ActionHelper.list(this.getService(), listMethod, null, params, jsonData);
+		return this.list(listMethod, params, this.transToSearchParams(jsonData));
 	}
 	
 	/**
@@ -151,9 +149,51 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * @return
 	 */
 	protected ActionResult list(String listMethod, String statisMethod, ReqParam params, String jsonData) {
-		return ActionHelper.list(this.getService(), listMethod, statisMethod, params, jsonData);
+		return this.list(listMethod, statisMethod, params, this.transToSearchParams(jsonData));
+	}
+	
+	/**
+	 * 查询参数转换
+	 *  
+	 * @author qiuxs  
+	 * @param jsonData
+	 * @return
+	 */
+	protected JSONObject transToSearchParams(String jsonData) {
+		if (StringUtils.isNotBlank(jsonData)) {
+			return JsonUtils.parseJSONObject(jsonData);
+		} else {
+			return new JSONObject();
+		}
+	}
+	
+	/**
+	 * 自动合计列表方法
+	 *  
+	 * @author qiuxs  
+	 * @param listMethod
+	 * @param params
+	 * @param searchParams
+	 * @return
+	 */
+	protected ActionResult list(String listMethod, ReqParam params, JSONObject searchParams) {
+		return this.list(listMethod, null, params, searchParams);
 	}
 
+	/**
+	 * 手动合计列表方法
+	 *  
+	 * @author qiuxs  
+	 * @param listMethod
+	 * @param statisMethod
+	 * @param params
+	 * @param searchParams
+	 * @return
+	 */
+	protected ActionResult list(String listMethod, String statisMethod, ReqParam params, JSONObject searchParams) {
+		return ActionHelper.list(this.getService(), listMethod, statisMethod, params, searchParams);
+	}
+	
 	/**
 	 * 检查参数是否存在
 	 *  
