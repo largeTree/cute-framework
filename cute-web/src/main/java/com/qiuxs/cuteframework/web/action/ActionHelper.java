@@ -30,6 +30,10 @@ public class ActionHelper {
 			searchParams = new JSONObject();
 		}
 		PageInfo pageInfo = PageSettings.preparePageInfo(params);
+		// 传了统计方法的，设置为不自动汇总
+		if (StringUtils.isNotBlank(statisMethod)) {
+			pageInfo.setAutoStatis(false);
+		}
 		List<?> list = (List<?>) MethodUtils.invokeMethodByName(service, listMethod, new Object[] { searchParams, pageInfo });
 		
 		int total = 0;

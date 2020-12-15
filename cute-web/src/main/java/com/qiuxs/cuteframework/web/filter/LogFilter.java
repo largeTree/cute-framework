@@ -23,6 +23,8 @@ import com.qiuxs.cuteframework.tech.log.LogConstant;
 import com.qiuxs.cuteframework.tech.log.LogUtils;
 import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogConstants;
 import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogUtils;
+import com.qiuxs.cuteframework.tech.task.AsyncTaskExecutor;
+import com.qiuxs.cuteframework.tech.task.RunnableAsyncTask;
 import com.qiuxs.cuteframework.web.WebConstants;
 import com.qiuxs.cuteframework.web.log.entity.RequestLog;
 import com.qiuxs.cuteframework.web.log.service.IRequestLogService;
@@ -71,7 +73,7 @@ public class LogFilter implements Filter {
 			// 全局日志识别号
 			Long globalId = ApiLogUtils.genGlobalId();
 			reqLog.setGlobalId(globalId);
-			
+
 			// 初始化apiLog
 			ApiLogUtils.initApiLog("gateway" + apiKey, LogConstant.APP_CLI, EnvironmentContext.getAppName(), globalId, ip, kvMap.get(ApiLogConstants.TL_APILOG_REQUEST_ID));
 		} catch (Throwable e) {
@@ -96,7 +98,15 @@ public class LogFilter implements Filter {
 			// 结束时间
 			reqLog.setReqEndTime(new Date());
 			reqLog.setServerId(EnvironmentContext.getServerId());
-			this.getRequestLogService().save(reqLog);
+			
+			// 异步执行，避免影响接口响应
+			AsyncTaskExecutor.execute(new RunnableAsyncTask<RequestLog>(reqLog) {
+				@Override
+				public void execute(RequestLog preparParam) {
+					getRequestLogService().save(reqLog);
+				}
+			}, false);
+			
 		} catch (Throwable e) {
 			log.error("save RequestLog ext=" + e.getLocalizedMessage(), e);
 		} finally {

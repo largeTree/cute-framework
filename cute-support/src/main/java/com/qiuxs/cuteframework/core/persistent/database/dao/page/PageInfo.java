@@ -30,6 +30,8 @@ public class PageInfo extends RowBounds {
 	private Integer total;
 	/** 总页数 */
 	private Integer totalPage;
+	/** 自动统计 */
+	private boolean autoStatis = true;
 
 	/** 默认分页 */
 	public static final PageInfo DEFAULT_PAGE_INFO = new PageInfo(1, DEFAULT_PAGESIZE);
@@ -161,6 +163,14 @@ public class PageInfo extends RowBounds {
 			pageNo--;
 		}
 		return pageNo;
+	}
+
+	public boolean isAutoStatis() {
+		return autoStatis;
+	}
+
+	public void setAutoStatis(boolean autoStatis) {
+		this.autoStatis = autoStatis;
 	}
 
 }
