@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.web.action;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +24,9 @@ public class ActionHelper {
 			listMethod = "findByMap";
 		}
 		
-		if (searchParams == null) {
-			searchParams = new JSONObject();
+		Map<String, Object> searchParamsMap = searchParams;
+		if (searchParamsMap == null) {
+			searchParamsMap = new HashMap<>();
 		}
 		
 		PageInfo pageInfo = PageSettings.preparePageInfo(params);
@@ -32,7 +34,8 @@ public class ActionHelper {
 		if (StringUtils.isNotBlank(statisMethod)) {
 			pageInfo.setAutoStatis(false);
 		}
-		List<?> list = (List<?>) MethodUtils.invokeMethodByName(service, listMethod, new Object[] { searchParams, pageInfo });
+		// List<?> list = (List<?>) MethodUtils.invokeMethod(service, listMethod, new Object[] { searchParamsMap, pageInfo });
+		List<?> list = (List<?>) MethodUtils.invokeMethod(service, listMethod, new Class[] { Map.class, PageInfo.class }, new Object[] { searchParamsMap, pageInfo });
 		
 		int total = 0;
 		Map<String, ? extends Number> sumrow;
