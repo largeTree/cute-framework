@@ -40,15 +40,17 @@ public abstract class BaseController {
 	public String handlerException(Throwable e, HttpServletResponse response) {
 		response.addIntHeader(HttpHeader.STATUS.value(), RequestLog.FAILED);
 		e = ExceptionUtils.getRtootThrowable(e);
+		boolean loginError = false;
 		if (e instanceof LoginException) {
 			// 登陆异常，返回标准状态码
 			response.addHeader("needLogin", "true");
 			response.addHeader("loginPath", getLoginPath());
 			response.setStatus(HttpStatus.UNAUTHORIZED.value());
+			loginError = true;
 		}
 		JSONObject error = ExceptionUtils.logError(log, e);
 		error.put("globalId", LogUtils.getContextMap().get(LogConstant.COLUMN_GLOBALID));
-		if (!EnvironmentContext.isDebug()) {
+		if (!EnvironmentContext.isDebug() && !loginError) {
 			NoticeLogger.error(error.getString("msg"), ExceptionUtils.getStackTrace(e));
 		}
 		return error.toJSONString();

@@ -2,13 +2,16 @@ package com.qiuxs.cuteframework.core.utils.notice;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.config.IConfiguration;
 import com.qiuxs.cuteframework.core.basic.config.UConfigUtils;
 import com.qiuxs.cuteframework.core.basic.utils.DateFormatUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.basic.utils.dingtalk.DingTalkUtils;
-import com.qiuxs.cuteframework.core.basic.utils.dingtalk.DingTalkUtils.HookKey;
 import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogUtils;
 
@@ -22,6 +25,8 @@ import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogUtils;
  * @version 1.0.0
  */
 public class NoticeLogger {
+	
+	private static Logger log = LoggerFactory.getLogger(NoticeLogger.class);
 
 	public static void error(String msg, Throwable e) {
 		error(msg, ExceptionUtils.getStackTrace(e));
@@ -58,7 +63,24 @@ public class NoticeLogger {
 		if (stackTrace != null) {
 			sb.append("\n堆栈: ").append(stackTrace);
 		}
-		DingTalkUtils.sendTextMsg(HookKey.LOG_NOTICE, sb.toString());
+		
+		String noticeLogToken = env.getString("dd_notice_log_token");
+		if (StringUtils.isNotBlank(noticeLogToken)) {
+			DingTalkUtils.sendTextMsg(noticeLogToken, sb.toString());
+		} else {
+			log.warn("没有配置钉钉日志通知，将不发送钉钉通知...");
+			switch (prefix) {
+			case "ERROR":
+				log.error(sb.toString());
+				break;
+			case "WARN":
+				log.warn(sb.toString());
+				break;
+			default:
+				log.info(sb.toString());
+				break;
+			}
+		}
 	}
 
 }
