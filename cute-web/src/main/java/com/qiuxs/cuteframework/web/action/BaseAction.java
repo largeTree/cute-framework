@@ -149,7 +149,22 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * @return
 	 */
 	protected ActionResult list(String listMethod, String statisMethod, ReqParam params, String jsonData) {
-		return this.list(listMethod, statisMethod, params, this.transToSearchParams(jsonData));
+		return this.list(listMethod, statisMethod, params, jsonData, true);
+	}
+	
+	/**
+	 * 支持选择是否执行分页
+	 *  
+	 * @author qiuxs  
+	 * @param listMethod
+	 * @param statisMethod
+	 * @param params
+	 * @param jsonData
+	 * @param page
+	 * @return
+	 */
+	protected ActionResult list(String listMethod, String statisMethod, ReqParam params, String jsonData, boolean page) {
+		return this.list(listMethod, statisMethod, params, this.transToSearchParams(jsonData), page);
 	}
 	
 	/**
@@ -163,7 +178,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 		if (StringUtils.isNotBlank(jsonData)) {
 			return JsonUtils.parseJSONObject(jsonData);
 		} else {
-			return new JSONObject();
+			return null;
 		}
 	}
 	
@@ -191,7 +206,22 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * @return
 	 */
 	protected ActionResult list(String listMethod, String statisMethod, ReqParam params, JSONObject searchParams) {
-		return ActionHelper.list(this.getService(), listMethod, statisMethod, params, searchParams);
+		return this.list(listMethod, statisMethod, params, searchParams, true);
+	}
+	
+	/**
+	 * 支持选择是否分页
+	 *  
+	 * @author qiuxs  
+	 * @param listMethod
+	 * @param statisMethod
+	 * @param params
+	 * @param searchParams
+	 * @param page
+	 * @return
+	 */
+	protected ActionResult list(String listMethod, String statisMethod, ReqParam params, JSONObject searchParams, boolean page) {
+		return ActionHelper.list(this.getService(), listMethod, statisMethod, params, searchParams, page);
 	}
 	
 	/**
