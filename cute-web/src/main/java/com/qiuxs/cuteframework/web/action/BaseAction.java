@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.bean.Pair;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
@@ -139,6 +140,20 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	}
 	
 	/**
+	 * 支持自动合计的列表方法
+	 *  
+	 * @author qiuxs  
+	 * @param listMethod
+	 * @param params
+	 * @param jsonData
+	 * @param colFieldNames
+	 * @return
+	 */
+	protected ActionResult list(String listMethod, ReqParam params, String jsonData, List<Pair<String, String>> colFieldNames) {
+		return this.list(listMethod, params, this.transToSearchParams(jsonData), true, colFieldNames);
+	}
+	
+	/**
 	 * 支持自定义统计方法
 	 *  
 	 * @author qiuxs  
@@ -164,7 +179,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * @return
 	 */
 	protected ActionResult list(String listMethod, String statisMethod, ReqParam params, String jsonData, boolean page) {
-		return this.list(listMethod, statisMethod, params, this.transToSearchParams(jsonData), page);
+		return this.list(listMethod, statisMethod, params, this.transToSearchParams(jsonData), page, null);
 	}
 	
 	/**
@@ -194,6 +209,20 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	protected ActionResult list(String listMethod, ReqParam params, JSONObject searchParams) {
 		return this.list(listMethod, null, params, searchParams);
 	}
+	
+	/**
+	 * 自动合计的列表方法
+	 *  
+	 * @author qiuxs  
+	 * @param listMethod
+	 * @param params
+	 * @param searchParams
+	 * @param colFieldNames
+	 * @return
+	 */
+	protected ActionResult list(String listMethod, ReqParam params, JSONObject searchParams, boolean page, List<Pair<String, String>> colFieldNames) {
+		return this.list(listMethod, null, params, searchParams, page, colFieldNames);
+	}
 
 	/**
 	 * 手动合计列表方法
@@ -206,7 +235,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * @return
 	 */
 	protected ActionResult list(String listMethod, String statisMethod, ReqParam params, JSONObject searchParams) {
-		return this.list(listMethod, statisMethod, params, searchParams, true);
+		return this.list(listMethod, statisMethod, params, searchParams, true, null);
 	}
 	
 	/**
@@ -220,8 +249,8 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 	 * @param page
 	 * @return
 	 */
-	protected ActionResult list(String listMethod, String statisMethod, ReqParam params, JSONObject searchParams, boolean page) {
-		return ActionHelper.list(this.getService(), listMethod, statisMethod, params, searchParams, page);
+	protected ActionResult list(String listMethod, String statisMethod, ReqParam params, JSONObject searchParams, boolean page, List<Pair<String, String>> colFieldNames) {
+		return ActionHelper.list(this.getService(), listMethod, statisMethod, params, searchParams, page, colFieldNames);
 	}
 	
 	/**

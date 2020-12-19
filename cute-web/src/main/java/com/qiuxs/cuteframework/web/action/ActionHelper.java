@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.bean.Pair;
+import com.qiuxs.cuteframework.core.basic.utils.CollectionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.basic.utils.reflect.MethodUtils;
@@ -27,10 +29,11 @@ public class ActionHelper {
 	 * @param params
 	 * @param searchParams
 	 * @param page
+	 * @param colFieldNames 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static ActionResult list(IDataPropertyService<?, ?> service, String listMethod, String statisMethod, ReqParam params, JSONObject searchParams, boolean page) {
+	public static ActionResult list(IDataPropertyService<?, ?> service, String listMethod, String statisMethod, ReqParam params, JSONObject searchParams, boolean page, List<Pair<String, String>> colFieldNames) {
 		if (listMethod == null) {
 			listMethod = "findByMap";
 		}
@@ -48,8 +51,11 @@ public class ActionHelper {
     		// 传了统计方法的，设置为不自动汇总
     		if (StringUtils.isNotBlank(statisMethod)) {
     			pageInfo.setAutoStatis(false);
+    		} else if (CollectionUtils.isNotEmpty(colFieldNames)) {
+    			colFieldNames.forEach(item -> {
+    				pageInfo.addSumColumn(item);
+    			});
     		}
-    		// List<?> list = (List<?>) MethodUtils.invokeMethod(service, listMethod, new Object[] { searchParamsMap, pageInfo });
     		list = (List<?>) MethodUtils.invokeMethod(service, listMethod, new Class[] { Map.class, PageInfo.class }, new Object[] { searchParams, pageInfo });
     		sumrow = pageInfo.getSumrow();
     		total = pageInfo.getTotal();
@@ -63,6 +69,7 @@ public class ActionHelper {
 		if (StringUtils.isNotBlank(statisMethod)) {
 			sumrow = (Map<String, ? extends Number>) MethodUtils.invokeMethodByName(service, statisMethod, new Object[] { searchParams });
 			total = MapUtils.getIntValue(sumrow, MbiPageHook.DB_COUNT, 0);
+			sumrow.remove(MbiPageHook.DB_COUNT);
 		}
 		
 		// 发送响应

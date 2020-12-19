@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.plugin.Invocation;
@@ -14,6 +15,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import com.qiuxs.cuteframework.core.FrmLogger;
+import com.qiuxs.cuteframework.core.basic.bean.Pair;
+import com.qiuxs.cuteframework.core.basic.utils.CollectionUtils;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.persistent.database.dao.page.PageInfo;
 import com.qiuxs.cuteframework.tech.mybatis.interceptor.utils.MbiUtils;
 
@@ -80,7 +84,7 @@ public class MbiPageHook implements IMbiHook {
 		ResultSet rs = null;
 		String countSql = null;
 		try {
-			countSql = getCountSql(sql);
+			countSql = getCountSumSql(sql, pageInfo);
 			Connection conn = (Connection) invocation.getArgs()[0];
 			StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
 			if (log.isDebugEnabled()) {
@@ -111,7 +115,7 @@ public class MbiPageHook implements IMbiHook {
 	 *
 	 * 创建时间：2018年8月17日 下午10:52:13
 	 */
-	private String getCountSql(String sql) {
+	private String getCountSumSql(String sql, PageInfo pageInfo) {
 		sql = sql.replaceAll("[\\t\\n\\r]", " ").replaceAll("\\s+", " ").toLowerCase();
 		int fromIndex = sql.indexOf("from");
 		
@@ -125,12 +129,34 @@ public class MbiPageHook implements IMbiHook {
 			fromSql = "from (" + sql + ") T";
 		}
 
-		StringBuilder countSql = new StringBuilder();
-		countSql.append("select count(1) as ").append(DB_COUNT).append(" ")
-				.append(fromSql);
-		return countSql.toString();
+		StringBuilder countSumSql = new StringBuilder();
+		countSumSql.append("select count(1) as ").append(DB_COUNT).append(" ");
+		String summarySql = this.getSummarySql(pageInfo.getSumColumnFields());
+		if (StringUtils.isNoneBlank(summarySql)) {
+			countSumSql.append(summarySql).append(" ");
+		}
+		countSumSql.append(fromSql);
+		return countSumSql.toString();
 	}
 
+	/**
+	 * 构建合计sql
+	 *  
+	 * @author qiuxs  
+	 * @return
+	 */
+	public String getSummarySql(List<Pair<String, String>> sumColumnFields) {
+		if (CollectionUtils.isEmpty(sumColumnFields)) {
+			return "";
+		}
+		StringBuilder sql = new StringBuilder();
+		for (Pair<String, String> pair : sumColumnFields) {
+			sql.append("SUM(").append(pair.getV1()).append(") as ").append(pair.getV2()).append(",");
+		}
+		sql.setLength(sql.length() - 1);
+		return sql.toString();
+	}
+	
 	private void close(PreparedStatement stat, ResultSet rs) {
 		try {
 			if (rs != null) {
