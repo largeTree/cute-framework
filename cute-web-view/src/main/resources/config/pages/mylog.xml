@@ -28,7 +28,7 @@
 			<td name="错误代码" field="errorCode" type="num" />
 			<td name="时间" field="logTime" type="date" length="11" />
 			<expands>
-				<td name="内容" field="msg" type="text" />
+				<td name="内容" field="msg" type="code" />
 				<td name="Throwable" field="throwable" type="code" />
 				<td name="StackTrace" field="stacktrace" type="code" />
 			</expands>

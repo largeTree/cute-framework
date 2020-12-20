@@ -11,6 +11,8 @@ public class FormModel {
 
 	/** 表单ID */
 	private String id;
+	/** 表单标题 */
+	private String title;
 	/** 获取数据使用的ApiKey */
 	private String getApiKey;
 	/** 保存数据使用的apiKey */
@@ -26,6 +28,14 @@ public class FormModel {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getGetApiKey() {
