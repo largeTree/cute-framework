@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import com.qiuxs.cuteframework.core.listener.lc.IWebLifecycle;
 import com.qiuxs.rmq.ConsumerUtils;
 import com.qiuxs.rmq.ProducerUtils;
+import com.qiuxs.rmq.TransactionMessageExpulsionThread;
 
 public class MqWebLifecycle implements IWebLifecycle {
 
@@ -28,6 +29,9 @@ public class MqWebLifecycle implements IWebLifecycle {
 		} catch (Exception e) {
 			log.error("init MqConsumerUtils failed, ext = " + e.getLocalizedMessage(), e);
 		}
+		
+		// 启动事务消息超时逐出线程
+		TransactionMessageExpulsionThread.startWorker();
 	}
 	
 	@Override
@@ -42,6 +46,8 @@ public class MqWebLifecycle implements IWebLifecycle {
 		} catch (Exception e) {
 			log.error("destory ConsumerUtils failed, ext = " + e.getLocalizedMessage(), e);
 		}
+		
+		TransactionMessageExpulsionThread.shutdownWorker();
 	}
 	
 }

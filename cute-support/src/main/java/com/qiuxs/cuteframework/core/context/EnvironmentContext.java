@@ -50,6 +50,10 @@ public class EnvironmentContext {
 		return getDoamin().getInt("web-index", 0);
 	}
 
+	public static int getWebCount() {
+		return getDoamin().getInt("web-count", 1);
+	}
+
 	public static boolean isTimerTaskOpen() {
 		return getDoamin().getBool("timer-task-open", false);
 	}

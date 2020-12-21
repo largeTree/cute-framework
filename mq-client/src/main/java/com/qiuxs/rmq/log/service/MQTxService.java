@@ -1,5 +1,7 @@
 package com.qiuxs.rmq.log.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -7,10 +9,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import com.qiuxs.cuteframework.core.basic.bean.Pair;
 import com.qiuxs.cuteframework.core.basic.config.IConfiguration;
 import com.qiuxs.cuteframework.core.basic.config.UConfigUtils;
-import com.qiuxs.cuteframework.core.basic.constants.SymbolConstants;
+import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.core.tx.IMQTxService;
 import com.qiuxs.cuteframework.core.tx.TxConfrimUtils;
 import com.qiuxs.cuteframework.core.tx.mq.TxMessage;
@@ -59,19 +60,43 @@ public class MQTxService implements IMQTxService {
 			return txMessageMap.get(key(txId, unitId));
 		}
 
-		public static TxMessage getTxMessage(String txKey) {
-			Pair<Long, Long> pair = parseKey(txKey);
-			return getTxMessage(pair.getV1(), pair.getV2());
+		private static TxMessage getTxMessage(String txKey) {
+			DistTransInfo distTxInfo = parseKey(txKey);
+			return getTxMessage(distTxInfo);
 		}
 		
-		private static Pair<Long, Long> parseKey(String txKey) {
-			String[] split = txKey.split(SymbolConstants.SEPARATOR_HYPHEN);
-			return new Pair<Long, Long>(Long.parseLong(split[0]), Long.parseLong(split[0]));
+		private static void removeTxMessage(String txKey) {
+			txMessageMap.remove(txKey);
+		}
+		
+		private static DistTransInfo parseKey(String txKey) {
+			return DistTransInfo.parseTxKey(txKey);
 		}
 		
 		private static String key(Long txId, Long unitId) {
-			return txId + SymbolConstants.SEPARATOR_HYPHEN + unitId;
+			return DistTransInfo.txKey(txId, unitId);
 		}
+	}
+	
+	@Override
+	public void expulsionTimeoutedTransactions() {
+		Collection<TxMessage> cachedTxMessages = TxMessageHolder.txMessageMap.values();
+		List<String> timeoutedTxKeys = new ArrayList<>();
+		for (TxMessage txMessage : cachedTxMessages) {
+			
+			Long unitId = txMessage.getDistTx().getUnitId();
+			int webIndex = EnvironmentContext.getWebIndex();
+			int webCount = EnvironmentContext.getWebCount();
+			// unitId取模，每台服务逐出一部分
+			if ((unitId % webCount) == webIndex) {
+				if ((System.currentTimeMillis() - txMessage.getBorntime()) > getTransactionMessageTimeout()) {
+					timeoutedTxKeys.add(txMessage.getDistTx().getTxKey());
+				}
+			}
+		}
+		log.warn("ExplusionTimeoutedTransactions {}", timeoutedTxKeys);
+		// 回滚已经超时了的事务消息
+		rollback(timeoutedTxKeys);
 	}
 	
 	@Override
@@ -98,6 +123,7 @@ public class MQTxService implements IMQTxService {
 				SerializableSendResult transactionSendResult = txMessage.getLocalTransactionSendResult();
 				log.info("Commit TxMessage txKey = {}, mqMsgId = {}", txKey, transactionSendResult.getMsgId());
 				ProducerUtils.commitTransactionMessage(transactionSendResult);
+				TxMessageHolder.removeTxMessage(txKey);
 			} catch (Throwable e) {
 				log.error("TxMessageCommit failed, ext = " + e.getLocalizedMessage(), e);
 			}
@@ -112,12 +138,17 @@ public class MQTxService implements IMQTxService {
 				SerializableSendResult transactionSendResult = txMessage.getLocalTransactionSendResult();
 				log.info("Rollback TxMessage txKey = {}, mqMsgId = {} ", txKeys, transactionSendResult.getMsgId());
 				ProducerUtils.rollbackTransactionMessage(transactionSendResult);
+				TxMessageHolder.removeTxMessage(txKey);
 			} catch (Throwable e) {
 				log.error("Rollback TxMessage failed, ext = " + e.getLocalizedMessage(), e);
 			}
 		}
 	}
 	
+	/**
+	 * 事务消息超时时间，超过此时间仍未提交的事务消息将被回滚
+	 * @return
+	 */
 	public long getTransactionMessageTimeout() {
 		if (transactionMessageTimeout == null) {
 			synchronized (this) {
