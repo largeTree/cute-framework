@@ -568,7 +568,7 @@ public class ProducerUtils {
 		producer.setNamesrvAddr(nameSrv);
 		producer.setInstanceName(producerGroupName + "-" + producerId.getAndIncrement());
 		// 事务监听器
-		producer.setTransactionListener(new LocalTransactionListener(producerGroupName, producer.getInstanceName()));
+		producer.setTransactionListener(new LocalTransactionListener(producerGroupName, producer.getInstanceName(), getTransSendService()));
 		producer.start();
 		groupNameProducerMap.put(producerGroupName, producer);
 		return producer;

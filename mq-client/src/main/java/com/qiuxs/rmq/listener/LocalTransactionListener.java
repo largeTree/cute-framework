@@ -16,6 +16,7 @@ import com.qiuxs.cuteframework.tech.microsvc.disttx.DistTransInfo;
 import com.qiuxs.rmq.MqClientContants;
 import com.qiuxs.rmq.MqTxMessage;
 import com.qiuxs.rmq.SerializableSendResult;
+import com.qiuxs.rmq.log.service.impl.TransSendService;
 
 public class LocalTransactionListener extends TxConfrimUtils implements TransactionListener {
 	
@@ -28,7 +29,10 @@ public class LocalTransactionListener extends TxConfrimUtils implements Transact
 	private final String instanceName;
 	
 	/**  mq事务消息服务. */
-	private static IMQTxService mqTxService;
+	private IMQTxService mqTxService;
+	
+	/** 简单事务消息表 */
+	private TransSendService transSendService;
 	
 	/**
 	 * 构造本地事务监听器
@@ -36,9 +40,11 @@ public class LocalTransactionListener extends TxConfrimUtils implements Transact
 	 * @param groupName the group name
 	 * @param instanceName the instance name
 	 */
-	public LocalTransactionListener(String groupName, String instanceName) {
+	public LocalTransactionListener(String groupName, String instanceName, TransSendService transSendService) {
 		this.groupName = groupName;
 		this.instanceName = instanceName;
+		this.mqTxService = ApplicationContextHolder.getBean(IMQTxService.class);
+		this.transSendService = transSendService;
 		log.info("Construct an LocalTransactionListener {} {}", groupName, instanceName);
 	}
 
@@ -56,7 +62,7 @@ public class LocalTransactionListener extends TxConfrimUtils implements Transact
 		Pair<SerializableSendResult, DistTransInfo> pair = (Pair<SerializableSendResult, DistTransInfo>) arg;
 		SerializableSendResult sendResult = pair.getV1();
 		DistTransInfo distTx = pair.getV2();
-		getMqTxService().cacheTxMessage(new MqTxMessage(distTx, sendResult));
+		this.mqTxService.cacheTxMessage(new MqTxMessage(distTx, sendResult));
 		return LocalTransactionState.UNKNOW;
 	}
 
@@ -71,11 +77,16 @@ public class LocalTransactionListener extends TxConfrimUtils implements Transact
 		String distTx = msg.getProperty(MqClientContants.MSG_PROP_SUB_DIST_TX);
 		DistTransInfo transInfo = JsonUtils.parseObject(distTx, DistTransInfo.class);
 
-		if (getMqTxService().checkTransInfoInCache(transInfo)) {
+		if (this.mqTxService.checkTransInfoInCache(transInfo)) {
 			return LocalTransactionState.UNKNOW;
 		}
-
-		return null;
+		
+		// 缓存中已不在的情况下，检查事务ID是否被存入数据库，如没被存入，则回滚消息
+		if (this.transSendService.existsTx(transInfo.getTxId())) {
+			return LocalTransactionState.COMMIT_MESSAGE;
+		} else {
+			return LocalTransactionState.ROLLBACK_MESSAGE;
+		}
 	}
 	
 	/**
@@ -94,18 +105,6 @@ public class LocalTransactionListener extends TxConfrimUtils implements Transact
 	 */
 	public String getInstanceName() {
 		return instanceName;
-	}
-
-	/**
-	 * Gets the mq事务消息服务.
-	 *
-	 * @return the mq事务消息服务
-	 */
-	public static IMQTxService getMqTxService() {
-		if (mqTxService == null) {
-			mqTxService = ApplicationContextHolder.getBean(MQ_TX_SERVICE_NAME);
-		}
-		return mqTxService;
 	}
 
 }
