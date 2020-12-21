@@ -1,5 +1,6 @@
 package com.qiuxs.rmq;
 
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,32 +11,41 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.impl.producer.DefaultMQProducerImpl;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.LocalTransactionState;
 import org.apache.rocketmq.client.producer.MessageQueueSelector;
 import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.SendStatus;
+import org.apache.rocketmq.client.producer.TransactionListener;
+import org.apache.rocketmq.client.producer.TransactionMQProducer;
+import org.apache.rocketmq.client.producer.TransactionSendResult;
 import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.common.message.MessageAccessor;
 import org.apache.rocketmq.common.message.MessageConst;
 import org.apache.rocketmq.common.message.MessageQueue;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 
 import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.bean.Pair;
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.config.IConfiguration;
 import com.qiuxs.cuteframework.core.basic.config.UConfigUtils;
 import com.qiuxs.cuteframework.core.basic.constants.SymbolConstants;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
+import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.basic.utils.io.SerializeUtil;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.core.context.UserContext;
-import com.qiuxs.cuteframework.core.tx.IMQTxService;
-import com.qiuxs.cuteframework.core.tx.TxConfrimUtils;
 import com.qiuxs.cuteframework.core.utils.FunctionUtils;
 import com.qiuxs.cuteframework.tech.microsvc.MicroSvcContext;
+import com.qiuxs.cuteframework.tech.microsvc.disttx.DistTransInfo;
 import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogConstants;
 import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogProp;
 import com.qiuxs.cuteframework.tech.microsvc.log.ApiLogUtils;
+import com.qiuxs.rmq.listener.LocalTransactionListener;
 import com.qiuxs.rmq.log.service.impl.TransSendService;
 import com.qiuxs.rmq.microsvc.MqMicroSvcContext;
 
@@ -48,7 +58,7 @@ import com.qiuxs.rmq.microsvc.MqMicroSvcContext;
  * @author qiuxs   
  * @version 1.0.0
  */
-public class ProducerUtils extends TxConfrimUtils {
+public class ProducerUtils {
 
 	private static Logger log = LogManager.getLogger(ProducerUtils.class);
 
@@ -56,17 +66,15 @@ public class ProducerUtils extends TxConfrimUtils {
 	/** 默认生产者组名 */
 	public static String defaultProducerGroupName;
 	/** 默认生产者对象 */
-	private static DefaultMQProducer defaultProducer;
+	private static TransactionMQProducer defaultProducer;
 	/** 组名与生产者Map。key=生产者组名 */
-	private static Map<String, DefaultMQProducer> groupNameProducerMap = new ConcurrentHashMap<>();
+	private static Map<String, TransactionMQProducer> groupNameProducerMap = new ConcurrentHashMap<>();
 	/** 默认发送超时时间 */
 	private static long sendMsgTimeout = 3000;
 	/** 默认消息队列选择器。用于发送顺序消息 */
 	private static MessageQueueSelector defaultQueueSelector;
 
 	private static TransSendService transSendService;
-
-	private static IMQTxService mqTxService;
 
 	/**
 	 * 事务消息预发送
@@ -115,11 +123,135 @@ public class ProducerUtils extends TxConfrimUtils {
 		if (extProps == null) {
 			extProps = new HashMap<String, String>();
 		}
+		
+		DistTransInfo distTx = new DistTransInfo(unitId, txId);
+		
 		// 消息扩展属性中加入mq事务ID
-		extProps.put(MqClientContants.MSG_PROP_SUB_TX_ID, String.valueOf(txId));
+		extProps.put(MqClientContants.MSG_PROP_SUB_DIST_TX, JsonUtils.toJSONString(distTx));
 		Message msg = prepareMessage(topic, tags, bizKeys, serialBody, body, delayLevel, extProps);
-		getMqTxService().sendPrepare(new MqTxMessage(txId, msg));
+		// getMqTxService().sendPrepare(new MqTxMessage(txId, msg));
+		try {
+			sendMessageInTransaction(msg, distTx);
+		} catch (Throwable e) {
+			throw ExceptionUtils.unchecked(e);
+		}
 		return txId;
+	}
+	
+	/**
+	 * 发送事务消息
+	 * @param msg
+	 * @param distTx
+	 * @return
+	 * @throws MQClientException
+	 * @throws InterruptedException 
+	 * @throws MQBrokerException 
+	 * @throws RemotingException 
+	 * @throws UnknownHostException 
+	 */
+	private static TransactionSendResult sendMessageInTransaction(Message msg, DistTransInfo distTx) throws MQClientException, UnknownHostException, RemotingException, MQBrokerException, InterruptedException {
+		TransactionMQProducer producer = getProducer(null);
+		MessageAccessor.putProperty(msg, MessageConst.PROPERTY_TRANSACTION_PREPARED, "true");
+		MessageAccessor.putProperty(msg, MessageConst.PROPERTY_PRODUCER_GROUP, producer.getProducerGroup());
+		
+		SendResult sendResult;
+		try {
+			sendResult = producer.send(msg);
+		} catch (Exception e) {
+			throw new MQClientException("send message Exception", e);
+		}
+		
+		if (sendResult.getSendStatus() != SendStatus.SEND_OK) {
+			throw new MQClientException("Message Send " + sendResult.getSendStatus(), null);
+		}
+		DefaultMQProducerImpl defaultMQProducerImpl = producer.getDefaultMQProducerImpl();
+		TransactionListener checkListener = defaultMQProducerImpl.getCheckListener();
+		if (checkListener == null) {
+			throw new MQClientException("TransactionList is null", null);
+		}
+		
+		// 分布式事务上下文存入Redis
+		Throwable localException = null;
+		try {
+			// 构造本地可序列化的发送结果，用户缓存到redis
+			SerializableSendResult serializableSendResult = new SerializableSendResult(sendResult, producer.getProducerGroup(), producer.getInstanceName());
+			checkListener.executeLocalTransaction(msg, new Pair<>(serializableSendResult, distTx));
+		} catch (Throwable e) {
+			localException = new MQClientException("executeLocalTransaction failed, ext = " + e.getLocalizedMessage(), e);
+		}
+		
+		// 上面抛出异常，则回滚前面的消息，并将异常抛出阻止Spring事务的执行
+		if (localException != null) {
+			defaultMQProducerImpl.endTransaction(sendResult, LocalTransactionState.ROLLBACK_MESSAGE, localException);
+			throw new MQClientException("localTransactionState is rollback or has an Exception", localException);
+		}
+		
+		String transactionId = sendResult.getTransactionId();
+		if (transactionId != null) {
+            msg.putUserProperty("__transactionId__", sendResult.getTransactionId());
+        }
+		transactionId = msg.getProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX);
+        if (null != transactionId && !"".equals(transactionId)) {
+            msg.setTransactionId(transactionId);
+        }
+
+		TransactionSendResult transactionSendResult = new TransactionSendResult();
+		transactionSendResult.setSendStatus(sendResult.getSendStatus());
+		transactionSendResult.setMessageQueue(sendResult.getMessageQueue());
+		transactionSendResult.setMsgId(sendResult.getMsgId());
+		transactionSendResult.setOffsetMsgId(sendResult.getOffsetMsgId());
+		transactionSendResult.setQueueOffset(sendResult.getQueueOffset());
+		transactionSendResult.setTransactionId(transactionId);
+		transactionSendResult.setLocalTransactionState(LocalTransactionState.UNKNOW); // 总是返回UNKNOW
+		return transactionSendResult;
+	}
+
+	/**
+	 * 提交一个事务消息
+	 * @param serializableSendResult
+	 * @throws UnknownHostException
+	 * @throws RemotingException
+	 * @throws MQBrokerException
+	 * @throws InterruptedException
+	 */
+	public static void commitTransactionMessage(SerializableSendResult serializableSendResult)
+			throws UnknownHostException, RemotingException, MQBrokerException, InterruptedException {
+		endTransaction(serializableSendResult, LocalTransactionState.COMMIT_MESSAGE);
+	}
+
+	/**
+	 * 回滚一个事务消息
+	 * @param serializableSendResult
+	 * @throws UnknownHostException
+	 * @throws RemotingException
+	 * @throws MQBrokerException
+	 * @throws InterruptedException
+	 */
+	public static void rollbackTransactionMessage(SerializableSendResult serializableSendResult)
+			throws UnknownHostException, RemotingException, MQBrokerException, InterruptedException {
+		endTransaction(serializableSendResult, LocalTransactionState.ROLLBACK_MESSAGE);
+	}
+	
+	/**
+	 * 结束一个事务消息，根据参数决定是提交还是回滚
+	 * @param serializableSendResult
+	 * @param localTransactionState
+	 * @throws UnknownHostException
+	 * @throws RemotingException
+	 * @throws MQBrokerException
+	 * @throws InterruptedException
+	 */
+	private static void endTransaction(SerializableSendResult serializableSendResult, LocalTransactionState localTransactionState) throws UnknownHostException, RemotingException, MQBrokerException, InterruptedException {
+		if (serializableSendResult == null) {
+			return;
+		}
+		String groupName = serializableSendResult.getGroupName();
+		TransactionMQProducer producer = getProducer(groupName);
+		if (producer == null) {
+			log.warn("Unknow ProducerGroup[{}] with transactionMessageId[{}]", groupName, serializableSendResult.getMsgId());
+		}
+		DefaultMQProducerImpl defaultMQProducerImpl = producer.getDefaultMQProducerImpl();
+		defaultMQProducerImpl.endTransaction(serializableSendResult.toRocketSendResult(), localTransactionState, null);
 	}
 
 	private static TransSendService getTransSendService() {
@@ -127,13 +259,6 @@ public class ProducerUtils extends TxConfrimUtils {
 			transSendService = ApplicationContextHolder.getBean(TransSendService.class);
 		}
 		return transSendService;
-	}
-
-	public static IMQTxService getMqTxService() {
-		if (mqTxService == null) {
-			mqTxService = ApplicationContextHolder.getBean(MQ_TX_SERVICE_NAME);
-		}
-		return mqTxService;
 	}
 
 	public static SendResult sendDirect(Message txMessage) {
@@ -263,6 +388,24 @@ public class ProducerUtils extends TxConfrimUtils {
 		}
 	}
 
+	/**
+	 * 
+	 * @param groupName
+	 * @param topic
+	 * @param tags
+	 * @param bizKeys
+	 * @param body
+	 * @param serialBody
+	 * @param orderId
+	 * @param timeout
+	 * @param extProp
+	 * @param bodyIsSerialed
+	 * @param delayLevel
+	 * @return
+	 * @throws MQClientException
+	 * @throws RemotingException
+	 * @throws MQBrokerException
+	 */
 	public static SendResult sendThrowException(String groupName, String topic, String tags, String bizKeys, Object body, boolean serialBody, Integer orderId, long timeout, Map<String, String> extProp, boolean bodyIsSerialed, int delayLevel) throws MQClientException, RemotingException, MQBrokerException {
 
 		Message msg = prepareMessage(topic, tags, bizKeys, serialBody, body, delayLevel, extProp);
@@ -351,8 +494,8 @@ public class ProducerUtils extends TxConfrimUtils {
 	 * @param groupName 生产者组。为null时，返回默认生产者
 	 * @return MQ生产者。生产者不存在时，将返回null。
 	 */
-	public static DefaultMQProducer getProducer(String groupName) {
-		DefaultMQProducer producer = groupName == null ? defaultProducer : groupNameProducerMap.get(groupName);
+	public static TransactionMQProducer getProducer(String groupName) {
+		TransactionMQProducer producer = groupName == null ? defaultProducer : groupNameProducerMap.get(groupName);
 		return producer;
 	}
 
@@ -413,10 +556,19 @@ public class ProducerUtils extends TxConfrimUtils {
 		};
 	}
 
-	private static DefaultMQProducer addProducer(String producerGroupName, String nameSrv) throws MQClientException {
-		DefaultMQProducer producer = new DefaultMQProducer(producerGroupName);
+	/**
+	 * 构造并启动生产者
+	 * @param producerGroupName
+	 * @param nameSrv
+	 * @return
+	 * @throws MQClientException
+	 */
+	private static TransactionMQProducer addProducer(String producerGroupName, String nameSrv) throws MQClientException {
+		TransactionMQProducer producer = new TransactionMQProducer(producerGroupName);
 		producer.setNamesrvAddr(nameSrv);
 		producer.setInstanceName(producerGroupName + "-" + producerId.getAndIncrement());
+		// 事务监听器
+		producer.setTransactionListener(new LocalTransactionListener(producerGroupName, producer.getInstanceName()));
 		producer.start();
 		groupNameProducerMap.put(producerGroupName, producer);
 		return producer;

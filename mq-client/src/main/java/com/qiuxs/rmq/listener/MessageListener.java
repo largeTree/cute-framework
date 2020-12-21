@@ -151,7 +151,7 @@ public abstract class MessageListener {
 	 */
 	private void putExtProps(Map<String, String> extProp, MessageExt msg) {
 		extProp.put(MqClientContants.MSG_PROP_RECONSUME_TIMES, String.valueOf(msg.getReconsumeTimes()));
-		extProp.put(MqClientContants.MSG_PROP_BORN_TIMEstamp, String.valueOf(msg.getBornTimestamp()));
+		extProp.put(MqClientContants.MSG_PROP_BORN_TIMESTAMP, String.valueOf(msg.getBornTimestamp()));
 	}
 
 }

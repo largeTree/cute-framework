@@ -1,5 +1,7 @@
 package com.qiuxs.rmq;
 
+import com.qiuxs.cuteframework.core.basic.utils.TimeUtils;
+
 public class MqClientContants {
 	
 	/** rmq配置域 */
@@ -30,8 +32,14 @@ public class MqClientContants {
 	/** 消息消费重试次数 */
 	public static final String MSG_PROP_RECONSUME_TIMES = "mqReconsumeTimes";
 	/** 消息产生时间 */
-	public static final String MSG_PROP_BORN_TIMEstamp = "mqMessageBornTimestamp";
-	/** mq子事务ID */
-	public static final String MSG_PROP_SUB_TX_ID = "mqSubTxId";
+	public static final String MSG_PROP_BORN_TIMESTAMP = "mqMessageBornTimestamp";
+	/** mq子事务 */
+	public static final String MSG_PROP_SUB_DIST_TX = "mq_dist_tx";
+
+	/** 事务消息默认超时时间 */
+	public static final long DEFAULT_TRANSACTION_TIMEOUT = 10 * TimeUtils.MINUTE;
+	
+	/** mq事务消息超时时间配置key */
+	public static final String TRANSACTION_TIMEOUT = "mq_transaction_timeout";
 	
 }

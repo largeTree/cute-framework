@@ -21,43 +21,43 @@ public class TxConfrimUtils {
 		return mqTxService;
 	}
 
-	public static void putMqToDoTxIdLocal(Long txId) {
-		getOrGenMqToDoTxIdList().add(txId);
+	public static void putMqToDoTxIdLocal(String txKey) {
+		getOrGenMqToDoTxIdList().add(txKey);
 	}
 
-	public static void removeMqToDoTxLocal(Long txId) {
-		getOrGenMqToDoTxIdList().remove(txId);
+	public static void removeMqToDoTxLocal(String txKey) {
+		getOrGenMqToDoTxIdList().remove(txKey);
 	}
 
 	public static void removeMqToDoTxLocal() {
 		TLVariableHolder.setVariable(TO_DO_MQ_TX_IDS_KEY, null);
 	}
 
-	public static List<Long> getMqToDoTxIdList() {
+	public static List<String> getMqToDoTxIdList() {
 		return TLVariableHolder.getVariable(TO_DO_MQ_TX_IDS_KEY);
 	}
 
-	public static List<Long> getOrGenMqToDoTxIdList() {
-		List<Long> txIds = getMqToDoTxIdList();
+	public static List<String> getOrGenMqToDoTxIdList() {
+		List<String> txIds = getMqToDoTxIdList();
 		if (txIds == null) {
-			txIds = new ArrayList<Long>();
+			txIds = new ArrayList<String>();
 			TLVariableHolder.setVariable(TO_DO_MQ_TX_IDS_KEY, txIds);
 		}
 		return txIds;
 	}
 
 	public static void commit() {
-		List<Long> txIds = getMqToDoTxIdList();
-		if (txIds != null) {
-			getMqTxService().commit(txIds);
+		List<String> txKeys = getMqToDoTxIdList();
+		if (txKeys != null) {
+			getMqTxService().commit(txKeys);
 			removeMqToDoTxLocal();
 		}
 	}
 
 	public static void rollback() {
-		List<Long> txIds = getMqToDoTxIdList();
-		if (txIds != null) {
-			getMqTxService().rollback(txIds);
+		List<String> txKeys = getMqToDoTxIdList();
+		if (txKeys != null) {
+			getMqTxService().rollback(txKeys);
 			removeMqToDoTxLocal();
 		}
 	}
