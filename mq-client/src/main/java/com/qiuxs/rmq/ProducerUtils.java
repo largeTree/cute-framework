@@ -116,7 +116,7 @@ public class ProducerUtils {
 	public static Long sendPrepare(String topic, String tags, String bizKeys, Object body, boolean serialBody, Map<String, String> extProps, int delayLevel) {
 		UserLite userLite = UserContext.getUserLiteOpt();
 		Long unitId = 0L;
-		if (userLite != null) {
+		if (userLite != null && userLite.getUnitId() != null) {
 			unitId = userLite.getUnitId();
 		}
 		Long txId = getTransSendService().appendTransSend(unitId);

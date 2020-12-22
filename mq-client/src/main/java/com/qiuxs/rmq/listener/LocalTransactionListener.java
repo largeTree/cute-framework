@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.qiuxs.cuteframework.core.basic.bean.Pair;
 import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
+import com.qiuxs.cuteframework.core.context.UserContext;
 import com.qiuxs.cuteframework.core.tx.IMQTxService;
 import com.qiuxs.cuteframework.core.tx.TxConfrimUtils;
 import com.qiuxs.cuteframework.tech.microsvc.disttx.DistTransInfo;
@@ -75,8 +76,12 @@ public class LocalTransactionListener extends TxConfrimUtils implements Transact
 	@Override
 	public LocalTransactionState checkLocalTransaction(MessageExt msg) {
 		String distTx = msg.getProperty(MqClientContants.MSG_PROP_SUB_DIST_TX);
+		log.warn("Check LocalTransaction {}", distTx);
+		
 		DistTransInfo transInfo = JsonUtils.parseObject(distTx, DistTransInfo.class);
-
+		
+		UserContext.mockUser(transInfo.getUnitId());
+		
 		if (this.mqTxService.checkTransInfoInCache(transInfo)) {
 			return LocalTransactionState.UNKNOW;
 		}

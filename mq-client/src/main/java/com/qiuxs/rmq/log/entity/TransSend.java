@@ -14,6 +14,9 @@ public class TransSend implements IObject<Long> {
 	private Long unitId;
 	/** 创建时间 */
 	private Date createdTime;
+	
+	public TransSend() {
+	}
 
 	public TransSend(Long id, Long unitId) {
 		super();

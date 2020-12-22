@@ -2,6 +2,7 @@ package com.qiuxs.rmq.log.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.qiuxs.cuteframework.core.basic.config.IConfiguration;
 import com.qiuxs.cuteframework.core.basic.config.UConfigUtils;
+import com.qiuxs.cuteframework.core.basic.utils.CollectionUtils;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 import com.qiuxs.cuteframework.core.tx.IMQTxService;
 import com.qiuxs.cuteframework.core.tx.TxConfrimUtils;
@@ -57,20 +59,15 @@ public class MQTxService implements IMQTxService {
 		}
 		
 		private static TxMessage getTxMessage(Long txId, Long unitId) {
-			return txMessageMap.get(key(txId, unitId));
+			return getTxMessage(key(txId, unitId));
 		}
 
 		private static TxMessage getTxMessage(String txKey) {
-			DistTransInfo distTxInfo = parseKey(txKey);
-			return getTxMessage(distTxInfo);
+			return txMessageMap.get(txKey);
 		}
 		
 		private static void removeTxMessage(String txKey) {
 			txMessageMap.remove(txKey);
-		}
-		
-		private static DistTransInfo parseKey(String txKey) {
-			return DistTransInfo.parseTxKey(txKey);
 		}
 		
 		private static String key(Long txId, Long unitId) {
@@ -80,23 +77,38 @@ public class MQTxService implements IMQTxService {
 	
 	@Override
 	public void expulsionTimeoutedTransactions() {
-		Collection<TxMessage> cachedTxMessages = TxMessageHolder.txMessageMap.values();
+		Collection<?> txKeys = TxMessageHolder.txMessageMap.keySet();
 		List<String> timeoutedTxKeys = new ArrayList<>();
-		for (TxMessage txMessage : cachedTxMessages) {
-			
-			Long unitId = txMessage.getDistTx().getUnitId();
-			int webIndex = EnvironmentContext.getWebIndex();
-			int webCount = EnvironmentContext.getWebCount();
-			// unitId取模，每台服务逐出一部分
-			if ((unitId % webCount) == webIndex) {
-				if ((System.currentTimeMillis() - txMessage.getBorntime()) > getTransactionMessageTimeout()) {
-					timeoutedTxKeys.add(txMessage.getDistTx().getTxKey());
-				}
-			}
+		if (CollectionUtils.isNotEmpty(txKeys)) {
+    		for (Iterator<?> iter = txKeys.iterator(); iter.hasNext();) {
+    			Object next = iter.next();
+    			if (next instanceof Long) {
+    				TxMessageHolder.txMessageMap.remove(next);
+    			} else {
+    				String txKey = (String) next;
+    				TxMessage txMessage = TxMessageHolder.getTxMessage(txKey);
+    				DistTransInfo distTx = txMessage.getDistTx();
+    				if (distTx != null) {
+    					Long unitId = distTx.getUnitId();
+    					int webIndex = EnvironmentContext.getWebIndex();
+    					int webCount = EnvironmentContext.getWebCount();
+    					// unitId取模，每台服务逐出一部分
+    					if ((unitId % webCount) == webIndex) {
+    						if ((System.currentTimeMillis() - txMessage.getBorntime()) > getTransactionMessageTimeout()) {
+    							timeoutedTxKeys.add(txMessage.getDistTx().getTxKey());
+    						}
+    					}
+    				}
+    			}
+    		}
 		}
 		log.warn("ExplusionTimeoutedTransactions {}", timeoutedTxKeys);
-		// 回滚已经超时了的事务消息
-		rollback(timeoutedTxKeys);
+		if (CollectionUtils.isNotEmpty(timeoutedTxKeys)) {
+			// 已经超时的事务逐出缓存
+			timeoutedTxKeys.forEach(item -> {
+				TxMessageHolder.removeTxMessage(item);
+			});
+		}
 	}
 	
 	@Override
@@ -118,6 +130,9 @@ public class MQTxService implements IMQTxService {
 	public void commit(List<String> txKeys) {
 		for (String txKey : txKeys) {
 			MqTxMessage txMessage = (MqTxMessage) TxMessageHolder.getTxMessage(txKey);
+			if (txMessage == null) {
+				continue;
+			}
 			try {
 				// 提交事务
 				SerializableSendResult transactionSendResult = txMessage.getLocalTransactionSendResult();

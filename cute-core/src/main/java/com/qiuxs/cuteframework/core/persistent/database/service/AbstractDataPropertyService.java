@@ -13,7 +13,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
@@ -100,7 +99,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * @see com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService#deleteById(java.io.Serializable)
 	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
+	@Transactional
 	public int deleteById(PK id) {
 		T bean = this.getMust(id);
 		if (bean != null) {
@@ -114,7 +113,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * @see com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService#delete(com.qiuxs.cuteframework.core.persistent.database.entity.IEntity)
 	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
+	@Transactional
 	public int delete(T bean) {
 		// 实现了IFlag接口的默认软删除
 		if (bean instanceof IFlag) {
@@ -127,6 +126,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	}
 	
 	@Override
+	@Transactional
 	public int deleteDirect(PK id) {
 		return this.getDao().deleteById(id);
 	}
@@ -137,6 +137,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * @see com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService#enable(java.io.Serializable)
 	 */
 	@Override
+	@Transactional
 	public void enable(PK pk) {
 		T bean = BeanUtils.instantiateClass(this.getPojoClass());
 		if (bean instanceof IFlag) {
@@ -164,6 +165,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * @see com.qiuxs.cuteframework.core.persistent.database.service.ifc.IDataPropertyService#disable(java.io.Serializable)
 	 */
 	@Override
+	@Transactional
 	public void disable(PK pk) {
 		T bean = BeanUtils.instantiateClass(this.getPojoClass());
 		if (bean instanceof IFlag) {
@@ -219,12 +221,10 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * @param ids
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
 	public List<T> getByIds(Collection<PK> ids) {
 		return this.getDao().getByIds(ids);
 	}
 
-	@Transactional(propagation = Propagation.SUPPORTS)
 	public List<T> getAll() {
 		return this.findByMap(new HashMap<String, Object>());
 	}
@@ -239,7 +239,6 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * 		分页信息
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
 	public List<T> findByMap(Map<String, Object> params, PageInfo pageInfo) {
 		return this.getDao().list(params, pageInfo);
 	}
@@ -252,7 +251,6 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * 		参数列表
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
 	public List<T> findByMap(Map<String, Object> params) {
 		return this.getDao().list(params);
 	}
@@ -264,7 +262,6 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * @param params
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
 	public T findByMapSingle(Map<String, Object> params) {
 		List<T> list = this.getDao().list(params, PageInfo.makeSinglePageInfo());
 		if (list.isEmpty()) {
@@ -281,7 +278,6 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * @param params
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
 	@Override
 	public Long getCountByMap(Map<String, Object> params) {
 		return this.getDao().getCount(params);
@@ -294,7 +290,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * @param bean
 	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
+	@Transactional
 	public void create(T bean) {
 		this.initCreate(bean);
 		this.preSave(null, bean);
@@ -308,7 +304,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
+	@Transactional
 	public void createInBatch(List<T> beans) {
 		if (ListUtils.isNullOrEmpty(beans)) {
 			return;
@@ -465,7 +461,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 *      java.lang.Object)
 	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
+	@Transactional
 	public int update(T bean) {
 		// 默认为Null，需要时自行实现
 		T oldBean = this.getOld(bean.getId());
@@ -495,6 +491,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	 * @author qiuxs  
 	 * @param beans
 	 */
+	@Transactional
 	public void updateInBatch(Collection<T> beans) {
 		if (ListUtils.isEmpty(beans)) {
 			return;
@@ -579,7 +576,7 @@ public abstract class AbstractDataPropertyService<PK extends Serializable, T ext
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
+	@Transactional
 	public void save(T bean) {
 		PK id = bean.getId();
 		if (id == null) {

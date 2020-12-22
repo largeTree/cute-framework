@@ -4,6 +4,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.tx.IMQTxService;
 
@@ -14,6 +17,8 @@ import com.qiuxs.cuteframework.core.tx.IMQTxService;
  *
  */
 public class TransactionMessageExpulsionThread implements Runnable {
+	
+	private static Logger log = LoggerFactory.getLogger(TransactionMessageExpulsionThread.class);
 
 	private static ScheduledExecutorService pool = new ScheduledThreadPoolExecutor(1);
 
@@ -25,7 +30,11 @@ public class TransactionMessageExpulsionThread implements Runnable {
 
 	@Override
 	public void run() {
-		this.mqTxService.expulsionTimeoutedTransactions();
+		try {
+			this.mqTxService.expulsionTimeoutedTransactions();
+		} catch (Throwable e) {
+			log.error("Expulsion TransactionMessage ext = " + e.getLocalizedMessage(), e);
+		}
 	}
 
 	/**
