@@ -26,7 +26,6 @@ import org.apache.rocketmq.common.message.MessageConst;
 import org.apache.rocketmq.common.message.MessageQueue;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 
-import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.bean.Pair;
 import com.qiuxs.cuteframework.core.basic.bean.UserLite;
 import com.qiuxs.cuteframework.core.basic.config.IConfiguration;
@@ -454,7 +453,7 @@ public class ProducerUtils {
 
 		//如果指定了附加属性，将附加属性添加到消息中
 		putExtProps(msg, extProp);
-
+		
 		//增加用户数据到附加信息中，以传送当前用户信息给消费者
 		putSendToInvokedProp(msg);
 
@@ -467,13 +466,12 @@ public class ProducerUtils {
 	 * 消息属性中附加需要传送到被调用者的的日志属性数据
 	 * @author qiuxs  
 	 * @param msg 消息对象
+	 * @param logProp 
 	 */
 	private static void putSendToInvokedLogProp(Message msg, Object body) {
-		//生成传送到被调用者端的日志附加数据。
-		ApiLogProp logProp = ApiLogUtils.genSendToInvokedLogProp();
-		logProp.setToApp("_mq_namesrv"); //发到mq服务器
-		ApiLogUtils.writeReqLog(logProp, msg.getTopic(), StringUtils.substringBefore(msg.getTags(), SymbolConstants.SEPARATOR_DOT), body, ApiLogConstants.TYPE_REQUEST_MQ);
-		msg.putUserProperty(ApiLogConstants.ATTACH_KEY_REQ_PROP, JSONObject.toJSONString(logProp));
+		ApiLogProp sendToInvoke = ApiLogUtils.genSendToInvokedLogProp();
+		sendToInvoke.setToApp("_mq_namesrv");
+		ApiLogUtils.writeReqLog(sendToInvoke, msg.getTopic(), StringUtils.substringBefore(msg.getTags(), SymbolConstants.SEPARATOR_DOT), body, ApiLogConstants.TYPE_REQUEST_MQ);
 	}
 
 	/**
@@ -482,6 +480,7 @@ public class ProducerUtils {
 	 * 2. 传送transId
 	 * @author qiuxs  
 	 * @param msg 消息对象
+	 * @param logProp 
 	 */
 	private static void putSendToInvokedProp(Message msg) {
 		//添加上下文环境到目标端

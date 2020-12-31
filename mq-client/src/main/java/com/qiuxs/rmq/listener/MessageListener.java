@@ -9,9 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.rocketmq.common.message.MessageExt;
 
-import com.qiuxs.cuteframework.core.basic.utils.JsonUtils;
-import com.qiuxs.cuteframework.core.basic.utils.MapUtils;
-import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.basic.utils.io.SerializeUtil;
 import com.qiuxs.cuteframework.core.basic.utils.reflect.MethodUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
@@ -133,12 +130,6 @@ public abstract class MessageListener {
 	 */
 	private ApiLogProp writeReqApiLog(MessageExt msg, Object body, Map<String, String> extProp) {
 		log.info("消费消息：" + msg.getMsgId() + ", topic = " + msg.getTopic() + ", tags = " + msg.getTags());
-		String strApiLogProp = MapUtils.getString(extProp, ApiLogConstants.ATTACH_KEY_REQ_PROP);
-		if (StringUtils.isNotBlank(strApiLogProp)) {
-			ApiLogProp apiLogProp = JsonUtils.parseObject(strApiLogProp, ApiLogProp.class);
-			ApiLogUtils.initApiLog(apiLogProp);
-			return apiLogProp;
-		}
 		return null;
 	}
 

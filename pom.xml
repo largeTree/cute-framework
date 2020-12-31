@@ -27,6 +27,7 @@
 		<module>cute-support</module>
 		<module>cute-web-support</module>
 		<module>generate-web</module>
+		<module>cute-dubbo</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
