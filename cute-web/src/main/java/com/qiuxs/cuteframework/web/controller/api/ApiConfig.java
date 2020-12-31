@@ -26,6 +26,9 @@ public class ApiConfig {
 	/**  apiKey. */
 	private String key;
 	
+	/**  restUri地址. */
+	private String restUri;
+	
 	/**  描述信息. */
 	private String desc;
 	
@@ -72,6 +75,24 @@ public class ApiConfig {
 	 */
 	public void setKey(String key) {
 		this.key = key;
+	}
+
+	/**
+	 * Gets the restUri地址.
+	 *
+	 * @return the restUri地址
+	 */
+	public String getRestUri() {
+		return restUri;
+	}
+
+	/**
+	 * Sets the restUri地址.
+	 *
+	 * @param restUri the new restUri地址
+	 */
+	public void setRestUri(String restUri) {
+		this.restUri = restUri;
 	}
 
 	/**
@@ -254,6 +275,11 @@ public class ApiConfig {
 		this.paramCount = paramCount;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

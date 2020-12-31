@@ -15,6 +15,7 @@ import org.springframework.core.io.Resource;
 import com.qiuxs.cuteframework.core.basic.Constants;
 import com.qiuxs.cuteframework.core.basic.utils.ClassPathResourceUtil;
 import com.qiuxs.cuteframework.core.basic.utils.ExceptionUtils;
+import com.qiuxs.cuteframework.core.basic.utils.StringUtils;
 import com.qiuxs.cuteframework.core.basic.utils.converter.XmlUtil;
 import com.qiuxs.cuteframework.core.basic.utils.reflect.MethodUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
@@ -31,9 +32,24 @@ public class ApiConfigHolder {
 
 	/** Api缓存 */
 	private static Map<String, ApiConfig> apiMap;
+	private static Map<String, ApiConfig> restApiMap;
 
 	static {
 		init();
+	}
+	
+	/**
+	 * 获取rest风格API
+	 * @param uri
+	 * @return
+	 */
+	public static ApiConfig getApiConfigByUri(String uri) {
+		// debug模式每次都自动刷新apiConfig
+		if (EnvironmentContext.isDebug()) {
+			ApiConfigHolder.init();
+		}
+		ApiConfig apiConfig = restApiMap.get(uri);
+		return fillApiInfo(apiConfig);
 	}
 
 	/**
@@ -46,8 +62,11 @@ public class ApiConfigHolder {
 		if (EnvironmentContext.isDebug()) {
 			ApiConfigHolder.init();
 		}
-		
 		ApiConfig apiConfig = apiMap.get(apiKey);
+		return fillApiInfo(apiConfig);
+	}
+	
+	private static ApiConfig fillApiInfo(ApiConfig apiConfig) {
 		// 填充action对象和方法对象
 		if (apiConfig.getAction() == null || apiConfig.getMethodObj() == null) {
 			IAction action = ApplicationContextHolder.getBean(apiConfig.getBean());
@@ -86,6 +105,7 @@ public class ApiConfigHolder {
 
 	private static void init() {
 		Map<String, ApiConfig> tempApiMap = new StrictApiMap();
+		Map<String, ApiConfig> tempRestApiMap = new StrictApiMap();
 		List<Resource> apiConfigFiles = ClassPathResourceUtil.getResourceList(API_CONFIG_PATH);
 		for (Resource res : apiConfigFiles) {
 			try {
@@ -101,10 +121,15 @@ public class ApiConfigHolder {
 						ApiConfig apiConfig = new ApiConfig();
 						Element next = apis.next();
 						XmlUtil.setBeanByElement(apiConfig, next);
+						String restUri = next.attributeValue("rest-uri");
+						apiConfig.setRestUri(restUri);
+						
 						String login = next.attributeValue("login");
 						apiConfig.setLoginFlag(Constants.TRUE_STR.equals(login));
+						
 						String auth = next.attributeValue("auth");
 						apiConfig.setAuthFlag(Constants.TRUE_STR.equals(auth));
+						
 						String type = next.attributeValue("type");
 						if (type == null) {
 							apiConfig.setType(ApiConfig.API_TYPE_USER);
@@ -112,6 +137,10 @@ public class ApiConfigHolder {
 							apiConfig.setType(Integer.parseInt(type));
 						}
 						tempApiMap.put(apiConfig.getKey(), apiConfig);
+						
+						if (StringUtils.isNotBlank(restUri)) {
+							tempRestApiMap.put(restUri, apiConfig);
+						}
 					}
 				}
 			} catch (Exception e) {
