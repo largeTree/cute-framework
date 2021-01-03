@@ -47,10 +47,11 @@ public class CuteDatabaseManager extends AbstractDatabaseManager {
 	}
 
 	@Override
-	protected void shutdownInternal() throws Exception {
+	protected boolean shutdownInternal() throws Exception {
 		if (this.connection != null || this.statement != null) {
-			this.commitAndClose();
+			return this.commitAndClose();
 		}
+		return false;
 	}
 
 	@Override
@@ -152,7 +153,8 @@ public class CuteDatabaseManager extends AbstractDatabaseManager {
 	}
 
 	@Override
-	protected void commitAndClose() {
+	protected boolean commitAndClose() {
+		boolean res = false;
 		try {
 			if (this.connection != null && !this.connection.isClosed()) {
 				if (this.isBatchSupported) {
@@ -162,10 +164,12 @@ public class CuteDatabaseManager extends AbstractDatabaseManager {
 			}
 		} catch (SQLException e) {
 			NoDbLogger.log.error("Failed to commit transaction logging event or flushing buffer: " + e.getMessage(), e);
+			res = false;
 		} finally {
 			try {
 				Closer.close(this.statement);
 			} catch (Exception e) {
+				res = false;
 				e.printStackTrace();
 			} finally {
 				this.statement = null;
@@ -173,11 +177,13 @@ public class CuteDatabaseManager extends AbstractDatabaseManager {
 			try {
 				Closer.close(this.connection);
 			} catch (Exception e) {
+				res = false;
 				e.printStackTrace();
 			} finally {
 				this.connection = null;
 			}
 		}
+		return res;
 	}
 
 	public static CuteDatabaseManager getJDBCDatabaseManager(final String name, final int bufferSize,

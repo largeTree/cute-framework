@@ -143,6 +143,22 @@ public class FieldUtils {
 		Field accessibleField = getAccessibleField(bean.getClass(), name);
 		return accessibleField.get(bean);
 	}
+	
+	/**
+	 * 获取字段值
+	 *  
+	 * @author qiuxs  
+	 * @param bean
+	 * @param name
+	 * @return
+	 */
+	public static Object getFieldValueQuietly(Object bean, String name) {
+		try {
+			return getFieldValue(bean, name);
+		} catch (ReflectiveOperationException e) {
+			return null;
+		}
+	}
 
 	/**
 	 * 设置字段值

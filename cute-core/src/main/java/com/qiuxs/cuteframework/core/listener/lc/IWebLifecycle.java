@@ -23,6 +23,22 @@ public interface IWebLifecycle {
 	 */
 	public default void firstDestoryed() {
 	}
+	
+	/**
+	 * 中间初始化
+	 *  
+	 * @author qiuxs
+	 */
+	public default void middleInit() {
+	}
+	
+	/**
+	 * 中间销毁
+	 *  
+	 * @author qiuxs
+	 */
+	public default void middleDestoryed() {
+	}
 
 	/**
 	 * Spring初始化之后执行

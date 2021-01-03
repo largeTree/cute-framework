@@ -1,7 +1,10 @@
 package com.qiuxs.cuteframework.core.basic.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +16,7 @@ public abstract class AbstractConfiguration implements IConfiguration {
 	
 	protected static Logger log = LogManager.getLogger(AbstractConfiguration.class);
 
+	private List<String> configPaths = new ArrayList<>();
 	/** 合并方式：默认为替换 */
 	protected String merge = UConfigUtils.MERGE_TYPE_REPLACE;
 	private Map<String, String> values = new HashMap<>();
@@ -80,6 +84,18 @@ public abstract class AbstractConfiguration implements IConfiguration {
 	public Map<String, String> toMap() {
 		return new HashMap<String, String>(this.values);
 	}
+	
+	@Override
+	public Properties toProperties() {
+		Properties props = new Properties();
+		props.putAll(this.values);
+		return props;
+	}
+	
+	@Override
+	public String getFirstAvailableLocation() {
+		return null;
+	}
 
 	protected void clear() {
 		this.values.clear();
@@ -102,11 +118,14 @@ public abstract class AbstractConfiguration implements IConfiguration {
 		return "[merge = " + this.merge + ", values = " + this.values.toString() + "]";
 	}
 
-	public String handlePath(String path) {
+	public String handlePathAndCache(String path) {
 		// 替换路径中的系统属性
 		path = StringUtils.replaceSystemProp(path);
 		path = path.replace("\\", "/");
 		path = path.replace("file://", "");
+		
+		// 缓存起来
+		this.configPaths.add(path);
 		return path;
 	}
 

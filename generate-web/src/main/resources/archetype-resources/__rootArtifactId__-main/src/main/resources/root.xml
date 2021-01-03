@@ -4,4 +4,9 @@
 		<extend path="file://${user.home}/${rootArtifactId}/env.xml" />
 		<extend path="file:///web/etc/${rootArtifactId}/env.xml" />
 	</domain>
+	<domain id="db" merge="replace" type="properties">
+		<default path="classpath:/config/db.properties" />
+		<extend path="file://${user.home}/wxbot/db.properties" />
+        <extend path="file:///web/etc/wxbot/db.properties" />
+	</domain>
 </domanins>

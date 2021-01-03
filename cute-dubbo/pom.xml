@@ -16,11 +16,14 @@
 			<groupId>com.qiuxs</groupId>
 			<artifactId>cute-core</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.dubbo/dubbo -->
 		<dependency>
-			<groupId>org.apache.dubbo</groupId>
+			<groupId>com.alibaba</groupId>
 			<artifactId>dubbo</artifactId>
-			<version>2.7.3</version>
+		</dependency>
+		<!-- Dubbo Nacos registry dependency -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>dubbo-registry-nacos</artifactId>
 		</dependency>
 	</dependencies>
 

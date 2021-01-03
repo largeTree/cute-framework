@@ -111,6 +111,11 @@
 				<artifactId>cute-wxpay-plugin</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.qiuxs</groupId>
+				<artifactId>cute-dubbo</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
     <build>

@@ -1,6 +1,7 @@
 package com.qiuxs.cuteframework.core.basic.config;
 
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * 简易配置对象
@@ -34,5 +35,9 @@ public interface IConfiguration {
 	public long getLongValue(String key, long defaultVal);
 
 	public Map<String, String> toMap();
+	
+	public Properties toProperties();
+
+	public String getFirstAvailableLocation();
 
 }

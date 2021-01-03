@@ -22,6 +22,11 @@
 			<groupId>${groupId}</groupId>
 			<artifactId>cute-web</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.qiuxs</groupId>
+			<artifactId>cute-jetty</artifactId>
+			<scope>provided</scope>
+		</dependency>
     </dependencies>
     
     <build>

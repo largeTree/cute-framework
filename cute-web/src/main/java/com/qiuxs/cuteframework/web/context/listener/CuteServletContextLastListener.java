@@ -14,6 +14,9 @@ import com.qiuxs.cuteframework.core.listener.lc.WebLifecycleContainer;
 public class CuteServletContextLastListener implements ServletContextListener {
 	
 	private static Logger log = LogManager.getLogger(CuteServletContextLastListener.class);
+	
+	/** 系统是否进入Last Destroy阶段 */
+	private static boolean lastDestroy = false;
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
@@ -31,6 +34,9 @@ public class CuteServletContextLastListener implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
+		// 标记已进入lastDestory阶段
+		lastDestroy = true;
+		
 		List<IWebLifecycle> lifecycles = WebLifecycleContainer.getLifecycles();
 		for (int i = lifecycles.size() - 1; i >= 0; i--) {
 			IWebLifecycle lifecycle = lifecycles.get(i);
@@ -40,6 +46,14 @@ public class CuteServletContextLastListener implements ServletContextListener {
 				log.error("Lifecycle@" + lifecycle.getClass() + ", destroy Failed ext = " + e.getLocalizedMessage(), e);
 			}
 		}
+	}
+	
+	/**
+	 * 系统当前是否进入了Last Destroy阶段
+	 * @return 系统进入Last Destroy阶段返回true，否则返回false
+	 */
+	public static boolean isLastDestroy() {
+		return lastDestroy;
 	}
 
 }

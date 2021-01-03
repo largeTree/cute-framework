@@ -77,15 +77,25 @@ public class ApplicationContextHolder {
 	 * @param name
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T getBean(String name) {
-		Object bean = null;
+//		Object bean = null;
+//		try {
+//			bean = getApplicationContext().getBean(name);
+//		} catch (Throwable e) {
+//			log.error("getBean[" + name + "], failed, ext = " + e.getLocalizedMessage(), e);
+//		}
+//		return (T) bean;
+		return getBeanQuietly(name);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T getBeanQuietly(String name) {
 		try {
-			bean = getApplicationContext().getBean(name);
+			return (T) getApplicationContext().getBean(name);
 		} catch (Throwable e) {
 			log.error("getBean[" + name + "], failed, ext = " + e.getLocalizedMessage(), e);
+			return null;
 		}
-		return (T) bean;
 	}
 
 	/**

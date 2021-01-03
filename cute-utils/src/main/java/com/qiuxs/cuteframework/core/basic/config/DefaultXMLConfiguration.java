@@ -94,7 +94,7 @@ public class DefaultXMLConfiguration extends AbstractConfiguration {
 	 */
 	public void addPath(String path) {
 		try {
-			path = super.handlePath(path);
+			path = super.handlePathAndCache(path);
 			Document document = null;
 			if (path.startsWith(UConfigUtils.CLASSPATH_PREFIX)) {
 				// classpath下的文件

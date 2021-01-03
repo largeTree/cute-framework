@@ -110,6 +110,11 @@ public class UConfigUtils {
 		configDomains = mapDomains;
 	}
 
+	public static String getFirstAvailableLocation(String domain) {
+		IConfiguration configuration = configDomains.get(domain);
+		return configuration.getFirstAvailableLocation();
+	}
+
 	/**
 	 * 初始化properties配置文件
 	 *  
