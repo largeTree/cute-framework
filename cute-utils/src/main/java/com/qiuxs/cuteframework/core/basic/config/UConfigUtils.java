@@ -45,6 +45,8 @@ public class UConfigUtils {
 	public static final String MERGE_TYPE_LAST_ONE = "lastOne";
 
 	public static final String DOMAIN_DB = "db";
+	public static final String DOMAIN_ENV = "env";
+	public static final String DOMAIN_DUBBO = "dubbo";
 
 	private static Map<String, IConfiguration> configDomains;
 

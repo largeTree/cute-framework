@@ -17,14 +17,21 @@
 			<artifactId>cute-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.alibaba</groupId>
+			<groupId>org.apache.dubbo</groupId>
 			<artifactId>dubbo</artifactId>
 		</dependency>
-		<!-- Dubbo Nacos registry dependency -->
 		<dependency>
-			<groupId>com.alibaba</groupId>
+			<groupId>org.apache.dubbo</groupId>
 			<artifactId>dubbo-registry-nacos</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.dubbo</groupId>
+			<artifactId>dubbo-registry-nacos</artifactId>
+		</dependency>
+	    <dependency>
+	      <groupId>com.alibaba.nacos</groupId>
+	      <artifactId>nacos-client</artifactId>
+	    </dependency>
 	</dependencies>
 
 	<build>

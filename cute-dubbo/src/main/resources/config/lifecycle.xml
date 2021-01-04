@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-	<lc class="com.qiuxs.dubbo.lc.DubboStartupLifecycle" />
+	<lc class="com.qiuxs.dubbo.lc.DubboLifecycle" />
 </root>

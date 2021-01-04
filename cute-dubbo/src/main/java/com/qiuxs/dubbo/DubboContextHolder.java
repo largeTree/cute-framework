@@ -12,18 +12,19 @@ import java.util.Set;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
+import org.apache.dubbo.common.extension.ExtensionLoader;
+import org.apache.dubbo.common.store.DataStore;
+import org.apache.dubbo.config.ServiceConfig;
+import org.apache.dubbo.config.spring.ReferenceBean;
+import org.apache.dubbo.config.spring.beans.factory.annotation.ReferenceAnnotationBeanPostProcessor;
+import org.apache.dubbo.config.spring.beans.factory.annotation.ServiceAnnotationBeanPostProcessor;
+import org.apache.dubbo.remoting.Constants;
+import org.apache.dubbo.rpc.RpcContext;
+import org.apache.dubbo.rpc.service.EchoService;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.web.context.support.XmlWebApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.extension.ExtensionLoader;
-import com.alibaba.dubbo.common.store.DataStore;
-import com.alibaba.dubbo.config.ServiceConfig;
-import com.alibaba.dubbo.config.spring.AnnotationBean;
-import com.alibaba.dubbo.config.spring.ReferenceBean;
-import com.alibaba.dubbo.rpc.RpcContext;
-import com.alibaba.dubbo.rpc.service.EchoService;
 import com.alibaba.fastjson.JSONObject;
 import com.qiuxs.cuteframework.core.basic.utils.CollectionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ThreadUtils;
@@ -47,12 +48,12 @@ public class DubboContextHolder {
 	/**********************提供者端*************************/
 	@SuppressWarnings("unchecked")
 	public static Set<ServiceConfig<?>> getServiceConfigs() {
-		XmlWebApplicationContext xwac = (XmlWebApplicationContext) ApplicationContextHolder.getApplicationContext();
+		ConfigurableApplicationContext xwac = (ConfigurableApplicationContext) ApplicationContextHolder.getApplicationContext();
 		DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) xwac.getBeanFactory();
 		List<BeanPostProcessor> beanPostProcessors = beanFactory.getBeanPostProcessors();
 		for (BeanPostProcessor beanPostProcessor : beanPostProcessors) {
-			if (beanPostProcessor instanceof AnnotationBean) {
-				AnnotationBean annotationBean = (AnnotationBean)beanPostProcessor;
+			if (beanPostProcessor instanceof ServiceAnnotationBeanPostProcessor) {
+				ServiceAnnotationBeanPostProcessor annotationBean = (ServiceAnnotationBeanPostProcessor)beanPostProcessor;
 				try {
 					return (Set<ServiceConfig<?>>) org.apache.commons.lang3.reflect.FieldUtils.readField(annotationBean, "serviceConfigs", true);
 				} catch (IllegalAccessException e) {
@@ -91,14 +92,14 @@ public class DubboContextHolder {
 	@SuppressWarnings("unchecked")
 	public static Map<String, ReferenceBean<?>> getReferenceConfigs() {
 		if (referenceConfigs == null) {
-			XmlWebApplicationContext xwac = (XmlWebApplicationContext) ApplicationContextHolder.getApplicationContext();
+			ConfigurableApplicationContext xwac = (ConfigurableApplicationContext) ApplicationContextHolder.getApplicationContext();
 			DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) xwac.getBeanFactory();
 			List<BeanPostProcessor> beanPostProcessors = beanFactory.getBeanPostProcessors();
 			for (BeanPostProcessor beanPostProcessor : beanPostProcessors) {
-				if (beanPostProcessor instanceof AnnotationBean) {
-					AnnotationBean annotationBean = (AnnotationBean)beanPostProcessor;
+				if (beanPostProcessor instanceof ReferenceAnnotationBeanPostProcessor) {
+					ReferenceAnnotationBeanPostProcessor annotationBean = (ReferenceAnnotationBeanPostProcessor)beanPostProcessor;
 					try {
-						referenceConfigs = (Map<String, ReferenceBean<?>>) org.apache.commons.lang3.reflect.FieldUtils.readField(annotationBean, "referenceConfigs", true);
+						referenceConfigs = (Map<String, ReferenceBean<?>>) org.apache.commons.lang3.reflect.FieldUtils.readField(annotationBean, "referenceBeanCache", true);
 					} catch (IllegalAccessException e) {
 						DubboLogger.logger.error("ext = " + e.getLocalizedMessage(), e);
 					}

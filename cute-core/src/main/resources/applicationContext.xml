@@ -22,7 +22,7 @@
 		name="templateLoaderPath" value="classpath:/templates/" /> <property name="freemarkerSettings"> <props> <prop key="template_update_delay">10</prop> <prop key="defaultEncoding">UTF-8</prop> 
 		</props> </property> <property name="postTemplateLoaders"> <array> <bean class="com.hzecool.tech.freemarker.EcFreemarkerTemplateLoader" /> </array> </property> </bean> -->
 
-	<!-- 配置数据源 -->
+	<!-- 注入spring属性 -->
 	<bean id="propertyConfigurer" class="com.qiuxs.cuteframework.tech.spring.config.CutePropertyPlaceholderConfigurer">
 	</bean>
 

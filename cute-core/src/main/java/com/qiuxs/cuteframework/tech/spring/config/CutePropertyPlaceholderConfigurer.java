@@ -25,7 +25,13 @@ public class CutePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 	protected void loadProperties(Properties props) throws IOException {
 		super.loadProperties(props);
 		IConfiguration domain = UConfigUtils.getDomain(UConfigUtils.DOMAIN_DB);
-		props.putAll(domain.toMap());
+		if (domain != null) {
+			props.putAll(domain.toMap());
+		}
+		domain = UConfigUtils.getDomain(UConfigUtils.DOMAIN_ENV);
+		if (domain != null) {
+			props.putAll(domain.toMap());
+		}
 		ctxProperties.putAll(props);
 		log.info("db.driver = " + props.getProperty("db.driver") + ", db.url = " + props.getProperty("db.url") + ", db.user = " + props.getProperty("db.user"));
 	}
