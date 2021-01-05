@@ -1,0 +1,4 @@
+userContextProviderDubboFilter=com.qiuxs.dubbo.filter.UserContextProviderDubboFilter
+userContextProviderDubboFilter=com.qiuxs.dubbo.filter.UserContextProviderDubboFilter
+apiLogProviderDubboFilter=com.qiuxs.dubbo.filter.ApiLogProviderDubboFilter
+apiLogCustomerDubboFilter=com.qiuxs.dubbo.filter.ApiLogCustomerDubboFilter
