@@ -1,1 +1,2 @@
 microSvcContextFilter=com.qiuxs.dubbo.filter.MicroSvcContextDubboFilter
+apiLogFilter=com.qiuxs.dubbo.filter.ApiLogDubboFilter

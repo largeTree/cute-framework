@@ -32,7 +32,7 @@ public class DubboLifecycle implements IWebLifecycle {
 	@Override
 	public void lastInit() {
 		// 暴露服务
-//		DubboContextHolder.exportServiceConfig();
+		DubboContextHolder.exportServiceConfig();
 	}
 	
 	@Override

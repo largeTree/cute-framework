@@ -12,12 +12,13 @@ import java.util.Set;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
-import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.common.extension.ExtensionLoader;
 import org.apache.dubbo.common.store.DataStore;
+import org.apache.dubbo.config.ServiceConfig;
 import org.apache.dubbo.config.spring.ReferenceBean;
 import org.apache.dubbo.config.spring.ServiceBean;
 import org.apache.dubbo.config.spring.beans.factory.annotation.ReferenceAnnotationBeanPostProcessor;
+import org.apache.dubbo.remoting.Constants;
 import org.apache.dubbo.rpc.RpcContext;
 import org.apache.dubbo.rpc.service.EchoService;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -25,8 +26,10 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import com.alibaba.fastjson.JSONObject;
+import com.qiuxs.cuteframework.core.basic.utils.CollectionUtils;
 import com.qiuxs.cuteframework.core.basic.utils.ThreadUtils;
 import com.qiuxs.cuteframework.core.basic.utils.reflect.FieldUtils;
+import com.qiuxs.cuteframework.core.basic.utils.reflect.MethodUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.context.EnvironmentContext;
 
@@ -61,45 +64,38 @@ public class DubboContextHolder {
 	}
 
 	/********************** 提供者端 *************************/
-//	@SuppressWarnings("unchecked")
-//	public static Set<ServiceConfig<?>> getServiceConfigs() {
-//		ConfigurableApplicationContext xwac = (ConfigurableApplicationContext) ApplicationContextHolder.getApplicationContext();
-//		DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) xwac.getBeanFactory();
-//		List<BeanPostProcessor> beanPostProcessors = beanFactory.getBeanPostProcessors();
-//		for (BeanPostProcessor beanPostProcessor : beanPostProcessors) {
-//			if (beanPostProcessor instanceof ServiceAnnotationBeanPostProcessor) {
-//				ServiceAnnotationBeanPostProcessor annotationBean = (ServiceAnnotationBeanPostProcessor)beanPostProcessor;
-//				try {
-//					return (Set<ServiceConfig<?>>) org.apache.commons.lang3.reflect.FieldUtils.readField(annotationBean, "serviceConfigs", true);
-//				} catch (IllegalAccessException e) {
-//					DubboLogger.logger.error("ext = " + e.getLocalizedMessage(), e);
-//				}
-//			} 
-//		}
-//		return Collections.emptySet();
-//	} 
-//	
-//	/**
-//	 * 暴露dubbo服务
-//	 *  
-//	 * @author qiuxs
-//	 */
-//	public static void exportServiceConfig() {
-//		Set<ServiceConfig<?>> serviceConfigs = getServiceConfigs();
-//		if (CollectionUtils.isNotEmpty(serviceConfigs)) {
-//			for (ServiceConfig<?> serviceConfig : serviceConfigs) {
-//				String refName = "";
-//				if (serviceConfig.getRef() != null) {
-//					refName = serviceConfig.getRef().getClass().getName();
-//				}
-//				DubboLogger.logger.info(serviceConfig.getInterface() + ": " + serviceConfig + "; ref: " + refName);
-//				Boolean export = serviceConfig.getExport();
-//		        if (export != null && ! export.booleanValue()) {
-//		            MethodUtils.invokeMethod(serviceConfig, "doExport", new Class[] {}, new Object[] {});
-//		        }
-//			}
-//		}
-//	} 
+	public static Set<ServiceConfig<?>> getServiceConfigs() {
+		ConfigurableApplicationContext xwac = (ConfigurableApplicationContext) ApplicationContextHolder.getApplicationContext();
+		DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) xwac.getBeanFactory();
+		String[] beanNamesForType = beanFactory.getBeanNamesForType(ServiceBean.class);
+		Set<ServiceConfig<?>> serviceConfigs = new HashSet<>();
+		for (String name : beanNamesForType) {
+			serviceConfigs.add(beanFactory.getBean(name, ServiceBean.class));
+		}
+		return serviceConfigs;
+	} 
+	
+	/**
+	 * 暴露dubbo服务
+	 *  
+	 * @author qiuxs
+	 */
+	public static void exportServiceConfig() {
+		Set<ServiceConfig<?>> serviceConfigs = getServiceConfigs();
+		if (CollectionUtils.isNotEmpty(serviceConfigs)) {
+			for (ServiceConfig<?> serviceConfig : serviceConfigs) {
+				String refName = "";
+				if (serviceConfig.getRef() != null) {
+					refName = serviceConfig.getRef().getClass().getName();
+				}
+				DubboLogger.logger.info(serviceConfig.getInterface() + ": " + serviceConfig + "; ref: " + refName);
+				Boolean export = serviceConfig.getExport();
+		        if (export != null && !export.booleanValue()) {
+		            MethodUtils.invokeMethod(serviceConfig, "doExport", new Class[] {}, new Object[] {});
+		        }
+			}
+		}
+	} 
 
 	/***************************** 调用者端 *****************************/
 	private static Map<String, ReferenceBean<?>> referenceConfigs = null;
@@ -195,7 +191,7 @@ public class DubboContextHolder {
 	public static Map<String, List<Thread>> getThreads(State threadState) {
 		Map<String, List<Thread>> portThreadsMap = new HashMap<>();
 		DataStore dataStore = ExtensionLoader.getExtensionLoader(DataStore.class).getDefaultExtension();
-		Map<String, Object> portExecutorMap = dataStore.get(CommonConstants.EXECUTOR_SERVICE_COMPONENT_KEY);
+		Map<String, Object> portExecutorMap = dataStore.get(Constants.EXECUTOR_SERVICE_COMPONENT_KEY);
 		for (String port : portExecutorMap.keySet()) {
 			List<Thread> threads = new ArrayList<>();
 			ThreadPoolExecutor es = (ThreadPoolExecutor) portExecutorMap.get(port);
@@ -270,7 +266,7 @@ public class DubboContextHolder {
 				long startMs = Calendar.getInstance().getTimeInMillis();
 				RpcContext context = getRpcContext(thread);
 				if (context != null) {
-					threadJson.put("context", context.getObjectAttachments());
+					threadJson.put("context", context.getAttachments());
 				}
 				threadJson.put("extElapsed", Calendar.getInstance().getTimeInMillis() - startMs);
 			}
