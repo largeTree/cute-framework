@@ -29,9 +29,9 @@
     <context:component-scan base-package="com.qiuxs"/>
     
     <!--      增加记录API调用日志、传送用户上下文数据消费者端拦截器。启动时不检查提供者是否存在。        -->
-    <!-- <dubbo:consumer filter="apiLogCustomerDubboFilter,userContextCustomerDubboFilter" check="false" /> -->
+    <dubbo:consumer filter="microSvcContextFilter" check="false" />
     
     <!--      去除default里的ExceptionFilter，重试次数设置为0，增加记录API调用日志、接收用户上下文数据提供者端拦截器     -->
-    <!-- <dubbo:provider filter="apiLogProviderDubboFilter,userContextProviderDubboFilter,-exception" registry="local" export="false" /> -->
+    <dubbo:provider filter="microSvcContextFilter,-exception" registry="local" export="false" />
 
 </beans>

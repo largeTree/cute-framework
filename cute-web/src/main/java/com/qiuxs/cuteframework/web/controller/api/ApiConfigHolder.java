@@ -149,6 +149,7 @@ public class ApiConfigHolder {
 			}
 		}
 		apiMap = tempApiMap;
+		restApiMap = tempRestApiMap;
 	}
 
 	/**

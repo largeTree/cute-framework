@@ -24,7 +24,7 @@ public class RestfulApiGatewayController extends AbstractApiGatewayController {
 			HttpServletRequest request, HttpServletResponse response)
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
-		String uri = request.getRequestURI().replace(REST_API_PREFIX, "");
+		String uri = request.getRequestURI().replace(request.getContextPath(), "").replace(REST_API_PREFIX, "");
 
 		// 获取apiConfig
 		ApiConfig apiConfig = ApiConfigHolder.getApiConfigByUri(uri);

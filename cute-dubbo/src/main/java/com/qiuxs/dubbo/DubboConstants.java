@@ -8,4 +8,6 @@ public class DubboConstants {
 	
 	public static final String CONFIG_APPLICATION_NAME = "dubbo.application.name";
 	
+	public static final String URL_PARAM_SERVER_ID = "serverId";
+	
 }

@@ -12,12 +12,12 @@ import java.util.Set;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
+import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.common.extension.ExtensionLoader;
 import org.apache.dubbo.common.store.DataStore;
 import org.apache.dubbo.config.spring.ReferenceBean;
 import org.apache.dubbo.config.spring.ServiceBean;
 import org.apache.dubbo.config.spring.beans.factory.annotation.ReferenceAnnotationBeanPostProcessor;
-import org.apache.dubbo.remoting.Constants;
 import org.apache.dubbo.rpc.RpcContext;
 import org.apache.dubbo.rpc.service.EchoService;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -195,7 +195,7 @@ public class DubboContextHolder {
 	public static Map<String, List<Thread>> getThreads(State threadState) {
 		Map<String, List<Thread>> portThreadsMap = new HashMap<>();
 		DataStore dataStore = ExtensionLoader.getExtensionLoader(DataStore.class).getDefaultExtension();
-		Map<String, Object> portExecutorMap = dataStore.get(Constants.EXECUTOR_SERVICE_COMPONENT_KEY);
+		Map<String, Object> portExecutorMap = dataStore.get(CommonConstants.EXECUTOR_SERVICE_COMPONENT_KEY);
 		for (String port : portExecutorMap.keySet()) {
 			List<Thread> threads = new ArrayList<>();
 			ThreadPoolExecutor es = (ThreadPoolExecutor) portExecutorMap.get(port);
@@ -270,7 +270,7 @@ public class DubboContextHolder {
 				long startMs = Calendar.getInstance().getTimeInMillis();
 				RpcContext context = getRpcContext(thread);
 				if (context != null) {
-					threadJson.put("context", context.getAttachments());
+					threadJson.put("context", context.getObjectAttachments());
 				}
 				threadJson.put("extElapsed", Calendar.getInstance().getTimeInMillis() - startMs);
 			}
