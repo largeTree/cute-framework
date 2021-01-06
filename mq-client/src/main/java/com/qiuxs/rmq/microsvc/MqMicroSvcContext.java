@@ -6,11 +6,11 @@ import com.qiuxs.cuteframework.tech.microsvc.MicroSvcContext;
 
 public class MqMicroSvcContext extends MicroSvcContext {
 
-	private Message msg;
+	// private Message msg;
 
 	public MqMicroSvcContext(Message msg) {
 		super(msg.getProperties());
-		this.msg = msg;
+		// this.msg = msg;
 	}
 
 }

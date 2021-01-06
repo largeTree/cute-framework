@@ -193,7 +193,7 @@ public abstract class BaseAction<PK extends Serializable, T extends IEntity<PK>,
 		if (StringUtils.isNotBlank(jsonData)) {
 			return JsonUtils.parseJSONObject(jsonData);
 		} else {
-			return null;
+			return new JSONObject();
 		}
 	}
 	

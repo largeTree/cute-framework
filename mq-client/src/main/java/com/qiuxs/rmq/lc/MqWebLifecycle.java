@@ -47,7 +47,7 @@ public class MqWebLifecycle implements IWebLifecycle {
 			log.error("destory ConsumerUtils failed, ext = " + e.getLocalizedMessage(), e);
 		}
 		
-		TransactionMessageExpulsionThread.shutdownWorker();
+		// TransactionMessageExpulsionThread.shutdownWorker();
 	}
 	
 }

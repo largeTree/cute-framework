@@ -1,12 +1,10 @@
 package com.qiuxs.rmq;
 
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
+import com.qiuxs.cuteframework.core.basic.utils.TimeUtils;
 import com.qiuxs.cuteframework.core.context.ApplicationContextHolder;
 import com.qiuxs.cuteframework.core.tx.IMQTxService;
 
@@ -20,7 +18,13 @@ public class TransactionMessageExpulsionThread implements Runnable {
 	
 	private static Logger log = LoggerFactory.getLogger(TransactionMessageExpulsionThread.class);
 
-	private static ScheduledExecutorService pool = new ScheduledThreadPoolExecutor(1);
+//	private static ScheduledExecutorService pool = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
+//		private AtomicInteger counter = new AtomicInteger(1);
+//		@Override
+//		public Thread newThread(Runnable r) {
+//			return new Thread(r, "transactionMessageExpThread-" + counter.getAndIncrement());
+//		}
+//	});
 
 	private IMQTxService mqTxService;
 
@@ -31,6 +35,9 @@ public class TransactionMessageExpulsionThread implements Runnable {
 	@Override
 	public void run() {
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("TransactionMessageExpulsionThread is running ");
+			}
 			this.mqTxService.expulsionTimeoutedTransactions();
 		} catch (Throwable e) {
 			log.error("Expulsion TransactionMessage ext = " + e.getLocalizedMessage(), e);
@@ -42,14 +49,15 @@ public class TransactionMessageExpulsionThread implements Runnable {
 	 */
 	public static void startWorker() {
 		IMQTxService mqTxService = ApplicationContextHolder.getBean(IMQTxService.class);
+		ThreadPoolTaskScheduler scheduler = ApplicationContextHolder.getBean("myScheduler");
 		TransactionMessageExpulsionThread worker = new TransactionMessageExpulsionThread(mqTxService);
-		pool.scheduleAtFixedRate(worker, 0, 1, TimeUnit.MINUTES);
+		scheduler.scheduleAtFixedRate(worker, TimeUtils.MINUTE);
 	}
 
-	public static void shutdownWorker() {
-		if (pool != null) {
-			pool.shutdown();
-		}
-	}
+//	public static void shutdownWorker() {
+//		if (pool != null) {
+//			pool.shutdown();
+//		}
+//	}
 
 }
