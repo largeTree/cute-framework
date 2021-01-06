@@ -24,14 +24,17 @@
 			<groupId>org.apache.dubbo</groupId>
 			<artifactId>dubbo-registry-nacos</artifactId>
 		</dependency>
+		<!-- 使用nacos注册中心时，手动添加下面的依赖 -->
 		<dependency>
 			<groupId>org.apache.dubbo</groupId>
 			<artifactId>dubbo-registry-nacos</artifactId>
+			<scope>provided</scope>
 		</dependency>
-	    <dependency>
-	      <groupId>com.alibaba.nacos</groupId>
-	      <artifactId>nacos-client</artifactId>
-	    </dependency>
+		<dependency>
+			<groupId>com.alibaba.nacos</groupId>
+			<artifactId>nacos-client</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
