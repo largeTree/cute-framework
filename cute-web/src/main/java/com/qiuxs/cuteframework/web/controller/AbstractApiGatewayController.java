@@ -29,9 +29,6 @@ public class AbstractApiGatewayController extends BaseController {
 		StopWatch sw = new StopWatch();
 		sw.start();
 		
-		// 子任务耗时情况统计
-		StopWatchContext.init();
-		
 		// 获取所有参数
 		ReqParam params = RequestUtils.getRequestParams(request, compressType);
 		super.fillClientInfo(params, request);
@@ -48,15 +45,12 @@ public class AbstractApiGatewayController extends BaseController {
 		// 调用Action
 		String actionResult = this.doAction(apiConfig, params);
 		
-		if (log.isDebugEnabled()) {
-			StopWatch csw = StopWatchContext.get(false);
-			if (csw != null) {
+		StopWatch csw = StopWatchContext.get(false);
+		if (csw != null) {
+			if (log.isDebugEnabled()) {
 				log.debug(csw.prettyPrint());
-			}
-		} else if (EnvironmentContext.isDebug()) {
-			StopWatch csw = StopWatchContext.get(false);
-			if (csw != null) {
-				log.info(StopWatchContext.get(false).prettyPrint());
+			} else if (EnvironmentContext.isDebug()) {
+				log.info(csw.prettyPrint());
 			}
 		}
 		
