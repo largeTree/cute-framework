@@ -102,8 +102,8 @@ public class MQTxService implements IMQTxService {
     			}
     		}
 		}
-		log.warn("ExplusionTimeoutedTransactions {}", timeoutedTxKeys);
 		if (CollectionUtils.isNotEmpty(timeoutedTxKeys)) {
+			log.warn("ExplusionTimeoutedTransactions {}", timeoutedTxKeys);
 			// 已经超时的事务逐出缓存
 			timeoutedTxKeys.forEach(item -> {
 				TxMessageHolder.removeTxMessage(item);
