@@ -125,9 +125,19 @@ public class CuteJdbcAppenderConfiguration {
 		}
 		// 采用blocking模式：
 		String asyncAppenderName = appenderName + LogConstant.JDBC_APPENDER_ASYNC_SUFFIX; // 异步Appender名称
-		AsyncAppender asyncAppender = AsyncAppender.createAppender(refs, errorRef, false, 0,
-				AbstractAppender.parseInt(LogConstant.JDBC_APPENDER_BUFFSIZE, 0), asyncAppenderName, true, null, config,
-				false);
+		
+		AsyncAppender asyncAppender = AsyncAppender.newBuilder()
+			.setAppenderRefs(refs)
+			.setErrorRef(errorRef)
+			.setBlocking(false)
+			.setShutdownTimeout(0)
+			.setBufferSize(AbstractAppender.parseInt(LogConstant.JDBC_APPENDER_BUFFSIZE, 0))
+			.setName(asyncAppenderName)
+			.setIncludeLocation(true)
+			.setIgnoreExceptions(false).build();
+//		AsyncAppender asyncAppender = AsyncAppender.createAppender(refs, errorRef, false, 0,
+//				AbstractAppender.parseInt(LogConstant.JDBC_APPENDER_BUFFSIZE, 0), asyncAppenderName, true, null, config,
+//				false);
 		
 		asyncAppender.start();
 		config.addAppender(asyncAppender);

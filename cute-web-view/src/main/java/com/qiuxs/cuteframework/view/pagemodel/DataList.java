@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.view.pagemodel;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,9 @@ import java.util.List;
  *
  * @author qiuxs
  */
-public class DataList {
+public class DataList implements Serializable {
+
+	private static final long serialVersionUID = 4221887491376883285L;
 
 	/**  查询接口号. */
 	private String apiKey;

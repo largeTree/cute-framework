@@ -36,7 +36,7 @@ public class FuncInitHelper {
 
 	private static Logger log = LogManager.getLogger(FuncInitHelper.class);
 
-	private static final String FUNC_XML_PATH = ClassPathResourceUtil.CLASSPATH_ALL_URL_PREFIX + "/config/func/*.xml";
+	private static final String FUNC_XML_PATH = ClassPathResourceUtil.CLASSPATH_ALL_URL_PREFIX + "/config/func/webMenu*.xml";
 
 	private static final String MENU_QNAME = "menu";
 

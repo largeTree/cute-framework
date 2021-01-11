@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.view.pagemodel;
 
+import java.io.Serializable;
 import java.util.Map;
 
 // TODO: Auto-generated Javadoc
@@ -8,8 +9,10 @@ import java.util.Map;
  *
  * @author qiuxs
  */
-public class Page {
+public class Page implements Serializable {
 	
+	private static final long serialVersionUID = -885650549863375664L;
+
 	/**  页面ID. */
 	private String id;
 	

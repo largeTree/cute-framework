@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.view.pagemodel;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,8 +8,10 @@ import java.util.List;
  * @author qiuxs
  *
  */
-public class FormSection {
+public class FormSection implements Serializable {
 
+	private static final long serialVersionUID = -3819649102340027802L;
+	
 	/** 标题 */
 	private String title;
 	/** 是否是明细部件 */

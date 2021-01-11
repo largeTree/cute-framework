@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.view.pagemodel;
 
+import java.io.Serializable;
 import java.util.List;
 
 /***
@@ -7,8 +8,10 @@ import java.util.List;
  * @author qiuxs
  *
  */
-public class FormModel {
+public class FormModel implements Serializable {
 
+	private static final long serialVersionUID = 1087178052057527047L;
+	
 	/** 表单ID */
 	private String id;
 	/** 表单标题 */

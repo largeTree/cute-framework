@@ -86,6 +86,7 @@ public class TableBuilderService extends Service<Boolean> {
 					Writer serviceOut = null;
 					Writer iServiceOut = null;
 					Writer actionOut = null;
+					Writer crudOut = null;
 					try {
 						if (tm.isEntity()) {
 							entityOut = builderWriter(outPutPath, tm, "", "entity", "", "java");
@@ -108,6 +109,10 @@ public class TableBuilderService extends Service<Boolean> {
 						if (tm.isAction()) {
 							actionOut = builderWriter(outPutPath, tm, "", "action", "", "java");
 							TableBuilderService.this.outPut("action", actionOut, tm);
+						}
+						if (tm.isCrud()) {
+							crudOut = builderWriter(outPutPath, tm, "", "crud", "", "xml");
+							TableBuilderService.this.outPut("crud", crudOut, tm);
 						}
 					} catch (IOException | TemplateException e) {
 						log.error("build error ext=" + e.getLocalizedMessage(), e);

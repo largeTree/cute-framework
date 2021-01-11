@@ -28,6 +28,7 @@ public class TableModel {
 	private boolean mapper = true;
 	private boolean service = true;
 	private boolean action = true;
+	private boolean crud = true;
 
 	private boolean hasError = false;
 	private Set<String> unkonwTypes = new HashSet<>();
@@ -157,6 +158,14 @@ public class TableModel {
 
 	public void setAction(boolean action) {
 		this.action = action;
+	}
+
+	public boolean isCrud() {
+		return crud;
+	}
+
+	public void setCrud(boolean crud) {
+		this.crud = crud;
 	}
 
 	public List<FieldModel> getFields() {

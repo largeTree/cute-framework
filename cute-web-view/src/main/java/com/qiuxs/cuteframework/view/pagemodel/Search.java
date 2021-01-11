@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.view.pagemodel;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,10 @@ import java.util.List;
  * @author qiuxs
  *
  */
-public class Search {
+public class Search implements Serializable {
+	
+	private static final long serialVersionUID = 709404894756292323L;
+	
 	/** 字段列表 */
 	private List<Field> fields;
 

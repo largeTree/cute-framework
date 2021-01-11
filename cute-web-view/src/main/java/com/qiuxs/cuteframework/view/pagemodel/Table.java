@@ -1,8 +1,12 @@
 package com.qiuxs.cuteframework.view.pagemodel;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Table {
+public class Table implements Serializable {
+	
+	private static final long serialVersionUID = -4377852980098027279L;
+	
 	/** 列表的列配置列表 */
 	private List<Td> tds;
 	/** 需要展开才能看到的列 */

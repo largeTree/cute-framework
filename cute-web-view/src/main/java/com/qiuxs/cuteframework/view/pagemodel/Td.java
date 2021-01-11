@@ -1,9 +1,12 @@
 package com.qiuxs.cuteframework.view.pagemodel;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Td {
+public class Td implements Serializable {
 
+	private static final long serialVersionUID = 109238320294072107L;
+	
 	/** 按钮类型的列 */
 	public static final String TD_TYPE_BTN = "btn";
 	/** 隐藏的列 */
@@ -20,6 +23,8 @@ public class Td {
 	public static final String TD_TYPE_CAPTION = "caption";
 	/** 图片地址 */
 	public static final String TD_TYPE_IMAGE = "imageurl";
+	/** 行内计算 */
+	public static final String TD_TYPE_CALC = "calc";
 
 	/** 列名 */
 	private String name;
@@ -27,6 +32,16 @@ public class Td {
 	private String field;
 	/** 列类型 */
 	private String type;
+	/** 鼠标悬浮提示内容 */
+	private String alt;
+	/** 显示前缀 */
+	private String prefix;
+	/** 显示后缀 */
+	private String suffix;
+	/** 宽度 */
+	private String width = "50";
+	/** 高度 */
+	private String height = "50";
 	/** 是否支持排序 */
 	private int order;
 	/** 列宽 */
@@ -60,6 +75,46 @@ public class Td {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getAlt() {
+		return alt;
+	}
+
+	public void setAlt(String alt) {
+		this.alt = alt;
+	}
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
+	public String getSuffix() {
+		return suffix;
+	}
+
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
+	}
+
+	public String getWidth() {
+		return width;
+	}
+
+	public void setWidth(String width) {
+		this.width = width;
+	}
+
+	public String getHeight() {
+		return height;
+	}
+
+	public void setHeight(String height) {
+		this.height = height;
 	}
 
 	public int getOrder() {

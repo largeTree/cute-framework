@@ -91,6 +91,8 @@ public class MainController implements Initializable {
 	private CheckBox serviceCkBox;
 	@FXML
 	private CheckBox actionCkBox;
+	@FXML
+	private CheckBox crudCkBox;
 
 	private TableModel currentTableModel;
 
@@ -166,6 +168,7 @@ public class MainController implements Initializable {
 		this.tableControls.add(this.mapperCkBox);
 		this.tableControls.add(this.serviceCkBox);
 		this.tableControls.add(this.actionCkBox);
+		this.tableControls.add(this.crudCkBox);
 
 		// 默认所有控件禁用，选择表并勾选build后启用
 		this.setDisableFlag(true);
@@ -358,6 +361,7 @@ public class MainController implements Initializable {
 		this.mapperCkBox.setSelected(this.currentTableModel.isMapper());
 		this.serviceCkBox.setSelected(this.currentTableModel.isService());
 		this.actionCkBox.setSelected(this.currentTableModel.isAction());
+		this.crudCkBox.setSelected(this.currentTableModel.isAction());
 	}
 
 	private void refreshTableModel() {
@@ -375,6 +379,7 @@ public class MainController implements Initializable {
 		this.currentTableModel.setMapper(this.mapperCkBox.isSelected());
 		this.currentTableModel.setService(this.serviceCkBox.isSelected());
 		this.currentTableModel.setAction(this.actionCkBox.isSelected());
+		this.currentTableModel.setCrud(this.crudCkBox.isSelected());
 	}
 
 	private void setDisableFlag(boolean flag) {

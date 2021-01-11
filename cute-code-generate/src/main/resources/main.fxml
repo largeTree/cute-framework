@@ -60,6 +60,7 @@
             <CheckBox fx:id="mapperCkBox" layoutX="284.0" layoutY="302.0" mnemonicParsing="false" selected="false" text="Mapper" />
             <CheckBox fx:id="serviceCkBox" layoutX="377.0" layoutY="302.0" mnemonicParsing="false" selected="false" text="Service" />
             <CheckBox fx:id="actionCkBox" layoutX="119.0" layoutY="345.0" mnemonicParsing="false" selected="false" text="Action" />
+            <CheckBox fx:id="crudCkBox" layoutX="206.0" layoutY="345.0" mnemonicParsing="false" selected="false" text="Crud.xml" />
           </children>
         </AnchorPane>
       </content>

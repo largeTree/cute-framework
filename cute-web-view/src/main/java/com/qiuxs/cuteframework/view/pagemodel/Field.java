@@ -1,12 +1,16 @@
 package com.qiuxs.cuteframework.view.pagemodel;
 
+import java.io.Serializable;
+
 // TODO: Auto-generated Javadoc
 /**
  * 表单字段.
  *
  * @author qiuxs
  */
-public class Field {
+public class Field implements Serializable {
+	
+	private static final long serialVersionUID = 7925775989268574769L;
 
 	/** The Constant TYPE_HIDDEN. */
 	public static final String TYPE_HIDDEN = "hidden";
@@ -34,6 +38,8 @@ public class Field {
 	
 	/** The Constant SEARCH_BTN. */
 	public static final Field SEARCH_BTN = new Field() {
+		private static final long serialVersionUID = 1146980148818185605L;
+
 		@Override
 		public String getType() {
 			return TYPE_SEARCH_BTN;
