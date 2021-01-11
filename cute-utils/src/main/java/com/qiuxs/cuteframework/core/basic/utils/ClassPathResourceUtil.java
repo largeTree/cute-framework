@@ -131,7 +131,7 @@ public class ClassPathResourceUtil {
 					listResource.addAll(Arrays.asList(arrResource));
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error("ext = " + e.getLocalizedMessage(), e);
 			}
 		}
 		return listResource;

@@ -30,7 +30,7 @@ public class LogConstant {
 	/**
 	 * jdbc日志appender缓存大小
 	 */
-	public static final String JDBC_APPENDER_BUFFSIZE = "10";
+	public static final String JDBC_APPENDER_BUFFSIZE = "128";
 
 	/**
 	 * jdbc日志appender名称前缀
