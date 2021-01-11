@@ -134,7 +134,8 @@ public class CuteJdbcAppenderConfiguration {
 			.setBufferSize(AbstractAppender.parseInt(LogConstant.JDBC_APPENDER_BUFFSIZE, 0))
 			.setName(asyncAppenderName)
 			.setIncludeLocation(true)
-			.setIgnoreExceptions(false).build();
+			.setIgnoreExceptions(false)
+			.setConfiguration(config).build();
 //		AsyncAppender asyncAppender = AsyncAppender.createAppender(refs, errorRef, false, 0,
 //				AbstractAppender.parseInt(LogConstant.JDBC_APPENDER_BUFFSIZE, 0), asyncAppenderName, true, null, config,
 //				false);
