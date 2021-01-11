@@ -1,5 +1,6 @@
 package com.qiuxs.cuteframework.web.common.biz.func.helper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -59,6 +60,11 @@ public class FuncInitHelper {
 		}
 		List<Document> docs = new ArrayList<>();
 		for (Resource res : resList) {
+			try {
+				log.info("init WebMenu res : {}", res.getURI());
+			} catch (IOException e) {
+				log.error("ext = " + e.getLocalizedMessage(), e);
+			}
 			Document funcXml = XmlUtil.readAsDocument(res);
 			docs.add(funcXml);
 		}
@@ -144,6 +150,7 @@ public class FuncInitHelper {
 			if (extra.size() > 0) {
 				func.setExtra(extra.toJSONString());
 			}
+			log.info("parse func item {}:{}", func.getId(), func.getName());
 			return func;
 		} catch (Exception e) {
 			log.error("parse Element Failed Ext = " + e.getLocalizedMessage(), e);
