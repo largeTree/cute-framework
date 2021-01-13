@@ -14,7 +14,10 @@
     <dubbo:application name="${app-name}" />
   
     <!-- 使用nacos注册中心暴露服务地址 -->  
-    <dubbo:registry protocol="nacos" id="local" />  
+    <dubbo:registry protocol="zookeeper" id="local" />  
+    
+    <!-- 配置中心？ -->
+    <dubbo:config-center timeout="5000" />
   
     <!-- 用dubbo协议暴露服务 -->  
     <dubbo:protocol name="dubbo" heartbeat="5000" />
@@ -31,7 +34,7 @@
     <!--      增加记录API调用日志、传送用户上下文数据消费者端拦截器。启动时不检查提供者是否存在。        -->
     <dubbo:consumer filter="microSvcContextFilter,apiLogFilter" check="false" />
     
-    <!--      去除default里的ExceptionFilter，重试次数设置为0，增加记录API调用日志、接收用户上下文数据提供者端拦截器     -->
+    <!--      去除default里的ExceptionFilter，增加记录API调用日志、接收用户上下文数据提供者端拦截器     -->
     <dubbo:provider filter="microSvcContextFilter,apiLogFilter,-exception" registry="local" export="false" />
 
 </beans>
