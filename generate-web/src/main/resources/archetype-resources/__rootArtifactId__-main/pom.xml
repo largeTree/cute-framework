@@ -31,8 +31,10 @@
     
     <build>
     	<finalName>${artifactId}</finalName>
-
 		<plugins>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
